@@ -23,7 +23,7 @@ double dphi(double phi1,double phi2)
 
 void analysis(int maxevt=0,int mult=50,int nbin=15){
 
-  TFile *f = new TFile("output-2.root");
+  TFile *f = new TFile("../Inputs/output-2.root");
   TTree *t1 = (TTree*)f->Get("t");
   Int_t nParticle;
   Float_t pt[50000];
@@ -39,7 +39,7 @@ void analysis(int maxevt=0,int mult=50,int nbin=15){
   t1->SetBranchAddress("phi",phi);
   t1->SetBranchAddress("mass",mass);
 
-  TFile *f_mix = new TFile("output-2.root");
+  TFile *f_mix = new TFile("../Inputs/output-2.root");
   TTree *t1_mix = (TTree*)f_mix->Get("t");
   Int_t nParticle_mix;
   Float_t pt_mix[50000];
