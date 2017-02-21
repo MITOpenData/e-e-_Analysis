@@ -1,0 +1,4 @@
+cmsDriver.py aaElectrons_pythia8_cff --conditions auto:run1_mc -s GEN --datatier GEN -n 100000 --relval 9000,300 --eventcontent RAWSIM --no_exec
+scp ginnocen@lxplus.cern.ch:/afs/cern.ch/work/g/ginnocen/GenEEvetnts/ForestMC/CMSSW_7_5_8_patch3/src/HeavyIonsAnalysis/JetAnalysis/test/HiForestAOD.root .
+scp ginnocen@lxplus.cern.ch:/afs/cern.ch/work/g/ginnocen/GenEEvetnts/ForestMC/CMSSW_7_5_8_patch3/src/HeavyIonsAnalysis/JetAnalysis/test/runForestAOD_EE_MC_75X.py .
+scp ginnocen@lxplus.cern.ch:/afs/cern.ch/work/g/ginnocen/GenEEvetnts/CMSSW_7_1_20/src/Configuration/Generator/python/aaElectrons_pythia8_cff.py .
