@@ -20,7 +20,7 @@ class particleData
     Float_t pwflag[10000];
 };
 
-void scan (TString infile="final.txt",TString output="PredictionsCUJET3_pt_0_10.root"){
+void scan (TString infile="cleaned_ALEPH_Data1998_189GeV_V0.txt"){
 
 	FILE *fp=fopen(infile.Data(),"r");
 
@@ -46,7 +46,7 @@ void scan (TString infile="final.txt",TString output="PredictionsCUJET3_pt_0_10.
 	if (_px==-999.&&_py==-999.&&_pz==-999.) { 
 	  pData.nParticle=counterParticles; counterParticles=0;  
 	  if(counterEntries>0) tout->Fill(); 
-	  cout<<"------------------------------------------------------------------------"<<endl; 
+	  //cout<<"------------------------------------------------------------------------"<<endl; 
 	  continue;
 	  }  
       pData.px[counterParticles]=_px;
@@ -55,7 +55,6 @@ void scan (TString infile="final.txt",TString output="PredictionsCUJET3_pt_0_10.
       pData.m[counterParticles]=_m;
       pData.charge[counterParticles]=_charge;
       pData.pwflag[counterParticles]=_pwflag;
-      cout<<"px="<<_px<<endl;
       counterParticles++;	
       counterEntries++;	
 }
