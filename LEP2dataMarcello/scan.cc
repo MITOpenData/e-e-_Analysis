@@ -21,7 +21,7 @@ class particleData
 		Float_t pt[100000];
 		Float_t eta[100000];
 		Float_t phi[100000];
-		Float_t m[100000];
+		Float_t mass[100000];
 		Float_t charge[10000];
 		Float_t pwflag[10000];
 		Int_t pid[10000];
@@ -43,7 +43,7 @@ void scan (TString infile="cleaned_ALEPH_Data1998_189GeV_V0.txt"){
 	tout->Branch("py", pData.py,"py[nParticle]/F");
 	tout->Branch("pz", pData.pz,"pz[nParticle]/F");
 	tout->Branch("pt", pData.pt,"pt[nParticle]/F");
-	tout->Branch("m", pData.m,"m[nParticle]/F");
+	tout->Branch("mass", pData.mass,"mass[nParticle]/F");
 	tout->Branch("eta", pData.eta,"eta[nParticle]/F");
 	tout->Branch("phi", pData.phi,"phi[nParticle]/F");
 	tout->Branch("charge", pData.charge,"charge[nParticle]/F");
@@ -55,17 +55,17 @@ void scan (TString infile="cleaned_ALEPH_Data1998_189GeV_V0.txt"){
 
 	while(fscanf(fp,"%f %f %f %f %f %f",&_px,&_py,&_pz,&_m,&_charge,&_pwflag)!=EOF) {
 		if (_px==-999.&&_py==-999.&&_pz==-999.) { 
-		   cout<<"counterEntries="<<counterEntries<<endl;
+		   //cout<<"counterEntries="<<counterEntries<<endl;
 		    if(counterEntries>0) tout->Fill(); 
 			pData.nParticle=counterParticles; 
 			counterParticles=0;   
-			cout<<"------------------------------------------------------------------------"<<endl; 
+			//cout<<"------------------------------------------------------------------------"<<endl; 
 			continue;
 		}  
 		pData.px[counterParticles]=_px;
 		pData.py[counterParticles]=_py;
 		pData.pz[counterParticles]=_pz;
-		pData.m[counterParticles]=_m;
+		pData.mass[counterParticles]=_m;
 		v.SetXYZM(_px,_py,_pz,_m);
         pData.pt[counterParticles]=v.Pt();
         pData.eta[counterParticles]=v.PseudoRapidity();
