@@ -24,7 +24,7 @@ class particleData
 		Float_t mass[100000];
 		Float_t charge[10000];
 		Float_t pwflag[10000];
-		Int_t pid[10000];
+		Float_t pid[10000];
 };
 
 void scan (TString infile="cleaned_ALEPH_Data1998_189GeV_V0.txt"){
@@ -48,7 +48,7 @@ void scan (TString infile="cleaned_ALEPH_Data1998_189GeV_V0.txt"){
 	tout->Branch("phi", pData.phi,"phi[nParticle]/F");
 	tout->Branch("charge", pData.charge,"charge[nParticle]/F");
 	tout->Branch("pwflag", pData.pwflag,"pwflag[nParticle]/F");
-	tout->Branch("pid", pData.pid,"pid[nParticle]/I");
+	tout->Branch("pid", pData.pid,"pid[nParticle]/F");
 
 	int counterEntries=0;
 	int counterParticles=0;
@@ -56,8 +56,8 @@ void scan (TString infile="cleaned_ALEPH_Data1998_189GeV_V0.txt"){
 	while(fscanf(fp,"%f %f %f %f %f %f",&_px,&_py,&_pz,&_m,&_charge,&_pwflag)!=EOF) {
 		if (_px==-999.&&_py==-999.&&_pz==-999.) { 
 		   //cout<<"counterEntries="<<counterEntries<<endl;
-		    if(counterEntries>0) tout->Fill(); 
 			pData.nParticle=counterParticles; 
+            if(counterEntries>0) tout->Fill(); 
 			counterParticles=0;   
 			//cout<<"------------------------------------------------------------------------"<<endl; 
 			continue;
@@ -77,4 +77,43 @@ void scan (TString infile="cleaned_ALEPH_Data1998_189GeV_V0.txt"){
 		counterEntries++;	
 	}
 	hf->Write();
+}
+
+
+void check(){
+
+  TFile *f = new TFile("../LEP2dataMarcello/myALEPH.root");
+  TTree *t1 = (TTree*)f->Get("t");
+  Int_t nParticle;
+  Float_t pt[50000];
+  Float_t eta[50000];
+  Float_t pid[50000];
+  Float_t phi[50000];
+  Float_t mass[50000];
+  
+  t1->SetBranchAddress("nParticle",&nParticle);
+  t1->SetBranchAddress("pt",pt);
+  t1->SetBranchAddress("eta",eta);
+  t1->SetBranchAddress("pid",pid);
+  t1->SetBranchAddress("phi",phi);
+  t1->SetBranchAddress("mass",mass);
+
+  Int_t nevent = (Int_t)t1->GetEntries();
+    
+  for (Int_t i=0;i<nevent;i++) {
+    t1->GetEntry(i);
+    
+    int nparticles = nParticle;
+    cout<<"nparticles="<<nparticles<<endl;
+
+    for ( int j=0;j<nparticles;j++ ) {
+    
+      int pid1 = pid[j];
+     // if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON) continue;
+      float eta1 = eta[j];
+      float phi1 = phi[j];
+      float pt1 = pt[j];
+      float mass1 = mass[j];
+   }
+ }
 }
