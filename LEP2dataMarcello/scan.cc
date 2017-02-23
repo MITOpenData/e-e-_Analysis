@@ -85,14 +85,14 @@ void check(){
   TFile *f = new TFile("../LEP2dataMarcello/myALEPH.root");
   TTree *t1 = (TTree*)f->Get("t");
   Int_t nParticle;
-  Float_t px[50000];
-  Float_t py[50000];
-  Float_t pz[50000];
-  Float_t pt[50000];
-  Float_t eta[50000];
-  Float_t pid[50000];
-  Float_t phi[50000];
-  Float_t mass[50000];
+  Float_t px[100000];
+  Float_t py[100000];
+  Float_t pz[100000];
+  Float_t pt[100000];
+  Float_t eta[100000];
+  Float_t pid[100000];
+  Float_t phi[100000];
+  Float_t mass[100000];
   
   t1->SetBranchAddress("nParticle",&nParticle);
   t1->SetBranchAddress("px",px);
@@ -124,7 +124,7 @@ void check(){
       float pz1 = pz[j];
       float pt1 = pt[j];
       float mass1 = mass[j];
-      cout<<"px="<<px1<<"py="<<py1<<"pz="<<pz1<<"mass="<<mass1<<endl;
+      cout<<"px="<<px1<<"py="<<py1<<"pz="<<pz1<<"pt="<<pt1<<"mass="<<mass1<<endl;
    }
  }
 }
