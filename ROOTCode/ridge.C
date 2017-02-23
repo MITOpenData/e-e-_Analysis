@@ -2,6 +2,7 @@
 #include <TTree.h>
 #include <TH1F.h>
 #include <TH2F.h>
+#include <TCanvas.h>
 #include <iostream>
 
 using namespace std;
@@ -21,9 +22,13 @@ double dphi(double phi1,double phi2)
     return a;
 }
 
-void analysis(int maxevt=0,int mult=50,int nbin=15){
+void analysis(int isBelle=1, int maxevt=100000,int mult=70,int nbin=15){
 
-  TFile *f = new TFile("../Inputs/output-2.root");
+  TString filename;
+  if(isBelle) filename="../Inputs/output-2.root";
+  else filename="../LEP2dataMarcello/myALEPH.root";
+  
+  TFile *f = new TFile(filename.Data());
   TTree *t1 = (TTree*)f->Get("t");
   Int_t nParticle;
   Float_t pt[50000];
@@ -39,7 +44,7 @@ void analysis(int maxevt=0,int mult=50,int nbin=15){
   t1->SetBranchAddress("phi",phi);
   t1->SetBranchAddress("mass",mass);
 
-  TFile *f_mix = new TFile("../Inputs/output-2.root");
+  TFile *f_mix = new TFile(filename.Data());
   TTree *t1_mix = (TTree*)f_mix->Get("t");
   Int_t nParticle_mix;
   Float_t pt_mix[50000];
@@ -59,7 +64,10 @@ void analysis(int maxevt=0,int mult=50,int nbin=15){
   TH2F *h_2D = new TH2F ( "h_2D", "eta-phi of all particles ",nbin, -3.5, 3.5,nbin, -3.1416/2., 3.1416*1.5);
   TH2F *h_2Dmix = new TH2F ( "h_2Dmix", "eta-phi of all particles ",nbin, -3.5, 3.5,nbin, -3.1416/2., 3.1416*1.5);
   TH2F *h_ratio = new TH2F ( "h_ratio", "eta-phi of all particles ", nbin, -3.5, 3.5,nbin, -3.1416/2.,3.1416*1.5);
-
+  h_2D->Sumw2();
+  h_2Dmix->Sumw2();
+  //h_ratio->Sumw2();
+  
 
   // all entries and fill the histograms
   Int_t nevent = (Int_t)t1->GetEntries();
@@ -68,16 +76,17 @@ void analysis(int maxevt=0,int mult=50,int nbin=15){
   if( maxevt>0 && maxevt<nevent ) nevent_process = maxevt;  
   
   for (Int_t i=0;i<nevent_process;i++) {
-    if (i%1000==0) cout <<i<<"/"<<nevent_process<<endl;
+    if (i%100==0) cout <<i<<"/"<<nevent_process<<endl;
     t1->GetEntry(i);
     
     int nparticles = nParticle;
+    cout<<"nparticles="<<nparticles<<endl;
     if (nparticles<mult) continue;
   
     int nparticles2=-1000;
     int selected=i+1;  //questo diventa il numero di evento estratto nel file +1
     int flag=0;    //definisco una flag a zero
-    if (nparticles>500) continue;
+    if (nparticles>100) continue;
     while ((abs(nparticles2-nparticles)>5&&nparticles<100)||i==selected){
        //cout <<nparticles<<" "<<selected<<endl;
        selected++;
@@ -91,7 +100,7 @@ void analysis(int maxevt=0,int mult=50,int nbin=15){
     for ( int j=0;j<nparticles;j++ ) {
     
       int pid1 = pid[j];
-      if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON) continue;
+     // if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON) continue;
       float eta1 = eta[j];
       float phi1 = phi[j];
       float pt1 = pt[j];
@@ -102,7 +111,7 @@ void analysis(int maxevt=0,int mult=50,int nbin=15){
       
       for ( int k=j+1;k<nparticles;k++ ) {
         int pid2 = pid[k];
-        if (pid2!=PION&&pid2!=PROTON&&pid2!=KAON) continue;
+        //if (pid2!=PION&&pid2!=PROTON&&pid2!=KAON) continue;
         float eta2 = eta[k];
         float phi2 = phi[k];
         float pt2 = pt[k];
@@ -120,7 +129,7 @@ void analysis(int maxevt=0,int mult=50,int nbin=15){
 
       for ( int k=0;k<nparticles2;k++ ) {
         int pidmix = pid_mix[k];
-        if (pidmix!=PION&&pidmix!=PROTON&&pidmix!=KAON) continue;
+        //if (pidmix!=PION&&pidmix!=PROTON&&pidmix!=KAON) continue;
         float etamix = eta_mix[k];
         float phimix = phi_mix[k];
         float ptmix = pt_mix[k];
@@ -143,12 +152,49 @@ void analysis(int maxevt=0,int mult=50,int nbin=15){
   }
   }
 
-  TFile*fout=new TFile("myoutput.root","recreate");
+    int etaranges[4]={0,1,2,3};
+    int minbin,maxbin;
+    
+	TH1F*h_deltaphi[3];
+
+	for (int i=0;i<3;i++){
+	  
+      minbin =  h_ratio->GetXaxis()->FindBin(etaranges[i]);
+      maxbin =  h_ratio->GetXaxis()->FindBin(etaranges[i+1]);
+      
+        h_deltaphi[i]  = (TH1F*) h_ratio->ProjectionY(Form("h_deltaphi_etamin%d_max%d",etaranges[i],etaranges[i+1]),minbin,maxbin);
+        //h_deltaphi[i]->Sumw2();
+		h_deltaphi[i]->SetName(Form("h_deltaphi_etamin%d_max%d",etaranges[i],etaranges[i+1]));
+	    h_deltaphi[i]->GetZaxis()->CenterTitle();
+	    h_deltaphi[i]->GetXaxis()->SetTitle("#Delta#phi");
+	}  
+
+
+  cout<<"error"<<h_deltaphi[0]->GetBinError(0)<<endl;
+
+  h_ratio->GetXaxis()->SetTitle("#Delta#eta");
+  h_ratio->GetYaxis()->SetTitle("#Delta#phi");
+  
+  TCanvas * c1 = new  TCanvas("c1","c1",1000,500); 
+  h_ratio->Draw("lego2");
+
+  TCanvas * c2 = new TCanvas("c2");
+  c2->Divide(3,1);
+  c2->cd(1);
+  h_deltaphi[0]->Draw();
+  c2->cd(2);
+  h_deltaphi[1]->Draw();
+  c2->cd(3);
+  h_deltaphi[2]->Draw();
+
+
+  TFile*fout=new TFile(Form("myoutput_isBelle%d_minMult%d.root",isBelle,mult),"recreate");
   fout->cd();
   h_2D->Write();
   h_2Dmix->Write();
   h_ratio->Write();
+  for (int i=0;i<3;i++) h_deltaphi[i]->Write();
   fout->Close();
   delete fout;
-  
+
   }
