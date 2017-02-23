@@ -66,7 +66,7 @@ void analysis(int isBelle=1, int maxevt=100000,int mult=70,int nbin=15){
   TH2F *h_ratio = new TH2F ( "h_ratio", "eta-phi of all particles ", nbin, -3.5, 3.5,nbin, -3.1416/2.,3.1416*1.5);
   h_2D->Sumw2();
   h_2Dmix->Sumw2();
-  //h_ratio->Sumw2();
+  h_ratio->Sumw2();
   
 
   // all entries and fill the histograms
@@ -155,22 +155,22 @@ void analysis(int isBelle=1, int maxevt=100000,int mult=70,int nbin=15){
     int etaranges[4]={0,1,2,3};
     int minbin,maxbin;
     
-	TH1F*h_deltaphi[3];
+	TH1D*h_deltaphi[3];
 
 	for (int i=0;i<3;i++){
 	  
       minbin =  h_ratio->GetXaxis()->FindBin(etaranges[i]);
       maxbin =  h_ratio->GetXaxis()->FindBin(etaranges[i+1]);
       
-        h_deltaphi[i]  = (TH1F*) h_ratio->ProjectionY(Form("h_deltaphi_etamin%d_max%d",etaranges[i],etaranges[i+1]),minbin,maxbin);
-        //h_deltaphi[i]->Sumw2();
+        h_deltaphi[i]  = (TH1D*) h_ratio->ProjectionY(Form("h_deltaphi_etamin%d_max%d",etaranges[i],etaranges[i+1]),minbin,maxbin);
+        h_deltaphi[i]->Sumw2();
 		h_deltaphi[i]->SetName(Form("h_deltaphi_etamin%d_max%d",etaranges[i],etaranges[i+1]));
 	    h_deltaphi[i]->GetZaxis()->CenterTitle();
 	    h_deltaphi[i]->GetXaxis()->SetTitle("#Delta#phi");
 	}  
 
 
-  cout<<"error"<<h_deltaphi[0]->GetBinError(0)<<endl;
+  cout<<"error"<<h_deltaphi[0]->GetBinError(5)<<endl;
 
   h_ratio->GetXaxis()->SetTitle("#Delta#eta");
   h_ratio->GetYaxis()->SetTitle("#Delta#phi");
@@ -181,11 +181,11 @@ void analysis(int isBelle=1, int maxevt=100000,int mult=70,int nbin=15){
   TCanvas * c2 = new TCanvas("c2");
   c2->Divide(3,1);
   c2->cd(1);
-  h_deltaphi[0]->Draw();
+  h_deltaphi[0]->Draw("ep");
   c2->cd(2);
-  h_deltaphi[1]->Draw();
+  h_deltaphi[1]->Draw("ep");
   c2->cd(3);
-  h_deltaphi[2]->Draw();
+  h_deltaphi[2]->Draw("ep");
 
 
   TFile*fout=new TFile(Form("myoutput_isBelle%d_minMult%d.root",isBelle,mult),"recreate");
