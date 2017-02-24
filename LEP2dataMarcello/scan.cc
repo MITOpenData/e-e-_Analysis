@@ -27,16 +27,16 @@ class particleData
 		Float_t pid[10000];
 };
 
-void scan (TString infile="cleaned_ALEPH_Data1998_189GeV_V0.txt"){
+void scan (TString infile="cleaned_ALEPH_Data1999_196GeV_V0"){
 
 	FILE *fp=fopen(infile.Data(),"r");
 
 	float _px,_py,_pz,_m,_charge,_pwflag;
 
-	TFile *hf = new TFile("myALEPH.root", "RECREATE" );
+	TFile *hf = new TFile(Form("%s.root",infile.Data()), "RECREATE" );
 	TTree *tout = new TTree("t","");
 	TLorentzVector v;
-
+    cout<<"step1"<<endl;
 	particleData pData;
 	tout->Branch("nParticle", &pData.nParticle,"nParticle/I");
 	tout->Branch("px", pData.px,"px[nParticle]/F");
@@ -53,15 +53,17 @@ void scan (TString infile="cleaned_ALEPH_Data1998_189GeV_V0.txt"){
 	int counterEntries=0;
 	int counterParticles=0;
 
+  cout<<"step2"<<endl;
 	while(fscanf(fp,"%f %f %f %f %f %f",&_px,&_py,&_pz,&_m,&_charge,&_pwflag)!=EOF) {
 		if (_px==-999.&&_py==-999.&&_pz==-999.) { 
-		   //cout<<"counterEntries="<<counterEntries<<endl;
+		   cout<<"counterEntries="<<counterEntries<<endl;
 			pData.nParticle=counterParticles; 
             if(counterEntries>0) tout->Fill(); 
 			counterParticles=0;   
-			//cout<<"------------------------------------------------------------------------"<<endl; 
+			cout<<"------------------------------------------------------------------------"<<endl; 
 			continue;
 		}  
+		cout<<_px<<"   "<<_py<<"   "<<_pz<<"   "<<endl;
 		pData.px[counterParticles]=_px;
 		pData.py[counterParticles]=_py;
 		pData.pz[counterParticles]=_pz;
@@ -72,7 +74,7 @@ void scan (TString infile="cleaned_ALEPH_Data1998_189GeV_V0.txt"){
         pData.phi[counterParticles]=v.Phi();    
 		pData.charge[counterParticles]=_charge;
 		pData.pwflag[counterParticles]=_pwflag;
-		pData.pid[counterParticles]=-1;
+		pData.pid[counterParticles]=0;
 		counterParticles++;	
 		counterEntries++;	
 	}
@@ -127,4 +129,20 @@ void check(){
       cout<<"px="<<px1<<"py="<<py1<<"pz="<<pz1<<"pt="<<pt1<<"mass="<<mass1<<endl;
    }
  }
+}
+
+
+
+int main(int argc, char *argv[])
+{
+  if((argc != 2))
+  {
+    std::cout << "Wrong number of inputs" << std::endl;
+    return 1;
+  }
+  
+  if(argc == 2)
+    std::cout << "Running for the sake of god" << std::endl;
+    scan(argv[1]);
+  return 0;
 }
