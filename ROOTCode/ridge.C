@@ -22,11 +22,12 @@ double dphi(double phi1,double phi2)
     return a;
 }
 
-void analysis(int isBelle=1, int maxevt=100000,int mult=70,int nbin=40,bool verbose=0){
+void analysis(int isBelle=0, int maxevt=0,int mult=70,int nbin=40,bool verbose=0){
 
   TString filename;
   if(isBelle) filename="../Inputs/output-2.root"; 			
-  else filename="../LEP2dataMarcello/myALEPH.root";
+  //else filename="../LEP2dataMarcello/myALEPH.root";
+  else filename="../LEP2dataMarcello/ROOTfiles/final_ALEPH.root";
   
   TFile *f = new TFile(filename.Data());
   TTree *t1 = (TTree*)f->Get("t");
