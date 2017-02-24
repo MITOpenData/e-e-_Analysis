@@ -36,6 +36,7 @@ void analysis(int isBelle=1, int maxevt=100000,int mult=70,int nbin=40,bool verb
   Float_t pid[50000];
   Float_t phi[50000];
   Float_t mass[50000];
+  Float_t pwflag[50000];
   
   t1->SetBranchAddress("nParticle",&nParticle);
   t1->SetBranchAddress("pt",pt);
@@ -43,6 +44,7 @@ void analysis(int isBelle=1, int maxevt=100000,int mult=70,int nbin=40,bool verb
   t1->SetBranchAddress("pid",pid);
   t1->SetBranchAddress("phi",phi);
   t1->SetBranchAddress("mass",mass);
+  t1->SetBranchAddress("pwflag",pwflag);
 
   TFile *f_mix = new TFile(filename.Data());
   TTree *t1_mix = (TTree*)f_mix->Get("t");
@@ -52,6 +54,7 @@ void analysis(int isBelle=1, int maxevt=100000,int mult=70,int nbin=40,bool verb
   Float_t pid_mix[50000];
   Float_t phi_mix[50000];
   Float_t mass_mix[50000];
+  Float_t pwflag_mix[50000];
   
   t1_mix->SetBranchAddress("nParticle",&nParticle_mix);
   t1_mix->SetBranchAddress("pt",pt_mix);
@@ -59,10 +62,11 @@ void analysis(int isBelle=1, int maxevt=100000,int mult=70,int nbin=40,bool verb
   t1_mix->SetBranchAddress("pid",pid_mix);
   t1_mix->SetBranchAddress("phi",phi_mix);
   t1_mix->SetBranchAddress("mass",mass_mix);
+  t1_mix->SetBranchAddress("pwflag",pwflag_mix);
 
 
   // two histograms
-  double detaRange = 3.5;
+  double detaRange = 3;
   double normalization = detaRange*2/nbin*2*3.14159/nbin;
   TH2F *h_2D = new TH2F ( "h_2D", "eta-phi of all particles ",nbin, -detaRange, detaRange,nbin, -3.1416/2., 3.1416*1.5);
   TH2F *h_2Dmix = new TH2F ( "h_2Dmix", "eta-phi of all particles ",nbin, -detaRange, detaRange,nbin, -3.1416/2., 3.1416*1.5);
@@ -105,7 +109,8 @@ void analysis(int isBelle=1, int maxevt=100000,int mult=70,int nbin=40,bool verb
     for ( int j=0;j<nparticles;j++ ) {
       float pt1 = pt[j];
       int pid1 = pid[j];
-      if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON) continue;
+      int pwflag1 = pwflag[j];
+      if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON&&!(!isBelle&&pwflag1==0)) continue;
       if(pt1<ptMin||pt1>ptMax) continue;
       N++;
     }
@@ -132,7 +137,8 @@ void analysis(int isBelle=1, int maxevt=100000,int mult=70,int nbin=40,bool verb
     for ( int j=0;j<nparticles;j++ ) {
       float pt1 = pt_mix[j];
       int pid1 = pid_mix[j];
-      if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON) continue;
+      int pwflag1 = pwflag_mix[j];
+      if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON&&!(!isBelle&&pwflag1==0)) continue;
       if(pt1<ptMin||pt1>ptMax) continue;
       N2++;
     }
@@ -144,7 +150,8 @@ void analysis(int isBelle=1, int maxevt=100000,int mult=70,int nbin=40,bool verb
       float phi1 = phi[j];
       float pt1 = pt[j];
       float mass1 = mass[j];
-      if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON) continue;
+      float pwflag1 = pwflag[j];
+      if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON&&!(!isBelle&&pwflag1==0)) continue;
       if(pt1<ptMin||pt1>ptMax) continue;
       
       // Signal loop, calculate S correlation function
@@ -154,7 +161,8 @@ void analysis(int isBelle=1, int maxevt=100000,int mult=70,int nbin=40,bool verb
         float phi2 = phi[k];
         float pt2 = pt[k];
         float mass2 = mass[k];
-        if (pid2!=PION&&pid2!=PROTON&&pid2!=KAON) continue;
+        float pwflag2 = pwflag[k];
+        if (pid2!=PION&&pid2!=PROTON&&pid2!=KAON&&!(!isBelle&&pwflag2==0)) continue;
         if(pt2<ptMin||pt2>ptMax) continue;
         
         h_2D->Fill(eta1-eta2,dphi(phi1,phi2),1./N/(N-1));    
@@ -170,7 +178,8 @@ void analysis(int isBelle=1, int maxevt=100000,int mult=70,int nbin=40,bool verb
         float phimix = phi_mix[k];
         float ptmix = pt_mix[k];
         float massmix = mass_mix[k];
-        if (pidmix!=PION&&pidmix!=PROTON&&pidmix!=KAON) continue;
+        float pwflagmix = pwflag_mix[k];
+        if (pidmix!=PION&&pidmix!=PROTON&&pidmix!=KAON&&!(!isBelle&&pwflagmix==0)) continue;
         if(ptmix<ptMin||ptmix>ptMax) continue;
         
         h_2Dmix->Fill(eta1-etamix,dphi(phi1,phimix),1./N/N2);    
