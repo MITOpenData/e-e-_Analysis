@@ -27,13 +27,13 @@ class particleData
 		Float_t pid[10000];
 };
 
-void scan (TString infile="cleaned_ALEPH_Data1999_196GeV_V0"){
+void scan (TString infile="cleaned_ALEPH_Data1999_200GeV_V0"){
 
-	FILE *fp=fopen(infile.Data(),"r");
+	FILE *fp=fopen(Form("LEP2/%s",infile.Data()),"r");
 
 	float _px,_py,_pz,_m,_charge,_pwflag;
 
-	TFile *hf = new TFile(Form("%s.root",infile.Data()), "RECREATE" );
+	TFile *hf = new TFile(Form("ROOTfiles/%s.root",infile.Data()), "RECREATE" );
 	TTree *tout = new TTree("t","");
 	TLorentzVector v;
     cout<<"step1"<<endl;
@@ -63,7 +63,7 @@ void scan (TString infile="cleaned_ALEPH_Data1999_196GeV_V0"){
 			cout<<"------------------------------------------------------------------------"<<endl; 
 			continue;
 		}  
-		cout<<_px<<"   "<<_py<<"   "<<_pz<<"   "<<endl;
+		cout<<_px<<"    "<<_py<<"    "<<_pz<<"    "<<endl;
 		pData.px[counterParticles]=_px;
 		pData.py[counterParticles]=_py;
 		pData.pz[counterParticles]=_pz;

@@ -1,6 +1,8 @@
 while read F  ; do
         echo $F
-          sed 's/px=//' $F.list >> temp_1.txt
+          rm LEP2/cleaned_$F
+          rm ROOTfiles/cleaned_$F.root
+          sed 's/px=//' LEP2/$F.list >> temp_1.txt
           sed 's/py=//' temp_1.txt >> temp_2.txt
           sed 's/pz=//' temp_2.txt >> temp_3.txt
           sed 's/m=//' temp_3.txt >> temp_4.txt
@@ -11,14 +13,13 @@ while read F  ; do
           sed 's/EVENT//' temp_8.txt >> temp_9.txt
           sed 's/ECM =//' temp_9.txt >> temp_10.txt
           sed 's/GEV//' temp_10.txt >> temp_11.txt
-          sed 's/ALEPH_DATA RUN =/   -999. -999. -999./' temp_11.txt >> cleaned_$F
-          echo "-999. -999. -999. -999. -999. -999." >> cleaned_$F
+          sed 's/ALEPH_DATA RUN =/   -999. -999. -999./' temp_11.txt >> LEP2/cleaned_$F
+          echo "-999. -999. -999. -999. -999. -999." >> LEP2/cleaned_$F
 
           rm temp_*
 
-           g++ scan.cc $(root-config --cflags --libs) -g -o scan.exe 
-           ./scan.exe cleaned_$F
-           rm scan.exe
+          g++ scan.cc $(root-config --cflags --libs) -g -o scan.exe 
+          ./scan.exe cleaned_$F
+          rm scan.exe
            
-done <shortlist
-#done <LEP2events_samples.list
+done <LEP2events_samples.list
