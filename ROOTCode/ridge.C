@@ -22,7 +22,7 @@ double dphi(double phi1,double phi2)
     return a;
 }
 
-void analysis(int isBelle=1, int maxevt=100000,int mult=70,int nbin=15){
+void analysis(int isBelle=1, int maxevt=100000,int mult=70,int nbin=20){
 
   TString filename;
   if(isBelle) filename="../Inputs/output-2.root";
@@ -80,7 +80,7 @@ void analysis(int isBelle=1, int maxevt=100000,int mult=70,int nbin=15){
     t1->GetEntry(i);
     
     int nparticles = nParticle;
-    cout<<"nparticles="<<nparticles<<endl;
+//    cout<<"nparticles="<<nparticles<<endl;
     if (nparticles<mult) continue;
   
     int nparticles2=-1000;
