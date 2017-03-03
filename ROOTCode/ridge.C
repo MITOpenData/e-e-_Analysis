@@ -23,7 +23,7 @@ double dphi(double phi1,double phi2)
     return a;
 }
 
-void analysis(int isBelle=1, int maxevt=0,int mult=30,int nbin=40,bool verbose=0){
+void analysis(int isBelle=1, int maxevt=10000,int mult=50,int nbin=40,bool verbose=0){
 
   TString filename;
   if(isBelle) filename="../Inputs/output-2.root"; 			
@@ -210,9 +210,10 @@ void analysis(int isBelle=1, int maxevt=0,int mult=30,int nbin=40,bool verbose=0
   for (int i=0;i<3;i++){
     minbin =  h_ratio->GetXaxis()->FindBin(etaranges[i]);
     maxbin =  h_ratio->GetXaxis()->FindBin(etaranges[i+1]);
-    h_deltaphi[i]  = (TH1D*) h_ratio->ProjectionY(Form("h_deltaphi_etamin%d_max%d",etaranges[i],etaranges[i+1]),minbin,maxbin);
+    //h_deltaphi[i]  = (TH1D*) h_ratio->ProjectionY(Form("h_deltaphi_etamin%d_max%d",etaranges[i],etaranges[i+1]),minbin,maxbin);
+    h_deltaphi[i]  = (TH1D*) h_ratio->ProjectionY(Form("h_deltaphi%d",i),minbin,maxbin);
     h_deltaphi[i]->Sumw2();
-    h_deltaphi[i]->SetName(Form("h_deltaphi_etamin%d_max%d",etaranges[i],etaranges[i+1]));
+    //h_deltaphi[i]->SetName(Form("h_deltaphi_etamin%d_max%d",etaranges[i],etaranges[i+1]));
     h_deltaphi[i]->GetZaxis()->CenterTitle();
     h_deltaphi[i]->GetXaxis()->SetTitle("#Delta#phi");
     h_deltaphi[i]->Scale(1./(maxbin-minbin+1));
@@ -224,20 +225,8 @@ void analysis(int isBelle=1, int maxevt=0,int mult=30,int nbin=40,bool verbose=0
   h_ratio->GetXaxis()->SetTitle("#Delta#eta");
   h_ratio->GetYaxis()->SetTitle("#Delta#phi");
   
-  TCanvas * c1 = new  TCanvas("c1","c1",1000,500); 
-  h_ratio->Draw("surf1");
 
-  TCanvas * c2 = new TCanvas("c2");
-  c2->Divide(3,1);
-  c2->cd(1);
-  h_deltaphi[0]->Draw("ep");
-  c2->cd(2);
-  h_deltaphi[1]->Draw("ep");
-  c2->cd(3);
-  h_deltaphi[2]->Draw("ep");
-
-
-  TFile*fout=new TFile(Form("myoutput_isBelle%d_minMult%d.root",isBelle,mult),"recreate");
+  TFile*fout=new TFile(Form("ROOTfiles/myoutput_isBelle%d_minMult%d.root",isBelle,mult),"recreate");
   fout->cd();
   h_2D->Write();
   h_2Dmix->Write();
@@ -246,22 +235,4 @@ void analysis(int isBelle=1, int maxevt=0,int mult=30,int nbin=40,bool verbose=0
   fout->Close();
   delete fout;
 
-  }
-  
-  
-  
-  
-  void plot(int isBelle=1,int mult=30){
-  
-    TFile*finput=new TFile(Form("myoutput_isBelle%d_minMult%d.root",isBelle,mult));
-    finput->cd();
-    TH2F*h_2D=(TH2F*)finput->Get("h_2D");
-    TH2F*h_2Dmix=(TH2F*)finput->Get("h_2Dmix");
-    TH2F*h_ratio=(TH2F*)finput->Get("h_ratio");
-    TH1D*h_deltaphi[0]=(TH1D*)finput->Get(Form("h_deltaphi_etamin0_max1"));
-    TH1D*h_deltaphi[1]=(TH1D*)finput->Get(Form("h_deltaphi_etamin1_max2"));
-    TH1D*h_deltaphi[2]=(TH1D*)finput->Get(Form("h_deltaphi_etamin2_max3"));
-    
-    h_ratio->Draw("surf1");
-    
   }
