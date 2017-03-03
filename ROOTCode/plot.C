@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <TStyle.h>
 
-void plot(int isBelle=1,int mult=40,int cuthigh=1){
+void plot(int isBelle=1,int mult=40,int cuthigh=0){
   
     TFile*finput=new TFile(Form("ROOTfiles/myoutput_isBelle%d_minMult%d.root",isBelle,mult));
     finput->cd();
@@ -38,16 +38,12 @@ void plot(int isBelle=1,int mult=40,int cuthigh=1){
     h_ratio->GetYaxis()->CenterTitle();
     h_ratio->GetXaxis()->CenterTitle();
     h_ratio->GetZaxis()->SetTitle("R(#Delta#eta, #Delta#phi)");
-    
-   
     h_ratio->GetXaxis()->SetTitleOffset(1.4);
     h_ratio->GetXaxis()->SetTitleSize(0.06);
     h_ratio->GetXaxis()->SetLabelSize(0.06);
-
     h_ratio->GetYaxis()->SetTitleOffset(1.4);
     h_ratio->GetYaxis()->SetTitleSize(0.06);
     h_ratio->GetYaxis()->SetLabelSize(0.06);
-
     h_ratio->GetZaxis()->SetTitleOffset(1.2);
     h_ratio->GetZaxis()->SetTitleSize(0.06);
     h_ratio->GetZaxis()->SetLabelSize(0.04);
@@ -60,13 +56,35 @@ void plot(int isBelle=1,int mult=40,int cuthigh=1){
     TH1D*h_deltaphi[3];
     for (int i=0;i<3;i++)h_deltaphi[i]=(TH1D*)finput->Get(Form("h_deltaphi%d",i));
     
-    TCanvas * c2 = new TCanvas("c2","c2",500,500);
-    c2->cd(1);
-    h_deltaphi[2]->Draw("ep");
-    c2->SaveAs(Form("Plots/canvasProjection_isBelle%d_mult%d.pdf",isBelle,mult));
+    h_deltaphi[0]->GetYaxis()->SetTitle("R( 0 < #Delta#eta < 1, #Delta#phi )");
+    h_deltaphi[1]->GetYaxis()->SetTitle("R( 1 < #Delta#eta < 2, #Delta#phi )");
+    h_deltaphi[2]->GetYaxis()->SetTitle("R( 2 < #Delta#eta < 3, #Delta#phi )");
+    
+    for (int i=0;i<3;i++){
+      h_deltaphi[i]->SetTitle("");
+      h_deltaphi[i]->GetYaxis()->SetTitleOffset(1.4);
+      h_deltaphi[i]->GetXaxis()->SetTitleOffset(1.);
+      h_deltaphi[i]->GetYaxis()->SetTitleSize(0.06);
+      h_deltaphi[i]->GetXaxis()->SetTitleSize(0.06);
+      h_deltaphi[i]->GetXaxis()->SetLabelSize(0.055);
+      h_deltaphi[i]->GetYaxis()->SetLabelSize(0.055);
+      //h_deltaphi[i]->SetMinimum(-6.);
+      //h_deltaphi[i]->SetMaximum(-3.);      
+      h_deltaphi[i]->GetYaxis()->SetLabelSize(0.055);
+      h_deltaphi[i]->Sumw2();
+    }
 
-    
-    
+
+    TCanvas * c2 = new TCanvas("c2","c2",1400,500);
+    c2->Divide(3);
+    c2->cd(1);
+    h_deltaphi[0]->Draw("pe");
+    c2->cd(2);
+    h_deltaphi[1]->Draw("pe");
+    c2->cd(3);
+    h_deltaphi[2]->Draw("pe");
+
+    c2->SaveAs(Form("Plots/canvasProjection_isBelle%d_mult%d.pdf",isBelle,mult));
 
 }
 
