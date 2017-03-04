@@ -5,6 +5,7 @@
 #include <TCanvas.h>
 #include <iostream>
 #include <stdlib.h>
+#include <TMath.h>
 
 using namespace std;
 
@@ -23,7 +24,7 @@ double dphi(double phi1,double phi2)
     return a;
 }
 
-void analysis(int isBelle=1, int maxevt=10000,int mult=50,int nbin=40,bool verbose=0){
+void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0){
 
   TString filename;
   if(isBelle) filename="../Inputs/output-2.root"; 			
@@ -195,10 +196,22 @@ void analysis(int isBelle=1, int maxevt=10000,int mult=50,int nbin=40,bool verbo
 
   averageN=averageN/nEventProcessed;
   cout <<"Average N = "<<averageN<<endl;
+  double ratio;
+  double errrel_ratio;
+  double errrel_num;
+  double errrel_den;
+  
+  
   // calculate the R correlation function
   for (int x=0;x<=h_2D->GetNbinsX();x++){
      for (int y=0;y<=h_2D->GetNbinsY();y++){
-        if (h_2Dmix->GetBinContent(x,y)>0) {h_ratio->SetBinContent(x,y,(averageN-1)*(h_2D->GetBinContent(x,y)/h_2Dmix->GetBinContent(x,y)-1));}
+        ratio=(averageN-1)*(h_2D->GetBinContent(x,y)/h_2Dmix->GetBinContent(x,y)-1);
+        if (h_2Dmix->GetBinContent(x,y)>0) {h_ratio->SetBinContent(x,y,ratio);
+          errrel_num=h_2D->GetBinError(x,y)/h_2D->GetBinContent(x,y);
+          errrel_den=h_2Dmix->GetBinError(x,y)/h_2Dmix->GetBinContent(x,y);
+          errrel_ratio=TMath::Sqrt(errrel_num*errrel_num+errrel_den*errrel_den);
+          h_ratio->SetBinError(x,y,ratio*errrel_ratio);
+        }
      }
   }
 
