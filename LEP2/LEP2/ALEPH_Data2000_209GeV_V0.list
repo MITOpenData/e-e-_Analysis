@@ -1,0 +1,86 @@
+ALEPH_DATA RUN = 53587 EVENT  3570 ECM =  208.591 GEV
+px=  -0.086 py=  -0.166 pz=   0.036 m=   0.140 charge  1.0 pwflag    0
+px=  39.159 py=   4.753 pz=   4.620 m=   0.138 charge -1.0 pwflag    0
+px=  -0.678 py=  -0.137 pz=  -0.687 m=   0.140 charge -1.0 pwflag    0
+px=  -2.599 py=  -0.828 pz=  -2.021 m=   0.140 charge  1.0 pwflag    0
+px=  -1.113 py=   0.701 pz=  -0.518 m=   0.140 charge -1.0 pwflag    0
+px=  -0.582 py=   0.074 pz=  -0.154 m=   0.140 charge  1.0 pwflag    0
+px=  -1.165 py=  -0.557 pz=  -0.504 m=   0.140 charge  1.0 pwflag    0
+px=   1.504 py=   0.037 pz=   0.225 m=   0.140 charge -1.0 pwflag    1
+px=   0.728 py=   4.980 pz=   3.880 m=   0.140 charge  1.0 pwflag    2
+px=  -0.240 py=  -0.166 pz=  -0.324 m=   0.140 charge -1.0 pwflag    0
+px=  -0.118 py=   0.163 pz=   0.318 m=   0.140 charge -1.0 pwflag    0
+px=  -2.545 py=  -0.571 pz=  -1.739 m=   0.140 charge -1.0 pwflag    0
+px=  -1.331 py=  -0.267 pz=  -0.812 m=   0.140 charge  1.0 pwflag    0
+px=  -0.907 py=  -0.420 pz=  -0.352 m=   0.140 charge  1.0 pwflag    0
+px=  -0.337 py=  -0.158 pz=  -0.413 m=   0.140 charge -1.0 pwflag    0
+px=   0.054 py=   0.229 pz=  -0.231 m=   0.140 charge  1.0 pwflag    0
+px=  17.858 py=   1.616 pz=   2.124 m=   0.000 charge  0.0 pwflag    4
+px=  -2.127 py=  -0.256 pz=  -1.598 m=   0.000 charge  0.0 pwflag    4
+px=   0.081 py=   0.824 pz=   0.662 m=   0.000 charge  0.0 pwflag    4
+px=   0.011 py=   1.607 pz=   1.491 m=   0.000 charge  0.0 pwflag    4
+px=   0.016 py=   1.408 pz=   1.209 m=   0.001 charge  0.0 pwflag    4
+px=  -0.088 py=   0.625 pz=   0.564 m=   0.000 charge  0.0 pwflag    4
+px=   0.017 py=   1.666 pz=   1.047 m=   0.001 charge  0.0 pwflag    4
+px=  -1.368 py=  -0.434 pz=  -0.679 m=   0.000 charge  0.0 pwflag    4
+px= -35.361 py= -10.773 pz= -21.591 m=   0.000 charge  0.0 pwflag    4
+px=  -1.049 py=  -0.188 pz=  -0.627 m=   0.000 charge  0.0 pwflag    4
+px=  -1.534 py=  -0.438 pz=  -1.115 m=   0.001 charge  0.0 pwflag    4
+px=  -1.943 py=  -0.416 pz=  -1.478 m=   0.000 charge  0.0 pwflag    4
+px=  34.545 py=   4.968 pz=   4.173 m=   0.000 charge  0.0 pwflag    5
+px=  -1.365 py=  -0.414 pz=  -0.845 m=   0.000 charge  0.0 pwflag    5
+END_EVENT
+ALEPH_DATA RUN = 55705 EVENT  1723 ECM =  208.632 GEV
+px=  -9.052 py=  12.585 pz=   6.661 m=   0.140 charge  1.0 pwflag    0
+px=  -1.197 py=   1.851 pz=   0.938 m=   0.140 charge -1.0 pwflag    0
+px=  -1.297 py=   1.158 pz=   0.320 m=   0.140 charge  1.0 pwflag    0
+px=  -0.149 py=   0.572 pz=   0.038 m=   0.140 charge -1.0 pwflag    0
+px=   9.761 py= -12.565 pz=  24.779 m=   0.140 charge -1.0 pwflag    0
+px=   2.048 py=  -3.121 pz=   5.907 m=   0.140 charge  1.0 pwflag    0
+px=   0.152 py=  -0.504 pz=   0.868 m=   0.140 charge  1.0 pwflag    0
+px=  -0.213 py=   0.263 pz=  -0.034 m=   0.140 charge  1.0 pwflag    0
+px=   0.354 py=   0.095 pz=   0.777 m=   0.140 charge  1.0 pwflag    0
+px=   0.181 py=  -0.311 pz=   0.696 m=   0.140 charge -1.0 pwflag    0
+px=  -5.311 py=   6.914 pz=   3.384 m=   0.000 charge  0.0 pwflag    4
+px=   5.683 py=  -8.996 pz=  20.342 m=   0.000 charge  0.0 pwflag    4
+px=   1.226 py=  -1.845 pz=   3.599 m=   0.000 charge  0.0 pwflag    4
+px=   0.394 py=  -0.443 pz=   0.819 m=   0.000 charge  0.0 pwflag    4
+px=   2.832 py=  -1.854 pz=   6.148 m=   0.037 charge  0.0 pwflag    5
+END_EVENT
+ALEPH_DATA RUN = 58363 EVENT    48 ECM =  206.759 GEV
+px=  -3.764 py=  -0.096 pz=  -0.192 m=   0.140 charge -1.0 pwflag    0
+px=  43.912 py= -22.594 pz=  51.423 m=   0.144 charge -1.0 pwflag    1
+px=  -5.622 py=   1.920 pz=  -0.121 m=   0.140 charge -1.0 pwflag    0
+px=  -5.181 py=   0.029 pz=  -0.312 m=   0.140 charge  1.0 pwflag    0
+px=  -3.148 py=   0.980 pz=   0.420 m=   0.140 charge -1.0 pwflag    0
+px=  -2.636 py=   0.092 pz=   0.100 m=   0.140 charge  1.0 pwflag    0
+px=  -1.236 py=  -0.519 pz=  -0.167 m=   0.140 charge -1.0 pwflag    0
+px=  -0.407 py=   0.087 pz=  -0.191 m=   0.140 charge  1.0 pwflag    0
+px=  -0.924 py=   0.216 pz=  -1.302 m=   0.140 charge  1.0 pwflag    0
+px=  -0.343 py=  -0.124 pz=   0.353 m=   0.140 charge  1.0 pwflag    0
+px=  -5.786 py=   1.431 pz=   0.433 m=   0.140 charge  1.0 pwflag    0
+px=  -0.057 py=  -0.606 pz=  -1.092 m=   0.140 charge  1.0 pwflag    0
+px=   0.492 py=  -1.498 pz=  -3.194 m=   0.140 charge -1.0 pwflag    0
+px=   0.791 py=  -2.909 pz=  -7.482 m=   0.140 charge -1.0 pwflag    0
+px=   0.111 py=  -0.137 pz=  -0.399 m=   0.140 charge -1.0 pwflag    0
+px=  -2.932 py=   0.388 pz=  -0.722 m=   0.140 charge -1.0 pwflag    0
+px=  -0.169 py=   0.505 pz=  -0.219 m=   0.140 charge  1.0 pwflag    0
+px=  -0.154 py=  -0.369 pz=  -0.944 m=   0.140 charge -1.0 pwflag    0
+px=  -0.756 py=   0.272 pz=  -0.676 m=   0.140 charge  1.0 pwflag    0
+px=  -1.202 py=  -0.238 pz=  -0.180 m=   0.001 charge  0.0 pwflag    4
+px=  -3.823 py=   0.600 pz=   0.339 m=   0.000 charge  0.0 pwflag    4
+px=   0.178 py=  -0.548 pz=  -1.322 m=   0.000 charge  0.0 pwflag    4
+px=   0.134 py=  -0.349 pz=  -0.833 m=   0.000 charge  0.0 pwflag    4
+px=   1.374 py=  -1.055 pz=  -3.656 m=   0.000 charge  0.0 pwflag    4
+px=  -0.020 py=  -0.339 pz=  -0.783 m=   0.000 charge  0.0 pwflag    4
+px=  -3.422 py=   1.639 pz=   0.207 m=   0.000 charge  0.0 pwflag    4
+px=  -0.907 py=   0.496 pz=  -0.023 m=   0.000 charge  0.0 pwflag    4
+px=  -1.102 py=   0.462 pz=  -0.124 m=   0.000 charge  0.0 pwflag    4
+px=  -1.374 py=   0.102 pz=  -0.238 m=   0.017 charge  0.0 pwflag    4
+px=  -3.265 py=   0.352 pz=   0.373 m=   0.026 charge  0.0 pwflag    5
+px=  -0.987 py=  -1.615 pz=  -0.801 m=   0.000 charge  0.0 pwflag    5
+px=   0.155 py=  -0.279 pz=  -0.754 m=   0.000 charge  0.0 pwflag    5
+px=   0.298 py=  -0.461 pz=  -1.629 m=   0.001 charge  0.0 pwflag    5
+px=  -2.211 py=   1.151 pz=   0.352 m=   0.022 charge  0.0 pwflag    5
+END_EVENT
+END_FILE
