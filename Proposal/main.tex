@@ -88,109 +88,17 @@ preprint,
 
 %\tableofcontents
 
-\section{Introduction}
+%%% Introduction %%%
+\input{introduction.tex}
 
-Two-particle correlations in high-energy collisions provide valuable information for characterizing Quantum Chromodynamics and have been studied previously for a broad range of collision energies in proton-proton (pp), proton-nucleus (pA), and nucleus-nucleus (AA) collisions. Such measurements can elucidate the underlying mechanism of particle production and reveal possible collective effects resulting from the high particle densities accessible in these collisions.
+%%% Analysis %%%
+\input{analysis.tex}
 
-Studies of two-particle angular correlations are typically performed using two-dimensional $\Delta\eta-\Delta\phi$ correlation functions, where $\Delta\phi$ is the difference in the azimuthal angle $\phi$ between the two particles and $\Delta\eta$ is the difference in pseudorapidity $\eta = -\ln(\tan(\theta/2))$. The polar angle $\theta$ is defined relative to the counterclockwise beam direction.
+%%% Results %%%
+\input{result.tex}
 
-Of particular interest in studies of collective effects is the long-range (large |$\delta\eta$|) structure of the two-particle correlation functions. In this region, the function is less susceptible to known sources of correlations such as resonance decays and fragmentation function of energetic jets. Measurements in high-energy AA collisions have shown significant modification of the long-range structure compared with minimum-bias pp collisions, over a very wide range of collision energies. This long-range correlations are commonly interpreted as a consequence of the hydrodynamical flow of the produced strongly interacting medium and usually characterized by the Fourier components of the azimuthal particle distributions. The extraction of the second and third Fourier components is of great interest because it is closely related to initial collision geometry and its fluctuation. Those measurements allows the extraction of the fundamental transport properties of the medium using hydrodynamic models.
-
-Recently, measurements in pp collisions and pPb collisions have revealed the emergence of long-range, near-side ($\Delta\phi\sim 0$) correlations in the selection of collisions with very high number of final state particles. This ``ridge-like'' correlation has inspired a large variety of theoretical models. Moreover, it was found that the elliptic flow signal exists also in the lowest energy AA collisions at the Relativistic Heavy Ion Collider. 
-
-\subsection{Two-Particle Correlation Function}
-
-In this analysis with BELLE open data, identified protons, pions and kaons with transverse momentum between 0.1 and 4.0 GeV/$c$ are selected for the correlation function analysis. High multiplicity events are sampled using the total number of selected proton, pions and kaons (hadron multiplicity $N$) in each event. The first step in extracting the correlation function was to divide the sample into bins in the hadron multiplicity. Following an approach similar to that in [pp ridge], the $p_{T}$-inclusive charged two-particle correlation function as a function of $\Delta\eta$ and $\Delta\phi$ is defined as follows:
-
-\begin{eqnarray}
-\label{eq:R}
-R(\Delta\eta,\Delta\phi) = \left<(\left<N\right>-1)\left(\frac{S_N(\Delta\eta,\Delta\phi)}{B_N(\Delta\eta,\Delta\phi)}\right)\right>_{N bins}
-\end{eqnarray}
-
-where $S_N$ and $B_N$ are the signal and random background distributions, defined in Eq.~\ref{eq:S} and \ref{eq:B} respectively, $\Delta\eta(=\eta_1-\eta_2)$ and $\Delta\phi(=\phi_1-\phi_2)$ are the differences in pseudorapidity and azimuthal angle between the two particles, $<N>$ is the number of hadrons per events averaged over the hadron multiplicity bin, and the final $R(\Delta\eta,\Delta\phi)$ is found by averaging over hadron multiplicity bins. The quantities of $\Delta\eta$ and $\Delta\phi$ are always taken to be positive and used to fill one quadrant of the $\Delta\eta,\Delta\phi$ histograms with the other three quadrants filled by reflection.
-
-For each hadron multiplicity bin, the signal distribution:
-\begin{eqnarray}
-\label{eq:S}
-S(\Delta\eta,\Delta\phi) = \frac{1}{N(N-1)}\frac{d^2 N^{\rm signal}}{d\Delta\eta d\Delta\phi}
-\end{eqnarray}
-
-was determined by counting all particles pairs within each event, using the weighting factor $N(N-1)$, then averaging over all events. This represents the charged two-particle pair density function normalized to unit integral. The background distribution:
-
-\begin{eqnarray}
-\label{eq:B}
-B(\Delta\eta,\Delta\phi) = \frac{1}{N(N-1)}\frac{d^2 N^{\rm mixed}}{d\Delta\eta d\Delta\phi}
-\end{eqnarray}
-
-denotes the distribution of uncorrelated particle pairs representing a product of two single-particle distributions, also normalized to unit integral. This distribution was constructed by randomly selecting two different events within the same hadron multiplicity bin and pairing every particle from one event with every particle in the other (in this case, the normalization factor $N^2$ corresponds to $N_1N_2$ event-by-event). 
-
-Dividing the background in this way corrects for detector effects such as tracking inefficiencies, non-uniform acceptance, etc. The ratio of signal to background was then weighted by the hadron multiplicity factor $<N>-1$, where $<N>$ is the average multiplicity in each bin, and averaged over all the multiplicity bins to arrive at the final two-particle correlation function $R(\Delta\eta,\Delta\phi)$. 
-
-\subsection{Preliminary Results from BELLE Open Data}
-
-Figure~\ref{fig:multPID} shows the multiplicity distribution of indentified particles. The dominant contribution to the total multiplicity is pions and the charged hadron multiplicity distribution $N$ is shown in Fig.~\ref{fig:multHadron} and the $N$ reach the level of 70
-
-\begin{figure}[!htb]
-\begin{center}
-\includegraphics[width=.32\textwidth]{figures/pion_mult.pdf}
-\includegraphics[width=.32\textwidth]{figures/kaon_mult.pdf}
-\includegraphics[width=.32\textwidth]{figures/proton_mult.pdf}
-\caption{Multiplicity distributions of pions (left), kaons (middle), protons (right) }
-\label{fig:multPID} 
-\end{center}
-\end{figure}
-
-\begin{figure}[!htb]
-\begin{center}
-\includegraphics[width=.45\textwidth]{figures/total_mult.pdf}
-\caption{Multiplicity distribution of charged hadrons (protons, kaons and pions) }
-\label{fig:multHadron} 
-\end{center}
-\end{figure}
-
-Two particle correlation functions are studied for the first time and the preliminary results from BELLE open data is shwon in Fig.~\ref{fig:ridgeBelle}. For low-multiplicity selection $N>20$, the dominant features are the correlation peak near $(\Delta\eta,\Delta\phi)=(0,0$ for pairs of particles originating from the same jet and the elongated structure at $\Delta\phi\sim\pi$ for pairs of particles from back-to-back jets. Moving from low-multiplicity to high-multiplicity selection, the same-side jet peak and back-to-back correlation structures can be observed. However, the relative contribution of the jet peak become smaller compared to the broad structure at small $\Delta\phi$. To check if a long-range ridge structure exists, similar to that seen in high-multiplicity pp and in AA collisions over a wide range of energies, one-dimensional $\Delta\phi$ distribution over differen $|\Delta\eta|$ interval are shown in Fig~\ref{fig:ProjectionMult50}. A hint of signal at $\Delta\phi=0$ could be seen in the BELLE open data, which motivates a studies with the highest statistics data taken by the BELLE collaboration.
-
-
-\begin{figure}[!htb]
-\begin{center}
-\includegraphics[width=.45\textwidth]{figures/canvasRidgeBelleMult20CutHigh0.pdf}
-\includegraphics[width=.45\textwidth]{figures/canvasRidgeBelleMult40CutHigh0.pdf}
-\includegraphics[width=.45\textwidth]{figures/canvasRidgeBelleMult50CutHigh0.pdf}
-\caption{Two-particle correlation functions versus $\Delta\eta$ and $\Delta\phi$ in $e^{+}e^{-}$ collisions for events with particle multiplicity $>$ 20 (top left), 40 (top right), 50 (bottom).}
-\label{fig:ridgeBelle} 
-\end{center}
-\end{figure}
-
-
-%\begin{figure}[!htb]
-%\begin{center}
-%\includegraphics[width=.95\textwidth]{figures/canvasProjection_isBelle1_mult20.pdf}
-%\caption{$\rm \Delta R$ ($\rm \Delta\phi$) for events with total multiplicity N$>=$ 20. }
-%\label{fig:ProjectionMult20} 
-%\end{center}
-%\end{figure}
-
-%\begin{figure}[!htb]
-%\begin{center}
-%\includegraphics[width=.95\textwidth]{figures/canvasProjection_isBelle1_mult40.pdf}
-%\caption{$\rm \Delta R$ ($\rm \Delta\phi$) for events with total multiplicity N$>=$ 40. }
-%\label{fig:ProjectionMult40} 
-%\end{center}
-%\end{figure}
-
-\begin{figure}[!htb]
-\begin{center}
-\includegraphics[width=.95\textwidth]{figures/canvasProjection_isBelle1_mult50.pdf}
-\caption{$\rm \Delta R$ ($\rm \Delta\phi$) for events with total multiplicity N$>=$ 50. }
-\label{fig:ProjectionMult50} 
-\end{center}
-\end{figure}
-
-
-\section{Summary}
-
-The BELLE open data has been used to measure angular correlations between two charged particles. A hint of long-range ridge-like structure at the near-side ($\Delta\phi\sim 0$) is seen in the BELLE data. The observation of long-range near-side ridge like correlation (or the non-observation) will bring significant impact to the interpretation of the pp and AA data.
-
+%%% Summary %%%
+\input{summary.tex}
 
 
 \end{document}

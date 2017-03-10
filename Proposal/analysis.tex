@@ -1,0 +1,27 @@
+\section{Two-Particle Correlation Function}
+
+In this analysis with BELLE open data, identified protons, pions and kaons with transverse momentum between 0.1 and 4.0 GeV/$c$ are selected for the correlation function analysis. High multiplicity events are sampled using the total number of selected proton, pions and kaons (hadron multiplicity $N$) in each event. The first step in extracting the correlation function was to divide the sample into bins in the hadron multiplicity. Following an approach similar to that in [pp ridge], the $p_{T}$-inclusive charged two-particle correlation function as a function of $\Delta\eta$ and $\Delta\phi$ is defined as follows:
+
+\begin{eqnarray}
+\label{eq:R}
+R(\Delta\eta,\Delta\phi) = \left<(\left<N\right>-1)\left(\frac{S_N(\Delta\eta,\Delta\phi)}{B_N(\Delta\eta,\Delta\phi)}\right)\right>_{N bins}
+\end{eqnarray}
+
+where $S_N$ and $B_N$ are the signal and random background distributions, defined in Eq.~\ref{eq:S} and \ref{eq:B} respectively, $\Delta\eta(=\eta_1-\eta_2)$ and $\Delta\phi(=\phi_1-\phi_2)$ are the differences in pseudorapidity and azimuthal angle between the two particles, $<N>$ is the number of hadrons per events averaged over the hadron multiplicity bin, and the final $R(\Delta\eta,\Delta\phi)$ is found by averaging over hadron multiplicity bins. The quantities of $\Delta\eta$ and $\Delta\phi$ are always taken to be positive and used to fill one quadrant of the $\Delta\eta,\Delta\phi$ histograms with the other three quadrants filled by reflection.
+
+For each hadron multiplicity bin, the signal distribution:
+\begin{eqnarray}
+\label{eq:S}
+S(\Delta\eta,\Delta\phi) = \frac{1}{N(N-1)}\frac{d^2 N^{\rm signal}}{d\Delta\eta d\Delta\phi}
+\end{eqnarray}
+
+was determined by counting all particles pairs within each event, using the weighting factor $N(N-1)$, then averaging over all events. This represents the charged two-particle pair density function normalized to unit integral. The background distribution:
+
+\begin{eqnarray}
+\label{eq:B}
+B(\Delta\eta,\Delta\phi) = \frac{1}{N(N-1)}\frac{d^2 N^{\rm mixed}}{d\Delta\eta d\Delta\phi}
+\end{eqnarray}
+
+denotes the distribution of uncorrelated particle pairs representing a product of two single-particle distributions, also normalized to unit integral. This distribution was constructed by randomly selecting two different events within the same hadron multiplicity bin and pairing every particle from one event with every particle in the other (in this case, the normalization factor $N^2$ corresponds to $N_1N_2$ event-by-event). 
+
+Dividing the background in this way corrects for detector effects such as tracking inefficiencies, non-uniform acceptance, etc. The ratio of signal to background was then weighted by the hadron multiplicity factor $<N>-1$, where $<N>$ is the average multiplicity in each bin, and averaged over all the multiplicity bins to arrive at the final two-particle correlation function $R(\Delta\eta,\Delta\phi)$. 
