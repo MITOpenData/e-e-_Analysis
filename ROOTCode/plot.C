@@ -85,12 +85,12 @@ void plot(int isBelle=1,int mult=30,int cuthigh=0){
     TCanvas * c1_2 = new TCanvas("c1_2","c1_2",600,500);
     c1_2->SetLeftMargin(0.23);
     c1_2->SetRightMargin(0.05);
-    h_deltaphi[0]->Draw("pe");
+    h_deltaphi[1]->Draw("pe");
     c1_2->SaveAs(Form("Plots/canvasProjection_isBelle%d_mult%d_eta12.pdf",isBelle,mult));
     TCanvas * c2_3 = new TCanvas("c2_3","c2_3",600,500);
     c2_3->SetLeftMargin(0.23);
     c2_3->SetRightMargin(0.05);
-    h_deltaphi[0]->Draw("pe");
+    h_deltaphi[2]->Draw("pe");
     c2_3->SaveAs(Form("Plots/canvasProjection_isBelle%d_mult%d_eta23.pdf",isBelle,mult));
 
 }
