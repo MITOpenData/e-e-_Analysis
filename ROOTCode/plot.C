@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <TStyle.h>
 
-void plot(int isBelle=1,int mult=40,int cuthigh=0){
+void plot(int isBelle=1,int mult=30,int cuthigh=0){
   
     TFile*finput=new TFile(Form("ROOTfiles/myoutput_isBelle%d_minMult%d.root",isBelle,mult));
     finput->cd();
@@ -26,7 +26,7 @@ void plot(int isBelle=1,int mult=40,int cuthigh=0){
     c1->SetBorderSize(0);
     c1->SetTickx(1);
     c1->SetTicky(1);
-    c1->SetLeftMargin(0.17);
+    c1->SetLeftMargin(0.22);
     c1->SetRightMargin(0.08);
     c1->SetTopMargin(0.1);
     c1->SetBottomMargin(0.15);
@@ -37,15 +37,15 @@ void plot(int isBelle=1,int mult=40,int cuthigh=0){
     h_ratio->GetXaxis()->CenterTitle();
     h_ratio->GetYaxis()->CenterTitle();
     h_ratio->GetXaxis()->CenterTitle();
-    h_ratio->GetZaxis()->SetTitle("R(#Delta#eta, #Delta#phi)");
+    h_ratio->GetZaxis()->SetTitle(" #frac{1}{N_{trig}} #frac{d^{2}N^{pair}}{d#Delta#eta#Delta#phi}");
     h_ratio->GetXaxis()->SetTitleOffset(1.4);
     h_ratio->GetXaxis()->SetTitleSize(0.06);
     h_ratio->GetXaxis()->SetLabelSize(0.06);
     h_ratio->GetYaxis()->SetTitleOffset(1.4);
     h_ratio->GetYaxis()->SetTitleSize(0.06);
     h_ratio->GetYaxis()->SetLabelSize(0.06);
-    h_ratio->GetZaxis()->SetTitleOffset(1.2);
-    h_ratio->GetZaxis()->SetTitleSize(0.06);
+    h_ratio->GetZaxis()->SetTitleOffset(2.3);
+    h_ratio->GetZaxis()->SetTitleSize(0.038);
     h_ratio->GetZaxis()->SetLabelSize(0.04);
     if(cuthigh) h_ratio->GetZaxis()->SetRangeUser(-6,-3);
     //h_ratio->SetNdivisions(1,"Z");
@@ -56,15 +56,17 @@ void plot(int isBelle=1,int mult=40,int cuthigh=0){
     TH1D*h_deltaphi[3];
     for (int i=0;i<3;i++)h_deltaphi[i]=(TH1D*)finput->Get(Form("h_deltaphi%d",i));
     
-    h_deltaphi[0]->GetYaxis()->SetTitle("R( 0 < #Delta#eta < 1, #Delta#phi )");
-    h_deltaphi[1]->GetYaxis()->SetTitle("R( 1 < #Delta#eta < 2, #Delta#phi )");
-    h_deltaphi[2]->GetYaxis()->SetTitle("R( 2 < #Delta#eta < 3, #Delta#phi )");
+    
+    
+    h_deltaphi[0]->GetYaxis()->SetTitle(" #frac{1}{N_{trig}} #frac{dN^{pair}}{d#Delta#phi} (0<#Delta#eta<1)");
+    h_deltaphi[1]->GetYaxis()->SetTitle(" #frac{1}{N_{trig}} #frac{dN^{pair}}{d#Delta#phi} (1<#Delta#eta<2)");
+    h_deltaphi[2]->GetYaxis()->SetTitle(" #frac{1}{N_{trig}} #frac{dN^{pair}}{d#Delta#phi} (2<#Delta#eta<3)");
     
     for (int i=0;i<3;i++){
       h_deltaphi[i]->SetTitle("");
-      h_deltaphi[i]->GetYaxis()->SetTitleOffset(1.4);
+      h_deltaphi[i]->GetYaxis()->SetTitleOffset(1.9);
       h_deltaphi[i]->GetXaxis()->SetTitleOffset(1.);
-      h_deltaphi[i]->GetYaxis()->SetTitleSize(0.06);
+      h_deltaphi[i]->GetYaxis()->SetTitleSize(0.05);
       h_deltaphi[i]->GetXaxis()->SetTitleSize(0.06);
       h_deltaphi[i]->GetXaxis()->SetLabelSize(0.055);
       h_deltaphi[i]->GetYaxis()->SetLabelSize(0.055);
@@ -75,16 +77,21 @@ void plot(int isBelle=1,int mult=40,int cuthigh=0){
     }
 
 
-    TCanvas * c2 = new TCanvas("c2","c2",1400,500);
-    c2->Divide(3);
-    c2->cd(1);
+    TCanvas * c0_1 = new TCanvas("c0_1","c0_1",600,500);
+    c0_1->SetLeftMargin(0.23);
+    c0_1->SetRightMargin(0.05);
     h_deltaphi[0]->Draw("pe");
-    c2->cd(2);
-    h_deltaphi[1]->Draw("pe");
-    c2->cd(3);
-    h_deltaphi[2]->Draw("pe");
-
-    c2->SaveAs(Form("Plots/canvasProjection_isBelle%d_mult%d.pdf",isBelle,mult));
+    c0_1->SaveAs(Form("Plots/canvasProjection_isBelle%d_mult%d_eta01.pdf",isBelle,mult));
+    TCanvas * c1_2 = new TCanvas("c1_2","c1_2",600,500);
+    c1_2->SetLeftMargin(0.23);
+    c1_2->SetRightMargin(0.05);
+    h_deltaphi[0]->Draw("pe");
+    c1_2->SaveAs(Form("Plots/canvasProjection_isBelle%d_mult%d_eta12.pdf",isBelle,mult));
+    TCanvas * c2_3 = new TCanvas("c2_3","c2_3",600,500);
+    c2_3->SetLeftMargin(0.23);
+    c2_3->SetRightMargin(0.05);
+    h_deltaphi[0]->Draw("pe");
+    c2_3->SaveAs(Form("Plots/canvasProjection_isBelle%d_mult%d_eta23.pdf",isBelle,mult));
 
 }
 

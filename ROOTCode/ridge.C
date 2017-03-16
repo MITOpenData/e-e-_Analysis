@@ -24,7 +24,7 @@ double dphi(double phi1,double phi2)
     return a;
 }
 
-void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0){
+void analysis(int isBelle=1, int maxevt=0,int mult=30,int nbin=40,bool verbose=0){
 
   TString filename;
   if(isBelle) filename="../Inputs/output-2.root"; 			
@@ -88,6 +88,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
   
     double averageN=0;
     double nEventProcessed=0;
+    double nEventInMultBin=0;
     for (Int_t i=0;i<nevent_process;i++) {
   
     if (i%10000==0) cout <<i<<"/"<<nevent_process<<endl;
@@ -122,6 +123,8 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
 
     //if (nparticles<mult) continue;
     if (N<mult) continue;
+    
+    nEventInMultBin++;
 
     // find a mixed event
     //	cout <<N<<endl;
@@ -168,10 +171,10 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
         if (pid2!=PION&&pid2!=PROTON&&pid2!=KAON&&!(!isBelle&&pwflag2==0)) continue;
         if(pt2<ptMin||pt2>ptMax) continue;
         
-        h_2D->Fill(eta1-eta2,dphi(phi1,phi2),1./N/(N-1));    
-        h_2D->Fill(eta1-eta2,dphi(phi2,phi1),1./N/(N-1));    
-        h_2D->Fill(eta2-eta1,dphi(phi1,phi2),1./N/(N-1));    
-        h_2D->Fill(eta2-eta1,dphi(phi2,phi1),1./N/(N-1));    
+        h_2D->Fill(eta1-eta2,dphi(phi1,phi2),1./N);    
+        h_2D->Fill(eta1-eta2,dphi(phi2,phi1),1./N);    
+        h_2D->Fill(eta2-eta1,dphi(phi1,phi2),1./N);    
+        h_2D->Fill(eta2-eta1,dphi(phi2,phi1),1./N);    
       }//end of second loop 
 
       // Background loop, calculate B correlation function from mixed event
@@ -185,15 +188,19 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
         if (pidmix!=PION&&pidmix!=PROTON&&pidmix!=KAON&&!(!isBelle&&pwflagmix==0)) continue;
         if(ptmix<ptMin||ptmix>ptMax) continue;
         
-        h_2Dmix->Fill(eta1-etamix,dphi(phi1,phimix),1./N/N2);    
-        h_2Dmix->Fill(eta1-etamix,dphi(phimix,phi1),1./N/N2);    
-        h_2Dmix->Fill(etamix-eta1,dphi(phi1,phimix),1./N/N2);    
-        h_2Dmix->Fill(etamix-eta1,dphi(phimix,phi1),1./N/N2);    
+        h_2Dmix->Fill(eta1-etamix,dphi(phi1,phimix),1./N);    
+        h_2Dmix->Fill(eta1-etamix,dphi(phimix,phi1),1./N);    
+        h_2Dmix->Fill(etamix-eta1,dphi(phi1,phimix),1./N);    
+        h_2Dmix->Fill(etamix-eta1,dphi(phimix,phi1),1./N);    
       }//end of second loop 
 
     }// end of first loop
   }// end of loop over events
-
+  
+  
+  h_2Dmix->Scale(1./nEventInMultBin);
+  h_2D->Scale(1./nEventInMultBin);
+  
   averageN=averageN/nEventProcessed;
   cout <<"Average N = "<<averageN<<endl;
   double ratio;
@@ -201,15 +208,27 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
   double errrel_num;
   double errrel_den;
   
+    // calculate the  correlation function
   
-  // calculate the R correlation function
+  double b00_x=h_2Dmix->GetXaxis()->FindBin(0.);
+  double b00_y=h_2Dmix->GetYaxis()->FindBin(0.);
+  double B00=h_2Dmix->GetBinContent(b00_x,b00_y);
+  double errrel_B00=h_2Dmix->GetBinError(b00_x,b00_y)/B00;
+  
+  cout<<"value of B(0,0)="<<B00<<endl;
+
+
+  cout<<"x axis "<<h_2Dmix->GetXaxis()->GetBinCenter(b00_x);
+  cout<<"y axis "<<h_2Dmix->GetYaxis()->GetBinCenter(b00_y);
+  
   for (int x=0;x<=h_2D->GetNbinsX();x++){
      for (int y=0;y<=h_2D->GetNbinsY();y++){
-        ratio=(averageN-1)*(h_2D->GetBinContent(x,y)/h_2Dmix->GetBinContent(x,y)-1);
-        if (h_2Dmix->GetBinContent(x,y)>0) {h_ratio->SetBinContent(x,y,ratio);
+        if(h_2Dmix->GetBinContent(x,y)>0){
+          ratio=B00*(h_2D->GetBinContent(x,y)/h_2Dmix->GetBinContent(x,y));
           errrel_num=h_2D->GetBinError(x,y)/h_2D->GetBinContent(x,y);
           errrel_den=h_2Dmix->GetBinError(x,y)/h_2Dmix->GetBinContent(x,y);
-          errrel_ratio=TMath::Sqrt(errrel_num*errrel_num+errrel_den*errrel_den);
+          errrel_ratio=TMath::Sqrt(errrel_num*errrel_num+errrel_den*errrel_den+errrel_B00*errrel_B00);
+          h_ratio->SetBinContent(x,y,ratio);
           h_ratio->SetBinError(x,y,ratio*errrel_ratio);
         }
      }
