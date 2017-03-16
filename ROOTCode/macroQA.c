@@ -39,22 +39,41 @@ void macroQA(int maxevt=0,int mult=0,int nbin=20){
   
   //
 
-  // ETA
-  TCanvas *c1 = new TCanvas("Eta","Eta",600,600);
+  //Pion ETA
+  TCanvas *c1 = new TCanvas("Pion Eta","Pion Eta",600,600);
   gPad->SetLogy();
   gStyle->SetOptStat(0);
-  TH1F *pion_eta = new TH1F ("pion_eta","#eta distribution of particles",100,-20.,20.);
-  TH1F *proton_eta = new TH1F ("proton_eta","proton",100,-20.,20.);
-  TH1F *kaon_eta = new TH1F ("proton_eta","pion",100,-20.,20.);
+  TH1F *pion_eta = new TH1F ("pion_eta","pion eta distribution",100,-20.,20.);
   pion_eta->SetStats(0);
   pion_eta->Draw();
-  pion_eta->GetXaxis()->SetTitle("#eta");
+  pion_eta->GetXaxis()->SetTitle("eta");
   pion_eta->GetYaxis()->SetTitle("Number of Events");
   pion_eta->GetYaxis()->SetTitleOffset(1.4);
-  proton_eta->SetLineColor(kRed);
-  proton_eta->Draw("same");
-  kaon_eta->SetLineColor(kGreen);
-  kaon_eta->Draw("same");
+
+
+  // Proton ETA
+  TCanvas *c8 = new TCanvas("Proton Eta","Proton Eta",600,600);
+  c8->cd();
+  gPad->SetLogy();
+  gStyle->SetOptStat(0);
+  TH1F *proton_eta = new TH1F ("proton_eta","proton eta distribution",100,-20.,20.);
+  proton_eta->SetStats(0);
+  proton_eta->Draw();
+  proton_eta->GetXaxis()->SetTitle("eta");
+  proton_eta->GetYaxis()->SetTitle("Number of Events");
+  proton_eta->GetYaxis()->SetTitleOffset(1.4);
+
+  // Kaon ETA
+  TCanvas *c9 = new TCanvas("Kaon Eta","Kaon Eta",600,600);
+  c9->cd();
+  gPad->SetLogy();
+  gStyle->SetOptStat(0);
+  TH1F *kaon_eta = new TH1F ("kaon_eta","kaon eta distribution",100,-20.,20.);
+  kaon_eta->SetStats(0);
+  kaon_eta->Draw();
+  kaon_eta->GetXaxis()->SetTitle("eta");
+  kaon_eta->GetYaxis()->SetTitle("Number of Events");
+  kaon_eta->GetYaxis()->SetTitleOffset(1.4);
     
   // PT
   TCanvas *c2 = new TCanvas("PT","PT",600,600);
@@ -183,7 +202,7 @@ void macroQA(int maxevt=0,int mult=0,int nbin=20){
     pion_theta->Scale(1./pion_theta->GetEntries());
     proton_theta->Scale(1./proton_theta->GetEntries());
     kaon_theta->Scale(1./kaon_theta->GetEntries());
-    
+    /*
     c1->cd();
     
     TLegend *leg = new TLegend(0.6526846,0.6474695,0.8808725,0.8010471,NULL,"brNDC");
@@ -206,7 +225,7 @@ void macroQA(int maxevt=0,int mult=0,int nbin=20){
     leg->Draw();   
     c1->Modified();
     c1->Update();
-    
+    */
     c7->cd();
     TLegend* leg2 = new TLegend(0.8,0.7,0.7,0.8);
     leg2->SetHeader("Particles","C"); // option "C" allows to center the header
@@ -234,7 +253,11 @@ void macroQA(int maxevt=0,int mult=0,int nbin=20){
     c2->Update();
  
     c1->Draw();
-    c1->SaveAs("eta.pdf");
+    c8->Draw();
+    c9->Draw();
+    c1->SaveAs("pion_eta.pdf");
+    c8->SaveAs("proton_eta.pdf");
+    c9->SaveAs("kaon_eta.pdf");
     //c2->SaveAs("pt.pdf");
     //c3->SaveAs("pion_mult.pdf");
     //c4->SaveAs("proton_mult.pdf");
