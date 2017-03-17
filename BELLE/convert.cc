@@ -34,6 +34,7 @@ class particleData
     Float_t pt[100000];
     Float_t pid[100000];
     Float_t eta[100000];
+    Float_t theta[100000];
     Float_t phi[100000];
     Float_t mass[10000];
 };
@@ -46,7 +47,7 @@ double dphi(double phi1,double phi2)
     if (a<-PI/2) a=2*PI+a;
     return a;
 }
-void analysis ( char* file, int mult=30,int nbin=20, int maxevt = 0 ) {
+void analysis ( char* file="../Inputs/hadron-2.root", int mult=30,int nbin=20, int maxevt = 0 ) {
    /* These are initialization codes.
      You can ignore them as a black box. */
   // Open a data file
@@ -70,13 +71,14 @@ void analysis ( char* file, int mult=30,int nbin=20, int maxevt = 0 ) {
    /* We define the  histograms.*/
   // First, we define the name of the file where histograms will be saved. 
   // We define "histfile" as the histogram file name, as shown below. 
-  TFile *hf = new TFile("histfile", "RECREATE" );
+  TFile *hf = new TFile("../Inputs/output_2_withtheta.root", "RECREATE" );
   TTree *tout = new TTree("t","");
   
   particleData pData;
   tout->Branch("nParticle", &pData.nParticle,"nParticle/I");
   tout->Branch("pt", pData.pt,"pt[nParticle]/F");
   tout->Branch("eta", pData.eta,"eta[nParticle]/F");
+  tout->Branch("theta", pData.theta,"theta[nParticle]/F");
   tout->Branch("pid", pData.pid,"pid[nParticle]/F");
   tout->Branch("phi", pData.phi,"phi[nParticle]/F");
   tout->Branch("mass", pData.mass,"mass[nParticle]/F");
@@ -125,6 +127,7 @@ void analysis ( char* file, int mult=30,int nbin=20, int maxevt = 0 ) {
       float eta1 = v.PseudoRapidity();
       float phi1 = v.Phi();
       pData.pt[j]=v.Pt();
+      pData.theta[j]=v.Theta();
       pData.eta[j]=v.PseudoRapidity();
       pData.phi[j]=v.Phi();    
       pData.mass[j]=mass1;  

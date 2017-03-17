@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <TStyle.h>
 
-void plot(int isBelle=1,int mult=30,int cuthigh=0){
+void plot(int isBelle=1,int mult=50,int cuthigh=0){
   
     TFile*finput=new TFile(Form("ROOTfiles/myoutput_isBelle%d_minMult%d.root",isBelle,mult));
     finput->cd();
@@ -47,7 +47,7 @@ void plot(int isBelle=1,int mult=30,int cuthigh=0){
     h_ratio->GetZaxis()->SetTitleOffset(2.3);
     h_ratio->GetZaxis()->SetTitleSize(0.038);
     h_ratio->GetZaxis()->SetLabelSize(0.04);
-    if(cuthigh) h_ratio->GetZaxis()->SetRangeUser(-6,-3);
+    if(cuthigh) h_ratio->GetZaxis()->SetRangeUser(0.5,0.8);
     //h_ratio->SetNdivisions(1,"Z");
     h_ratio->Draw("surf1FB");
     if (isBelle) c1->SaveAs(Form("Plots/canvasRidgeBelleMult%dCutHigh%d.pdf",mult,cuthigh));

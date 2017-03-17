@@ -24,10 +24,10 @@ double dphi(double phi1,double phi2)
     return a;
 }
 
-void analysis(int isBelle=1, int maxevt=0,int mult=30,int nbin=40,bool verbose=0){
+void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0){
 
   TString filename;
-  if(isBelle) filename="../Inputs/output-2.root"; 			
+  if(isBelle) filename="../Inputs/output_2_withtheta.root"; 			
   //else filename="../LEP2dataMarcello/myALEPH.root";
   else filename="../LEP2dataMarcello/ROOTfiles/final_ALEPH.root";
   
@@ -36,6 +36,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=30,int nbin=40,bool verbose=0
   Int_t nParticle;
   Float_t pt[50000];
   Float_t eta[50000];
+  Float_t theta[50000];
   Float_t pid[50000];
   Float_t phi[50000];
   Float_t mass[50000];
@@ -44,6 +45,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=30,int nbin=40,bool verbose=0
   t1->SetBranchAddress("nParticle",&nParticle);
   t1->SetBranchAddress("pt",pt);
   t1->SetBranchAddress("eta",eta);
+  t1->SetBranchAddress("theta",theta);
   t1->SetBranchAddress("pid",pid);
   t1->SetBranchAddress("phi",phi);
   t1->SetBranchAddress("mass",mass);
@@ -54,6 +56,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=30,int nbin=40,bool verbose=0
   Int_t nParticle_mix;
   Float_t pt_mix[50000];
   Float_t eta_mix[50000];
+  Float_t theta_mix[50000];
   Float_t pid_mix[50000];
   Float_t phi_mix[50000];
   Float_t mass_mix[50000];
@@ -62,6 +65,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=30,int nbin=40,bool verbose=0
   t1_mix->SetBranchAddress("nParticle",&nParticle_mix);
   t1_mix->SetBranchAddress("pt",pt_mix);
   t1_mix->SetBranchAddress("eta",eta_mix);
+  t1_mix->SetBranchAddress("theta",theta_mix);
   t1_mix->SetBranchAddress("pid",pid_mix);
   t1_mix->SetBranchAddress("phi",phi_mix);
   t1_mix->SetBranchAddress("mass",mass_mix);
