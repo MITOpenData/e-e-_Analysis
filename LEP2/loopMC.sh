@@ -1,7 +1,7 @@
-folder="LEP2_MC/GGUD"
+folder="LEP2_MC/GGBB"
 filelist="LEP2MCGGUDMCtrue.list"
 output="cleaned_LEP2MCGGUD-MCtrue-all.aleph"
-suffix="LEP2MCGGUD*mctrue_aftercut"
+suffix="LEP2MCGGBB*mctrue_aftercut"
 
 rm $filelist
 rm $output
