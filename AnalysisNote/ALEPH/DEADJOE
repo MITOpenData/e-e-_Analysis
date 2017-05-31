@@ -1,0 +1,33 @@
+
+*** These modified files were found in JOE when it aborted on Fri Mar 10 12:00:17 2017
+*** JOE was aborted because the terminal closed
+
+*** File 'edit.sh'
+nedt *.tex *.bibfg
+*** File '(Unnamed)'
+r
+
+*** File '(Unnamed)'
+%
+2
+,)
+7   
+7 
+7
+(7,
+L0
+%
+bib
+
+*** File '(Unnamed)'
+main.tex
+paper.sh
+main.bib
+main.tex
+introduction.tex
+paper.sh
+paper.sh
+paper.sh
+main.bib
+/home/yjlee/StudyMult/.git/COMMIT_EDITMSG
+edit.sh
