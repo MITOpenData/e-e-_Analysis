@@ -2,7 +2,7 @@
 //  aleph_analysis.c
 //  
 //
-//  Created by Anthony Badea on 5/31/17.
+//  Created by Anthony Badea and Bibek K Pandit on 5/31/17.
 //
 //
 
@@ -22,11 +22,13 @@ using namespace std;
 #define plank (4.135667516 * pow(10,-18))
 enum SIMPLEPWFLAG {CHARGED_TRACK, CHARGED_LEPTONS1, CHARGED_LEPTONS2, V0, PHOTON, NEUTRAL_HADRON};
 // LEP2mcggbby200e
+
+
 void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0){
     
     TString filename;
-    if(isBelle) filename="/Users/anthony/Documents/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
-    //else filename="../LEP2dataMarcello/myALEPH.root";
+    //if(isBelle) filename="/Users/anthony/Documents/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
+    if(isBelle) filename="ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
     
     TFile *f = new TFile(filename.Data());
     TTree *t1 = (TTree*)f->Get("t");
@@ -37,6 +39,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
     Float_t phi[50000];
     Float_t mass[50000];
     Float_t pwflag[50000];
+    Float_t Energy[50000];
     
     t1->SetBranchAddress("nParticle",&nParticle);
     t1->SetBranchAddress("pt",pt);
@@ -45,6 +48,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
     t1->SetBranchAddress("phi",phi);
     t1->SetBranchAddress("mass",mass);
     t1->SetBranchAddress("pwflag",pwflag);
+    t1->SetBranchAddress("Energy",Energy);
     
     TCanvas *c1 = new TCanvas("eta_photon", "eta_photon", 600,  600);
     TH1F *h1 = new TH1F("eta_photon", "eta_photon", 100, -PI,PI);
@@ -67,6 +71,14 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
     TCanvas *c9 = new TCanvas("2d_neutral", "2d_neutral", 600,  600);
     TH2F *h9 = new TH2F("2d_neutral", "2d_neutral", 100, -PI,PI,100, -PI,PI);
     
+    char *h_photon_energy = new char[100];
+    char *h_charged_energy = new char[100];
+    char *h_neutral_energy = new char[100];
+    char *h_all_energy = new char[100];
+    
+    TCanvas *c10 = new TCanvas("mult", "mult", 600,  600);
+    TH1F *h10 = new TH1F("mult", "mult", 100, 0, 100);
+    
     
     
     // all entries and fill the histograms
@@ -74,6 +86,13 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
 
     if (maxevt > 0 && maxevt < nevent) nevent_process = maxevt;
     int nevent_process = nevent;
+    
+    for (int e = 130; e<=210; i = i + 10)
+    {
+      sprintf(h_photon_energy, "h_photon_%d", i);
+      TH1F *h_photon = new TH1F (h_photon, h_photon, 100, 0, 100);
+      
+    }
     
     for (Int_t i = 0; i<nevent_process; i++)
     {
@@ -104,7 +123,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
         }
         
     }
-    
+    /*
     c1->cd();
     h1->Draw();
     c2->cd();
@@ -123,5 +142,9 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
     h8->Draw();
     c9->cd();
     h9->Draw();
+    */
+    c10->cd();
+    t1->Draw("Sum$(pwflag == CHARGED_TRACK):Energy>>h10","","prof");
+    //h10->D
 }
 
