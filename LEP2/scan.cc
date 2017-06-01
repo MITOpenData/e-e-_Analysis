@@ -30,7 +30,7 @@ class particleData
 		Float_t pid[10000];
 };
 
-void scan (TString infile="cleaned_GGUD_recons_aftercut-all.aleph"){
+void scan (TString infile="cleaned_LEP2MCGGUD-MCtrue-all.aleph"){
 
 	FILE *fp=fopen(Form("%s",infile.Data()),"r");
 
