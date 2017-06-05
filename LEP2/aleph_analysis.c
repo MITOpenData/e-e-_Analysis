@@ -116,7 +116,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
       h_all->Sumw2();
       h_all->SetMarkerStyle(20);
       sprintf(h_all_energy, "h_all_%d.pdf", j);
-      c10->SaveAs(Form("/Users/anthony/Documents/StudyMult/LEP2/Images/%s",h_all_energy));
+      c10->SaveAs(Form("Images/%s",h_all_energy));
     
       c11->cd();
       t1->Draw("Sum$(pwflag==4)>>h_photon",energy_range);
@@ -129,7 +129,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
       h_photon->Sumw2();
       h_photon->SetMarkerStyle(20);
       sprintf(h_photon_energy, "h_photon_%d.pdf", j);
-      c11->SaveAs(Form("/Users/anthony/Documents/StudyMult/LEP2/Images/%s",h_photon_energy));
+      c11->SaveAs(Form("Images/%s",h_photon_energy));
         
       c12->cd();
       t1->Draw("Sum$(pwflag==0 || pwflag==1 || pwflag == 2)>>h_charged",energy_range);
@@ -142,7 +142,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
       h_charged->Sumw2();
       h_charged->SetMarkerStyle(20);
       sprintf(h_charged_energy, "h_charged_%d.pdf", j);
-      c12->SaveAs(Form("/Users/anthony/Documents/StudyMult/LEP2/Images/%s",h_charged_energy));
+      c12->SaveAs(Form("Images/%s",h_charged_energy));
         
       c13->cd();
       t1->Draw("Sum$(pwflag==5)>>h_neutral",energy_range);
@@ -155,7 +155,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
       h_neutral->Sumw2();
       h_neutral->SetMarkerStyle(20);
       sprintf(h_neutral_energy, "h_neutral_%d.pdf", j);
-      c13->SaveAs(Form("/Users/anthony/Documents/StudyMult/LEP2/Images/%s",h_neutral_energy));
+      c13->SaveAs(Form("Images/%s",h_neutral_energy));
         
     }
     
@@ -191,31 +191,31 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
     
     c1->cd();
     h1->Draw();
-    c1->SaveAs(Form("/Users/anthony/Documents/StudyMult/LEP2/Images/eta_photon.pdf"));
+    c1->SaveAs(Form("Images/eta_photon.pdf"));
     c2->cd();
     h2->Draw();
-    c2->SaveAs(Form("/Users/anthony/Documents/StudyMult/LEP2/Images/eta_charged.pdf"));
+    c2->SaveAs(Form("Images/eta_charged.pdf"));
     c3->cd();
     h3->Draw();
-    c3->SaveAs(Form("/Users/anthony/Documents/StudyMult/LEP2/Images/eta_neutral.pdf"));
+    c3->SaveAs(Form("Images/eta_neutral.pdf"));
     c4->cd();
     h4->Draw();
-    c4->SaveAs(Form("/Users/anthony/Documents/StudyMult/LEP2/Images/phi_photon.pdf"));
+    c4->SaveAs(Form("Images/phi_photon.pdf"));
     c5->cd();
     h5->Draw();
-    c5->SaveAs(Form("/Users/anthony/Documents/StudyMult/LEP2/Images/phi_charged.pdf"));
+    c5->SaveAs(Form("Images/phi_charged.pdf"));
     c6->cd();
     h6->Draw();
-    c6->SaveAs(Form("/Users/anthony/Documents/StudyMult/LEP2/Images/phi_neutral.pdf"));
+    c6->SaveAs(Form("Images/phi_neutral.pdf"));
     c7->cd();
     h7->Draw("colz");
-    c7->SaveAs(Form("/Users/anthony/Documents/StudyMult/LEP2/Images/2d_photon.pdf"));
+    c7->SaveAs(Form("Images/2d_photon.pdf"));
     c8->cd();
     h8->Draw("colz");
-    c8->SaveAs(Form("/Users/anthony/Documents/StudyMult/LEP2/Images/2d_charged.pdf"));
+    c8->SaveAs(Form("Images/2d_charged.pdf"));
     c9->cd();
     h9->Draw("colz");
-    c9->SaveAs(Form("/Users/anthony/Documents/StudyMult/LEP2/Images/2d_neutral.pdf"));
+    c9->SaveAs(Form("Images/2d_neutral.pdf"));
     
     c14->cd();
     t1->Draw("nParticle>>h_14");
@@ -225,7 +225,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
     h_14->GetXaxis()->SetTitle("Multiplicity");
     h_14->GetYaxis()->SetTitle("Number of Events");
     h_14->GetYaxis()->SetTitleOffset(1.55);
-    c14->SaveAs(Form("/Users/anthony/Documents/StudyMult/LEP2/Images/mult_all_energies.pdf"));
+    c14->SaveAs(Form("Images/mult_all_energies.pdf"));
     
     c15->cd();
     t1->Draw("nParticle:Energy>>h_15(8,130,210)","","prof");
@@ -235,6 +235,6 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
     h_15->GetXaxis()->SetTitle("Energy (GeV)");
     h_15->GetYaxis()->SetTitle("<Multiplicity>");
     h_15->GetYaxis()->SetTitleOffset(1.2);
-    c15->SaveAs(Form("/Users/anthony/Documents/StudyMult/LEP2/Images/mean_mult_all_energies.pdf"));
+    c15->SaveAs(Form("Images/mean_mult_all_energies.pdf"));
 }
 
