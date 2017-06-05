@@ -50,8 +50,51 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
     t1->SetBranchAddress("pwflag",pwflag);
     t1->SetBranchAddress("Energy",Energy);
     
-    TCanvas *c1 = new TCanvas("eta_photon", "eta_photon", 600,  600);
-    TH1F *h1 = new TH1F("eta_photon", "eta_photon", 100, -PI,PI);
-   
+    TCanvas *c1 = new TCanvas("mult", "mult", 600,  600);
+    TH1F *h1 = new TH1F("mult", "mult", 100, 0 , 100);
+    
+    // all entries and fill the histograms
+    Int_t nevent = (Int_t)t1->GetEntries();
+
+    if (maxevt > 0 && maxevt < nevent) nevent_process = maxevt;
+    int nevent_process = nevent;
+    
+    for (Int_t i = 0; i<nevent_process; i++)
+    {
+      t1->GetEntry(i);
+      int nparticles = nParticle;
+      
+      if (i % 100 == 0){
+      cout<<i<<endl;
+      }
+      
+      int N =0;
+      
+      for (Int_t j = 0; j<nparticles; j++)
+      {
+        //pwflag1 = pwflag[j];
+        //cout<<pwflag1<<endl;
+        if (pwflag[j] == CHARGED_TRACK)
+        {
+          //cout<<"hi"<<endl;
+          N++;
+        }
+        
+      }
+      //if (N == nparticles)
+      //{
+        //cout<<"hi"<<endl;
+      //}
+      //cout<<nparticles - N<<endl;
+      for (int k = 0; k<=N; k++)
+      {
+        h1->Fill(k);
+      }
+    }
+    c1->cd();
+    c1->SetLogy();
+    h1->Draw();
+    
+    //c1->SaveAs(Form("Images/eta_photon.pdf"));
 }
 

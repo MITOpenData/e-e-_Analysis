@@ -109,7 +109,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
     if (nparticles>100) continue;
     
 
-    double N=0;
+    //double N=0;
     double ptMin=0.1;
     double ptMax=4;
     
@@ -121,7 +121,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
     for (int p = 0; p < 10; p++)
     {
       
-    
+      double N=0;
       for ( int j=0;j<nparticles;j++ ) {
         float pt1 = pt[j];
         int pid1 = pid[j];

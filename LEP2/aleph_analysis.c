@@ -167,6 +167,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
         {
             if(pwflag[j]==PHOTON)
             {
+                cout<<"hi"<<endl;
                 h1->Fill(eta[j]);
                 h4->Fill(phi[j]);
                 h7->Fill(eta[j],phi[j]);
