@@ -1,8 +1,6 @@
-pdflatex main.tex
+pdflatex main
 bibtex main
-pdflatex main.tex
-pdflatex main.tex
+pdflatex main
+pdflatex main
 evince main.pdf&
-#cp main.pdf ~/Downloads/
-
 

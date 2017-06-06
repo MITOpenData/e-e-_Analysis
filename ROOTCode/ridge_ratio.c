@@ -27,10 +27,10 @@ double dphi(double phi1,double phi2)
 void analysis(){
 
   TString filename1;
-  if(isBelle) filename1="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
+  filename1="/Users/anthony/Documents/StudyMult/ROOTCode/ROOTfiles/myoutput_isBelle1_minMult40.root";
   
   TString filename2;
-  if(isBelle) filename2="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
+  filename2="/Users/anthony/Documents/StudyMult/ROOTCode/ROOTfiles/myoutput_isBelle1_minMult0.root";
   
   TFile *f1 = new TFile(filename1.Data());
   //TTree *t1 = (TTree*)f1->Get("t");

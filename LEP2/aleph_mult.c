@@ -1,6 +1,6 @@
 //
 //  aleph_analysis.c
-//  
+//
 //
 //  Created by Anthony Badea and Bibek K Pandit on 5/31/17.
 //
@@ -50,51 +50,58 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
     t1->SetBranchAddress("pwflag",pwflag);
     t1->SetBranchAddress("Energy",Energy);
     
-    TCanvas *c1 = new TCanvas("mult", "mult", 600,  600);
-    TH1F *h1 = new TH1F("mult", "mult", 100, 0 , 100);
+    TCanvas *c1 = new TCanvas("h", "h", 600,  600);
+    TCanvas *c2 = new TCanvas("i", "i", 600,  600);
+    TCanvas *c3 = new TCanvas("j", "j", 600,  600);
+    TH1F *h1 = new TH1F("photon","h",100,0,100);
+    TH1F *h2 = new TH1F("charged","h",100,0,100);
+    TH1F *h3 = new TH1F("neutral","h",100,0,100);
     
     // all entries and fill the histograms
     Int_t nevent = (Int_t)t1->GetEntries();
-
+    
     if (maxevt > 0 && maxevt < nevent) nevent_process = maxevt;
     int nevent_process = nevent;
     
     for (Int_t i = 0; i<nevent_process; i++)
     {
-      t1->GetEntry(i);
-      int nparticles = nParticle;
-      
-      if (i % 100 == 0){
-      cout<<i<<endl;
-      }
-      
-      int N =0;
-      
-      for (Int_t j = 0; j<nparticles; j++)
-      {
-        //pwflag1 = pwflag[j];
-        //cout<<pwflag1<<endl;
-        if (pwflag[j] == CHARGED_TRACK)
+        t1->GetEntry(i);
+        int nparticles = nParticle;
+        int P =0;
+        int C = 0;
+        int N = 0;
+        for (Int_t j =0;j<nparticles;j++)
         {
-          //cout<<"hi"<<endl;
-          N++;
+            if(pwflag[j]==PHOTON)
+            {
+                P+=1;
+            }
+            
+            if(pwflag[j] == CHARGED_TRACK || pwflag[j] == CHARGED_LEPTONS1 || pwflag[j] == CHARGED_LEPTONS2)
+            {
+                C+=1;
+            }
+            
+            if(pwflag[j] == NEUTRAL_HADRON) //pwflag[j] == V0 ||
+            {
+                N+=1;
+            }
+            
         }
-        
-      }
-      //if (N == nparticles)
-      //{
-        //cout<<"hi"<<endl;
-      //}
-      //cout<<nparticles - N<<endl;
-      for (int k = 0; k<=N; k++)
-      {
-        h1->Fill(k);
-      }
+        for (int j = 0; j<=P;j++){h1->Fill(j);}
+        for (int k = 0; k<=C;k++){h2->Fill(k);}
+        for (int l = 0; l<=N;l++){h3->Fill(l);}
     }
     c1->cd();
     c1->SetLogy();
     h1->Draw();
+    c2->cd();
+    c2->SetLogy();
+    h2->Draw();
+    c3->cd();
+    c3->SetLogy();
+    h3->Draw();
     
-    //c1->SaveAs(Form("Images/eta_photon.pdf"));
+
 }
 

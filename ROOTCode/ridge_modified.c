@@ -24,10 +24,11 @@ double dphi(double phi1,double phi2)
     return a;
 }
 
-void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0){
+void analysis(int isBelle=1, int maxevt=0,int mult=0,int nbin=40,bool verbose=0){
 
   TString filename;
-  if(isBelle) filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root"; 			
+ // if(isBelle) filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
+  if(isBelle) filename="/Users/anthony/Documents/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
   //else filename="../LEP2dataMarcello/myALEPH.root";
   else filename="../LEP2dataMarcello/ROOTfiles/final_ALEPH.root";
   
@@ -73,7 +74,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
 
 
   // two histograms
-  double detaRange = 3;
+  double detaRange = 3.;
   double normalization = detaRange*2/nbin*2*3.14159/nbin;
   TH2F *h_2D = new TH2F ( "h_2D", "eta-phi of all particles ",nbin, -detaRange, detaRange,nbin, -3.1416/2., 3.1416*1.5);
   TH2F *h_2Dmix = new TH2F ( "h_2Dmix", "eta-phi of all particles ",nbin, -detaRange, detaRange,nbin, -3.1416/2., 3.1416*1.5);
@@ -106,7 +107,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
     int flag=0;    //definisco una flag a zero
     
     // Yen-Jie: cut on maximum number of particles to avoid infinite loop, for the moment it is 100
-    if (nparticles>100) continue;
+    if (nparticles>20) continue;
     
 
     //double N=0;
@@ -133,14 +134,14 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
       averageN+=N;
       nEventProcessed++;
 
-      //if (nparticles<mult) continue;
-      if (N<mult) continue;
+      if (nparticles<mult) continue;
+      //if (N<mult) continue;
       
       nEventInMultBin++;
 
       // find a mixed event
       //	cout <<N<<endl;
-      while ((fabs(nparticles2-nparticles)>5&&nparticles<100)||i==selected){
+      while ((fabs(nparticles2-nparticles)>5&&nparticles<20)||i==selected){
          //cout <<nparticles<<" "<<selected<<endl;
          selected++;
          if (selected>nevent_process&&flag==1) break;
@@ -202,7 +203,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
           float pwflagmix = pwflag_mix[k];
           if (pwflagmix != CHARGED_TRACK) continue;
           if(ptmix<ptMin||ptmix>ptMax) continue;
-          
+            
           h_2Dmix->Fill(eta1-etamix,dphi(phi1,phimix),1./N);    
           h_2Dmix->Fill(eta1-etamix,dphi(phimix,phi1),1./N);    
           h_2Dmix->Fill(etamix-eta1,dphi(phi1,phimix),1./N);    
