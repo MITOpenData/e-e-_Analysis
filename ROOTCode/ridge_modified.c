@@ -24,8 +24,9 @@ double dphi(double phi1,double phi2)
     return a;
 }
 
-void analysis(int isBelle=1, int maxevt=0,int mult=0,int nbin=40,bool verbose=0){
-
+void analysis(int isBelle=1, int maxevt=0,int mult=100,int nbin=40,bool verbose=0){
+  int mult_upper_bound = 1000;
+  
   TString filename;
  // if(isBelle) filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
   if(isBelle) filename="/Users/anthony/Documents/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
@@ -37,7 +38,6 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0,int nbin=40,bool verbose=0)
   Int_t nParticle;
   Float_t pt[50000];
   Float_t eta[50000];
-  Float_t theta[50000];
   Float_t pid[50000];
   Float_t phi[50000];
   Float_t mass[50000];
@@ -46,7 +46,6 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0,int nbin=40,bool verbose=0)
   t1->SetBranchAddress("nParticle",&nParticle);
   t1->SetBranchAddress("pt",pt);
   t1->SetBranchAddress("eta",eta);
-  t1->SetBranchAddress("theta",theta);
   t1->SetBranchAddress("pid",pid);
   t1->SetBranchAddress("phi",phi);
   t1->SetBranchAddress("mass",mass);
@@ -57,7 +56,6 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0,int nbin=40,bool verbose=0)
   Int_t nParticle_mix;
   Float_t pt_mix[50000];
   Float_t eta_mix[50000];
-  Float_t theta_mix[50000];
   Float_t pid_mix[50000];
   Float_t phi_mix[50000];
   Float_t mass_mix[50000];
@@ -66,7 +64,6 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0,int nbin=40,bool verbose=0)
   t1_mix->SetBranchAddress("nParticle",&nParticle_mix);
   t1_mix->SetBranchAddress("pt",pt_mix);
   t1_mix->SetBranchAddress("eta",eta_mix);
-  t1_mix->SetBranchAddress("theta",theta_mix);
   t1_mix->SetBranchAddress("pid",pid_mix);
   t1_mix->SetBranchAddress("phi",phi_mix);
   t1_mix->SetBranchAddress("mass",mass_mix);
@@ -107,7 +104,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0,int nbin=40,bool verbose=0)
     int flag=0;    //definisco una flag a zero
     
     // Yen-Jie: cut on maximum number of particles to avoid infinite loop, for the moment it is 100
-    if (nparticles>20) continue;
+    if (nparticles>mult_upper_bound) continue;
     
 
     //double N=0;
@@ -141,7 +138,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0,int nbin=40,bool verbose=0)
 
       // find a mixed event
       //	cout <<N<<endl;
-      while ((fabs(nparticles2-nparticles)>5&&nparticles<20)||i==selected){
+      while ((fabs(nparticles2-nparticles)>5&&nparticles<mult_upper_bound)||i==selected){
          //cout <<nparticles<<" "<<selected<<endl;
          selected++;
          if (selected>nevent_process&&flag==1) break;
@@ -280,8 +277,19 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0,int nbin=40,bool verbose=0)
   h_2D->Write();
   h_2Dmix->Write();
   h_ratio->Write();
+  TH1D *h_proj = h_ratio->ProjectionY("",2,4);
+  h_proj->SetTitle(Form("Multiplicity Between %d and %d",mult,mult_upper_bound));
+  h_proj->Write();
   for (int i=0;i<3;i++) h_deltaphi[i]->Write();
   fout->Close();
   delete fout;
+    
+    
+  TCanvas *c1 = new TCanvas("c1","",600,600);
+    c1->SetTheta(60.839);
+    c1->SetPhi(38.0172);
+  h_ratio->SetTitle(Form("Ratio for Multiplicity between %d and %d",mult,mult_upper_bound));
+  h_ratio->Draw("LEGO2");
+  c1->SaveAs(Form("ratio%d_%d.pdf",mult,mult_upper_bound));
 
   }
