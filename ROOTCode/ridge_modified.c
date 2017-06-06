@@ -108,7 +108,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=100,int nbin=40,bool verbose=
     
 
     //double N=0;
-    double ptMin=0.1;
+    double ptMin=1;
     double ptMax=4;
     
     
