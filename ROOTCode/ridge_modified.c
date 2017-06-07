@@ -24,8 +24,8 @@ double dphi(double phi1,double phi2)
     return a;
 }
 
-void analysis(int isBelle=1, int maxevt=0,int mult=100,int nbin=40,bool verbose=0){
-  int mult_upper_bound = 1000;
+void analysis(int isBelle=1, int maxevt=0,int mult = 0, int mult_upper_bound =0,int nbin=40,bool verbose=0){
+    
   
   TString filename;
  // if(isBelle) filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
@@ -71,7 +71,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=100,int nbin=40,bool verbose=
 
 
   // two histograms
-  double detaRange = 3.;
+  double detaRange = 2.4;
   double normalization = detaRange*2/nbin*2*3.14159/nbin;
   TH2F *h_2D = new TH2F ( "h_2D", "eta-phi of all particles ",nbin, -detaRange, detaRange,nbin, -3.1416/2., 3.1416*1.5);
   TH2F *h_2Dmix = new TH2F ( "h_2Dmix", "eta-phi of all particles ",nbin, -detaRange, detaRange,nbin, -3.1416/2., 3.1416*1.5);
@@ -108,18 +108,17 @@ void analysis(int isBelle=1, int maxevt=0,int mult=100,int nbin=40,bool verbose=
     
 
     //double N=0;
-    double ptMin=1;
+    double ptMin=0.4;
     double ptMax=4;
     
     
     //int count = 0;
     
     // calculate the number of tracks in the passing selection
-    
+    double N=0;
     for (int p = 0; p < 10; p++)
     {
       
-      double N=0;
       for ( int j=0;j<nparticles;j++ ) {
         float pt1 = pt[j];
         int pid1 = pid[j];
@@ -201,14 +200,17 @@ void analysis(int isBelle=1, int maxevt=0,int mult=100,int nbin=40,bool verbose=
           if (pwflagmix != CHARGED_TRACK) continue;
           if(ptmix<ptMin||ptmix>ptMax) continue;
             
-          h_2Dmix->Fill(eta1-etamix,dphi(phi1,phimix),1./N);    
-          h_2Dmix->Fill(eta1-etamix,dphi(phimix,phi1),1./N);    
-          h_2Dmix->Fill(etamix-eta1,dphi(phi1,phimix),1./N);    
-          h_2Dmix->Fill(etamix-eta1,dphi(phimix,phi1),1./N);    
+          h_2Dmix->Fill(eta1-etamix,dphi(phi1,phimix));
+          h_2Dmix->Fill(eta1-etamix,dphi(phimix,phi1));
+          h_2Dmix->Fill(etamix-eta1,dphi(phi1,phimix));
+          h_2Dmix->Fill(etamix-eta1,dphi(phimix,phi1));
         }//end of second loop 
 
     }// end of first loop
     }
+    // NOW DIVIDE
+    h_2Dmix->Scale(1./N);
+    
   }// end of loop over events
   
   
@@ -293,3 +295,18 @@ void analysis(int isBelle=1, int maxevt=0,int mult=100,int nbin=40,bool verbose=
   c1->SaveAs(Form("ratio%d_%d.pdf",mult,mult_upper_bound));
 
   }
+
+
+
+void bar()
+{
+    int mult[1][2] = {{0,20}};//,{20,40},{40,1000},{50,1000},{60,1000},{70,1000},{80,1000},{90,1000}};
+    cout<<mult[0]<<"/n";
+    analysis(1, 0,0,20,40,0);
+    /**
+    for (int i =0; i<1;i++)
+    {
+        analysis(1, 0,mult[i][0],mult[i][1],40,0);
+    }**/
+    
+}
