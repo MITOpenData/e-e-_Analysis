@@ -24,17 +24,14 @@ double dphi(double phi1,double phi2)
     return a;
 }
 
-<<<<<<< HEAD
-void analysis(int isBelle=1, int maxevt=0,int mult = 0, int mult_upper_bound =0,int nbin=40,bool verbose=0){
-    
-=======
+
 void analysis(int isBelle=1, int maxevt=0,int mult=100, int mult_upper_bound = 1000, int nbin=40,bool verbose=0){
   
->>>>>>> origin/master
+
   
   TString filename;
-  if(isBelle) filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
-  //if(isBelle) filename="/Users/anthony/Documents/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
+  //if(isBelle) filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
+  if(isBelle) filename="/Users/anthony/Documents/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
   //else filename="../LEP2dataMarcello/myALEPH.root";
   //else filename="../LEP2dataMarcello/ROOTfiles/final_ALEPH.root";
   
@@ -304,27 +301,10 @@ void analysis(int isBelle=1, int maxevt=0,int mult=100, int mult_upper_bound = 1
 
 void goofy()
 {
-  int low[2] = {0, 40};
-  int high[2] = {20, 100};
-  for (int i = 0; i<3; i++){
+  int low[7] = {0, 40,50,60,70,80,90};
+  int high[7] = {20, 1000,1000,1000,1000,1000};
+  for (int i = 0; i<6; i++){
     analysis(1, 0, low[i], high[i], 40, 0);
   }
-<<<<<<< HEAD
-
-
-
-void bar()
-{
-    int mult[1][2] = {{0,20}};//,{20,40},{40,1000},{50,1000},{60,1000},{70,1000},{80,1000},{90,1000}};
-    cout<<mult[0]<<"/n";
-    analysis(1, 0,0,20,40,0);
-    /**
-    for (int i =0; i<1;i++)
-    {
-        analysis(1, 0,mult[i][0],mult[i][1],40,0);
-    }**/
-    
-=======
-  //return 0;
->>>>>>> origin/master
 }
+
