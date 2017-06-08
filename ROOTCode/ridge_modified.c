@@ -24,14 +24,19 @@ double dphi(double phi1,double phi2)
     return a;
 }
 
+<<<<<<< HEAD
 void analysis(int isBelle=1, int maxevt=0,int mult = 0, int mult_upper_bound =0,int nbin=40,bool verbose=0){
     
+=======
+void analysis(int isBelle=1, int maxevt=0,int mult=100, int mult_upper_bound = 1000, int nbin=40,bool verbose=0){
+  
+>>>>>>> origin/master
   
   TString filename;
- // if(isBelle) filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
-  if(isBelle) filename="/Users/anthony/Documents/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
+  if(isBelle) filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
+  //if(isBelle) filename="/Users/anthony/Documents/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
   //else filename="../LEP2dataMarcello/myALEPH.root";
-  else filename="../LEP2dataMarcello/ROOTfiles/final_ALEPH.root";
+  //else filename="../LEP2dataMarcello/ROOTfiles/final_ALEPH.root";
   
   TFile *f = new TFile(filename.Data());
   TTree *t1 = (TTree*)f->Get("t");
@@ -293,8 +298,18 @@ void analysis(int isBelle=1, int maxevt=0,int mult = 0, int mult_upper_bound =0,
   h_ratio->SetTitle(Form("Ratio for Multiplicity between %d and %d",mult,mult_upper_bound));
   h_ratio->Draw("LEGO2");
   c1->SaveAs(Form("ratio%d_%d.pdf",mult,mult_upper_bound));
-
+  
+  
   }
+
+void goofy()
+{
+  int low[2] = {0, 40};
+  int high[2] = {20, 100};
+  for (int i = 0; i<3; i++){
+    analysis(1, 0, low[i], high[i], 40, 0);
+  }
+<<<<<<< HEAD
 
 
 
@@ -309,4 +324,7 @@ void bar()
         analysis(1, 0,mult[i][0],mult[i][1],40,0);
     }**/
     
+=======
+  //return 0;
+>>>>>>> origin/master
 }
