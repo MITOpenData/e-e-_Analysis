@@ -25,7 +25,8 @@ double dphi(double phi1,double phi2)
 }
 
 
-void analysis(int isBelle=1, int maxevt=0,int mult=100, int mult_upper_bound = 1000, int nbin=40,bool verbose=0){
+void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 1000, int nbin=40,bool verbose=0){
+
   
 
   
@@ -93,6 +94,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=100, int mult_upper_bound = 1
     double averageN=0;
     double nEventProcessed=0;
     double nEventInMultBin=0;
+    double num_runs = 10;
     for (Int_t i=0;i<nevent_process;i++) {
   
     if (i%10000==0) cout <<i<<"/"<<nevent_process<<endl;
@@ -112,13 +114,13 @@ void analysis(int isBelle=1, int maxevt=0,int mult=100, int mult_upper_bound = 1
     //double N=0;
     double ptMin=0.4;
     double ptMax=4;
-    
-    
-    //int count = 0;
+        
+        
     
     // calculate the number of tracks in the passing selection
     double N=0;
-    for (int p = 0; p < 10; p++)
+
+    for (int p = 0; p < num_runs; p++)
     {
       
       for ( int j=0;j<nparticles;j++ ) {
@@ -132,8 +134,8 @@ void analysis(int isBelle=1, int maxevt=0,int mult=100, int mult_upper_bound = 1
       averageN+=N;
       nEventProcessed++;
 
-      if (nparticles<mult) continue;
-      //if (N<mult) continue;
+      //if (nparticles<mult) continue;
+      if (N<mult) continue;
       
       nEventInMultBin++;
 
@@ -187,7 +189,13 @@ void analysis(int isBelle=1, int maxevt=0,int mult=100, int mult_upper_bound = 1
             h_2D->Fill(eta1-eta2,dphi(phi1,phi2),1./N);    
             h_2D->Fill(eta1-eta2,dphi(phi2,phi1),1./N);    
             h_2D->Fill(eta2-eta1,dphi(phi1,phi2),1./N);    
-            h_2D->Fill(eta2-eta1,dphi(phi2,phi1),1./N);    
+            h_2D->Fill(eta2-eta1,dphi(phi2,phi1),1./N);
+           /**
+          h_2D->Fill(fabs(eta1)-fabs(eta2),dphi(phi1,phi2),1./N);
+          h_2D->Fill(fabs(eta1)-fabs(eta2),dphi(phi2,phi1),1./N);
+          h_2D->Fill(fabs(eta2)-fabs(eta1),dphi(phi1,phi2),1./N);
+          h_2D->Fill(fabs(eta2)-fabs(eta1),dphi(phi2,phi1),1./N);
+            */
           }//end of second loop 
         }
 
@@ -201,21 +209,19 @@ void analysis(int isBelle=1, int maxevt=0,int mult=100, int mult_upper_bound = 1
           float pwflagmix = pwflag_mix[k];
           if (pwflagmix != CHARGED_TRACK) continue;
           if(ptmix<ptMin||ptmix>ptMax) continue;
-            
-          h_2Dmix->Fill(eta1-etamix,dphi(phi1,phimix));
-          h_2Dmix->Fill(eta1-etamix,dphi(phimix,phi1));
-          h_2Dmix->Fill(etamix-eta1,dphi(phi1,phimix));
-          h_2Dmix->Fill(etamix-eta1,dphi(phimix,phi1));
+
+          h_2Dmix->Fill(eta1-etamix,dphi(phi1,phimix),1./N);
+          h_2Dmix->Fill(eta1-etamix,dphi(phimix,phi1),1./N);
+          h_2Dmix->Fill(etamix-eta1,dphi(phi1,phimix),1./N);
+          h_2Dmix->Fill(etamix-eta1,dphi(phimix,phi1),1./N);
         }//end of second loop 
 
     }// end of first loop
     }
     // NOW DIVIDE
-    h_2Dmix->Scale(1./N);
+    //h_2Dmix->Scale(1./N);
+  }//end of second loop
     
-  }// end of loop over events
-  
-  
   h_2Dmix->Scale(1./nEventInMultBin);
   h_2D->Scale(1./nEventInMultBin);
   
@@ -226,7 +232,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=100, int mult_upper_bound = 1
   double errrel_num;
   double errrel_den;
   
-    // calculate the  correlation function
+  // calculate the  correlation function
   
   double b00_x=h_2Dmix->GetXaxis()->FindBin(0.);
   double b00_y=h_2Dmix->GetYaxis()->FindBin(0.);
@@ -236,8 +242,8 @@ void analysis(int isBelle=1, int maxevt=0,int mult=100, int mult_upper_bound = 1
   cout<<"value of B(0,0)="<<B00<<endl;
 
 
-  cout<<"x axis "<<h_2Dmix->GetXaxis()->GetBinCenter(b00_x);
-  cout<<"y axis "<<h_2Dmix->GetYaxis()->GetBinCenter(b00_y);
+  cout<<"x axis"<<h_2Dmix->GetXaxis()->GetBinCenter(b00_x);
+  cout<<"y axis"<<h_2Dmix->GetYaxis()->GetBinCenter(b00_y);
   
   for (int x=0;x<=h_2D->GetNbinsX();x++){
      for (int y=0;y<=h_2D->GetNbinsY();y++){
@@ -251,7 +257,9 @@ void analysis(int isBelle=1, int maxevt=0,int mult=100, int mult_upper_bound = 1
         }
      }
   }
-
+    
+  h_ratio->Scale(num_runs);
+    
   int etaranges[4]={0,1,2,3};
   int minbin,maxbin;
   
@@ -302,8 +310,8 @@ void analysis(int isBelle=1, int maxevt=0,int mult=100, int mult_upper_bound = 1
 void goofy()
 {
   int low[7] = {0, 40,50,60,70,80,90};
-  int high[7] = {20, 1000,1000,1000,1000,1000};
-  for (int i = 0; i<6; i++){
+  int high[7] = {20, 1000,1000,1000,1000,1000,1000};
+  for (int i = 0; i<7; i++){
     analysis(1, 0, low[i], high[i], 40, 0);
   }
 }
