@@ -309,8 +309,8 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
 
 void goofy()
 {
-  int low[7] = {0, 40,50,60,70,80,90};
-  int high[7] = {20, 1000,1000,1000,1000,1000,1000};
+  int low[7] = {0, 10,20,40};
+  int high[7] = {10, 20,30,50};
   for (int i = 0; i<7; i++){
     analysis(1, 0, low[i], high[i], 40, 0);
   }
