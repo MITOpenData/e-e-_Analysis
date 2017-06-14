@@ -6,6 +6,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <TMath.h>
+#include "TLorentzVector.h"
 
 using namespace std;
 
@@ -25,11 +26,8 @@ double dphi(double phi1,double phi2)
 }
 
 
-void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 1000, int nbin=40,bool verbose=0){
+void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 1000, int nbin=40,bool verbose=0,int isThrust = 0){
 
-  
-
-  
   TString filename;
   //if(isBelle) filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
   if(isBelle) filename="/Users/anthony/Documents/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
@@ -45,7 +43,11 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
   Float_t phi[50000];
   Float_t mass[50000];
   Float_t pwflag[50000];
-  
+  Float_t px[100000];
+  Float_t py[100000];
+  Float_t pz[100000];
+  Float_t thrust[100000];
+    
   t1->SetBranchAddress("nParticle",&nParticle);
   t1->SetBranchAddress("pt",pt);
   t1->SetBranchAddress("eta",eta);
@@ -53,6 +55,10 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
   t1->SetBranchAddress("phi",phi);
   t1->SetBranchAddress("mass",mass);
   t1->SetBranchAddress("pwflag",pwflag);
+  t1->SetBranchAddress("px",px);
+  t1->SetBranchAddress("py",py);
+  t1->SetBranchAddress("pz",pz);
+  t1->SetBranchAddress("thrust",thrust);
 
   TFile *f_mix = new TFile(filename.Data());
   TTree *t1_mix = (TTree*)f_mix->Get("t");
@@ -63,6 +69,10 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
   Float_t phi_mix[50000];
   Float_t mass_mix[50000];
   Float_t pwflag_mix[50000];
+  Float_t px_mix[100000];
+  Float_t py_mix[100000];
+  Float_t pz_mix[100000];
+  Float_t thrust_mix[100000];
   
   t1_mix->SetBranchAddress("nParticle",&nParticle_mix);
   t1_mix->SetBranchAddress("pt",pt_mix);
@@ -71,8 +81,11 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
   t1_mix->SetBranchAddress("phi",phi_mix);
   t1_mix->SetBranchAddress("mass",mass_mix);
   t1_mix->SetBranchAddress("pwflag",pwflag_mix);
-
-
+  t1_mix->SetBranchAddress("px",px_mix);
+  t1_mix->SetBranchAddress("py",py_mix);
+  t1_mix->SetBranchAddress("pz",pz_mix);
+  t1_mix->SetBranchAddress("thrust",thrust_mix);
+    
   // two histograms
   double detaRange = 2.4;
   double normalization = detaRange*2/nbin*2*3.14159/nbin;
@@ -162,27 +175,70 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
         N2++;
       }
       
-      
-      for ( int j=0;j<nparticles;j++ ) {
-        int pid1 = pid[j];
-        float eta1 = eta[j];
-        float phi1 = phi[j];
-        float pt1 = pt[j];
+        
+      for ( int j=0;j<nparticles;j++ )
+      {
         float mass1 = mass[j];
+        int pid1 = pid[j];
         float pwflag1 = pwflag[j];
+        
+        // If isThrust == 0 then do not rotate by thrust angle
+        // If isThrust == 1 then rotate by thrust angle
+        if (isThrust == 0)
+        {
+            float eta1 = eta[j];
+            float phi1 = phi[j];
+            float pt1 = pt[j];
+        }
+          
+        if (isThrust == 1)
+        {
+            TLorentzVector v1;
+            float px1 = px[j];
+            float py1 = py[j];
+            float pz1 = pz[j];
+            float thrust_angle1 = thrust[k];
+            v1.SetXYZM(px1,py1,pz1,mass1);
+            v1.RotateZ(thrust_angle1);
+            float eta1 = v1.PsuedoRapidity();
+            float phi1 = v1.Phi();
+            float pt1 = v1.Pt();
+        }
+
         if (pwflag1 != CHARGED_TRACK) continue;
         if(pt1<ptMin||pt1>ptMax) continue;
         
         // Signal loop, calculate S correlation function
         if (p == 0)
         {
-          for ( int k=j+1;k<nparticles;k++ ) {
+          for ( int k=j+1;k<nparticles;k++ )
+          {
             int pid2 = pid[k];
-            float eta2 = eta[k];
-            float phi2 = phi[k];
-            float pt2 = pt[k];
             float mass2 = mass[k];
             float pwflag2 = pwflag[k];
+            
+            if( isThrust == 0)
+            {
+                float eta2 = eta[k];
+                float phi2 = phi[k];
+                float pt2 = pt[k];
+            }
+              
+            if( isThrust == 1)
+            {
+                TLorentzVector v2;
+                float px2 = px[k];
+                float py2 = py[k];
+                float pz2 = pz[k];
+                float thrust_angle2 = thrust[k];
+                v2.SetXYZM(px2,py2,pz2,mass2);
+                v2.RotateZ(thrust_angle2);
+                float eta2 = v2.PsuedoRapidity();
+                float phi2 = v2.Phi();
+                float pt2 = v2.Pt();
+            }
+            
+            
             if (pwflag2 != CHARGED_TRACK) continue;
             if(pt2<ptMin||pt2>ptMax) continue;
             
@@ -190,7 +246,8 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
             h_2D->Fill(eta1-eta2,dphi(phi2,phi1),1./N);    
             h_2D->Fill(eta2-eta1,dphi(phi1,phi2),1./N);    
             h_2D->Fill(eta2-eta1,dphi(phi2,phi1),1./N);
-           /**
+              
+           /** TEST IDEA we want to be able to see two peaks one in the front and one in the back. try adding an if statement if eta is greater than 180 then take absolute value
           h_2D->Fill(fabs(eta1)-fabs(eta2),dphi(phi1,phi2),1./N);
           h_2D->Fill(fabs(eta1)-fabs(eta2),dphi(phi2,phi1),1./N);
           h_2D->Fill(fabs(eta2)-fabs(eta1),dphi(phi1,phi2),1./N);
@@ -200,13 +257,34 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
         }
 
         // Background loop, calculate B correlation function from mixed event
-        for ( int k=0;k<nparticles2;k++ ) {
+        for ( int k=0;k<nparticles2;k++ )
+        {
           int pidmix = pid_mix[k];
-          float etamix = eta_mix[k];
-          float phimix = phi_mix[k];
-          float ptmix = pt_mix[k];
           float massmix = mass_mix[k];
           float pwflagmix = pwflag_mix[k];
+          
+          if (isThrust == 0)
+          {
+              float etamix = eta_mix[k];
+              float phimix = phi_mix[k];
+              float ptmix = pt_mix[k];
+          }
+          
+          if (isThrust == 1)
+          {
+              TLorentzVector vmix;
+              float pxmix = px_mix[k];
+              float pymix = py_mix[k];
+              float pzmix = pz_mix[k];
+              float thrust_angle_mix = thrust_mix[k];
+              vmix.SetXYZM(pxmix,pymix,pzmix,massmix);
+              vmix.RotateZ(thrust_angle_mix);
+              float etamix = vmix.PsuedoRapidity();
+              float phimix = vmix.Phi();
+              float ptmix = vmix.Pt();
+          }
+          
+          
           if (pwflagmix != CHARGED_TRACK) continue;
           if(ptmix<ptMin||ptmix>ptMax) continue;
 
@@ -312,7 +390,7 @@ void goofy()
   int low[7] = {0, 10,20,40};
   int high[7] = {10, 20,30,50};
   for (int i = 0; i<7; i++){
-    analysis(1, 0, low[i], high[i], 40, 0);
+    analysis(1, 0, low[i], high[i], 40, 0,0);
   }
 }
 
