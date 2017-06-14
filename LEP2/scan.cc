@@ -23,6 +23,7 @@ class particleData
 		Float_t pz[100000];
 		Float_t pt[100000];
 		Float_t eta[100000];
+    Float_t theta[100000];
 		Float_t phi[100000];
 		Float_t mass[100000];
 		Float_t charge[10000];
@@ -30,7 +31,7 @@ class particleData
 		Float_t pid[10000];
 };
 
-void scan (TString infile="cleaned_LEP2MCGGUD-MCtrue-all.aleph"){
+void scan (TString infile="cleaned_ALEPH_Data-all.aleph"){
 
 	FILE *fp=fopen(Form("%s",infile.Data()),"r");
 
@@ -51,6 +52,7 @@ void scan (TString infile="cleaned_LEP2MCGGUD-MCtrue-all.aleph"){
 	tout->Branch("pt", pData.pt,"pt[nParticle]/F");
 	tout->Branch("mass", pData.mass,"mass[nParticle]/F");
 	tout->Branch("eta", pData.eta,"eta[nParticle]/F");
+  tout->Branch("theta", pData.theta,"theta[nParticle]/F");
 	tout->Branch("phi", pData.phi,"phi[nParticle]/F");
 	tout->Branch("charge", pData.charge,"charge[nParticle]/F");
 	tout->Branch("pwflag", pData.pwflag,"pwflag[nParticle]/F");
@@ -80,6 +82,7 @@ void scan (TString infile="cleaned_LEP2MCGGUD-MCtrue-all.aleph"){
 		v.SetXYZM(_px,_py,_pz,_m);
         pData.pt[counterParticles]=v.Pt();
         pData.eta[counterParticles]=v.PseudoRapidity();
+        pData.theta[counterParticles]=v.Theta();
         pData.phi[counterParticles]=v.Phi();    
 		pData.charge[counterParticles]=_charge;
 		pData.pwflag[counterParticles]=_pwflag;
