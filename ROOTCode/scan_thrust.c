@@ -224,7 +224,7 @@ float thrust(float x[]){
   
   //int nevent_process = nevent;
   //cout<<"n"<<nevent<<endl;
-  const int nevent_process = 100; //59874
+  const int nevent_process = 59874; //59874
   TH2F*hprojection[nevent_process];
   //float x[nevent_process];
   
@@ -407,17 +407,17 @@ void scan_thrust(){
   //add the branch to the new tree and try to fill it
   newtree->Branch("tAngle", &tAngle, "tAngle/F");
   
-  //int nentries=newtree->GetEntries();
+  int nentries=newtree->GetEntries();
   //cout<<nentries<<endl;
-  int nentries = 100;
-  float x[100];
+  //int nentries = 100;
+  float x[59874];
    //memset(x, 0, nevent*sizeof(float) );
   cout<<"elo"<<endl; 
     
   thrust(x);
   
-  for( int i=0; i < nentries; i++){
-     //t1->GetEntry(i);
+  for( int i=0; i < 59874; i++){
+     t1->GetEntry(i);
      tAngle = x[i];
      newtree->Fill();
   }

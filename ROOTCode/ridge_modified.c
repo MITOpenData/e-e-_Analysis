@@ -6,7 +6,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <TMath.h>
-#include "TLorentzVector.h"
+#include <TLorentzVector.h>
 
 using namespace std;
 
@@ -29,8 +29,8 @@ double dphi(double phi1,double phi2)
 void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 1000, int nbin=40,bool verbose=0,int isThrust = 0){
 
   TString filename;
-  //if(isBelle) filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
-  if(isBelle) filename="/Users/anthony/Documents/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
+  if(isBelle) filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root";
+  //if(isBelle) filename="/Users/anthony/Documents/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
   //else filename="../LEP2dataMarcello/myALEPH.root";
   //else filename="../LEP2dataMarcello/ROOTfiles/final_ALEPH.root";
   
@@ -46,7 +46,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
   Float_t px[100000];
   Float_t py[100000];
   Float_t pz[100000];
-  Float_t thrust[100000];
+  Float_t tAngle[100000];
     
   t1->SetBranchAddress("nParticle",&nParticle);
   t1->SetBranchAddress("pt",pt);
@@ -58,7 +58,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
   t1->SetBranchAddress("px",px);
   t1->SetBranchAddress("py",py);
   t1->SetBranchAddress("pz",pz);
-  t1->SetBranchAddress("thrust",thrust);
+  t1->SetBranchAddress("tAngle",tAngle);
 
   TFile *f_mix = new TFile(filename.Data());
   TTree *t1_mix = (TTree*)f_mix->Get("t");
@@ -72,7 +72,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
   Float_t px_mix[100000];
   Float_t py_mix[100000];
   Float_t pz_mix[100000];
-  Float_t thrust_mix[100000];
+  Float_t tAngle_mix[100000];
   
   t1_mix->SetBranchAddress("nParticle",&nParticle_mix);
   t1_mix->SetBranchAddress("pt",pt_mix);
@@ -84,7 +84,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
   t1_mix->SetBranchAddress("px",px_mix);
   t1_mix->SetBranchAddress("py",py_mix);
   t1_mix->SetBranchAddress("pz",pz_mix);
-  t1_mix->SetBranchAddress("thrust",thrust_mix);
+  t1_mix->SetBranchAddress("tAngle",tAngle_mix);
     
   // two histograms
   double detaRange = 2.4;
@@ -182,27 +182,33 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
         int pid1 = pid[j];
         float pwflag1 = pwflag[j];
         
+        float eta1;
+        float phi1;
+        float pt1;
         // If isThrust == 0 then do not rotate by thrust angle
         // If isThrust == 1 then rotate by thrust angle
         if (isThrust == 0)
         {
-            float eta1 = eta[j];
-            float phi1 = phi[j];
-            float pt1 = pt[j];
+            eta1 = eta[j];
+            phi1 = phi[j];
+            pt1 = pt[j];
+            //if(pt1<ptMin||pt1>ptMax) continue;
         }
           
-        if (isThrust == 1)
+        else //(isThrust == 1)
         {
             TLorentzVector v1;
             float px1 = px[j];
             float py1 = py[j];
             float pz1 = pz[j];
-            float thrust_angle1 = thrust[k];
+            float thrust_angle1 = tAngle[j];//EDIT
             v1.SetXYZM(px1,py1,pz1,mass1);
             v1.RotateZ(thrust_angle1);
-            float eta1 = v1.PsuedoRapidity();
-            float phi1 = v1.Phi();
-            float pt1 = v1.Pt();
+            phi1 = v1.Phi();
+            eta1 = v1.PseudoRapidity();
+            
+            pt1 = v1.Pt();
+            if(pt1<ptMin||pt1>ptMax) continue;
         }
 
         if (pwflag1 != CHARGED_TRACK) continue;
@@ -217,11 +223,15 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
             float mass2 = mass[k];
             float pwflag2 = pwflag[k];
             
+            float eta2;
+            float phi2;
+            float pt2;
+            
             if( isThrust == 0)
             {
-                float eta2 = eta[k];
-                float phi2 = phi[k];
-                float pt2 = pt[k];
+                eta2 = eta[k];
+                phi2 = phi[k];
+                pt2 = pt[k];
             }
               
             if( isThrust == 1)
@@ -230,12 +240,12 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
                 float px2 = px[k];
                 float py2 = py[k];
                 float pz2 = pz[k];
-                float thrust_angle2 = thrust[k];
+                float thrust_angle2 = tAngle[k];
                 v2.SetXYZM(px2,py2,pz2,mass2);
                 v2.RotateZ(thrust_angle2);
-                float eta2 = v2.PsuedoRapidity();
-                float phi2 = v2.Phi();
-                float pt2 = v2.Pt();
+                eta2 = v2.PseudoRapidity();
+                phi2 = v2.Phi();
+                pt2 = v2.Pt();
             }
             
             
@@ -263,11 +273,15 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
           float massmix = mass_mix[k];
           float pwflagmix = pwflag_mix[k];
           
+          float etamix;
+          float phimix;
+          float ptmix;
+          
           if (isThrust == 0)
           {
-              float etamix = eta_mix[k];
-              float phimix = phi_mix[k];
-              float ptmix = pt_mix[k];
+              etamix = eta_mix[k];
+              phimix = phi_mix[k];
+              ptmix = pt_mix[k];
           }
           
           if (isThrust == 1)
@@ -276,12 +290,12 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
               float pxmix = px_mix[k];
               float pymix = py_mix[k];
               float pzmix = pz_mix[k];
-              float thrust_angle_mix = thrust_mix[k];
+              float thrust_angle_mix = tAngle_mix[k];
               vmix.SetXYZM(pxmix,pymix,pzmix,massmix);
               vmix.RotateZ(thrust_angle_mix);
-              float etamix = vmix.PsuedoRapidity();
-              float phimix = vmix.Phi();
-              float ptmix = vmix.Pt();
+              etamix = vmix.PseudoRapidity();
+              phimix = vmix.Phi();
+              ptmix = vmix.Pt();
           }
           
           
@@ -390,7 +404,7 @@ void goofy()
   int low[7] = {0, 10,20,40};
   int high[7] = {10, 20,30,50};
   for (int i = 0; i<7; i++){
-    analysis(1, 0, low[i], high[i], 40, 0,0);
+    analysis(1, 0, low[i], high[i], 40, 0,1);
   }
 }
 
