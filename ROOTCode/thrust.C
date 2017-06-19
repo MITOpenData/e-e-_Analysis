@@ -33,6 +33,9 @@ void thrust(){
   TTree *t1 = (TTree*)f->Get("t");
   Int_t nParticle;
   Float_t pt[50000];
+  Float_t px[50000];
+  Float_t py[50000];
+  Float_t pz[50000];
   Float_t eta[50000];
   Float_t theta[50000];
   Float_t pid[50000];
@@ -42,6 +45,9 @@ void thrust(){
   
   t1->SetBranchAddress("nParticle",&nParticle);
   t1->SetBranchAddress("pt",pt);
+  t1->SetBranchAddress("px",pt);
+  t1->SetBranchAddress("py",pt);
+  t1->SetBranchAddress("pz",pt);
   t1->SetBranchAddress("eta",eta);
   t1->SetBranchAddress("theta",theta);
   t1->SetBranchAddress("pid",pid);
@@ -106,12 +112,15 @@ void thrust(){
          float pt1 = pt[j];
          float theta1 = theta[j];
          float phi1 = phi[j];
+         float px1=px[j];
          float py1=py[j];
          float pz1=pz[j];
          /*
          float px1=pt1*sin(theta1)*cos(phi1);
          float py1=pt1*sin(theta1)*sin(phi1);
-         float pz1=pt1*sin(phi1);
+         float pz1=pt1*cos(theta1);
+         */
+         
          particle_vector.SetXYZ(px1,py1,pz1);
          scalar_prod=scalar_prod+fabs(particle_vector.Dot(unity_versor));         
        }//end of loop over particles

@@ -26,7 +26,7 @@ double dphi(double phi1,double phi2)
 }
 
 
-void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 1000, int nbin=40,bool verbose=0,int isThrust = 0){
+void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 1000, int nbin=20,bool verbose=0,int isThrust = 0){
 
   TString filename;
   if(isBelle) filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root";
@@ -87,11 +87,11 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
   t1_mix->SetBranchAddress("tAngle",tAngle_mix);
     
   // two histograms
-  double detaRange = 2.4;
+  double detaRange = 1.8;
   double normalization = detaRange*2/nbin*2*3.14159/nbin;
-  TH2F *h_2D = new TH2F ( "h_2D", "eta-phi of all particles ",nbin, -detaRange, detaRange,nbin, -3.1416/2., 3.1416*1.5);
-  TH2F *h_2Dmix = new TH2F ( "h_2Dmix", "eta-phi of all particles ",nbin, -detaRange, detaRange,nbin, -3.1416/2., 3.1416*1.5);
-  TH2F *h_ratio = new TH2F ( "h_ratio", "eta-phi of all particles ", nbin, -detaRange, detaRange,nbin, -3.1416/2.,3.1416*1.5);
+  TH2F *h_2D = new TH2F ( "h_2D", "eta-phi of all particles ",nbin*1.5, -detaRange, detaRange,nbin, -3.1416/4., 3.1416*0.75);
+  TH2F *h_2Dmix = new TH2F ( "h_2Dmix", "eta-phi of all particles ",nbin*1.5, -detaRange, detaRange,nbin, -3.1416/4., 3.1416*0.75);
+  TH2F *h_ratio = new TH2F ( "h_ratio", "eta-phi of all particles ", nbin*1.5, -detaRange, detaRange,nbin, -3.1416/4.,3.1416*0.75);
   
   h_2D->Sumw2();
   h_2Dmix->Sumw2();
@@ -257,7 +257,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
             h_2D->Fill(eta2-eta1,dphi(phi1,phi2),1./N);    
             h_2D->Fill(eta2-eta1,dphi(phi2,phi1),1./N);
               
-           /** TEST IDEA we want to be able to see two peaks one in the front and one in the back. try adding an if statement if eta is greater than 180 then take absolute value
+           /* TEST IDEA we want to be able to see two peaks one in the front and one in the back. try adding an if statement if eta is greater than 180 then take absolute value
           h_2D->Fill(fabs(eta1)-fabs(eta2),dphi(phi1,phi2),1./N);
           h_2D->Fill(fabs(eta1)-fabs(eta2),dphi(phi2,phi1),1./N);
           h_2D->Fill(fabs(eta2)-fabs(eta1),dphi(phi1,phi2),1./N);
@@ -387,22 +387,36 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
   for (int i=0;i<3;i++) h_deltaphi[i]->Write();
   fout->Close();
   delete fout;
-    
-    
+  
+
   TCanvas *c1 = new TCanvas("c1","",600,600);
-    c1->SetTheta(60.839);
-    c1->SetPhi(38.0172);
-  h_ratio->SetTitle(Form("Ratio for Multiplicity between %d and %d",mult,mult_upper_bound));
+  c1->SetTheta(60.839);
+  c1->SetPhi(38.0172);
+  h_2D->SetTitle(Form("S correlation between %d and %d",mult,mult_upper_bound));
+  h_2D->Draw("LEGO2");
+  c1->SaveAs(Form("S%d_%d.pdf",mult,mult_upper_bound));
+  
+  TCanvas *c2 = new TCanvas("c2","",600,600);
+    c2->SetTheta(60.839);
+    c2->SetPhi(38.0172);
+  h_2Dmix->SetTitle(Form("B correlation between %d and %d",mult,mult_upper_bound));
+  h_2Dmix->Draw("LEGO2");
+  c2->SaveAs(Form("B%d_%d.pdf",mult,mult_upper_bound));
+    
+  TCanvas *c3 = new TCanvas("c3","",600,600);
+    c3->SetTheta(60.839);
+    c3->SetPhi(38.0172);
+  h_ratio->SetTitle(Form("Ratio of correlations between %d and %d",mult,mult_upper_bound));
   h_ratio->Draw("LEGO2");
-  c1->SaveAs(Form("ratio%d_%d.pdf",mult,mult_upper_bound));
+  c3->SaveAs(Form("ratio%d_%d.pdf",mult,mult_upper_bound));
   
   
   }
 
 void goofy()
 {
-  int low[7] = {0, 10,20,40};
-  int high[7] = {10, 20,30,50};
+  int low[7] = {0, 10,15,20, 25};
+  int high[7] = {10, 15,20,25,30};
   for (int i = 0; i<7; i++){
     analysis(1, 0, low[i], high[i], 40, 0,1);
   }
