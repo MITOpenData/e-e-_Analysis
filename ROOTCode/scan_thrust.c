@@ -173,8 +173,8 @@ double dphi(double phi1,double phi2)
 
 float thrust(float x[]){
 
-  TString filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
-  
+  //TString filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
+  TString filename = "/Users/anthony/Documents/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
   TFile *f = new TFile(filename.Data());
   TTree *t1 = (TTree*)f->Get("t");
   Int_t nParticle;
@@ -355,8 +355,8 @@ void scan_thrust(){
   
   //Float_t px, py, energy, transmom;
   TString filename;
-  filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
-  
+  //filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
+   filename = "/Users/anthony/Documents/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
   TFile *f = new TFile(filename.Data());
   //TFile *f = TFile("/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root");
   TTree *t1 = (TTree*)f->Get("t");
@@ -401,7 +401,8 @@ void scan_thrust(){
   
   
 
-  TFile *g = new TFile("/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root", "RECREATE");
+  //TFile *g = new TFile("/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root", "RECREATE");
+  TFile *g = new TFile("/Users/anthony/Documents/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root","RECREATE");
   TTree *newtree = t1->CloneTree(0); // Do no copy the data yet
   // DO NOT delete the old tree and close the old file
   //add the branch to the new tree and try to fill it

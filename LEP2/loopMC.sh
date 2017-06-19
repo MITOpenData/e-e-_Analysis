@@ -1,7 +1,8 @@
-folder="LEP2_MC/GGBB"
-filelist="LEP2MCGGUDMCtrue.list"
-output="cleaned_LEP2MCGGUD-MCtrue-all.aleph"
-suffix="LEP2MCGGBB*mctrue_aftercut"
+folder="LEP2_MC/GGUD"
+filelist="LEP2MCGGUDY1997E183_mctrue_beforecut-001.list"
+output="cleaned_LEP2MCGGUDY1997E183_mctrue_beforecut-001.aleph"
+suffix="LEP2MCGGUDY1997E183_mctrue_beforecut-001"
+
 
 rm $filelist
 rm $output
@@ -18,6 +19,7 @@ while read F  ; do
           rm $folder/cleaned_$F
           rm ROOTfiles/cleaned_$F.root
           cp $folder/$F  $folder/cleaned_$F
+          sed -i '' 's/MC_TRUE_BEFORE_CUT RUN = / -999. -999. -999. -999./' $folder/cleaned_$F
           sed -i '' 's/px=//'  $folder/cleaned_$F
           sed -i '' 's/py=//'  $folder/cleaned_$F
           sed -i '' 's/pz=//'  $folder/cleaned_$F
@@ -32,6 +34,8 @@ while read F  ; do
           sed -i '' 's/pname//'  $folder/cleaned_$F
           sed -i '' 's/MC_TRUE_AFTER_CUT RUN =/   -999. -999. -999. -999./'  $folder/cleaned_$F
           awk '!/END_/' $folder/cleaned_$F >> testfile.txt && mv testfile.txt $folder/cleaned_$F
+
+
            
 done <$filelist
 
