@@ -78,7 +78,7 @@ void thrust(){
   
   //int nevent_process = nevent;
   const int nevent_process = 100;
-  TH2F*hprojection[nevent_process];
+  TH2F *hprojection[nevent_process];
   
     for (Int_t i=0;i<nevent_process;i++) {  
     if (i%10==0) cout <<i<<"/"<<nevent_process<<endl;
@@ -106,6 +106,9 @@ void thrust(){
          float pt1 = pt[j];
          float theta1 = theta[j];
          float phi1 = phi[j];
+         float py1=py[j];
+         float pz1=pz[j];
+         /*
          float px1=pt1*sin(theta1)*cos(phi1);
          float py1=pt1*sin(theta1)*sin(phi1);
          float pz1=pt1*sin(phi1);
