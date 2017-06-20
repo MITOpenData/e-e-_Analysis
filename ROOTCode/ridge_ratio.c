@@ -27,10 +27,10 @@ double dphi(double phi1,double phi2)
 void analysis(){
 
   TString filename1;
-  filename1="/Users/anthony/Documents/StudyMult/ROOTCode/ROOTfiles/myoutput_isBelle1_minMult40.root";
+  filename1="/data/flowex/Datasamples/Belle/myoutput_isBelle1_minMult40.root";
   
   TString filename2;
-  filename2="/Users/anthony/Documents/StudyMult/ROOTCode/ROOTfiles/myoutput_isBelle1_minMult0.root";
+  filename2="/data/flowex/Datasamples/Belle/myoutput_isBelle1_minMult0.root";
   
   TFile *f1 = new TFile(filename1.Data());
   //TTree *t1 = (TTree*)f1->Get("t");

@@ -1,4 +1,4 @@
-\
+
 #include <TFile.h>
 #include <TTree.h>
 #include <TH1F.h>
@@ -11,9 +11,13 @@ using namespace std;
 #define PI 3.1415926
 enum SIMPLEPID {PHOTON, ELECTRON, PION, MUON, KAON, PROTON};
 
-void macroQA(int maxevt=0,int mult=0,int nbin=20){
+void macroQA(int isBelle = 0, int maxevt=0,int mult=0,int nbin=20){
+  
+  TString filename;
+  if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root"; 			
+  else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root";
 
-  TFile *f = new TFile("output-2.root");
+  TFile *f = new TFile(filename.Data());
   TTree *t1 = (TTree*)f->Get("t");
   Int_t nParticle;
   Float_t pt[10000];

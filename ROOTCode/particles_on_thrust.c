@@ -16,10 +16,12 @@ enum SIMPLEPWFLAG {CHARGED_TRACK, CHARGED_LEPTONS1, CHARGED_LEPTONS2, V0, PHOTON
 
 
 
-void analysis(int maxevt=10){
-
-  TString filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
+void analysis(int isBelle = 0, int maxevt=10){
   
+  TString filename;
+  if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root"; 			
+  else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root";
+
   TFile *f = new TFile(filename.Data());
   TTree *t1 = (TTree*)f->Get("t");
   Int_t nParticle;

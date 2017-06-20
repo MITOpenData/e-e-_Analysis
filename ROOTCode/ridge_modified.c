@@ -29,10 +29,8 @@ double dphi(double phi1,double phi2)
 void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 1000, int nbin=20,bool verbose=0,int isThrust = 0){
 
   TString filename;
-  if(isBelle) filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root";
-  //if(isBelle) filename="/Users/anthony/Documents/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
-  //else filename="../LEP2dataMarcello/myALEPH.root";
-  //else filename="../LEP2dataMarcello/ROOTfiles/final_ALEPH.root";
+  if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root"; 			
+  else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root";
   
   TFile *f = new TFile(filename.Data());
   TTree *t1 = (TTree*)f->Get("t");
@@ -375,8 +373,9 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
   h_ratio->GetXaxis()->SetTitle("#Delta#eta");
   h_ratio->GetYaxis()->SetTitle("#Delta#phi");
   
-
-  TFile*fout=new TFile(Form("ROOTfiles/myoutput_isBelle%d_minMult%d.root",isBelle,mult),"recreate");
+  if (isBelle) TFile*fout=new TFile(Form("/data/flowex/Datasamples/Belle/myoutput_minMult%d.root",mult),"recreate");
+  else TFile*fout=new TFile(Form("/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/myoutput_minMult%d.root",mult),"recreate");
+  //TFile*fout=new TFile(Form("ROOTfiles/myoutput_isBelle%d_minMult%d.root",isBelle,mult),"recreate");
   fout->cd();
   h_2D->Write();
   h_2Dmix->Write();

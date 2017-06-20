@@ -24,10 +24,13 @@ double dphi(double phi1,double phi2)
     return a;
 }
 
-float thrust(float x[]){
+float thrust(int isBelle = 0, float x[]){
 
-  //TString filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
-  TString filename = "/Users/anthony/Documents/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
+
+  TString filename;
+  if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root"; 			
+  else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root";
+  
   TFile *f = new TFile(filename.Data());
   TTree *t1 = (TTree*)f->Get("t");
   Int_t nParticle;

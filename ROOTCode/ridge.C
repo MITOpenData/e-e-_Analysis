@@ -25,12 +25,11 @@ double dphi(double phi1,double phi2)
 }
 
 void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0){
-
-  TString filename;
-  if(isBelle) filename="../Inputs/output_2_withtheta.root"; 			
-  //else filename="../LEP2dataMarcello/myALEPH.root";
-  else filename="../LEP2dataMarcello/ROOTfiles/final_ALEPH.root";
   
+  TString filename;
+  if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root"; 			
+  else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root";
+
   TFile *f = new TFile(filename.Data());
   TTree *t1 = (TTree*)f->Get("t");
   Int_t nParticle;
@@ -262,7 +261,8 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
   h_ratio->GetYaxis()->SetTitle("#Delta#phi");
   
 
-  TFile*fout=new TFile(Form("ROOTfiles/myoutput_isBelle%d_minMult%d.root",isBelle,mult),"recreate");
+  if (isBelle) TFile*fout=new TFile(Form("/data/flowex/Datasamples/Belle/myoutput_minMult%d.root",mult),"recreate");
+  else TFile*fout=new TFile(Form("/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/myoutput_minMult%d.root",mult),"recreate");
   fout->cd();
   h_2D->Write();
   h_2Dmix->Write();

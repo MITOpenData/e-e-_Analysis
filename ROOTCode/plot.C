@@ -9,7 +9,7 @@
 
 void plot(int isBelle=1,int mult=50,int cuthigh=0){
   
-    TFile*finput=new TFile(Form("ROOTfiles/myoutput_isBelle%d_minMult%d.root",isBelle,mult));
+    TFile*finput=new TFile(Form("/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/myoutput_isBelle%d_minMult%d.root",isBelle,mult));
     finput->cd();
     TH2F*h_2D=(TH2F*)finput->Get("h_2D");
     TH2F*h_2Dmix=(TH2F*)finput->Get("h_2Dmix");

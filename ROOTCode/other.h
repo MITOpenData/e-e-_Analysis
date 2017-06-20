@@ -1,1 +1,0 @@
-float thrust(float x[]);

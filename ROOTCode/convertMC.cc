@@ -28,7 +28,7 @@ class particleData
 
 void convertMC(){
 
-  const TString forestinput = "HiForestAOD.root";
+  const TString forestinput = "/data/flowex/StudyMult/ROOTCode/HiForestAOD.root";
   TFile *lFile = TFile::Open(forestinput);
   TTree *gentree = (TTree*)lFile->Get("HiGenParticleAna/hi");
   

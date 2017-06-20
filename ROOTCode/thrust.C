@@ -25,9 +25,11 @@ double dphi(double phi1,double phi2)
     return a;
 }
 
-void thrust(){
-
-  TString filename="../Inputs/output_2_withtheta.root";
+void thrust(int isBelle = 0){
+  
+  TString filename;
+  if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root"; 			
+  else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root";
   
   TFile *f = new TFile(filename.Data());
   TTree *t1 = (TTree*)f->Get("t");
