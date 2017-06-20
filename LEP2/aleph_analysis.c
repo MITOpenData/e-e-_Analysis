@@ -28,7 +28,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
     
     TString filename;
     //if(isBelle) filename="/Users/anthony/Documents/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
-    if(isBelle) filename="ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
+    if(isBelle) filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_DATA_all.aleph.root";
     
     TFile *f = new TFile(filename.Data());
     TTree *t1 = (TTree*)f->Get("t");

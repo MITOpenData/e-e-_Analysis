@@ -3,6 +3,7 @@ filelist="LEP2MCGGUDY1997E183_mctrue_beforecut-001.list"
 output="cleaned_LEP2MCGGUDY1997E183_mctrue_beforecut-001.aleph"
 suffix="LEP2MCGGUDY1997E183_mctrue_beforecut-001"
 
+#EMACS COMMENT
 
 rm $filelist
 rm $output
