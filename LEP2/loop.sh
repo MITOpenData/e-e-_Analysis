@@ -1,5 +1,5 @@
-folder="LEP2"
-filelist="ALEPH_Data.list"
+folder="/data/flowex/Datasamples/LEP2_MAIN/LEP2"
+filelist="/data/flowex/Datasamples/LEP2_MAIN/Lists/ALEPH_Data.list"
 output="cleaned_ALEPH_Data-all.aleph"
 suffix="ALEPH_Data"
 

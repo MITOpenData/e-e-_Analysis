@@ -47,7 +47,7 @@ public:
     Float_t pid_gen[10000];
 };
 
-void scanMC (TString infile="cleaned_LEP2MCGGUDY1997E183_mctrue_beforecut-001.aleph"){
+void scanMC (TString infile="/data/flowex/MCsamples/LEP2_MC_MAIN/LEP2_MC/GGUD/cleaned_LEP2MCGGUDY1997E183_mctrue_beforecut-001.aleph"){
     
     FILE *fp=fopen(Form("%s",infile.Data()),"r");
     
@@ -110,6 +110,8 @@ void scanMC (TString infile="cleaned_LEP2MCGGUDY1997E183_mctrue_beforecut-001.al
 
 void checkMC(){
     
+    // FILE LOCATION NEEDS TO BE FIXED TO svmithi02 location
+    // NOT ALREADY FIXED BECAUSE CURRENT FILE NOT IN SPECIFIED LOCATION
     TFile *f = new TFile("ROOTfiles/cleaned_LEP2MCGGBBY2000E207_mctrue_beforecut-001.aleph.root");
     TTree *t1 = (TTree*)f->Get("tgen");
     Int_t nParticle_gen,EventNo_gen,RunNo_gen;

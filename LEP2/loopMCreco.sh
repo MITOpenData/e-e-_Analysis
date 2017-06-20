@@ -1,5 +1,5 @@
-folder="LEP2_MC/GGUD"
-filelist="LEP2MCGGUDReco.list"
+folder="/data/flowex/MCsamples/LEP2_MC_MAIN/LEP2_MC/GGUD"
+filelist="/data/flowex/MCsamples/LEP2_MC_MAIN/Lists_MC/LEP2MCGGUDReco.list"
 output="cleaned_LEP2MCGGUD-Reco-all.aleph"
 suffix="LEP2MCGGUD*recons_aftercut"
 

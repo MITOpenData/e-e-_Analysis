@@ -31,7 +31,7 @@ class particleData
 		Float_t pid[10000];
 };
 
-void scan (TString infile="cleaned_ALEPH_Data-all.aleph"){
+void scan (TString infile="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph"){
 
 	FILE *fp=fopen(Form("%s",infile.Data()),"r");
 
@@ -96,6 +96,8 @@ void scan (TString infile="cleaned_ALEPH_Data-all.aleph"){
 
 void check(){
 
+  // THIS FILE LOCATION NEEDS TO BE UPDATED TO SVMITHI02 ADDRESS
+  // THIS WAS NOT DONE BECAUSE THE FILE WAS NOT IN THE ORIGINAL GIT FILES
   TFile *f = new TFile("ROOTfiles/cleaned_ALEPH_Data1999_200GeV_V0.root");
   TTree *t1 = (TTree*)f->Get("t");
   Int_t nParticle,EventNo,RunNo;

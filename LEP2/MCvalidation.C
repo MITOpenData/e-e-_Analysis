@@ -1,7 +1,7 @@
 void MCvalidation(){
 
-TString filetrue="cleaned_LEP2MCGGBBY2000E207_mctrue_aftercut-001.aleph.root";
-TString filereco="cleaned_LEP2MCGGBBY2000E207_recons_aftercut-001.aleph.root";
+TString filetrue="/data/flowex/MCsamples/LEP2_MC_MAIN/ROOTfiles_MCcleaned_LEP2MCGGBBY2000E207_mctrue_aftercut-001.aleph.root";
+TString filereco="/data/flowex/MCsamples/LEP2_MC_MAIN/ROOTfiles_MCcleaned_LEP2MCGGBBY2000E207_recons_aftercut-001.aleph.root";
 TString fileoutput="test.root";
 
 TFile*ftrue=new TFile(filetrue.Data());

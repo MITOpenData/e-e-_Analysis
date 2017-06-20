@@ -1,5 +1,5 @@
-folder="LEP2_MC/GGUD"
-filelist="LEP2MCGGUDY1997E183_mctrue_beforecut-001.list"
+folder="/data/flowex/MCsamples/LEP2_MC_MAIN/LEP2_MC/GGUD"
+filelist="/data/flowex/MCsamples/LEP2_MC_MAIN/Lists_MC/LEP2MCGGUDY1997E183_mctrue_beforecut-001.list"
 output="cleaned_LEP2MCGGUDY1997E183_mctrue_beforecut-001.aleph"
 suffix="LEP2MCGGUDY1997E183_mctrue_beforecut-001"
 
