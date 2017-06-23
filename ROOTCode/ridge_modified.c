@@ -26,10 +26,9 @@ double dphi(double phi1,double phi2)
 }
 
 
-void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 1000, int nbin=20,bool verbose=0,int isThrust = 0){
+void analysis(int isBelle=0, int maxevt=0,int mult=0, int mult_upper_bound = 1000, int nbin=20,bool verbose=0,int isThrust = 0){
 
-  TString filename;
-  if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root"; 			
+  if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root";
   else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root";
   
   TFile *f = new TFile(filename.Data());

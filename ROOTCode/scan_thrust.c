@@ -24,12 +24,11 @@ double dphi(double phi1,double phi2)
     return a;
 }
 
-float thrust(int isBelle = 0, float x[]){
+void thrust(int isBelle, float x[]){
 
 
-  TString filename;
-  if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root"; 			
-  else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root";
+  if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root";
+  else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
   
   TFile *f = new TFile(filename.Data());
   TTree *t1 = (TTree*)f->Get("t");
@@ -136,88 +135,9 @@ float thrust(int isBelle = 0, float x[]){
 
 
 void scan_thrust(){
-  
- 
-  //TFile *f = new TFile(filename.Data());
-  //TTree *t1 = (TTree*)f->Get("t");
-  
- 	//TFile *hf = TFile(Form("ROOTfiles/%s.root",infile.Data()), "RECREATE" );
-	//TTree *tout = new TTree("t","");
-	//TLorentzVector v;
-  //  cout<<"step1"<<endl;
-  
-  /*
-  TFile *f = new TFile("/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root","update");
-  TTree *tout = (TTree*)f->Get("ntuple");
-	
-  float tAngle;
-	TBranch *etAngle = tout->Branch("tAngle", &tAngle,"tAngle/F");
-  Int_t nevent = (Int_t)tout->GetEntries();
-  
-  
-  float x[nevent];
-  memset(x, 0, nevent*sizeof(float) );
-  cout<<"elo"<<endl;
-  
-  thrust(x);
-  
-  //tAngle_array = thrust();
-  
-  for (Int_t i =0; i < nevent; i++)
-  {
-    if (i%10 == 0) 
-    {   
-      cout<<i<<endl;
-    }
-    tAngle = x[i];
-    etAngle->Fill();
-  }
-  tout->Print();
-  tout->Write();
-  delete f;
-  
-  
- */
- 
-
-
-
-  /*
-  TFile *f = new TFile("/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root","RECREATE");
-   TTree *T = (TTree*)f->Get("t");
-  // float px,py;
-   float tAngle;
-   TBranch *bpt = T->Branch("tAngle",&tAngle,"tAngle/F");
-  // T->SetBranchAddress("px",&px);
-   //T->SetBranchAddress("py",&py);
-   //Long64_t nentries = T->GetEntries
-   //Int_t nevent = (Int_t)T->GetEntries();
-  
-  
-   float x[100];
-   //memset(x, 0, nevent*sizeof(float) );
-   cout<<"elo"<<endl; 
-    
-    thrust(x);
-   // Int_t nevent = (Int_t)tout->GetEntries();
-   for (i=0;i<100;i++) {
-      if (i%10 == 0) 
-    {   
-      cout<<i<<endl;
-    }
-    tAngle = x[i];
-    bpt->Fill();
-   }
-   T->Print();
-   T->Write();
-   delete f;
-   
-   */
-  
-  
-  TString filename;
+   TString filename;
   //filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
-  filename = "/Users/anthony/Documents/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
+  filename = "/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
   
   TFile *f = new TFile(filename.Data());
   TTree *t1 = (TTree*)f->Get("t");
@@ -263,7 +183,7 @@ void scan_thrust(){
   
 
   //TFile *g = new TFile("/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root", "RECREATE");
-  TFile *g = new TFile("/Users/anthony/Documents/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root","RECREATE");
+  TFile *g = new TFile("/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.roo","RECREATE");
  
 
   TTree *newtree = t1->CloneTree(0); // Do no copy the data yet
@@ -274,14 +194,14 @@ void scan_thrust(){
   
   //int nentries=newtree->GetEntries();
   Int_t nevent = (Int_t)t1->GetEntries();
-  int nevent_process = nevent
+    int nevent_process = nevent;
   //cout<<nentries<<endl;
   //int nentries = 100;
   float x[nevent_process];
   memset(x, 0, nevent*sizeof(float) );
   cout<<"elo"<<endl; 
     
-  thrust(x);
+  thrust(0,x);
   
   for( int i=0; i < nevent_process; i++){
      t1->GetEntry(i);
