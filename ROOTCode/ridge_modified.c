@@ -373,9 +373,11 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
   h_ratio->GetXaxis()->SetTitle("#Delta#eta");
   h_ratio->GetYaxis()->SetTitle("#Delta#phi");
   
+  TFile *fout;
   if (isBelle) TFile *fout=new TFile(Form("/data/flowex/Datasamples/Belle/myoutput_minMult%d.root",mult),"recreate");
   else TFile *fout=new TFile(Form("/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/myoutput_minMult%d.root",mult),"recreate");
-  //TFile*fout=new TFile(Form("ROOTfiles/myoutput_isBelle%d_minMult%d.root",isBelle,mult),"recreate");
+  //TFile *fout=new TFile(Form("ROOTfiles/myoutput_isBelle%d_minMult%d.root",isBelle,mult),"recreate");
+    TFile *fout=new TFile(Form("/data/flowex/Datasamples/Belle/myoutput_minMult%d.root",mult),"recreate");
   fout->cd();
   h_2D->Write();
   h_2Dmix->Write();
