@@ -26,7 +26,7 @@ double dphi(double phi1,double phi2)
 
 void thrust(int isBelle, float x[]){
 
-    TFile *filename;
+    TFile filename;
   if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root";
   else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
   
