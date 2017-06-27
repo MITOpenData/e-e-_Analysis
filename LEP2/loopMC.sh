@@ -3,7 +3,6 @@ filelist="/data/flowex/MCsamples/LEP2_MC_MAIN/Lists_MC/LEP2MCGGUDY1997E183_mctru
 output="cleaned_LEP2MCGGUDY1997E183_mctrue_beforecut-001.aleph"
 suffix="LEP2MCGGUDY1997E183_mctrue_beforecut-001"
 
-#EMACS COMMENT
 
 rm $filelist
 rm $output

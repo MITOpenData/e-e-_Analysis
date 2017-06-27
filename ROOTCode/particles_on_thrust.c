@@ -21,9 +21,12 @@ void analysis(int isBelle = 0, int maxevt=10){
   TString filename;
   if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root"; 			
   else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root";
-
+  
+  
+  //filename = "/mnt/c/Users/Bibek Kumar Pandit/Desktop/cleaned_ALEPH_Data2-all.aleph.root";
   TFile *f = new TFile(filename.Data());
   TTree *t1 = (TTree*)f->Get("t");
+  
   Int_t nParticle;
   Float_t pt[50000];
   Float_t px[50000];
@@ -36,9 +39,11 @@ void analysis(int isBelle = 0, int maxevt=10){
   Float_t mass[50000];
   Float_t pwflag[50000];
   
+  cout<<"hi"<<endl;
+  
   t1->SetBranchAddress("nParticle",&nParticle);
   t1->SetBranchAddress("pt",pt);
-   t1->SetBranchAddress("px",px);
+  t1->SetBranchAddress("px",px);
   t1->SetBranchAddress("py",py);
   t1->SetBranchAddress("pz",pz);
   t1->SetBranchAddress("eta",eta);
@@ -47,6 +52,7 @@ void analysis(int isBelle = 0, int maxevt=10){
   t1->SetBranchAddress("phi",phi);
   t1->SetBranchAddress("mass",mass);
   t1->SetBranchAddress("pwflag",pwflag);
+  
 
   /*
   x=sin(theta)*cos(phi)
@@ -59,8 +65,8 @@ void analysis(int isBelle = 0, int maxevt=10){
   double maxtheta=3.14;  
   
   int nstepsphi=100;
-  double minphi=0.;
-  double maxphi=2*3.14;
+  double minphi=-3.14;
+  double maxphi=3.14;
   
   double sizetheta=(maxtheta-mintheta)/(double)nstepstheta;
   double sizephi=(maxphi-minphi)/(double)nstepsphi;
@@ -74,11 +80,11 @@ void analysis(int isBelle = 0, int maxevt=10){
   
     // all entries and fill the histograms
   Int_t nevent = (Int_t)t1->GetEntries();
-  int nevent_process = nevent;
+  int nevent_process= nevent;
   
   if (maxevt > 0 && maxevt < nevent) nevent_process = maxevt;
   //const int nevent_process = 10;
-  
+
   TH2F*hprojection[nevent_process];
   TH2F*hparticles[nevent_process];
   
@@ -103,9 +109,9 @@ void analysis(int isBelle = 0, int maxevt=10){
 
   for ( int itheta=0; itheta<nstepstheta; itheta++ ) {
     mytheta=sizetheta*(double)itheta;
-    
+    myphi = -3.14;
     for ( int iphi=0; iphi<nstepsphi; iphi++ ) {
-      myphi=sizephi*(double)iphi;
+      
 
       x_versor=sin(mytheta)*cos(myphi);
       y_versor=sin(mytheta)*sin(myphi);
@@ -123,15 +129,12 @@ void analysis(int isBelle = 0, int maxevt=10){
        float px1=px[j];
        float py1=py[j];
        float pz1=pz[j];
-       /*
-       float px1=pt1*sin(theta1)*cos(phi1);
-       float py1=pt1*sin(theta1)*sin(phi1);
-       float pz1=pt1*cos(theta1);
-       */
-       particle_vector.SetXYZ(px1,py1,pz1);
-       scalar_prod = scalar_prod + fabs(particle_vector.Dot(unity_versor));         
-      }//end of loop over particles
 
+       particle_vector.SetXYZ(px1,py1,pz1);
+       scalar_prod = scalar_prod + fabs(particle_vector.Dot(unity_versor)); 
+       
+       myphi += sizephi;
+      }//end of loop over particles
      hprojection[i]->SetBinContent(itheta,iphi,scalar_prod);     
      if (scalar_prod>maxscalar) { maxscalar=scalar_prod; theta_max=mytheta; phi_max=myphi;} 
     }//loop over theta
@@ -142,7 +145,6 @@ void analysis(int isBelle = 0, int maxevt=10){
   
   hparticles[i]->SetMarkerStyle(20);
   hparticles[i]->Fill(theta[j], phi[j]);
-           
  }
  
  

@@ -22,6 +22,7 @@ class particleData
 		Float_t py[100000];
 		Float_t pz[100000];
 		Float_t pt[100000];
+    Float_t pmag[100000];//Added later on
 		Float_t eta[100000];
     Float_t theta[100000];
 		Float_t phi[100000];
@@ -33,6 +34,8 @@ class particleData
 
 void scan (TString infile="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph"){
 
+
+  //"/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph"
 	FILE *fp=fopen(Form("%s",infile.Data()),"r");
 
 	float _px,_py,_pz,_m,_charge,_pwflag;
@@ -50,6 +53,7 @@ void scan (TString infile="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_
 	tout->Branch("py", pData.py,"py[nParticle]/F");
 	tout->Branch("pz", pData.pz,"pz[nParticle]/F");
 	tout->Branch("pt", pData.pt,"pt[nParticle]/F");
+  tout->Branch("pmag", pData.pmag,"pmag[nParticle]/F");//Added later on
 	tout->Branch("mass", pData.mass,"mass[nParticle]/F");
 	tout->Branch("eta", pData.eta,"eta[nParticle]/F");
   tout->Branch("theta", pData.theta,"theta[nParticle]/F");
@@ -64,11 +68,11 @@ void scan (TString infile="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_
   cout<<"step2"<<endl;
 	while(fscanf(fp,"%f %f %f %f %f %f",&_px,&_py,&_pz,&_m,&_charge,&_pwflag)!=EOF) {
 		if (_px==-999.&&_py==-999.&&_pz==-999.) { 
-		   cout<<"counterEntries="<<counterEntries<<endl;
+		  cout<<"counterEntries="<<counterEntries<<endl;
 			pData.nParticle=counterParticles; 
-            if(counterEntries>0) tout->Fill(); 
-		    pData.RunNo=_m; 
-		    pData.EventNo=_charge; 
+      if(counterEntries>0) tout->Fill(); 
+		  pData.RunNo=_m; 
+		  pData.EventNo=_charge; 
 			pData.Energy=_pwflag; 
 			counterParticles=0;   
 			cout<<"------------------------------------------------------------------------"<<endl; 
@@ -81,9 +85,11 @@ void scan (TString infile="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_
 		pData.mass[counterParticles]=_m;
 		v.SetXYZM(_px,_py,_pz,_m);
         pData.pt[counterParticles]=v.Pt();
+        pData.pmag[counterParticles]=v.Rho(); //Added later on
         pData.eta[counterParticles]=v.PseudoRapidity();
         pData.theta[counterParticles]=v.Theta();
-        pData.phi[counterParticles]=v.Phi();    
+        pData.phi[counterParticles]=v.Phi();
+        
 		pData.charge[counterParticles]=_charge;
 		pData.pwflag[counterParticles]=_pwflag;
 		pData.pid[counterParticles]=0;
@@ -106,6 +112,7 @@ void check(){
   Float_t py[100000];
   Float_t pz[100000];
   Float_t pt[100000];
+  Float_t pmag[100000];//Added later on
   Float_t eta[100000];
   Float_t pid[100000];
   Float_t phi[100000];
@@ -119,6 +126,7 @@ void check(){
   t1->SetBranchAddress("py",py);
   t1->SetBranchAddress("pz",pz);
   t1->SetBranchAddress("pt",pt);
+  t1->SetBranchAddress("pmag",pmag);//Added later on
   t1->SetBranchAddress("eta",eta);
   t1->SetBranchAddress("pid",pid);
   t1->SetBranchAddress("phi",phi);
@@ -143,8 +151,9 @@ void check(){
       float py1 = py[j];
       float pz1 = pz[j];
       float pt1 = pt[j];
+      float pmag1 = pmag[j];
       float mass1 = mass[j];
-      cout<<"EventNo="<<EventNo<<" px="<<px1<<"py="<<py1<<"pz="<<pz1<<"pt="<<pt1<<"mass="<<mass1<<endl;
+      cout<<"EventNo="<<EventNo<<" px="<<px1<<"py="<<py1<<"pz="<<pz1<<"pt="<<pt1<<"pmag="<<pmag1<<"mass="<<mass1<<endl;
    }
  }
 }

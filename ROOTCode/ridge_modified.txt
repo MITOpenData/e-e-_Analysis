@@ -272,3 +272,81 @@ void analysis(int isBelle=1, int maxevt=0,int mult=50,int nbin=40,bool verbose=0
   delete fout;
 
   }
+  
+  
+    //TFile *f = new TFile(filename.Data());
+  //TTree *t1 = (TTree*)f->Get("t");
+  
+ 	//TFile *hf = TFile(Form("ROOTfiles/%s.root",infile.Data()), "RECREATE" );
+	//TTree *tout = new TTree("t","");
+	//TLorentzVector v;
+  //  cout<<"step1"<<endl;
+  
+  /*
+  TFile *f = new TFile("/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root","update");
+  TTree *tout = (TTree*)f->Get("ntuple");
+	
+  float tAngle;
+	TBranch *etAngle = tout->Branch("tAngle", &tAngle,"tAngle/F");
+  Int_t nevent = (Int_t)tout->GetEntries();
+  
+  
+  float x[nevent];
+  memset(x, 0, nevent*sizeof(float) );
+  cout<<"elo"<<endl;
+  
+  thrust(x);
+  
+  //tAngle_array = thrust();
+  
+  for (Int_t i =0; i < nevent; i++)
+  {
+    if (i%10 == 0) 
+    {   
+      cout<<i<<endl;
+    }
+    tAngle = x[i];
+    etAngle->Fill();
+  }
+  tout->Print();
+  tout->Write();
+  delete f;
+  
+  
+ */
+ 
+
+
+
+  /*
+  TFile *f = new TFile("/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root","RECREATE");
+   TTree *T = (TTree*)f->Get("t");
+  // float px,py;
+   float tAngle;
+   TBranch *bpt = T->Branch("tAngle",&tAngle,"tAngle/F");
+  // T->SetBranchAddress("px",&px);
+   //T->SetBranchAddress("py",&py);
+   //Long64_t nentries = T->GetEntries
+   //Int_t nevent = (Int_t)T->GetEntries();
+  
+  
+   float x[100];
+   //memset(x, 0, nevent*sizeof(float) );
+   cout<<"elo"<<endl; 
+    
+    thrust(x);
+   // Int_t nevent = (Int_t)tout->GetEntries();
+   for (i=0;i<100;i++) {
+      if (i%10 == 0) 
+    {   
+      cout<<i<<endl;
+    }
+    tAngle = x[i];
+    bpt->Fill();
+   }
+   T->Print();
+   T->Write();
+   delete f;
+   
+   */
+  
