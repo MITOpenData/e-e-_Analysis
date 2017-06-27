@@ -26,10 +26,9 @@ double dphi(double phi1,double phi2)
 }
 
 
-void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 1000, int nbin=20,bool verbose=0,int isThrust = 0){
-
+void analysis(int isBelle=0, int maxevt=0,int mult=0, int mult_upper_bound = 1000, int nbin=20,bool verbose=0,int isThrust = 0){
   TString filename;
-  if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root"; 			
+  if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root";
   else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root";
   
   TFile *f = new TFile(filename.Data());
@@ -373,9 +372,9 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
   h_ratio->GetXaxis()->SetTitle("#Delta#eta");
   h_ratio->GetYaxis()->SetTitle("#Delta#phi");
   
-  if (isBelle) TFile*fout=new TFile(Form("/data/flowex/Datasamples/Belle/myoutput_minMult%d.root",mult),"recreate");
-  else TFile*fout=new TFile(Form("/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/myoutput_minMult%d.root",mult),"recreate");
-  //TFile*fout=new TFile(Form("ROOTfiles/myoutput_isBelle%d_minMult%d.root",isBelle,mult),"recreate");
+    TFile *fout;
+  if (isBelle) fout= new TFile(Form("/data/flowex/Outputs/myoutput_minMult%d.root",mult),"recreate");
+  else fout=new TFile(Form("/data/flowex/Outputs/myoutput_minMult%d.root",mult),"recreate");
   fout->cd();
   h_2D->Write();
   h_2Dmix->Write();
@@ -384,9 +383,11 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
   h_proj->SetTitle(Form("Multiplicity Between %d and %d",mult,mult_upper_bound));
   h_proj->Write();
   for (int i=0;i<3;i++) h_deltaphi[i]->Write();
+  
   fout->Close();
   delete fout;
   
+
 
   TCanvas *c1 = new TCanvas("c1","",600,600);
   c1->SetTheta(60.839);
@@ -408,8 +409,7 @@ void analysis(int isBelle=1, int maxevt=0,int mult=0, int mult_upper_bound = 100
   h_ratio->SetTitle(Form("Ratio of correlations between %d and %d",mult,mult_upper_bound));
   h_ratio->Draw("LEGO2");
   c3->SaveAs(Form("ratio%d_%d.pdf",mult,mult_upper_bound));
-  
-  
+
   }
 
 void goofy()
