@@ -26,10 +26,12 @@ double dphi(double phi1,double phi2)
 }
 
 
-void analysis(int isBelle=0, int maxevt=0,int mult=0, int mult_upper_bound = 1000, int nbin=20,bool verbose=0,int isThrust = 0){
+void analysis(int isBelle, int maxevt,int mult, int mult_upper_bound, int nbin,bool verbose,int isThrust){
   TString filename;
-  if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root";
-  else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root";
+  //if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root";
+  //else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
+  
+  filename = "/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root";
   
   TFile *f = new TFile(filename.Data());
   TTree *t1 = (TTree*)f->Get("t");
@@ -43,8 +45,9 @@ void analysis(int isBelle=0, int maxevt=0,int mult=0, int mult_upper_bound = 100
   Float_t px[100000];
   Float_t py[100000];
   Float_t pz[100000];
-  Float_t tAngle[100000];
-    
+  Float_t TTheta[100000];
+  Float_t TPhi[100000];
+  
   t1->SetBranchAddress("nParticle",&nParticle);
   t1->SetBranchAddress("pt",pt);
   t1->SetBranchAddress("eta",eta);
@@ -55,7 +58,8 @@ void analysis(int isBelle=0, int maxevt=0,int mult=0, int mult_upper_bound = 100
   t1->SetBranchAddress("px",px);
   t1->SetBranchAddress("py",py);
   t1->SetBranchAddress("pz",pz);
-  t1->SetBranchAddress("tAngle",tAngle);
+  t1->SetBranchAddress("TTheta", TTheta);
+  t1->SetBranchAddress("TPhi",TPhi);
 
   TFile *f_mix = new TFile(filename.Data());
   TTree *t1_mix = (TTree*)f_mix->Get("t");
@@ -69,7 +73,8 @@ void analysis(int isBelle=0, int maxevt=0,int mult=0, int mult_upper_bound = 100
   Float_t px_mix[100000];
   Float_t py_mix[100000];
   Float_t pz_mix[100000];
-  Float_t tAngle_mix[100000];
+  Float_t TTheta_mix[100000];
+  Float_t TPhi_mix[100000];
   
   t1_mix->SetBranchAddress("nParticle",&nParticle_mix);
   t1_mix->SetBranchAddress("pt",pt_mix);
@@ -81,10 +86,11 @@ void analysis(int isBelle=0, int maxevt=0,int mult=0, int mult_upper_bound = 100
   t1_mix->SetBranchAddress("px",px_mix);
   t1_mix->SetBranchAddress("py",py_mix);
   t1_mix->SetBranchAddress("pz",pz_mix);
-  t1_mix->SetBranchAddress("tAngle",tAngle_mix);
-    
+  t1_mix->SetBranchAddress("TTheta", TTheta_mix);
+  t1_mix->SetBranchAddress("TPhi", TPhi_mix);
+  
   // two histograms
-  double detaRange = 1.8;
+  double detaRange = 3.0;
   double normalization = detaRange*2/nbin*2*3.14159/nbin;
   TH2F *h_2D = new TH2F ( "h_2D", "eta-phi of all particles ",nbin*1.5, -detaRange, detaRange,nbin, -3.1416/4., 3.1416*0.75);
   TH2F *h_2Dmix = new TH2F ( "h_2Dmix", "eta-phi of all particles ",nbin*1.5, -detaRange, detaRange,nbin, -3.1416/4., 3.1416*0.75);
@@ -105,6 +111,7 @@ void analysis(int isBelle=0, int maxevt=0,int mult=0, int mult_upper_bound = 100
     double nEventProcessed=0;
     double nEventInMultBin=0;
     double num_runs = 10;
+    
     for (Int_t i=0;i<nevent_process;i++) {
   
     if (i%10000==0) cout <<i<<"/"<<nevent_process<<endl;
@@ -198,14 +205,14 @@ void analysis(int isBelle=0, int maxevt=0,int mult=0, int mult_upper_bound = 100
             float px1 = px[j];
             float py1 = py[j];
             float pz1 = pz[j];
-            float thrust_angle1 = tAngle[j];//EDIT
+            float thrust_angle1 = TTheta[i];//EDIT
             v1.SetXYZM(px1,py1,pz1,mass1);
             v1.RotateZ(thrust_angle1);
             phi1 = v1.Phi();
             eta1 = v1.PseudoRapidity();
             
             pt1 = v1.Pt();
-            if(pt1<ptMin||pt1>ptMax) continue;
+            //if(pt1<ptMin||pt1>ptMax) continue;
         }
 
         if (pwflag1 != CHARGED_TRACK) continue;
@@ -237,7 +244,7 @@ void analysis(int isBelle=0, int maxevt=0,int mult=0, int mult_upper_bound = 100
                 float px2 = px[k];
                 float py2 = py[k];
                 float pz2 = pz[k];
-                float thrust_angle2 = tAngle[k];
+                float thrust_angle2 = TTheta[i];
                 v2.SetXYZM(px2,py2,pz2,mass2);
                 v2.RotateZ(thrust_angle2);
                 eta2 = v2.PseudoRapidity();
@@ -287,7 +294,7 @@ void analysis(int isBelle=0, int maxevt=0,int mult=0, int mult_upper_bound = 100
               float pxmix = px_mix[k];
               float pymix = py_mix[k];
               float pzmix = pz_mix[k];
-              float thrust_angle_mix = tAngle_mix[k];
+              float thrust_angle_mix = TTheta_mix[selected];
               vmix.SetXYZM(pxmix,pymix,pzmix,massmix);
               vmix.RotateZ(thrust_angle_mix);
               etamix = vmix.PseudoRapidity();
@@ -372,9 +379,10 @@ void analysis(int isBelle=0, int maxevt=0,int mult=0, int mult_upper_bound = 100
   h_ratio->GetXaxis()->SetTitle("#Delta#eta");
   h_ratio->GetYaxis()->SetTitle("#Delta#phi");
   
-    TFile *fout;
-  if (isBelle) fout= new TFile(Form("/data/flowex/Outputs/myoutput_minMult%d.root",mult),"recreate");
-  else fout=new TFile(Form("/data/flowex/Outputs/myoutput_minMult%d.root",mult),"recreate");
+  TFile *fout;
+  //if (isBelle) fout= new TFile(Form("/data/flowex/Outputs/myoutput_minMult%d.root",mult),"recreate");
+  //else fout=new TFile(Form("/data/flowex/Outputs/myoutput_minMult%d.root",mult),"recreate");
+  fout = new TFile(Form("/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/DataFiles/ROOTfiles_from_ROOTCode/myoutput_minMult%d.root", mult), "recreate");
   fout->cd();
   h_2D->Write();
   h_2Dmix->Write();
@@ -414,10 +422,12 @@ void analysis(int isBelle=0, int maxevt=0,int mult=0, int mult_upper_bound = 100
 
 void goofy()
 {
-  int low[7] = {0, 10,15,20, 25};
-  int high[7] = {10, 15,20,25,30};
-  for (int i = 0; i<7; i++){
-    analysis(1, 0, low[i], high[i], 40, 0,1);
+  int low[1] = {0};
+  int high[1] = {1000};
+  for (int i = 0; i<1; i++){
+    analysis(0, 0, low[i], high[i], 40, 0,0);
+  
+//void analysis(int isBelle, int maxevt,int mult, int mult_upper_bound, int nbin,bool verbose,int isThrust)
   }
 }
 

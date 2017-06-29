@@ -26,12 +26,13 @@ double dphi(double phi1,double phi2)
 
 
 
-void thrust(int isBelle, float x[]){
+void thrust(int isBelle, float x[], float y[]){
 
   TString filename;
-  if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root";
-  else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
-
+  //if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root";
+  //else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
+  
+  filename ="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/DataFiles/ROOTfiles/cleaned_ALEPH_Data-all";
   
   TFile *f = new TFile(filename.Data());
   TTree *t1 = (TTree*)f->Get("t");
@@ -134,18 +135,12 @@ void thrust(int isBelle, float x[]){
 
 
 
-<<<<<<< HEAD
-void scan_thrust()
-{  
-  TString filename;
-  filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
-  //filename = "/Users/anthony/Documents/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
-=======
+
 void scan_thrust(){
-   TString filename;
-  //filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
-  filename = "/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
->>>>>>> origin/master
+  TString filename;
+  filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/DataFiles/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
+  //filename = "/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
+
   
   TFile *f = new TFile(filename.Data());
   TTree *t1 = (TTree*)f->Get("t");
@@ -191,13 +186,10 @@ void scan_thrust(){
   
   
 
-<<<<<<< HEAD
-  TFile *g = new TFile("/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root", "RECREATE");
-  //TFile *g = new TFile("/Users/anthony/Documents/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root","RECREATE");
-=======
-  //TFile *g = new TFile("/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/LEP2/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root", "RECREATE");
-  TFile *g = new TFile("/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.roo","RECREATE");
->>>>>>> origin/master
+
+  TFile *g = new TFile("/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/DataFiles/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root", "RECREATE");
+  //TFile *g = new TFile("/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.roo","RECREATE");
+
  
 
   TTree *newtree = t1->CloneTree(0); // Do no copy the data yet
@@ -209,11 +201,9 @@ void scan_thrust(){
   
   //int nentries=newtree->GetEntries();
   Int_t nevent = (Int_t)t1->GetEntries();
-<<<<<<< HEAD
+
   int nevent_process = nevent;
-=======
-    int nevent_process = nevent;
->>>>>>> origin/master
+
   //cout<<nentries<<endl;
   //int nentries = 100;
   float x[nevent_process];
@@ -221,12 +211,9 @@ void scan_thrust(){
   
   float y[nevent_process];
   memset(y, 0, nevent*sizeof(float)); 
-    
-<<<<<<< HEAD
+ 
   thrust(0,x,y);
-=======
-  thrust(0,x);
->>>>>>> origin/master
+
   
   for( int i=0; i < nevent_process; i++){
      t1->GetEntry(i);
