@@ -29,10 +29,10 @@ double dphi(double phi1,double phi2)
 void thrust(int isBelle, float x[], float y[]){
 
   TString filename;
-  //if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root";
-  //else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
+  if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root";
+  else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
   
-  filename ="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/DataFiles/ROOTfiles/cleaned_ALEPH_Data-all";
+  //filename ="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/DataFiles/ROOTfiles/cleaned_ALEPH_Data-all";
   
   TFile *f = new TFile(filename.Data());
   TTree *t1 = (TTree*)f->Get("t");
@@ -138,8 +138,8 @@ void thrust(int isBelle, float x[], float y[]){
 
 void scan_thrust(){
   TString filename;
-  filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/DataFiles/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
-  //filename = "/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
+  //filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/DataFiles/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
+  filename = "/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
 
   
   TFile *f = new TFile(filename.Data());
@@ -187,8 +187,8 @@ void scan_thrust(){
   
 
 
-  TFile *g = new TFile("/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/DataFiles/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root", "RECREATE");
-  //TFile *g = new TFile("/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.roo","RECREATE");
+  //TFile *g = new TFile("/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/DataFiles/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root", "RECREATE");
+  TFile *g = new TFile("/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.roo","RECREATE");
 
  
 

@@ -112,7 +112,7 @@ void checkMC(){
     
     // FILE LOCATION NEEDS TO BE FIXED TO svmithi02 location
     // NOT ALREADY FIXED BECAUSE CURRENT FILE NOT IN SPECIFIED LOCATION
-    TFile *f = new TFile("ROOTfiles/cleaned_LEP2MCGGBBY2000E207_mctrue_beforecut-001.aleph.root");
+    TFile *f = new TFile("/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_LEP2MCGGBBY2000E207_mctrue_beforecut-001.aleph.root");
     TTree *t1 = (TTree*)f->Get("tgen");
     Int_t nParticle_gen,EventNo_gen,RunNo_gen;
     Float_t Energy_gen;

@@ -140,7 +140,9 @@ void thrust(int isBelle = 0){
 }// end of loop over events
 
 
-TFile*fout=new TFile("lookatthisfile.root","recreate"); 
+
+if (isBelle) TFile*fout=new TFile("data/flowex/Datasamples/Belle/lookatthisfile.root","recreate"); 
+else TFile*fout=new TFile("/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/lookatthisfile.root","recreate"); 
 fout->cd();
 for (int m=0;m<nevent_process;m++)hprojection[m]->Write();
 fout->Close();
