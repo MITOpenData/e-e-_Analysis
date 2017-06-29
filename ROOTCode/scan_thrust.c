@@ -139,7 +139,7 @@ void thrust(int isBelle, float x[], float y[]){
 void scan_thrust(){
   TString filename;
   //filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/DataFiles/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
-  filename = "/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
+  filename = "/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
 
   
   TFile *f = new TFile(filename.Data());
