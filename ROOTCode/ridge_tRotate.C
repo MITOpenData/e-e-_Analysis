@@ -325,8 +325,8 @@ void analysis(int isBelle=0,int isThrust=1, int maxevt=0,int mult_low=0,int mult
   h_ratio->GetYaxis()->SetTitle("#Delta#phi");
   
   TFile *fout;
-  if (isBelle) fout=new TFile(Form("/data/flowex/Datasamples/Belle/myoutput_minMult%d.root",mult),"recreate");
-  else fout=new TFile(Form("/Users/anthony/desktop/myoutput_minMult%d_modified.root",mult),"recreate");
+  if (isBelle) fout=new TFile(Form("/data/flowex/Datasamples/Belle/myoutput_minMult%d.root",mult_low),"recreate");
+  else fout=new TFile(Form("/data/flowex/Outputs/myoutput_minMult%d_modified.root",mult_low),"recreate");
   fout->cd();
   h_2D->Write();
   h_2Dmix->Write();
