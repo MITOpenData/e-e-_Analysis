@@ -30,7 +30,7 @@ void thrust(int isBelle, float x[], float y[]){
 
   TString filename;
   if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root";
-  else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
+  else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
   
   //filename ="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/DataFiles/ROOTfiles/cleaned_ALEPH_Data-all";
   
