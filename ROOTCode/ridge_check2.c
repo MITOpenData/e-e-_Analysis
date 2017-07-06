@@ -44,7 +44,7 @@ void analysis(int isBelle=0,int isThrust=1, int maxevt=0,int mult_low=0,int mult
   //if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root";/Users/anthony/Desktop/ROOTUsersGuideLetter.pdf
   //else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root";
   
-  filename = "/Users/anthony/documents/StudyMult/DataFiles/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root";
+  filename = "/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root";
   
   TFile *f = new TFile(filename.Data());
   TTree *t1 = (TTree*)f->Get("t");
