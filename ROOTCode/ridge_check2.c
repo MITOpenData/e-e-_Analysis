@@ -545,7 +545,7 @@ void analysis(int isBelle=0,int isThrust=1, int maxevt=0,int mult_low=0,int mult
   TFile *fout;
   //if (isBelle) fout=new TFile(Form("/data/flowex/Datasamples/Belle/myoutput_minMult%d.root",mult_low),"recreate");
   //else fout=new TFile(Form("/data/flowex/Outputs/myoutput_minMult%d_modified.root",mult_low),"recreate");
-  fout = new TFile(Form("/Users/anthony/desktop/myoutput_minMult%d_modified1_%d.root",mult_low,isThrust),"recreate");
+  fout = new TFile(Form("/data/flowex/Outputs/ridgeOutput/myoutput_minMult%d_modified1_%d.root",mult_low,isThrust),"recreate");
   fout->cd();
   h_2D->Write();
   h_2Dmix->Write();
