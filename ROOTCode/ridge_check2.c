@@ -474,11 +474,14 @@ void analysis(int isBelle=0,int isThrust=1, int maxevt=0,int mult_low=0,int mult
 
   TH2F *h_ratio_theta = new TH2F ( "h_ratio_theta", "theta-phi of all particles ", nbin, -PI*1.1, PI/6.,nbin, -3.1416/2.,3.1416*1.5);
     
+    
   h_ratio_theta->Sumw2();
-  for (int x=0;x<=h_2D->GetNbinsX();x++){
-     for (int y=0;y<=h_2D->GetNbinsY();y++){
-        if(h_2Dmix->GetBinContent(x,y)>0){
-            
+  for (int x=0;x<=h_2D->GetNbinsX();x++)
+    {
+     for (int y=0;y<=h_2D->GetNbinsY();y++)
+      {
+        if(h_2Dmix->GetBinContent(x,y)>0)
+         {
           ratio=B00*(h_2D->GetBinContent(x,y)/h_2Dmix->GetBinContent(x,y));
           errrel_num=h_2D->GetBinError(x,y)/h_2D->GetBinContent(x,y);
           errrel_den=h_2Dmix->GetBinError(x,y)/h_2Dmix->GetBinContent(x,y);
@@ -486,14 +489,15 @@ void analysis(int isBelle=0,int isThrust=1, int maxevt=0,int mult_low=0,int mult
             //cout<<ratio*errrel_ratio<<endl;
           h_ratio->SetBinContent(x,y,ratio);
           h_ratio->SetBinError(x,y,ratio*errrel_ratio);
-          
         }
      }
-  
   }
 
-  for(int binIterX = 0; binIterX < h_ratio->GetNbinsX(); ++binIterX){
-      for(int binIterY = 0; binIterY < h_ratio->GetNbinsX(); ++binIterY){
+    
+  for(int binIterX = 0; binIterX < h_ratio->GetNbinsX(); ++binIterX)
+    {
+      for(int binIterY = 0; binIterY < h_ratio->GetNbinsX(); ++binIterY)
+        {
           double eta = h_ratio->GetXaxis()->GetBinCenter(binIterX+1);
           double phi = h_ratio->GetYaxis()->GetBinCenter(binIterY+1);
           double val = h_ratio->GetBinContent(binIterX,binIterY);
