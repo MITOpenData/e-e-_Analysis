@@ -45,8 +45,8 @@ void analysis(){
   Float_t px[100000];
   Float_t py[100000];
   Float_t pz[100000];
-  Float_t TTheta[100000];
-  Float_t TPhi[100000];
+  Float_t TTheta;
+  Float_t TPhi;
   
   t1->SetBranchAddress("nParticle",&nParticle);
   t1->SetBranchAddress("pt",pt);
@@ -58,8 +58,8 @@ void analysis(){
   t1->SetBranchAddress("px",px);
   t1->SetBranchAddress("py",py);
   t1->SetBranchAddress("pz",pz);
-  t1->SetBranchAddress("TTheta", TTheta);
-  t1->SetBranchAddress("TPhi",TPhi);
+  t1->SetBranchAddress("TTheta", &TTheta);
+  t1->SetBranchAddress("TPhi", &TPhi);
 
   TFile *f_mix = new TFile(filename.Data());
   TTree *t1_mix = (TTree*)f_mix->Get("t");
@@ -91,19 +91,27 @@ void analysis(){
   
   Int_t nevent = (Int_t)t1->GetEntries();
   
-  for (Int_t i=0;i<100;i++) {
+  for (Int_t i=0;i<5;i++) {
 
   //if (i%10000==0) cout <<i<<"/"<<nevent_process<<endl;
   t1->GetEntry(i);
+  cout<<"-------------------------------------------------"<<endl;
+  float theta1 = TTheta;
+  float phi1 = TPhi;
   
-  float theta1 = TTheta[i];
-  float phi1 = TPhi[i];
-  TVector3 v(1,0,0);
+  TVector3 v(1,1,1);
+  
+  TVector3 v1;
   v.SetPhi(phi1);
   v.SetTheta(theta1);
-  v.RotateZ(theta1);
+  v1.SetX(-v.Y());
+  v1.SetY(v.X());
+  v.Rotate(-theta1, v1);
+ 
   cout<<v.X()<<endl;
   cout<<v.Y()<<endl;
+  cout<<v.Z()<<endl;
+ 
   cout<<endl;
   }
 }
