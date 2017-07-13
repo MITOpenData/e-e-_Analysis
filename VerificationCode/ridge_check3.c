@@ -29,7 +29,7 @@ double dphi(double phi1,double phi2)
     return a;
 }
 
-void analysis(int isBelle,int isThrust, int maxevt,int mult_low,int mult_high,int nbin,bool verbose,int num_runs){
+TH1D* analysis(int isBelle,int isThrust, int maxevt,int mult_low,int mult_high,int nbin,bool verbose,int num_runs){
   
   TString filename;
   //if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root";/Users/anthony/Desktop/ROOTUsersGuideLetter.pdf
@@ -655,5 +655,63 @@ void analysis(int isBelle,int isThrust, int maxevt,int mult_low,int mult_high,in
   
     c->SaveAs("fit1.pdf");
     */
+    return h_deltaphi[0];
     
   }
+
+TH1D *hist1 = analysis(0, 0,  0, 30, 40, 50, 0, 1); 
+TH1D *hist2 = analysis(0, 0,  0, 0, 10, 50, 0, 1);
+
+Double_t ftotal(Double_t *x, Double_t *par) {
+   Double_t xx = x[0];
+   //Int_t bin = hist2->GetXaxis()->FindBin(xx);
+   Double_t br = 0;//par[4] + par[3]*hist2->GetBinContent(bin);
+   Double_t arg = (par[2]*xx-par[1]);
+   Double_t sr = par[3]+par[0]*TMath::Sin(arg);
+   return sr;
+}
+
+void subtract()
+{
+  
+  //TH1D* hist2 = new TH1D("blablabla2", "",50,-3.1416/2., 3.1416*1.5);
+  
+
+  
+
+  /*
+  TCanvas *c1 = new TCanvas("c1","",600,600);
+  c1->cd();
+  cout<<"hi"<<" "<<"3"<<endl;
+  hist1->Draw();
+  
+  c1->SaveAs("fit.pdf");
+  cout<<"hi"<<" "<<"4"<<endl;
+  */
+  
+
+
+   //fit function ftotal to signal + background
+
+//   histgen();
+
+   //TFile *f = new TFile("background.root");
+   //background = (TH1F*)f->Get("background"); //pointer used in ftotal
+   //TH1F *result = (TH1F*)f->Get("result");
+
+  TF1 *ftot = new TF1("ftot",ftotal,0,10,4);
+  Double_t norm = hist1->GetMaximum();
+  ftot->SetParameters(0.5*norm,1,2, 0.5*norm);
+   //ftot->SetParLimits(0,.3*norm,norm);
+    
+  hist1->Fit("ftot");
+  
+  TCanvas *c1 = new TCanvas("c1","",600,600);
+  c1->cd();
+  cout<<"hi"<<" "<<"3"<<endl;
+  hist1->Draw();
+  
+  c1->SaveAs("fit.pdf");
+  cout<<"hi"<<" "<<"4"<<endl;
+  
+}
