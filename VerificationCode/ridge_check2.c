@@ -29,7 +29,7 @@ double dphi(double phi1,double phi2)
     return a;
 }
 
-void analysis(int isBelle,int isThrust, int maxevt,int mult_low,int mult_high,int nbin,bool verbose,int num_runs){
+void analysis(int isBelle = 0,int isThrust = 0, int maxevt = 0,int mult_low = 0,int mult_high = 10,int nbin = 50,bool verbose = 0,int num_runs = 1){
   
   TString filename;
   //if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root";/Users/anthony/Desktop/ROOTUsersGuideLetter.pdf

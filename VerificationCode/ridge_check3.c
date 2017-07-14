@@ -29,7 +29,7 @@ double dphi(double phi1,double phi2)
     return a;
 }
 
-TH1D* analysis(int isBelle,int isThrust, int maxevt,int mult_low,int mult_high,int nbin,bool verbose,int num_runs){
+void analysis(int isBelle = 0,int isThrust = 0, int maxevt = 0,int mult_low = 0,int mult_high = 10,int nbin = 50,bool verbose = 0,int num_runs= 1){
   
   TString filename;
   //if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root";/Users/anthony/Desktop/ROOTUsersGuideLetter.pdf
@@ -552,8 +552,9 @@ TH1D* analysis(int isBelle,int isThrust, int maxevt,int mult_low,int mult_high,i
        histogram  = (TH1D*) h_ratio->ProjectionY(Form("h_deltaphi_thetamin%d_max%d",thetaranges[i],thetaranges[i+1]),minbin,maxbin);
        histogram->Sumw2();
      }*/
-    //h_deltaphi[i]->SetName(Form("h_deltaphi_etamin%d_max%d",etaranges[i],etaranges[i+1]));
+    h_deltaphi[i]->SetName(Form("h_deltaphi_%d",i));
     //h_deltaphi[i]->GetZaxis()->CenterTitle();
+    
     h_deltaphi[i]->GetXaxis()->SetTitle("#Delta#phi");
     h_deltaphi[i]->SetTitle(Form("#Delta#phi, #Delta#eta (%f, %f), Multipliplicity (%d, %d)",etaranges[i],etaranges[i+1], mult_low, mult_high));
     h_deltaphi[i]->GetYaxis()->SetTitle("Y(#Delta#phi)");
@@ -655,29 +656,35 @@ TH1D* analysis(int isBelle,int isThrust, int maxevt,int mult_low,int mult_high,i
   
     c->SaveAs("fit1.pdf");
     */
-    return h_deltaphi[0];
+    TFile *background = new TFile(Form("correlation_%d_%d.root", mult_low, mult_high), "recreate");
+    h_deltaphi[0]->Write();
+    background->Close();
     
   }
 
-TH1D *hist1 = analysis(0, 0,  0, 30, 40, 50, 0, 1); 
-TH1D *hist2 = analysis(0, 0,  0, 0, 10, 50, 0, 1);
+TH1D *background;// = analysis(0, 0,  0, 30, 40, 50, 0, 1); 
+// = analysis(0, 0,  0, 0, 10, 50, 0, 1);
 
 Double_t ftotal(Double_t *x, Double_t *par) {
    Double_t xx = x[0];
-   //Int_t bin = hist2->GetXaxis()->FindBin(xx);
-   Double_t br = 0;//par[4] + par[3]*hist2->GetBinContent(bin);
+   Int_t bin = background->GetXaxis()->FindBin(xx);
+   Double_t br = par[4]*background->GetBinContent(bin);
    Double_t arg = (par[2]*xx-par[1]);
    Double_t sr = par[3]+par[0]*TMath::Sin(arg);
-   return sr;
+   return br+sr;
 }
 
 void subtract()
 {
-  
+  analysis();
+  TFile *file = new TFile("correlation_0_10.root");
+  background = (TH1D*)file->Get("h_deltaphi_0");
   //TH1D* hist2 = new TH1D("blablabla2", "",50,-3.1416/2., 3.1416*1.5);
   
-
+  analysis(0, 0,  0, 30, 40, 50, 0, 1);
   
+  TFile *file2 = new TFile("correlation_30_40.root");
+  TH1D* result = (TH1D*)file2->Get("h_deltaphi_0");
 
   /*
   TCanvas *c1 = new TCanvas("c1","",600,600);
@@ -700,16 +707,16 @@ void subtract()
    //TH1F *result = (TH1F*)f->Get("result");
 
   TF1 *ftot = new TF1("ftot",ftotal,0,10,4);
-  Double_t norm = hist1->GetMaximum();
-  ftot->SetParameters(0.5*norm,1,2, 0.5*norm);
+  Double_t norm = result->GetMaximum();
+  ftot->SetParameters(0.5*norm,1,2, 0.5*norm, 1);
    //ftot->SetParLimits(0,.3*norm,norm);
     
-  hist1->Fit("ftot");
+  result->Fit("ftot", "b");
   
   TCanvas *c1 = new TCanvas("c1","",600,600);
   c1->cd();
   cout<<"hi"<<" "<<"3"<<endl;
-  hist1->Draw();
+  result->Draw();
   
   c1->SaveAs("fit.pdf");
   cout<<"hi"<<" "<<"4"<<endl;
