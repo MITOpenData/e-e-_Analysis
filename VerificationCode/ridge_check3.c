@@ -529,11 +529,11 @@ void analysis(int isBelle = 0,int isThrust = 0, int maxevt = 0,int mult_low = 0,
       
     }
     cout<<"bin"<<h_ratio_theta->GetBinContent(0,0)<<endl;
-  double etaranges[8]={1.5,3,1.5,4, 2,3, 2,4};
+  double etaranges[8]={1.5,4,1.5,3, 2,3, 2,4};
   int minbin,maxbin;
     int thetaranges[4] = {-3,-2,-1,0};
   
-  TH1D*h_deltaphi[3];
+  TH1D*h_deltaphi[7];
   TH1D*h_deltaphi_theta[3];
 
   //h_deltaphi  = (TH1D*) h_ratio->ProjectionY("h_deltaphi",0,-1);
@@ -668,10 +668,11 @@ TH1D *background;// = analysis(0, 0,  0, 30, 40, 50, 0, 1);
 Double_t ftotal(Double_t *x, Double_t *par) {
    Double_t xx = x[0];
    Int_t bin = background->GetXaxis()->FindBin(xx);
-   Double_t br = par[4]*background->GetBinContent(bin);
-   Double_t arg = (par[2]*xx-par[1]);
-   Double_t sr = par[3]+par[0]*TMath::Sin(arg);
-   return br+sr;
+   Int_t bin2 = background->GetXaxis()->FindBin(0.);
+   Double_t br = par[1] + par[2]*background->GetBinContent(bin);
+   //Double_t arg = (2*xx);
+   Double_t sr = background->GetBinContent(bin2)+par[0]*TMath::Cos(2*xx);
+   return br + sr;
 }
 
 void subtract()
@@ -708,8 +709,8 @@ void subtract()
 
   TF1 *ftot = new TF1("ftot",ftotal,0,10,4);
   Double_t norm = result->GetMaximum();
-  ftot->SetParameters(0.5*norm,1,2, 0.5*norm, 1);
-   //ftot->SetParLimits(0,.3*norm,norm);
+  ftot->SetParameters(0.5*norm,0.5*norm, 0.1);
+  //ftot->SetParLimits(2,0.001,0.5);
     
   result->Fit("ftot", "b");
   
@@ -721,4 +722,6 @@ void subtract()
   c1->SaveAs("fit.pdf");
   cout<<"hi"<<" "<<"4"<<endl;
   
+  file->Close();
+  file2->Close();
 }
