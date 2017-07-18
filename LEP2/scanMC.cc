@@ -53,7 +53,7 @@ void scanMC (TString infile="/data/flowex/MCsamples/LEP2_MC_MAIN/LEP2_MC/GGUD/cl
     
     float _px,_py,_pz,_m,_charge,_pwflag,_pid;
     
-    TFile *hf = new TFile(Form("ROOTfiles/%s.root",infile.Data()), "RECREATE" );
+    TFile *hf = new TFile(Form("%s.root",infile.Data()), "RECREATE" );
     TTree *tout = new TTree("tgen","");
     TLorentzVector v;
     cout<<"step1"<<endl;
