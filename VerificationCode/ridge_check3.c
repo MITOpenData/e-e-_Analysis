@@ -540,7 +540,7 @@ void analysis(int isBelle = 0,int isThrust = 0, int maxevt = 0,int mult_low = 0,
   //h_deltaphi->Sumw2();
   
   for (int i=0;i<7;i =i+2){
-    if (i==0) h_deltaphi[i]->SetFillColor(kRed);
+   // if (i==0) h_deltaphi[i]->SetFillColor(kRed);
     minbin =  h_ratio->GetXaxis()->FindBin(etaranges[i]);
     maxbin =  h_ratio->GetXaxis()->FindBin(etaranges[i+1]);
     cout<<"1"<<" "<<minbin<<" "<<maxbin<<endl;
@@ -667,13 +667,13 @@ TH1D *background;// = analysis(0, 0,  0, 30, 40, 50, 0, 1);
 // = analysis(0, 0,  0, 0, 10, 50, 0, 1);
 
 Double_t ftotal(Double_t *x, Double_t *par) {
-   Double_t xx = x[0];
-   Int_t bin = background->GetXaxis()->FindBin(xx);
-   Int_t bin2 = background->GetXaxis()->FindBin(0.);
-   Double_t br = par[2] + par[0]*background->GetBinContent(bin);
-   //Double_t arg = (2*xx);
-   Double_t sr = background->GetBinContent(bin2)+par[1]*TMath::Cos(2*xx);
-   return br + sr;
+  Double_t xx = x[0];
+  Int_t bin = background->GetXaxis()->FindBin(xx);
+  Int_t bin2 = background->GetXaxis()->FindBin(0.);
+  Double_t br = par[2] + par[0]*background->GetBinContent(bin);
+  Double_t arg = (2*xx);
+  Double_t sr = par[1]+par[0]*TMath::Cos(2*xx);
+  return sr;
 }
 
 Double_t cosine(Double_t *x1, Double_t *par1){
@@ -689,7 +689,7 @@ void subtract()
   //background->SetFillColor(kRed);
   TFile *file = new TFile("correlation_0_10.root");
   background = (TH1D*)file->Get("h_deltaphi_0");
-  gStyle->SetErrorX(1);
+ // gStyle->SetErrorX(1);
   
   analysis(0, 0,  0, 30, 40, 50, 0, 1);
   
@@ -697,41 +697,51 @@ void subtract()
   TH1D* result = (TH1D*)file2->Get("h_deltaphi_0");
 
  
-  TF1 *ftot = new TF1("ftot",ftotal,-3.1416/2., 3.1416*1.5,4);
+  TF1 *ftot = new TF1("ftot",ftotal,-3.1416/2., 3.1416*1.5, 2); //4 specifies the number of parameters we have to fit.
   Double_t norm = result->GetMaximum();
-  ftot->SetParameters(0.2,0.5*norm,0.5*norm);
-  ftot->SetParLimits(0,0.1,0.5);
+  ftot->SetParameters(0.5*norm, 0.5*norm);
+  //ftot->SetParLimits(0,0.1,0.5);
     
   result->Fit("ftot", "b");
   
   double p0 = ftot->GetParameter(0);
   double p1 = ftot->GetParameter(1);
-  double p2 = ftot->GetParameter(2);
-  Int_t b = background->GetXaxis()->FindBin(0.);
-  double p = background->GetBinContent(b);
+  //double p2 = ftot->GetParameter(2);
+  //double p3 = ftot->GetParameter(3);
+  //Int_t b = background->GetXaxis()->FindBin(0.);
+  //double p = background->GetBinContent(b);
   
-  
+  double chi2 = ftot->GetChisquare();
+  /*
   background->Scale(p0);
   for (int i = 0; i<50; i++)
   {
     background->AddBinContent(i,p1);
   }
-  TF1 *cosine_effect = new TF1("cosine_effect", cosine, -3.1416/2., 3.1416*1.5, 4);
-  cosine_effect->SetParameter(0,p1);
-  cosine_effect->SetParameter(1, p);
+  */
+  TF1 *cosine_effect = new TF1("cosine_effect", cosine, -3.1416/2., 3.1416*1.5, 2);
+  cosine_effect->SetParameter(0, p0);
+  cosine_effect->SetParameter(1, p1);
   
-  
+  gROOT->ForceStyle();
   TCanvas *c1 = new TCanvas("c1","",600,600);
   
-  
+  result->SetMarkerStyle(4);
+  background->SetMarkerStyle(20);
+  result->SetMarkerColor(4);
+  background->SetMarkerColor(2);
   c1->cd();
-
-  background->Draw("L");
-  //result->Draw("same");
-  //cosine_effect->Draw("same");
+  
+  result->Draw("C");
+  
+  background->Draw("same");
+  
+  cosine_effect->Draw("same");
   
   c1->SaveAs("fit.pdf");
 
+  
+  cout<<"ChiSquare: "<<chi2<<endl;
   
   file->Close();
   file2->Close();
