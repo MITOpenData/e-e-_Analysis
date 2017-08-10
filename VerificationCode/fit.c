@@ -101,7 +101,7 @@ void subtract()
     
     //background->Draw("same");
     
-    //cosine_effect->Draw("same");
+    cosine_effect->Draw("same");
     
     c1->SaveAs("fit.pdf");
     
