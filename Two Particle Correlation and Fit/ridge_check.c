@@ -18,8 +18,12 @@
 using namespace std;
 
 #define PI 3.14159265358979
-//enum SIMPLEPID {PHOTON, ELECTRON, PION, MUON, KAON, PROTON};
-enum SIMPLEPWLAG {CHARGED_TRACK, CHARGED_LEPTONS1, CHARGED_LEPTONS2, V0, PHOTON, NEUTRAL_HADRON};
+
+// BELLE
+//enum SIMPLEPID {BELLE_PHOTON, BELLE_ELECTRON, BELLE_PION, BELLE_MUON, BELLE_KAON, BELLE_PROTON};
+
+// ALEPH Particle Flow Classification
+enum SIMPLEPWFLAG {ALEPH_CHARGED_TRACK, ALEPH_CHARGED_LEPTONS1, ALEPH_CHARGED_LEPTONS2, ALEPH_V0, ALEPH_PHOTON, ALEPH_NEUTRAL_HADRON};
 
 // Calculate Delta Phi
 double dphi(double phi1,double phi2)
@@ -32,15 +36,18 @@ double dphi(double phi1,double phi2)
     return a;
 }
 
-// Main Analysis 
+/**************************************************************************************/
+// Main Analysis Routine
+/**************************************************************************************/
+
 void analysis(int isBelle    = 0,		// 
               int isThrust   = 0, 		//
-	      int maxevt     = 1000000,		// Max number of events To be Processed
-	      int mult_low   = 0,		//
-	      int mult_high  = 100,		//
-	      int nbin       = 26,		//
-	      bool verbose   = 0,		//
-	      int num_runs   = 1,		//
+	      int maxevt     = 1000000,		// Max number of events to be processed
+	      int mult_low   = 30,		// Lower cut on the event multiplicity
+	      int mult_high  = 100,		// Upper cut on the event multiplicity
+	      int nbin       = 26,		// Number of bins in the correlation function
+	      bool verbose   = 0,		// Verbose mode
+	      int num_runs   = 5,		// 
               double ptMin   = 0.4,             // min pT of the particles
               double ptMax   = 4                // max pT of the particles
 	     )
@@ -102,130 +109,92 @@ void analysis(int isBelle    = 0,		//
         // if (nparticles>mult_high) continue;
         
         double N=0;
-        for (int p = 0;p<num_runs;p++)
-        {
-            // calculate the number of tracks in the passing selection
-            for ( int j=0;j<data.nParticle;j++ ) {
-                float pt1 = data.pt[j];
-                int pid1 = data.pid[j];
-                int pwflag1 = data.pwflag[j];
-                //if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON&&!(!isBelle&&pwflag1==0)) continue;
-                if (pwflag1!=CHARGED_TRACK){continue;}
-                if(pt1<ptMin||pt1>ptMax) {continue;}
-                N++;
+        // calculate the number of tracks in the passing selection
+        for ( int j=0;j<data.nParticle;j++ ) {
+            float pt1 = data.pt[j];
+            int pid1 = data.pid[j];
+            int pwflag1 = data.pwflag[j];
+            //if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON&&!(!isBelle&&pwflag1==0)) continue;
+            if (pwflag1!=ALEPH_CHARGED_TRACK){continue;}
+            if(pt1<ptMin||pt1>ptMax) {continue;}
+            N++;
+        }
+        mult_dist->Fill(N);
+        averageN+=N;
+        nEventProcessed++;
+        
+        if (N<mult_low) continue;
+        if (N>mult_high) continue;
+        nEventInMultBin++;
+        
+        TVector3 thrust(1, 1, 1);
+        thrust.SetTheta(data.TTheta);
+        thrust.SetPhi(data.TPhi);
+        
+        
+        TVector3 rotVec;
+        rotVec.SetX(-thrust.Y());
+        rotVec.SetY(thrust.X());
+        
+        for ( int j=0;j<data.nParticle;j++ ) {
+            int pid1 = data.pid[j];
+            float eta1 = data.eta[j];
+            float phi1 = data.phi[j];
+            float pt1 = data.pt[j];
+            float mass1 = data.mass[j];
+            float pwflag1 = data.pwflag[j];
+            float theta1 = data.theta[j];
+            if (isThrust == 1)
+            {
+        	TVector3 v1;
+        	float px1 = data.px[j];
+        	float py1 = data.py[j];
+        	float pz1 = data.pz[j];
+        	v1.SetXYZ(px1,py1,pz1);
+        	v1.Rotate(-data.TTheta, rotVec);
+        	phi1 = v1.Phi();
+        	eta1 = v1.PseudoRapidity();
+        	pt1 = v1.Pt();
+        	theta1 = v1.Theta();
             }
-            mult_dist->Fill(N);
-            averageN+=N;
-            nEventProcessed++;
-            
-            //if (nparticles<mult_low) continue;
-            if (N<mult_low) continue;
-            if (N>mult_high) continue;
-            nEventInMultBin++;
-            
-            // find a mixed event
-            while ((fabs(mix.nParticle-data.nParticle)>5&&data.nParticle<mult_high)||i==selected){
-                selected++;
-                if (selected>nevent_process&&flag==1) break;
-                if (selected>nevent_process) flag=1;
-                selected = selected % nevent_process;
-                t1_mix->GetEntry ( selected );
+            if(pwflag1!=ALEPH_CHARGED_TRACK)continue;
+            //if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON&&!(!isBelle&&pwflag1==0)) continue;
+            if(pt1<ptMin||pt1>ptMax) continue;
+            // Signal loop, calculate S correlation function
+            for ( int k=j+1;k<data.nParticle;k++ ) {
+            	int pid2 = data.pid[k];
+            	float eta2 = data.eta[k];
+            	float phi2 = data.phi[k];
+            	float pt2 = data.pt[k];
+            	float mass2 = data.mass[k];
+            	float pwflag2 = data.pwflag[k];
+            	float theta2 = data.theta[k];
+            	if (isThrust == 1)
+            	{
+            	    TVector3 v2;
+            	    float px2 = data.px[k];
+            	    float py2 = data.py[k];
+            	    float pz2 = data.pz[k];
+            	    v2.SetXYZ(px2,py2,pz2);
+            	    v2.Rotate(-data.TTheta, rotVec);
+            	    phi2 = v2.Phi();
+            	    eta2 = v2.PseudoRapidity();
+            	    pt2 = v2.Pt();
+            	    theta2 = v2.Theta();
+            	    //
+            	}
+            	if(pwflag2!=ALEPH_CHARGED_TRACK)continue;
+            	if(pt2<ptMin||pt2>ptMax) continue;
+            	if (N!=0)
+            	{
+            	    //cout<<"HELLO"<<endl;
+            	    h_2D->Fill(eta1-eta2,dphi(phi1,phi2),1./N);
+            	    h_2D->Fill(eta1-eta2,dphi(phi2,phi1),1./N);
+            	    h_2D->Fill(eta2-eta1,dphi(phi1,phi2),1./N);
+            	    h_2D->Fill(eta2-eta1,dphi(phi2,phi1),1./N);
+            	}
             }
-            
-            double N2=0;
-            // calculate the number of tracks in the mixed event passing selection
-            for ( int j=0;j<data.nParticle;j++ ) {
-                float pt1 = mix.pt[j];
-                int pid1 = mix.pid[j];
-                int pwflag1 = mix.pwflag[j];
-                if (pwflag1!=CHARGED_TRACK) continue;
-                //if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON&&!(!isBelle&&pwflag1==0)) continue;
-                if(pt1<ptMin||pt1>ptMax) continue;
-                N2++;
-            }
-            
-            TVector3 thrust(1, 1, 1);
-            thrust.SetTheta(data.TTheta);
-            thrust.SetPhi(data.TPhi);
-            
-            
-            TVector3 rotVec;
-            rotVec.SetX(-thrust.Y());
-            rotVec.SetY(thrust.X());
-            
-            TVector3 thrust_mix(1, 1, 1);
-            thrust_mix.SetTheta(mix.TTheta);
-            thrust_mix.SetPhi(mix.TPhi);
-            
-            TVector3 rotVec_mix;
-            rotVec_mix.SetX(-thrust_mix.Y());
-            rotVec_mix.SetY(thrust_mix.X());
-            
-            for ( int j=0;j<data.nParticle;j++ ) {
-                int pid1 = data.pid[j];
-                float eta1 = data.eta[j];
-                float phi1 = data.phi[j];
-                float pt1 = data.pt[j];
-                float mass1 = data.mass[j];
-                float pwflag1 = data.pwflag[j];
-                float theta1 = data.theta[j];
-                if (isThrust == 1)
-                {
-                    TVector3 v1;
-                    float px1 = data.px[j];
-                    float py1 = data.py[j];
-                    float pz1 = data.pz[j];
-                    v1.SetXYZ(px1,py1,pz1);
-                    v1.Rotate(-data.TTheta, rotVec);
-                    phi1 = v1.Phi();
-                    eta1 = v1.PseudoRapidity();
-                    pt1 = v1.Pt();
-                    theta1 = v1.Theta();
-                    //
-                }
-                //cout<<phi1<<endl;
-                if(pwflag1!=CHARGED_TRACK)continue;
-                //if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON&&!(!isBelle&&pwflag1==0)) continue;
-                if(pt1<ptMin||pt1>ptMax) continue;
-                if(p==0)
-                {
-                    // Signal loop, calculate S correlation function
-                    for ( int k=j+1;k<data.nParticle;k++ ) {
-                        int pid2 = data.pid[k];
-                        float eta2 = data.eta[k];
-                        float phi2 = data.phi[k];
-                        float pt2 = data.pt[k];
-                        float mass2 = data.mass[k];
-                        float pwflag2 = data.pwflag[k];
-                        float theta2 = data.theta[k];
-                        if (isThrust == 1)
-                        {
-                            TVector3 v2;
-                            float px2 = data.px[k];
-                            float py2 = data.py[k];
-                            float pz2 = data.pz[k];
-                            v2.SetXYZ(px2,py2,pz2);
-                            v2.Rotate(-data.TTheta, rotVec);
-                            phi2 = v2.Phi();
-                            eta2 = v2.PseudoRapidity();
-                            pt2 = v2.Pt();
-                            theta2 = v2.Theta();
-                            //
-                        }
-                        if(pwflag2!=CHARGED_TRACK)continue;
-                        if(pt2<ptMin||pt2>ptMax) continue;
-                        if (N!=0)
-                        {
-                            //cout<<"HELLO"<<endl;
-                            h_2D->Fill(eta1-eta2,dphi(phi1,phi2),1./N);
-                            h_2D->Fill(eta1-eta2,dphi(phi2,phi1),1./N);
-                            h_2D->Fill(eta2-eta1,dphi(phi1,phi2),1./N);
-                            h_2D->Fill(eta2-eta1,dphi(phi2,phi1),1./N);
-                        }
-                    }
-                }//end of second loop
-            }
-        }// end of first loop
+        } 
     }// end of loop over events
     
     // BACKGROUND LOOP using no multiplicity cut
@@ -252,7 +221,7 @@ void analysis(int isBelle    = 0,		//
                 int pid1 = data.pid[j];
                 int pwflag1 = data.pwflag[j];
                 //if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON&&!(!isBelle&&pwflag1==0)) continue;
-                if (pwflag1!=CHARGED_TRACK)continue;
+                if (pwflag1!=ALEPH_CHARGED_TRACK)continue;
                 if(pt1<ptMin||pt1>ptMax) continue;
                 N++;
             }
@@ -267,7 +236,7 @@ void analysis(int isBelle    = 0,		//
             
             // find a mixed event
             //	cout <<N<<endl;
-            while ((fabs(mix.nParticle-data.nParticle)>40&&data.nParticle<1000)||i==selected){
+            while ((fabs(mix.nParticle-data.nParticle)>10&&data.nParticle<1000)||i==selected){
                 //cout <<nparticles<<" "<<selected<<endl;
                 selected++;
                 if (selected>nevent_process&&flag==1) break;
@@ -282,7 +251,7 @@ void analysis(int isBelle    = 0,		//
                 float pt1 = mix.pt[j];
                 int pid1 = mix.pid[j];
                 int pwflag1 = mix.pwflag[j];
-                if (pwflag1!=CHARGED_TRACK) continue;
+                if (pwflag1!=ALEPH_CHARGED_TRACK) continue;
                 //if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON&&!(!isBelle&&pwflag1==0)) continue;
                 if(pt1<ptMin||pt1>ptMax) continue;
                 N2++;
@@ -327,7 +296,7 @@ void analysis(int isBelle    = 0,		//
                     theta1 = v1.Theta();
                 }
                 //cout<<phi1<<endl;
-                if(pwflag1!=CHARGED_TRACK)continue;
+                if(pwflag1!=ALEPH_CHARGED_TRACK)continue;
                 //if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON&&!(!isBelle&&pwflag1==0)) continue;
                 if(pt1<ptMin||pt1>ptMax) continue;
                 
@@ -354,7 +323,7 @@ void analysis(int isBelle    = 0,		//
                         thetamix = vmix.Theta();
                         
                     }
-                    if(pwflagmix!= CHARGED_TRACK)continue;
+                    if(pwflagmix!= ALEPH_CHARGED_TRACK)continue;
                     //if (pidmix!=PION&&pidmix!=PROTON&&pidmix!=KAON&&!(!isBelle&&pwflagmix==0)) continue;
                     if(ptmix<ptMin||ptmix>ptMax) continue;
                     if(N!=0)
@@ -403,10 +372,7 @@ void analysis(int isBelle    = 0,		//
 
     double ratio_phi;
     double ratio_eta;
-    
-    //float deta_count = 2*detaRange/(float)nbin;
-    //float dphi_count = (3.1416*1.5 - -3.1416/2.)/(float)nbin;
-    
+        
     for (int x=0;x<=h_2D->GetNbinsX();x++){
         
         for (int y=0;y<=h_2D->GetNbinsY();y++){
@@ -426,8 +392,6 @@ void analysis(int isBelle    = 0,		//
         }
         
     }
-    
-    
     
     for(int binIterX = 0; binIterX < h_ratio->GetNbinsX(); ++binIterX){
         for(int binIterY = 0; binIterY < h_ratio->GetNbinsX(); ++binIterY){
