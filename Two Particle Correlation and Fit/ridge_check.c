@@ -236,7 +236,10 @@ void analysis(int isBelle    = 0,		//
             
             // find a mixed event
             //	cout <<N<<endl;
-            while ((fabs(mix.nParticle-data.nParticle)>10&&data.nParticle<1000)||i==selected){
+	    selected=i+1;
+	    t1_mix->GetEntry ( selected );
+	    
+            while ((fabs(mix.nParticle-data.nParticle)>4&&data.nParticle<1000)||i==selected){
                 //cout <<nparticles<<" "<<selected<<endl;
                 selected++;
                 if (selected>nevent_process&&flag==1) break;
@@ -244,6 +247,7 @@ void analysis(int isBelle    = 0,		//
                 selected = selected % nevent_process;
                 t1_mix->GetEntry ( selected );
             }
+	    if (selected>nevent_process) continue;
             
             double N2=0;
             // calculate the number of tracks in the mixed event passing selection
@@ -274,6 +278,7 @@ void analysis(int isBelle    = 0,		//
             rotVec_mix.SetX(-thrust_mix.Y());
             rotVec_mix.SetY(thrust_mix.X());
             
+	    if (i==selected) continue;
             for ( int j=0;j<data.nParticle;j++ ) {
                 int pid1 = data.pid[j];
                 float eta1 = data.eta[j];
