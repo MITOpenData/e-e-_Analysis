@@ -14,8 +14,7 @@
 #include "fourier.h"
 using namespace std;
 
-
-#define PI 3.1415926
+#define PI 3.14159265358979
 //enum SIMPLEPID {PHOTON, ELECTRON, PION, MUON, KAON, PROTON};
 enum SIMPLEPWLAG {CHARGED_TRACK, CHARGED_LEPTONS1, CHARGED_LEPTONS2, V0, PHOTON, NEUTRAL_HADRON};
 
@@ -71,19 +70,21 @@ void setupTPCTree(TTree *t1, TPCNtupleData &data)
 // Main Analysis 
 void analysis(int isBelle    = 0,		// 
               int isThrust   = 0, 		//
-	      int maxevt     = 0,		// Max number of events To be Processed
-	      int mult_low   = 30,		//
+	      int maxevt     = 1000000,		// Max number of events To be Processed
+	      int mult_low   = 0,		//
 	      int mult_high  = 100,		//
 	      int nbin       = 26,		//
 	      bool verbose   = 0,		//
-	      int num_runs   = 1		//
+	      int num_runs   = 1,		//
+              double ptMin   = 0.4,             // min pT of the particles
+              double ptMax   = 4                // max pT of the particles
 	     )
 {
     // Input File
     TString filename;
-    filename = "cleaned_ALEPH_Data-all.aleph.root";
+    //filename = "cleaned_ALEPH_Data-all.aleph.root";
     //filename = "/Users/anthony/desktop/LEP2MCGGCCY1997E183_mctrue_aftercut-001.aleph.root";
-    //filename = "/data/flowex/CMSsample/cleaned_MinBias_TuneCUETP8M1_5p02TeV-pythia8-HINppWinter16DR-NoPU_75X_mcRun2_asymptotic_ppAt5TeV_forest_v2_track.root";
+    filename = "/data/flowex/CMSsample/cleaned_MinBias_TuneCUETP8M1_5p02TeV-pythia8-HINppWinter16DR-NoPU_75X_mcRun2_asymptotic_ppAt5TeV_forest_v2_track.root";
         
     TFile *f = new TFile(filename.Data());
     TTree *t1 = (TTree*)f->Get("t");
@@ -136,8 +137,6 @@ void analysis(int isBelle    = 0,		//
         // if (nparticles>mult_high) continue;
         
         double N=0;
-        double ptMin=0.4; //0.4
-        double ptMax=4;
         for (int p = 0;p<num_runs;p++)
         {
             // calculate the number of tracks in the passing selection
@@ -281,8 +280,6 @@ void analysis(int isBelle    = 0,		//
         
         
         double N=0;
-        double ptMin=0.4; //0.4
-        double ptMax=4;
         for (int p = 0;p<num_runs;p++)
         {
             // calculate the number of tracks in the passing selection
@@ -306,7 +303,7 @@ void analysis(int isBelle    = 0,		//
             
             // find a mixed event
             //	cout <<N<<endl;
-            while ((fabs(mix.nParticle-data.nParticle)>4&&data.nParticle<1000)||i==selected){
+            while ((fabs(mix.nParticle-data.nParticle)>40&&data.nParticle<1000)||i==selected){
                 //cout <<nparticles<<" "<<selected<<endl;
                 selected++;
                 if (selected>nevent_process&&flag==1) break;
@@ -460,7 +457,7 @@ void analysis(int isBelle    = 0,		//
                 
                 ratio_eta = h_2D->GetXaxis()->GetBinCenter(x);
                 ratio_phi = h_2D->GetYaxis()->GetBinCenter(y);
-                h_ratio->Fill(ratio_eta,ratio_phi,ratio);
+                h_ratio->Fill(ratio_eta,ratio_phi,ratio/normalization);
             }
         }
         
@@ -535,4 +532,18 @@ void analysis(int isBelle    = 0,		//
     mult_dist->Write();
     background->Close();
     
+    TCanvas *c = new TCanvas("c","S",600,600);
+    c->SetTheta(60.839);
+    c->SetPhi(38.0172);
+    h_2D->Draw("surf1");    
+    
+    TCanvas *c1 = new TCanvas("c1","B",600,600);
+    c1->SetTheta(60.839);
+    c1->SetPhi(38.0172);
+    h_2Dmix->Draw("surf1");    
+    
+    TCanvas *c2 = new TCanvas("c2","Ratio",600,600);
+    c2->SetTheta(60.839);
+    c2->SetPhi(38.0172);
+    h_ratio->Draw("surf1");    
 }
