@@ -315,7 +315,7 @@ void scan_thrust(){
 
   //TFile *g = new TFile("/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/DataFiles/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root", "RECREATE");
 
-  TFile *g = new TFile("/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data2-all_AUSTINSTEST.aleph.root","RECREATE");
+  TFile *g = new TFile("/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root","RECREATE");
  
 
   TTree *newtree = t1->CloneTree(0); // Do no copy the data yet
