@@ -40,16 +40,17 @@ double dphi(double phi1,double phi2)
 // Main Analysis Routine
 /**************************************************************************************/
 
-void analysis(int isBelle    = 0,		// 
-              int isThrust   = 0, 		//
-	      int maxevt     = 1000000,		// Max number of events to be processed
-	      int mult_low   = 30,		// Lower cut on the event multiplicity
-	      int mult_high  = 100,		// Upper cut on the event multiplicity
-	      int nbin       = 26,		// Number of bins in the correlation function
-	      bool verbose   = 0,		// Verbose mode
-	      int num_runs   = 5,		// 
-              double ptMin   = 0.4,             // min pT of the particles
-              double ptMax   = 4                // max pT of the particles
+void analysis(int isBelle      = 0,		// 
+              int isThrust     = 0, 		//
+	      int maxevt       = 1000000,	// Max number of events to be processed
+	      int mult_low     = 0,		// Lower cut on the event multiplicity
+	      int mult_high    = 100,		// Upper cut on the event multiplicity
+	      int nbin         = 20,		// Number of bins in the correlation function
+	      bool verbose     = 0,		// Verbose mode
+	      int num_runs     = 5,		// 
+              double ptMin     = 0.4,           // min pT of the particles
+              double ptMax     = 4,             // max pT of the particles
+              double detaRange = 3             //  deta window
 	     )
 {
     // Input File
@@ -72,7 +73,6 @@ void analysis(int isBelle    = 0,		//
     setupTPCTree(t1_mix,mix);
     
     // two histograms    
-    double detaRange = 4;//1.8
     double dthetaRange = PI;
     double normalization = detaRange*2/nbin*2*3.14159/nbin;
     TH2F *h_2D = new TH2F ( "h_2D", "eta-phi of all particles ",nbin, -detaRange, detaRange,nbin, -3.1416/2., 3.1416*1.5);
@@ -392,7 +392,8 @@ void analysis(int isBelle    = 0,		//
                 
                 ratio_eta = h_2D->GetXaxis()->GetBinCenter(x);
                 ratio_phi = h_2D->GetYaxis()->GetBinCenter(y);
-                h_ratio->Fill(ratio_eta,ratio_phi,ratio/normalization);
+                h_ratio->SetBinContent(x,y,ratio/normalization);
+                h_ratio->SetBinError(x,y,errrel_ratio*ratio/normalization);
             }
         }
         
@@ -456,6 +457,9 @@ void analysis(int isBelle    = 0,		//
     
     h_ratio->GetXaxis()->SetTitle("#Delta#eta");
     h_ratio->GetYaxis()->SetTitle("#Delta#phi");
+    h_ratio->GetZaxis()->SetTitle("#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi}");
+    
+    // Plot the results
     
     TFile *background = new TFile(Form("correlation_%d_%d_%d.root", isThrust,mult_low, mult_high), "recreate");
     h_deltaphi[0]->Write();
@@ -478,5 +482,13 @@ void analysis(int isBelle    = 0,		//
     TCanvas *c2 = new TCanvas("c2","Ratio",600,600);
     c2->SetTheta(60.839);
     c2->SetPhi(38.0172);
-    h_ratio->Draw("surf1");    
+    h_ratio->Draw("surf1");  
+    
+    TCanvas *c3 = new TCanvas("c3","dphi",600,600);
+    c3->Divide(2,2);
+    for (int i=0;i<3;i++)
+    {
+      c3->cd(i+1);
+      h_deltaphi[i*2]->Draw();
+    }    
 }
