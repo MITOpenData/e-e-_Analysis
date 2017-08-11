@@ -12,30 +12,14 @@
 #include <TVector3.h>
 #include <TFormula.h>
 #include "fourier.h"
+
+#include "TPCNtupleData.h"
+
 using namespace std;
 
 #define PI 3.14159265358979
 //enum SIMPLEPID {PHOTON, ELECTRON, PION, MUON, KAON, PROTON};
 enum SIMPLEPWLAG {CHARGED_TRACK, CHARGED_LEPTONS1, CHARGED_LEPTONS2, V0, PHOTON, NEUTRAL_HADRON};
-
-// DataFormat
-class TPCNtupleData{
-    public:
-    Int_t nParticle;
-    Float_t pt[50000];
-    Float_t eta[50000];
-    Float_t theta[50000];
-    Float_t pid[50000];
-    Float_t phi[50000];
-    Float_t mass[50000];
-    Float_t pwflag[50000];
-    
-    Float_t px[100000];
-    Float_t py[100000];
-    Float_t pz[100000];
-    Float_t TTheta;
-    Float_t TPhi;
-};
 
 // Calculate Delta Phi
 double dphi(double phi1,double phi2)
@@ -46,25 +30,6 @@ double dphi(double phi1,double phi2)
     
     if (a<-PI/2) a=2*PI+a;
     return a;
-}
-
-// Set the branch addresses
-void setupTPCTree(TTree *t1, TPCNtupleData &data)
-{
-    t1->SetBranchAddress("nParticle",&data.nParticle);
-    t1->SetBranchAddress("pt",data.pt);
-    t1->SetBranchAddress("eta",data.eta);
-    t1->SetBranchAddress("theta",data.theta);
-    t1->SetBranchAddress("pid",data.pid);
-    t1->SetBranchAddress("phi",data.phi);
-    t1->SetBranchAddress("mass",data.mass);
-    t1->SetBranchAddress("pwflag",data.pwflag);
-    
-    t1->SetBranchAddress("px",data.px);
-    t1->SetBranchAddress("py",data.py);
-    t1->SetBranchAddress("pz",data.pz);
-    t1->SetBranchAddress("TTheta", &data.TTheta);
-    t1->SetBranchAddress("TPhi", &data.TPhi);
 }
 
 // Main Analysis 
@@ -82,9 +47,9 @@ void analysis(int isBelle    = 0,		//
 {
     // Input File
     TString filename;
-    //filename = "cleaned_ALEPH_Data-all.aleph.root";
+    filename = "cleaned_ALEPH_Data-all.aleph.root";
     //filename = "/Users/anthony/desktop/LEP2MCGGCCY1997E183_mctrue_aftercut-001.aleph.root";
-    filename = "/data/flowex/CMSsample/cleaned_MinBias_TuneCUETP8M1_5p02TeV-pythia8-HINppWinter16DR-NoPU_75X_mcRun2_asymptotic_ppAt5TeV_forest_v2_track.root";
+    //filename = "/data/flowex/CMSsample/cleaned_MinBias_TuneCUETP8M1_5p02TeV-pythia8-HINppWinter16DR-NoPU_75X_mcRun2_asymptotic_ppAt5TeV_forest_v2_track.root";
         
     TFile *f = new TFile(filename.Data());
     TTree *t1 = (TTree*)f->Get("t");
@@ -149,7 +114,6 @@ void analysis(int isBelle    = 0,		//
                 if(pt1<ptMin||pt1>ptMax) {continue;}
                 N++;
             }
-//            cout<<"N"<<N<<endl;
             mult_dist->Fill(N);
             averageN+=N;
             nEventProcessed++;
