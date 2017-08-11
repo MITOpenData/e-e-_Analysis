@@ -6,7 +6,8 @@
 #include <stdlib.h>
 #include <TMath.h>
 #include <TVector3.h>
-
+#include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -25,12 +26,135 @@ double dphi(double phi1,double phi2)
 }
 
 
-
+//based on code from herwig: http://herwig.hepforge.org/svn/tags/herwig-2-0-beta/Analysis/EventShapes.cc
+//ported by A. Baty
 void thrust(int isBelle, float x[], float y[]){
 
   TString filename;
   if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root";
-  else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
+  else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
+  
+  //filename ="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/DataFiles/ROOTfiles/cleaned_ALEPH_Data-all";
+  
+  TFile *f = new TFile(filename.Data());
+  TTree *t1 = (TTree*)f->Get("t");
+  int n;
+  Float_t pt[50000];
+  Float_t px[50000];
+  Float_t py[50000];
+  Float_t pz[50000];
+  Float_t eta[50000];
+  Float_t theta[50000];
+  Float_t pid[50000];
+  Float_t phi[50000];
+  Float_t mass[50000];
+  Float_t pwflag[50000];
+  
+  t1->SetBranchAddress("nParticle",&n);
+  t1->SetBranchAddress("pt",pt);
+  t1->SetBranchAddress("px",px);
+  t1->SetBranchAddress("py",py);
+  t1->SetBranchAddress("pz",pz);
+  t1->SetBranchAddress("eta",eta);
+  t1->SetBranchAddress("theta",theta);
+  t1->SetBranchAddress("pid",pid);
+  t1->SetBranchAddress("phi",phi);
+  t1->SetBranchAddress("mass",mass);
+  t1->SetBranchAddress("pwflag",pwflag);
+
+  for (int i=0;i<t1->GetEntries();i++) 
+  {  
+    if (i%100==0) cout <<i<<"/"<<t1->GetEntries()<<endl;
+    t1->GetEntry(i);
+
+    
+    TVector3 thrust = TVector3(0,0,0);
+    if(n==1){//thrust is just the particle
+      thrust = TVector3(px[0],py[0],pz[0]);   
+    }
+  
+    if(n==2){//special case for 2 particles
+      if(TMath::Power(px[0],2)+TMath::Power(py[0],2)+TMath::Power(pz[0],2) >= TMath::Power(px[1],2)+TMath::Power(py[1],2)+TMath::Power(pz[1],2)){
+        thrust = TVector3(px[0],py[0],pz[0]);
+      }
+      else{
+        thrust = TVector3(px[1],py[1],pz[1]);
+      }
+    }
+  
+    if(n==3){//combine lowest 2 magnitude momentum, then use same algo as n=2
+      if(TMath::Power(px[0],2)+TMath::Power(py[0],2)+TMath::Power(pz[0],2) >= TMath::Power(px[1],2)+TMath::Power(py[1],2)+TMath::Power(pz[1],2)){
+        if(TMath::Power(px[0],2)+TMath::Power(py[0],2)+TMath::Power(pz[0],2) >= TMath::Power(px[2],2)+TMath::Power(py[2],2)+TMath::Power(pz[2],2)){
+          thrust = TVector3(px[0],py[0],pz[0]);//0 is largest momentum
+        }
+        else{
+          thrust = TVector3(px[2],py[2],pz[2]);//2 is largest momentum
+        } 
+      }
+      else{
+        if(TMath::Power(px[1],2)+TMath::Power(py[1],2)+TMath::Power(pz[1],2) >= TMath::Power(px[2],2)+TMath::Power(py[2],2)+TMath::Power(pz[2],2)){
+          thrust = TVector3(px[1],py[1],pz[1]);//1 is largest momentum
+        }
+        else{
+          thrust = TVector3(px[2],py[2],pz[2]);//2 is largest momentum
+        } 
+      }
+    }
+  
+    if(n>3){
+      //make vector of TVector3's of each particle
+      std::vector< TVector3 > pVec;
+      for(int i = 0; i<n; i++){
+        TVector3 v = TVector3(px[i],py[i],pz[i]);
+        pVec.push_back(v); 
+      }
+      //std::cout << pVecs.at(0).x();
+    
+      TVector3 cross; 
+      float t = 0;
+      for(int i = 1; i<n; i++){//loop through all possible cross products of 2 unique vectors
+        for(int j = 0; j<i; j++){
+          cross = pVec.at(i).Cross(pVec.at(j));
+          TVector3 ptot = TVector3(0,0,0);
+ 
+          for(int k = 0; k<n; k++){ //loop through all 3rd particles not used for the cross product
+            if(k!=i && i!=j){
+              if(pVec.at(k)*cross > 0){//if dot product is >0
+                ptot += pVec.at(k); 
+              }
+              else{
+                ptot -= pVec.at(k);
+              }
+            }
+          }
+
+          std::vector< TVector3 > cpm;//add or subtract in last 2 vectors used for cross product
+          cpm.push_back(ptot - pVec.at(j) - pVec.at(i));
+          cpm.push_back(ptot - pVec.at(j) + pVec.at(i));
+          cpm.push_back(ptot + pVec.at(j) - pVec.at(i));
+          cpm.push_back(ptot + pVec.at(j) + pVec.at(i));
+          for(vector<TVector3>::iterator it = cpm.begin(); it != cpm.end(); it++){
+            float tval = (*it).Mag2();
+            if(tval > t){
+              t = tval;
+              thrust = *it;
+            }
+          }
+        }
+      } 
+    }
+
+    x[i] = thrust.Theta();
+    y[i] = thrust.Phi();
+  }
+}
+
+//legacy thrust code written using a scan over theta/phi
+void thrustLegacy(int isBelle, float x[], float y[]){
+
+  TString filename;
+  if(isBelle) filename="/data/flowex/Datasamples/Belle/output_2_withtheta.root";
+  else filename="/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
 
   
   //filename ="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/DataFiles/ROOTfiles/cleaned_ALEPH_Data-all";
@@ -140,7 +264,7 @@ void thrust(int isBelle, float x[], float y[]){
 void scan_thrust(){
   TString filename;
   //filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/DataFiles/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
-  filename = "/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
+  filename = "/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
 
 
   
@@ -191,9 +315,7 @@ void scan_thrust(){
 
   //TFile *g = new TFile("/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/DataFiles/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root", "RECREATE");
 
-  TFile *g = new TFile("/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root","RECREATE");
-
-
+  TFile *g = new TFile("/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data2-all_AUSTINSTEST.aleph.root","RECREATE");
  
 
   TTree *newtree = t1->CloneTree(0); // Do no copy the data yet
@@ -205,7 +327,7 @@ void scan_thrust(){
   
   //int nentries=newtree->GetEntries();
   Int_t nevent = (Int_t)t1->GetEntries();
-
+ 
   int nevent_process = nevent;
 
   //cout<<nentries<<endl;
