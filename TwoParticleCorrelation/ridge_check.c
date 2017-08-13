@@ -40,8 +40,7 @@ void analysis(int isBelle      = 0,		//
               double ptMin     = 0.4,           // min pT of the particles used for correlation function
               double ptMax     = 4,             // max pT of the particles used for correlation function
               double detaRange = 4              //  deta window
-	     )
-{
+	     ) {
     // Input File
     TString filename;
     filename = "cleaned_ALEPH_Data-all.aleph.root";
@@ -82,215 +81,217 @@ void analysis(int isBelle      = 0,		//
     double nEventProcessed=0;
     double nEventInMultBin=0;
     
-    // S calculation using multiplicity cut
     for (Int_t i=0;i<nevent_process;i++) {
-        t1->GetEntry(i);
-        if (i%10000==0) cout <<i<<"/"<<nevent_process<<endl;
-        if (verbose) cout<<"nparticles="<<data.nParticle<<endl;
-        
-        int selected=i+1;  //questo diventa il numero di evento estratto nel file +1
-        int flag=0;        //definisco una flag a zero
-        
-        // Yen-Jie: cut on maximum number of particles to avoid infinite loop, for the moment it is 100
-        // if (nparticles>mult_high) continue;
-        
-	// Yen-Jie: we would like to use a definition similar to CMS publication
-        // all particles with pT > 0.4 GeV/c for the calculation of event multiplicity N	
+       t1->GetEntry(i);
+       if (i%10000==0) cout <<i<<"/"<<nevent_process<<endl;
+       if (verbose) cout<<"nparticles="<<data.nParticle<<endl;
+       
+       int selected=i+1;  //questo diventa il numero di evento estratto nel file +1
+       int flag=0;	  //definisco una flag a zero
+       
+       // Yen-Jie: cut on maximum number of particles to avoid infinite loop, for the moment it is 100
+       // if (nparticles>mult_high) continue;
+       
+       // Yen-Jie: we would like to use a definition similar to CMS publication
+       // all particles with pT > 0.4 GeV/c for the calculation of event multiplicity N        
 
-        double N=0;      // N_{trk}^{offline}
-        double N_TP=0;   // Number of particles used in the two particle correlation function calculation, can be different from N for event classification
-	double ptMinForN = 0.4;
-	double ptMaxForN = 100;
-	
-        // calculate the number of tracks in the passing selection
-        for ( int j=0;j<data.nParticle;j++ ) {
-            float pt1 = data.pt[j];
-            int pid1 = data.pid[j];
-            int pwflag1 = data.pwflag[j];
-            //if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON&&!(!isBelle&&pwflag1==0)) continue;
-            if (pwflag1!=ALEPH_CHARGED_TRACK){continue;}
-            if (pt1>ptMinForN&&pt1<ptMaxForN) N++;
-            if (pt1>ptMin&&pt1<ptMax) N_TP++;
-        }
-        h_mult_dist->Fill(N);
-        averageN+=N;
-        nEventProcessed++;
-        
-        if (N<mult_low) continue;
-        if (N>mult_high) continue;
-        nEventInMultBin++;
-        
-        TVector3 thrust(1, 1, 1);
-        thrust.SetTheta(data.TTheta);
-        thrust.SetPhi(data.TPhi);
-        
-        
-        TVector3 rotVec;
-        rotVec.SetX(-thrust.Y());
-        rotVec.SetY(thrust.X());
-        
-        for ( int j=0;j<data.nParticle;j++ ) {
-            int pid1 = data.pid[j];
-            float eta1 = data.eta[j];
-            float phi1 = data.phi[j];
-            float pt1 = data.pt[j];
-            float mass1 = data.mass[j];
-            float pwflag1 = data.pwflag[j];
-            float theta1 = data.theta[j];
-            if (isThrust == 1)
-            {
-        	TVector3 v1;
-        	float px1 = data.px[j];
-        	float py1 = data.py[j];
-        	float pz1 = data.pz[j];
-        	v1.SetXYZ(px1,py1,pz1);
-        	v1.Rotate(-data.TTheta, rotVec);
-        	phi1 = v1.Phi();
-        	eta1 = v1.PseudoRapidity();
-        	pt1 = v1.Pt();
-        	theta1 = v1.Theta();
-            }
-            if(pwflag1!=ALEPH_CHARGED_TRACK)continue;
-            //if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON&&!(!isBelle&&pwflag1==0)) continue;
-            if(pt1<ptMin||pt1>ptMax) continue;
-            // Signal loop, calculate S correlation function
-            for ( int k=j+1;k<data.nParticle;k++ ) {
-            	int pid2 = data.pid[k];
-            	float eta2 = data.eta[k];
-            	float phi2 = data.phi[k];
-            	float pt2 = data.pt[k];
-            	float mass2 = data.mass[k];
-            	float pwflag2 = data.pwflag[k];
-            	float theta2 = data.theta[k];
-            	if (isThrust == 1)
-            	{
-            	    TVector3 v2;
-            	    float px2 = data.px[k];
-            	    float py2 = data.py[k];
-            	    float pz2 = data.pz[k];
-            	    v2.SetXYZ(px2,py2,pz2);
-            	    v2.Rotate(-data.TTheta, rotVec);
-            	    phi2 = v2.Phi();
-            	    eta2 = v2.PseudoRapidity();
-            	    pt2 = v2.Pt();
-            	    theta2 = v2.Theta();
-            	}
-		
-            	if(pwflag2!=ALEPH_CHARGED_TRACK)continue;
-            	if(pt2<ptMin||pt2>ptMax) continue;
-            	if (N!=0)
-            	{
-            	    h_2D->Fill(eta1-eta2,dphi(phi1,phi2),1./N_TP);
-            	    h_2D->Fill(eta1-eta2,dphi(phi2,phi1),1./N_TP);
-            	    h_2D->Fill(eta2-eta1,dphi(phi1,phi2),1./N_TP);
-            	    h_2D->Fill(eta2-eta1,dphi(phi2,phi1),1./N_TP);
-            	}
-            }
-        }
-            
-	for (int nMix = 0; nMix<num_runs; nMix++)
-	{
-	   t1_mix->GetEntry ( selected );
-	
-	   // Select a matched event
-           while ((fabs(mix.nParticle-data.nParticle)>4&&data.nParticle<1000)||i==selected){
-               selected++;
-               if (selected>nevent_process&&flag==1) break;
-               if (selected>nevent_process) flag=1;
-               selected = selected % nevent_process;
-               t1_mix->GetEntry ( selected );
+       double N=0;	// N_{trk}^{offline}
+       double N_TP=0;	// Number of particles used in the two particle correlation function calculation, can be different from N for event classification
+       double ptMinForN = 0.4;
+       double ptMaxForN = 100;
+
+       // calculate the number of tracks in the passing selection
+       for ( int j=0;j<data.nParticle;j++ ) {
+           float pt1 = data.pt[j];
+           int pid1 = data.pid[j];
+           int pwflag1 = data.pwflag[j];
+           //if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON&&!(!isBelle&&pwflag1==0)) continue;
+           if (pwflag1!=ALEPH_CHARGED_TRACK){continue;}
+           if (pt1>ptMinForN&&pt1<ptMaxForN) N++;
+           if (pt1>ptMin&&pt1<ptMax) N_TP++;
+       }
+       h_mult_dist->Fill(N);
+       averageN+=N;
+       nEventProcessed++;
+       
+       if (N<mult_low) continue;
+       if (N>mult_high) continue;
+       nEventInMultBin++;
+       
+       TVector3 thrust(1, 1, 1);
+       thrust.SetTheta(data.TTheta);
+       thrust.SetPhi(data.TPhi);
+       
+       
+       TVector3 rotVec;
+       rotVec.SetX(-thrust.Y());
+       rotVec.SetY(thrust.X());
+       
+       /****************************************/
+       // S calculation using multiplicity cut //
+       /****************************************/
+       for ( int j=0;j<data.nParticle;j++ ) {
+           int pid1 = data.pid[j];
+           float eta1 = data.eta[j];
+           float phi1 = data.phi[j];
+           float pt1 = data.pt[j];
+           float mass1 = data.mass[j];
+           float pwflag1 = data.pwflag[j];
+           float theta1 = data.theta[j];
+           if (isThrust == 1)
+           {
+               TVector3 v1;
+               float px1 = data.px[j];
+               float py1 = data.py[j];
+               float pz1 = data.pz[j];
+               v1.SetXYZ(px1,py1,pz1);
+               v1.Rotate(-data.TTheta, rotVec);
+               phi1 = v1.Phi();
+               eta1 = v1.PseudoRapidity();
+               pt1 = v1.Pt();
+               theta1 = v1.Theta();
            }
-	
-           double N2=0;
-           double N2_TP=0;
-	   
-           // calculate the number of tracks in the mixed event passing selection
-           for ( int j=0;j<data.nParticle;j++ ) {
-              float pt1 = mix.pt[j];
-              int pid1 = mix.pid[j];
-              int pwflag1 = mix.pwflag[j];
+           if(pwflag1!=ALEPH_CHARGED_TRACK)continue;
+           //if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON&&!(!isBelle&&pwflag1==0)) continue;
+           if(pt1<ptMin||pt1>ptMax) continue;
+           // Signal loop, calculate S correlation function
+           for ( int k=j+1;k<data.nParticle;k++ ) {
+               int pid2 = data.pid[k];
+               float eta2 = data.eta[k];
+               float phi2 = data.phi[k];
+               float pt2 = data.pt[k];
+               float mass2 = data.mass[k];
+               float pwflag2 = data.pwflag[k];
+               float theta2 = data.theta[k];
+               if (isThrust == 1)
+               {
+        	   TVector3 v2;
+        	   float px2 = data.px[k];
+        	   float py2 = data.py[k];
+        	   float pz2 = data.pz[k];
+        	   v2.SetXYZ(px2,py2,pz2);
+        	   v2.Rotate(-data.TTheta, rotVec);
+        	   phi2 = v2.Phi();
+        	   eta2 = v2.PseudoRapidity();
+        	   pt2 = v2.Pt();
+        	   theta2 = v2.Theta();
+               }
+               
+               if(pwflag2!=ALEPH_CHARGED_TRACK)continue;
+               if(pt2<ptMin||pt2>ptMax) continue;
+               if (N!=0)
+               {
+        	   h_2D->Fill(eta1-eta2,dphi(phi1,phi2),1./N_TP);
+        	   h_2D->Fill(eta1-eta2,dphi(phi2,phi1),1./N_TP);
+        	   h_2D->Fill(eta2-eta1,dphi(phi1,phi2),1./N_TP);
+        	   h_2D->Fill(eta2-eta1,dphi(phi2,phi1),1./N_TP);
+               }
+           }
+       }
+           
+       /****************************************/
+       // B calculation using multiplicity cut //
+       /****************************************/
+       for (int nMix = 0; nMix<num_runs; nMix++)
+       {
+          t1_mix->GetEntry ( selected );
+
+          // Select a matched event
+          while ((fabs(mix.nParticle-data.nParticle)>4&&data.nParticle<1000)||i==selected){
+              selected++;
+              if (selected>nevent_process&&flag==1) break;
+              if (selected>nevent_process) flag=1;
+              selected = selected % nevent_process;
+              t1_mix->GetEntry ( selected );
+          }
+
+          double N2=0;
+          double N2_TP=0;
+          
+          // calculate the number of tracks in the mixed event passing selection
+          for ( int j=0;j<data.nParticle;j++ ) {
+             float pt1 = mix.pt[j];
+             int pid1 = mix.pid[j];
+             int pwflag1 = mix.pwflag[j];
+             if (pwflag1!=ALEPH_CHARGED_TRACK) continue;
+             //if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON&&!(!isBelle&&pwflag1==0)) continue;
+             if (pt1>ptMinForN&&pt1<ptMaxForN) N2++;
+             if (pt1>ptMin&&pt1<ptMax) N2_TP++;
+          }
+       
+          TVector3 thrust_mix(1, 1, 1);
+          thrust_mix.SetTheta(mix.TTheta);
+          thrust_mix.SetPhi(mix.TPhi);
+       
+          TVector3 rotVec_mix;
+          rotVec_mix.SetX(-thrust_mix.Y());
+          rotVec_mix.SetY(thrust_mix.X());
+       
+          if (i==selected) {
+             cout <<"Error in Mixing!"<<endl;
+             continue;
+          }
+          for ( int j=0;j<data.nParticle;j++ ) {
+              int pid1 = data.pid[j];
+              float eta1 = data.eta[j];
+              float phi1 = data.phi[j];
+              float pt1 = data.pt[j];
+              float mass1 = data.mass[j];
+              float pwflag1 = data.pwflag[j];
+              float theta1 = data.theta[j];
+              if (isThrust == 1){
+        	 TVector3 v1;
+        	 float px1 = data.px[j];
+        	 float py1 = data.py[j];
+        	 float pz1 = data.pz[j];
+        	 v1.SetXYZ(px1,py1,pz1);
+        	 v1.Rotate(-data.TTheta, rotVec);
+        	 phi1 = v1.Phi();
+        	 eta1 = v1.PseudoRapidity();
+        	 pt1 = v1.Pt();
+        	 theta1 = v1.Theta();
+              }
+           
               if (pwflag1!=ALEPH_CHARGED_TRACK) continue;
               //if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON&&!(!isBelle&&pwflag1==0)) continue;
-              if (pt1>ptMinForN&&pt1<ptMaxForN) N2++;
-              if (pt1>ptMin&&pt1<ptMax) N2_TP++;
-           }
-        
-           TVector3 thrust_mix(1, 1, 1);
-           thrust_mix.SetTheta(mix.TTheta);
-           thrust_mix.SetPhi(mix.TPhi);
-        
-           TVector3 rotVec_mix;
-           rotVec_mix.SetX(-thrust_mix.Y());
-           rotVec_mix.SetY(thrust_mix.X());
-        
-  	   if (i==selected) {
-	      cout <<"Error in Mixing!"<<endl;
-	      continue;
-	   }
-           for ( int j=0;j<data.nParticle;j++ ) {
-               int pid1 = data.pid[j];
-               float eta1 = data.eta[j];
-               float phi1 = data.phi[j];
-               float pt1 = data.pt[j];
-               float mass1 = data.mass[j];
-               float pwflag1 = data.pwflag[j];
-               float theta1 = data.theta[j];
-               if (isThrust == 1){
-                  TVector3 v1;
-         	  float px1 = data.px[j];
-               	  float py1 = data.py[j];
-                  float pz1 = data.pz[j];
-        	  v1.SetXYZ(px1,py1,pz1);
-                  v1.Rotate(-data.TTheta, rotVec);
-                  phi1 = v1.Phi();
-                  eta1 = v1.PseudoRapidity();
-                  pt1 = v1.Pt();
-                  theta1 = v1.Theta();
-               }
-            
-	       if (pwflag1!=ALEPH_CHARGED_TRACK) continue;
-               //if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON&&!(!isBelle&&pwflag1==0)) continue;
-               if(pt1<ptMin||pt1>ptMax) continue;
-            
-               // Background loop, calculate B correlation function from mixed event
-               for ( int k=0;k<mix.nParticle;k++ ) {
-                  int pidmix = mix.pid[k];
-        	  float etamix = mix.eta[k];
-          	  float phimix = mix.phi[k];
-        	  float ptmix = mix.pt[k];
-          	  float massmix = mix.mass[k];
-        	  float pwflagmix = mix.pwflag[k];
-        	  float thetamix = mix.theta[k];
-        	  if (isThrust == 1){
-        	    TVector3 vmix;
-        	    float pxmix = mix.px[j];
-        	    float pymix = mix.py[j];
-        	    float pzmix = mix.pz[j];
-        	    vmix.SetXYZ(pxmix,pymix,pzmix);
-        	    vmix.Rotate(-mix.TTheta, rotVec_mix);
-        	    phimix = vmix.Phi();
-        	    etamix = vmix.PseudoRapidity();
-        	    ptmix = vmix.Pt();
-        	    thetamix = vmix.Theta();
-        	  }
-        	
-		  if (pwflagmix!= ALEPH_CHARGED_TRACK) continue;
-        	  //if (pidmix!=PION&&pidmix!=PROTON&&pidmix!=KAON&&!(!isBelle&&pwflagmix==0)) continue;
-        	  if(ptmix<ptMin||ptmix>ptMax) continue;
+              if(pt1<ptMin||pt1>ptMax) continue;
+           
+              // Background loop, calculate B correlation function from mixed event
+              for ( int k=0;k<mix.nParticle;k++ ) {
+        	 int pidmix = mix.pid[k];
+        	 float etamix = mix.eta[k];
+        	 float phimix = mix.phi[k];
+        	 float ptmix = mix.pt[k];
+        	 float massmix = mix.mass[k];
+        	 float pwflagmix = mix.pwflag[k];
+        	 float thetamix = mix.theta[k];
+        	 if (isThrust == 1){
+        	   TVector3 vmix;
+        	   float pxmix = mix.px[j];
+        	   float pymix = mix.py[j];
+        	   float pzmix = mix.pz[j];
+        	   vmix.SetXYZ(pxmix,pymix,pzmix);
+        	   vmix.Rotate(-mix.TTheta, rotVec_mix);
+        	   phimix = vmix.Phi();
+        	   etamix = vmix.PseudoRapidity();
+        	   ptmix = vmix.Pt();
+        	   thetamix = vmix.Theta();
+        	 }
+               
+        	 if (pwflagmix!= ALEPH_CHARGED_TRACK) continue;
+        	 //if (pidmix!=PION&&pidmix!=PROTON&&pidmix!=KAON&&!(!isBelle&&pwflagmix==0)) continue;
+        	 if(ptmix<ptMin||ptmix>ptMax) continue;
 
-        	  if (N!=0) {
-        	    h_2Dmix->Fill(eta1-etamix,dphi(phi1,phimix),1./N2_TP);
-        	    h_2Dmix->Fill(eta1-etamix,dphi(phimix,phi1),1./N2_TP);
-        	    h_2Dmix->Fill(etamix-eta1,dphi(phi1,phimix),1./N2_TP);
-        	    h_2Dmix->Fill(etamix-eta1,dphi(phimix,phi1),1./N2_TP);
-        	    
-        	  }
-                }//end of second loop
-            }// end of first loop
+        	 if (N!=0) {
+        	   h_2Dmix->Fill(eta1-etamix,dphi(phi1,phimix),1./N2_TP);
+        	   h_2Dmix->Fill(eta1-etamix,dphi(phimix,phi1),1./N2_TP);
+        	   h_2Dmix->Fill(etamix-eta1,dphi(phi1,phimix),1./N2_TP);
+        	   h_2Dmix->Fill(etamix-eta1,dphi(phimix,phi1),1./N2_TP);
+        	 }
+               } //end of mixed event loop
+           } // end of working event loop
        } // end of nMix loop      
-    }// end of loop over events
-    
-    
+    } // end of loop over events
     
     cout<<"nEventInMultBin"<<nEventInMultBin<<endl;
     
@@ -404,7 +405,9 @@ void analysis(int isBelle      = 0,		//
     h_ratio->GetYaxis()->SetTitle("#Delta#phi");
     h_ratio->GetZaxis()->SetTitle("#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi}");
     
+    /**************************************************************************************/
     // Plot the results
+    /**************************************************************************************/
     
     TFile *background = new TFile(Form("correlation_%d_%d_%d.root", isThrust,mult_low, mult_high), "recreate");
     h_deltaphi[0]->Write();
@@ -439,11 +442,11 @@ void analysis(int isBelle      = 0,		//
       c3->cd(i+1);
       h_deltaphi[i*2]->Draw();
     }
-   
 }
 
+/**************************************************************************************/
 // For interactive session in ROOT
-
+/**************************************************************************************/
 void ridge_check()
 {
    analysis();
