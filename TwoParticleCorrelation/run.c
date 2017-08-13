@@ -1,6 +1,6 @@
 #include "ridge_check.c"
 
-void test(int isBelle      = 0,		// 
+void run(int isBelle      = 0,		// 
               int isThrust     = 0, 		//
 	      int maxevt       = 1000000,	// Max number of events to be processed, 0 = all events
 	      int mult_low     = 38,		// Lower cut on the event multiplicity
