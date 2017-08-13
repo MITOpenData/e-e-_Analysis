@@ -3,6 +3,7 @@
 
 #include "TMath.h"
 #include "TH2F.h"
+#include "Settings.h"
 
 inline float dPhi(float phi1, float phi2){
   return TMath::ACos(TMath::Cos(phi1-phi2));
@@ -28,6 +29,26 @@ void symmetrizeDetaDphi(TH2F * h, int etaBins, int phiBins){
       h->SetBinError(etaBins-i,bin,h->GetBinError(i+1,j+1));
     }
   } 
+}
+
+void getLongRangeYield(Settings s, TH2F * h, TH1F * g){
+  float binArea = (4*s.etaCut/(float)s.dEtaBins)*(2*TMath::Pi()/(float)s.dPhiBins); 
+ 
+  for(int i = 0; i<s.dPhiBins; i++){
+    float sum = 0; 
+    float err2 = 0;
+    for(int j = 0; j<s.dEtaBins; j++){
+      float center = h->GetXaxis()->GetBinCenter(j+1); 
+      if(TMath::Abs(center)>=s.dEtaRangeToIntegrate[0] && TMath::Abs(center)<s.dEtaRangeToIntegrate[1]){
+        sum += h->GetBinContent(j+1,i+1);
+        err2+= h->GetBinError(j+1,i+1)*h->GetBinError(j+1,i+1);
+      }
+    }
+    g->SetBinContent(i+1,sum);
+    g->SetBinError(i+1,TMath::Power(err2,0.5));
+  }
+                      //scale by bin area to get yield
+  g->Scale(2*binArea);//scale by 2 because we only integrated the positive side, adn there is also yield in the negative eta side
 }
 
 #endif

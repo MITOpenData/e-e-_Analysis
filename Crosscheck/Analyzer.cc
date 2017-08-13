@@ -18,11 +18,13 @@ void Analyzer(){
   TH2F * signal2PC[s.nMultBins]; 
   TH2F * bkgrnd2PC[s.nMultBins];
   TH2F * ratio2PC[s.nMultBins]; 
+  TH1F * longRangeYield[s.nMultBins]; 
   float nSignalTriggers[s.nMultBins] = {0};
   float nBkgrndTriggers[s.nMultBins] = {0};
   for(int i = 0; i<s.nMultBins; i++){
     signal2PC[i] = new TH2F(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaCut,2*s.etaCut,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
     bkgrnd2PC[i] = new TH2F(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaCut,2*s.etaCut,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+    longRangeYield[i] = new TH1F(Form("longRangeYield_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#phi;Y(#Delta#Phi)",s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0); 
   }
   TH1F * multiplicity = new TH1F("multiplicity",";nTrk;nEvents",200,0,200);
 
@@ -126,6 +128,7 @@ void Analyzer(){
     ratio2PC[k] = (TH2F*)signal2PC[k]->Clone(Form("ratio2PC_%d_%d",s.multBinsLow[k],s.multBinsHigh[k]));
     ratio2PC[k]->Divide(bkgrnd2PC[k]);
     ratio2PC[k]->Scale(bkgrnd2PC[k]->GetBinContent(bkgrnd2PC[k]->FindBin(0,0))/4.0);
+    getLongRangeYield(s,ratio2PC[k],longRangeYield[k]);
   }
 
   f->Close();

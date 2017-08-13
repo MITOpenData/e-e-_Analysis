@@ -13,17 +13,24 @@ class Settings{
     //cuts
     bool doUseLeptons = true;
 
-    float etaCut = 1.7;
-    float dEtaBins = 32;//keep even
-    float dPhiBins = 32;//keep factor of 4
+    //kinematics
+    float etaCut = 1.8;
+    float dEtaBins = 36;//keep even
+    float dPhiBins = 36;//keep factor of 4
 
+    float dEtaRangeToIntegrate[2] = {2.0,3.6};//try to make this correspond with bin edges based on above parameters
+
+    //mixing
     int nMixedEvents = 5;
     int maxSkipSize  = 3;
 
+
+    //plots
     static const int nMultBins = 5;
     int multBinsLow[nMultBins]  = {0,   0 , 15, 25, 35};
     int multBinsHigh[nMultBins] = {999, 15, 25, 35, 999};
 
+    //other
     bool doAllData = true;
     int nEvts = 5000;
 
