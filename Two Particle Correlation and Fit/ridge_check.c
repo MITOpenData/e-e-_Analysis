@@ -43,14 +43,14 @@ double dphi(double phi1,double phi2)
 void analysis(int isBelle      = 0,		// 
               int isThrust     = 0, 		//
 	      int maxevt       = 1000000,	// Max number of events to be processed
-	      int mult_low     = 0,		// Lower cut on the event multiplicity
-	      int mult_high    = 100,		// Upper cut on the event multiplicity
-	      int nbin         = 20,		// Number of bins in the correlation function
+	      int mult_low     = 40,		// Lower cut on the event multiplicity
+	      int mult_high    = 50,		// Upper cut on the event multiplicity
+	      int nbin         = 26,		// Number of bins in the correlation function
 	      bool verbose     = 0,		// Verbose mode
 	      int num_runs     = 5,		// 
-              double ptMin     = 0.4,           // min pT of the particles
-              double ptMax     = 4,             // max pT of the particles
-              double detaRange = 3             //  deta window
+              double ptMin     = 0.4,           // min pT of the particles used for correlation function
+              double ptMax     = 4,             // max pT of the particles used for correlation function
+              double detaRange = 3.5              //  deta window
 	     )
 {
     // Input File
@@ -108,7 +108,13 @@ void analysis(int isBelle      = 0,		//
         // Yen-Jie: cut on maximum number of particles to avoid infinite loop, for the moment it is 100
         // if (nparticles>mult_high) continue;
         
+	// Yen-Jie: we would like to use a definition similar to CMS publication
+        // all particles with pT > 0.4 GeV/c for the calculation of event multiplicity N	
+
         double N=0;
+	double ptMinForN = 0.4;
+	double ptMaxForN = 100;
+	
         // calculate the number of tracks in the passing selection
         for ( int j=0;j<data.nParticle;j++ ) {
             float pt1 = data.pt[j];
@@ -116,7 +122,7 @@ void analysis(int isBelle      = 0,		//
             int pwflag1 = data.pwflag[j];
             //if (pid1!=PION&&pid1!=PROTON&&pid1!=KAON&&!(!isBelle&&pwflag1==0)) continue;
             if (pwflag1!=ALEPH_CHARGED_TRACK){continue;}
-            if(pt1<ptMin||pt1>ptMax) {continue;}
+            if (pt1<ptMinForN||pt1>ptMaxForN) {continue;}
             N++;
         }
         mult_dist->Fill(N);
@@ -236,7 +242,7 @@ void analysis(int isBelle      = 0,		//
             
             // find a mixed event
             //	cout <<N<<endl;
-	    selected=i+1;
+	    //selected=i+1;
 	    t1_mix->GetEntry ( selected );
 	    
             while ((fabs(mix.nParticle-data.nParticle)>4&&data.nParticle<1000)||i==selected){
@@ -247,7 +253,7 @@ void analysis(int isBelle      = 0,		//
                 selected = selected % nevent_process;
                 t1_mix->GetEntry ( selected );
             }
-	    if (selected>nevent_process) continue;
+	    //if (selected>nevent_process) continue;
             
             double N2=0;
             // calculate the number of tracks in the mixed event passing selection
@@ -411,7 +417,7 @@ void analysis(int isBelle      = 0,		//
         
     }
     cout<<"bin"<<h_ratio_theta->GetBinContent(0,0)<<endl;
-    double etaranges[8]={1.5,4,1.5,3, 2,3, 2,4};
+    double etaranges[8]={1.5,3.5,1.5,3, 2,3, 2,3.5};
     int minbin,maxbin;
     int thetaranges[4] = {-3,-2,-1,0};
     
@@ -486,9 +492,17 @@ void analysis(int isBelle      = 0,		//
     
     TCanvas *c3 = new TCanvas("c3","dphi",600,600);
     c3->Divide(2,2);
-    for (int i=0;i<3;i++)
+    for (int i=0;i<4;i++)
     {
       c3->cd(i+1);
       h_deltaphi[i*2]->Draw();
-    }    
+    }
+        
+}
+
+// For interactive session in ROOT
+
+void ridge_check()
+{
+   analysis();
 }
