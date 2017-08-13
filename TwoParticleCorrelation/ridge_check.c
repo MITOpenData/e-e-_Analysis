@@ -67,7 +67,7 @@ void analysis(int isBelle      = 0,		//
     TH2F *h_2D = new TH2F ( "h_2D", "#eta-#phi of all particles ",nbin, -detaRange, detaRange,nbin, -3.1416/2., 3.1416*1.5);
     TH2F *h_2Dmix = new TH2F ( "h_2Dmix", "#eta-#phi of all particles ",nbin, -detaRange, detaRange,nbin, -3.1416/2., 3.1416*1.5);
     TH2F *h_ratio = new TH2F ( "h_ratio", "#eta-#phi of all particles ", nbin, -detaRange, detaRange,nbin, -3.1416/2.,3.1416*1.5);
-    TH1D *h_mult_dist = new TH1D("multi","multiplicity distribution of charged particles",20,0,20);
+    TH1D *h_mult_dist = new TH1D("multi","multiplicity distribution of charged particles;N_{trk}^{offline};Count",60,0,60);
     h_2D->Sumw2();
     h_2Dmix->Sumw2();
     h_ratio->Sumw2();
@@ -414,6 +414,9 @@ void analysis(int isBelle      = 0,		//
     h_mult_dist->Write();
     background->Close();
     
+    TCanvas *c0 = new TCanvas("c0","Multiplicity",600,600);
+    h_mult_dist->Draw("e");     
+
     TCanvas *c = new TCanvas("c","S",600,600);
     c->SetTheta(60.839);
     c->SetPhi(38.0172);
@@ -436,7 +439,7 @@ void analysis(int isBelle      = 0,		//
       c3->cd(i+1);
       h_deltaphi[i*2]->Draw();
     }
-        
+   
 }
 
 // For interactive session in ROOT
