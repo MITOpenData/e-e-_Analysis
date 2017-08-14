@@ -21,8 +21,7 @@ void Analyzer(){
   TH1F * longRangeYield[s.nMultBins]; 
   float nSignalEvts[s.nMultBins] = {0};
   float nBkgrndEvts[s.nMultBins] = {0};
-//  float nSignalTriggers[s.nMultBins] = {0};
-//  float nBkgrndTriggers[s.nMultBins] = {0};
+  
   for(int i = 0; i<s.nMultBins; i++){
     signal2PC[i] = new TH2F(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaCut,2*s.etaCut,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
     bkgrnd2PC[i] = new TH2F(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaCut,2*s.etaCut,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
