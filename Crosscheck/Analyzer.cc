@@ -19,8 +19,10 @@ void Analyzer(){
   TH2F * bkgrnd2PC[s.nMultBins];
   TH2F * ratio2PC[s.nMultBins]; 
   TH1F * longRangeYield[s.nMultBins]; 
-  float nSignalTriggers[s.nMultBins] = {0};
-  float nBkgrndTriggers[s.nMultBins] = {0};
+  float nSignalEvts[s.nMultBins] = {0};
+  float nBkgrndEvts[s.nMultBins] = {0};
+//  float nSignalTriggers[s.nMultBins] = {0};
+//  float nBkgrndTriggers[s.nMultBins] = {0};
   for(int i = 0; i<s.nMultBins; i++){
     signal2PC[i] = new TH2F(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaCut,2*s.etaCut,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
     bkgrnd2PC[i] = new TH2F(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaCut,2*s.etaCut,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
@@ -63,54 +65,62 @@ void Analyzer(){
     if(i%1000==0) std::cout << i << "/" << (s.doAllData?t->GetEntries():s.nEvts) << std::endl;
 
     int nTrk = 0;
+    float nTrig = 0;
     for(int t = 0; t<nParticle; t++){
-      if(pwflag[t]==0 || (s.doUseLeptons && (pwflag[t]==1 || pwflag[t]==2))) nTrk++;
+      if(pwflag[t]==0 || (s.doUseLeptons && (pwflag[t]==1 || pwflag[t]==2))){
+        nTrk++;
+        if(TMath::Abs(eta[t]) > s.etaCut) continue;
+        if(pt[t]<s.trigPt[0] || pt[t]>s.trigPt[1]) continue;
+        float corr = 1;//TODO eff corr
+        nTrig += corr;
+      }
     }
     multiplicity->Fill(nTrk);
+    if(nTrig<2 && s.doExcludeNTrigLT2) continue;
 
-    int nMixed = 0;
+    int nMixed = 0; 
     //start at the next event and add maxSkipSize each time
     for(int i2 = i+1; nMixed<s.nMixedEvents; i2 += (int)(s.maxSkipSize*randGen.Rndm())+1 ){
       if( i2>=t->GetEntries()) i2 = (int)(s.maxSkipSize*randGen.Rndm())+1;
       tMix->GetEntry(i2);
+      for(int k = 0; k<s.nMultBins; k++){
+        if(s.isInMultBin(nTrk,k) && nMixed==0)  nSignalEvts[k]++;
+        if(s.isInMultBin(nTrk,k))  nBkgrndEvts[k]++;
+      }
     
       //fill signal histogram
       for(int j1 = 0; j1<nParticle; j1++){
         if(TMath::Abs(eta[j1]) > s.etaCut) continue;
+        if(pt[j1]<s.trigPt[0] || pt[j1]>s.trigPt[1]) continue;
         if(!(pwflag[j1]==0 || (s.doUseLeptons && (pwflag[j1]==1 || pwflag[j1]==2)))) continue;
         float corr1 = 1;//TODO eff corr
 
         //signal histogram
         if(nMixed == 0){
-          for(int k = 0; k<s.nMultBins; k++){
-            if(s.isInMultBin(nTrk,k))  nSignalTriggers[k] += corr1;
-          }
-         
           for(int j2 = 0; j2<j1; j2++){
             if(TMath::Abs(eta[j2]) > s.etaCut) continue;
+            if(pt[j2]<s.assocPt[0] || pt[j2]>s.assocPt[1]) continue;
             if(!(pwflag[j2]==0 || (s.doUseLeptons && (pwflag[j2]==1 || pwflag[j2]==2)))) continue;
             float corr2 = 1;//TODO eff corr
             //correct for both particles and also divide by hte bin widths
             for(int k = 0; k<s.nMultBins; k++){
               if(s.isInMultBin(nTrk,k)){
-                signal2PC[k]->Fill( dEta(eta[j1],eta[j2]), dPhi(phi[j1],phi[j2]), corr1*corr2/(4*s.etaCut/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins));
+                signal2PC[k]->Fill( dEta(eta[j1],eta[j2]), dPhi(phi[j1],phi[j2]), corr1*corr2/(4*s.etaCut/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
               }
             }//end mult bin loop
           }//end 2nd particle loop
         }
         
         //background mixed event histogram  
-        for(int k = 0; k<s.nMultBins; k++){
-          if(s.isInMultBin(nTrk,k))  nBkgrndTriggers[k] += corr1;
-        }
         for(int j2 = 0; j2<nParticleMix; j2++){
           if(TMath::Abs(etaMix[j2]) > s.etaCut) continue;
+          if(ptMix[j2]<s.assocPt[0] || ptMix[j2]>s.assocPt[1]) continue;
           if(!(pwflagMix[j2]==0 || (s.doUseLeptons && (pwflagMix[j2]==1 || pwflagMix[j2]==2)))) continue;
           float corr2 = 1;//TODO eff corr
           //correct for both particles and also divide by hte bin widths
           for(int k = 0; k<s.nMultBins; k++){
             if(s.isInMultBin(nTrk,k)){
-              bkgrnd2PC[k]->Fill( dEta(eta[j1],etaMix[j2]), dPhi(phi[j1],phiMix[j2]), corr1*corr2/(4*s.etaCut/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins));
+              bkgrnd2PC[k]->Fill( dEta(eta[j1],etaMix[j2]), dPhi(phi[j1],phiMix[j2]), corr1*corr2/(4*s.etaCut/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
             }
           }//end mult bin loop
         }//end mixed particle loop
@@ -121,9 +131,9 @@ void Analyzer(){
   
   output->cd();
   for(int k = 0; k<s.nMultBins; k++){
-    signal2PC[k]->Scale(1.0/(float)nSignalTriggers[k]);
+    signal2PC[k]->Scale(1.0/(float)nSignalEvts[k]);
     symmetrizeDetaDphi(signal2PC[k],s.dEtaBins,s.dPhiBins);
-    bkgrnd2PC[k]->Scale(1.0/(float)nBkgrndTriggers[k]);
+    bkgrnd2PC[k]->Scale(1.0/(float)nBkgrndEvts[k]);
     symmetrizeDetaDphi(bkgrnd2PC[k],s.dEtaBins,s.dPhiBins);
     ratio2PC[k] = (TH2F*)signal2PC[k]->Clone(Form("ratio2PC_%d_%d",s.multBinsLow[k],s.multBinsHigh[k]));
     ratio2PC[k]->Divide(bkgrnd2PC[k]);

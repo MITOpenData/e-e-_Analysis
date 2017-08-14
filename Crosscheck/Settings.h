@@ -8,13 +8,19 @@
 class Settings{
   public:
 
-    std::string inputFile = "/data/abaty/ALEPHTrees/cleaned_ALEPH_Data2-v3_Aug11_2017.root";
+    //ALEPH data
+    //std::string inputFile = "/data/abaty/ALEPHTrees/cleaned_ALEPH_Data2-v3_Aug11_2017.root";
+    //CMS data
+    std::string inputFile = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneCUETP8M1_5p02TeV-pythia8-HINppWinter16DR-NoPU_75X_mcRun2_asymptotic_ppAt5TeV_forest_v2_track.root";    
 
     //cuts
-    bool doUseLeptons = true;
+    bool doUseLeptons = false;
 
-    //kinematics
-    float etaCut = 1.8;
+    //kinematics (if trig != assoc cuts, make sure doExcludeNTrigLT2 is set to false)
+    float trigPt[2] = {1,3};
+    float assocPt[2] = {1,3};
+
+    float etaCut = 2.4;
     float dEtaBins = 36;//keep even
     float dPhiBins = 36;//keep factor of 4
 
@@ -31,8 +37,9 @@ class Settings{
     int multBinsHigh[nMultBins] = {999, 15, 25, 35, 999};
 
     //other
-    bool doAllData = true;
-    int nEvts = 5000;
+    bool doExcludeNTrigLT2 = true;
+    bool doAllData = false;
+    int nEvts = 1000000;
 
     Settings();
     bool isInMultBin(int n, int bin);
