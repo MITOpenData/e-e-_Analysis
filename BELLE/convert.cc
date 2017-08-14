@@ -47,7 +47,7 @@ double dphi(double phi1,double phi2)
     if (a<-PI/2) a=2*PI+a;
     return a;
 }
-void analysis ( char* file="../Inputs/hadron-2.root", int mult=30,int nbin=20, int maxevt = 0 ) {
+void analysis ( char* file="../Inputs/hadron-2.root", int maxevt = 0 ) {
    /* These are initialization codes.
      You can ignore them as a black box. */
   // Open a data file
