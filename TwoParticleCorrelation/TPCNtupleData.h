@@ -1,9 +1,10 @@
 #include <TTree.h>
-
+#include "utilities.h"
 
 // DataFormat
 class TPCNtupleData{
     public:
+    
     Int_t nParticle;
     Float_t pt[50000];
     Float_t eta[50000];
@@ -18,6 +19,25 @@ class TPCNtupleData{
     Float_t pz[100000];
     Float_t TTheta;
     Float_t TPhi;
+    bool isBelle;
+
+    TPCNtupleData(bool ana=0)
+    {
+       isBelle = ana;
+    }
+        
+    bool isChargedHadron(int j)
+    {
+       if (isBelle) {
+          // for BELLE analysis
+          if (pid[j]!=BELLE_PION&&pid[j]!=BELLE_PROTON&&pid[j]!=BELLE_KAON) return 0; 
+       } else {
+          // for ALEPH analysis
+         if (pwflag[j]!=ALEPH_CHARGED_TRACK) return 0;
+       }
+       
+       return 1;
+    }
 };
 
 
