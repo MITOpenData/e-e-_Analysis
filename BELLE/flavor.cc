@@ -56,7 +56,7 @@ public:
 
     // Check the flavor of the daughters of the virtual photon
     flavor = 0;
-    for (auto i = gen.daFirst[0]; gen.daLast[0]; i++) {
+    for (auto i = gen.daFirst[0]; i <= gen.daLast[0]; i++) {
       if (gen.idhep[i] == 4) {
         flavor = 1;
         break;
