@@ -406,6 +406,10 @@ void analysis(int isBelle      = 0,		//
     h_ratio->GetXaxis()->SetTitle("#Delta#eta");
     h_ratio->GetYaxis()->SetTitle("#Delta#phi");
     h_ratio->GetZaxis()->SetTitle("#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi}");
+    h_ratio->SetTitleOffset(2,"Z");
+    h_ratio->GetXaxis()->CenterTitle();
+    h_ratio->GetYaxis()->CenterTitle();
+    h_ratio->GetZaxis()->CenterTitle();
     
     /**************************************************************************************/
     // Plot the results
