@@ -38,15 +38,7 @@ class particleData
     Float_t phi[100000];
     Float_t mass[10000];
 };
-double dphi(double phi1,double phi2)
-{
-    double a=phi1-phi2;
-    while (a<-PI) a+=2*PI;
-    while (a>PI) a-=2*PI;
-    
-    if (a<-PI/2) a=2*PI+a;
-    return a;
-}
+
 void analysis ( char* file="../Inputs/hadron-2.root", int maxevt = 0 ) {
    /* These are initialization codes.
      You can ignore them as a black box. */
