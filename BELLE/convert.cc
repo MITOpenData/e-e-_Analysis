@@ -4,8 +4,8 @@
 // The neutral pion (pizero) and the charged pion are differentiated and respective
 // mass distributions are produced.
 //+
-// File : pion.cc
-// Description : Analyze a data file
+// File : convert.cc
+// Description : convert BELLE open data format to TPCNtuple
 // 
 // Author : Ryosuke Itoh, IPNS, KEK
 // Date : 1 - Mar - 2004
