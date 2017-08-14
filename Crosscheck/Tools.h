@@ -3,6 +3,7 @@
 
 #include "TMath.h"
 #include "TH2F.h"
+#include "TVector3.h"
 #include "Settings.h"
 
 inline float dPhi(float phi1, float phi2){
@@ -49,6 +50,33 @@ void getLongRangeYield(Settings s, TH2F * h, TH1F * g){
   }
                       //scale by bin area to get yield
   g->Scale(2*binArea);//scale by 2 because we only integrated the positive side, adn there is also yield in the negative eta side
+}
+
+float getEff(Settings s, float pt, float eta){
+  if(s.experiment == 0){
+    return 0.98;
+  }
+  if(s.experiment == 3){
+    return 1;
+  }
+  return 1;
+}
+
+inline double ptFromThrust(TVector3 thrust, TVector3 p){
+  return p.Perp(thrust); 
+}
+inline double thetaFromThrust(TVector3 thrust, TVector3 p){
+  return p.Angle(thrust);
+}
+inline double etaFromThrust(TVector3 thrust, TVector3 p){
+  double theta = thetaFromThrust(thrust,p);
+  return -TMath::Log(TMath::Tan(theta/2.0));
+}
+inline double phiFromThrust(TVector3 thrust, TVector3 p){
+  double phi = (thrust.Cross(p)).Angle(thrust.Orthogonal());
+
+  if( ((thrust.Cross(p).Unit()).Cross(thrust.Orthogonal().Unit()))*thrust >= 0) return phi;
+  else return -phi;
 }
 
 #endif
