@@ -4,8 +4,8 @@
 // The neutral pion (pizero) and the charged pion are differentiated and respective
 // mass distributions are produced.
 //+
-// File : pion.cc
-// Description : Analyze a data file
+// File : convert.cc
+// Description : convert BELLE open data format to TPCNtuple
 // 
 // Author : Ryosuke Itoh, IPNS, KEK
 // Date : 1 - Mar - 2004
@@ -38,39 +38,23 @@ class particleData
     Float_t phi[100000];
     Float_t mass[10000];
 };
-double dphi(double phi1,double phi2)
-{
-    double a=phi1-phi2;
-    while (a<-PI) a+=2*PI;
-    while (a>PI) a-=2*PI;
-    
-    if (a<-PI/2) a=2*PI+a;
-    return a;
-}
-void analysis ( char* file="../Inputs/hadron-2.root", int mult=30,int nbin=20, int maxevt = 0 ) {
+
+void analysis ( char* file="../Inputs/hadron-2.root", int maxevt = 0 ) {
    /* These are initialization codes.
      You can ignore them as a black box. */
   // Open a data file
+
   TFile *f = new TFile( file );
-  TFile *f2 = new TFile( file );
   // Obtain a pointer to a series of "event" data in the file
   TTree *t = (TTree*)f->Get("T");
-  TTree *t2 = (TTree*)f2->Get("T");
   // Create a pointer to "BEvent" object where data are loaded from the file
   BEvent* event = new BEvent();
-  BEvent* event2 = new BEvent();
   // Obtain a branch for "BEvent" in the tree
   TBranch *branch = t->GetBranch("BEvent");
-  TBranch *branch2 = t2->GetBranch("BEvent");
   // register created "BEvent" object to the branch to load event data
   branch->SetAddress(&event);
-  branch2->SetAddress(&event2);
    
-   /*  Initialization codes finish here.*/
-  // ---------------------------------------------------------------------- //
-   /* We define the  histograms.*/
-  // First, we define the name of the file where histograms will be saved. 
-  // We define "histfile" as the histogram file name, as shown below. 
+  // output file
   TFile *hf = new TFile("../Inputs/output_2_withtheta.root", "RECREATE" );
   TTree *tout = new TTree("t","");
   
@@ -83,13 +67,10 @@ void analysis ( char* file="../Inputs/hadron-2.root", int mult=30,int nbin=20, i
   tout->Branch("phi", pData.phi,"phi[nParticle]/F");
   tout->Branch("mass", pData.mass,"mass[nParticle]/F");
   
-   /* The analysis codes start here. */
-  // Let us examine how many events exists in the data file.
   int nevent = (int)t->GetEntries();
-  // Let us determine how many events should be analyzed.
-  // If maxevent is not specified all the events in the data are analyzed.
   int nevent_process = nevent;
   if( maxevt>0 && maxevt<nevent ) nevent_process = maxevt;
+
   // Analysis is carried out event by event.
   // loop of events.
   for ( int i=0;i<nevent_process;i++ ) {
@@ -148,4 +129,9 @@ void analysis ( char* file="../Inputs/hadron-2.root", int mult=30,int nbin=20, i
 void showhist() {
   TFile *f = new TFile ( "histfile" );
   TBrowser *t = new TBrowser;
+}
+
+// for ROOT interactive job
+void convert ( char* file="../Inputs/hadron-2.root", int maxevt = 0 ) {
+   analysis(file,maxevt);
 }
