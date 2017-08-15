@@ -1,16 +1,22 @@
 #include <TFile.h>
 #include <TTree.h>
+#include <TChain.h>
 #include <TH1F.h>
 #include <TH1D.h>
 #include <TH2F.h>
 #include <TF1.h>
 #include <TCanvas.h>
+#include <TROOT.h>
+#include <TStyle.h>
+#include <TLatex.h>
 #include <iostream>
 #include <stdlib.h>
 #include <TMath.h>
 #include <TLorentzVector.h>
 #include <TVector3.h>
 #include <TFormula.h>
+#include <sstream>
+#include <string>
 
 #include "fourier.h"
 #include "TPCNtupleData.h"
@@ -34,7 +40,8 @@ using namespace std;
 // Main Analysis Routine
 /**************************************************************************************/
 
-void analysis(int isBelle      = 0,		// 
+void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneCUETP8M1_5p02TeV-pythia8-HINppWinter16DR-NoPU_75X_mcRun2_asymptotic_ppAt5TeV_forest_v2_track.root",
+              int isBelle      = 0,		//
               int isThrust     = 0, 		//
 	      int maxevt       = 1000000,	// Max number of events to be processed, 0 = all events
 	      int mult_low     = 0,		// Lower cut on the event multiplicity
@@ -48,7 +55,7 @@ void analysis(int isBelle      = 0,		//
 	     ) {
 
     // Input File
-    TString filename;
+    /* TString filename; */
     
     //BELLE data
     //filename = "/data/flowex/Datasamples/Belle_Data/TPCNtuple-HadronBJ-e07-00.root";
@@ -62,23 +69,36 @@ void analysis(int isBelle      = 0,		//
     //filename = "cleaned_ALEPH_Data-all.aleph.root";
 
        // With new Thrust code from Austin
-    filename = "cleaned_ALEPH_Data2-v3_Aug11_2017.root";
+    //filename = "cleaned_ALEPH_Data2-v3_Aug11_2017.root";
     
     //CMS PP MC at 5.02 TeV
-    //filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneCUETP8M1_5p02TeV-pythia8-HINppWinter16DR-NoPU_75X_mcRun2_asymptotic_ppAt5TeV_forest_v2_track.root";
+    /* filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneCUETP8M1_5p02TeV-pythia8-HINppWinter16DR-NoPU_75X_mcRun2_asymptotic_ppAt5TeV_forest_v2_track.root"; */
         
-    TFile *f = new TFile(filename.Data());
-    TTree *t1 = (TTree*)f->Get("t");
+    /* TFile *f = new TFile(filename.Data()); */
+    /* TTree *t1 = (TTree*)f->Get("t"); */
+
+    TChain *t1 = new TChain("t");
+    t1->Add(filename);
+
+    /* TString friendname =  "qqmc-e07-00_flavor.root"; */
+    /* TFile *ff = new TFile(friendname); */
+    /* TTree *tf = (TTree*)ff->Get("t"); */
+    /* t1->AddFriend(tf); */
 
     TPCNtupleData data(isBelle, isThrust);
     setupTPCTree(t1,data);
+    data.setTPCTreeStatus(t1);
+
     
     // File for event mixing, use the same file for the moment
-    TFile *f_mix = new TFile(filename.Data());
-    TTree *t1_mix = (TTree*)f_mix->Get("t");
+    /* TFile *f_mix = new TFile(filename.Data()); */
+    /* TTree *t1_mix = (TTree*)f_mix->Get("t"); */
+    TChain *t1_mix = new TChain("t");
+    t1_mix->Add(filename);
     
     TPCNtupleData mix(isBelle, isThrust);
     setupTPCTree(t1_mix,mix);
+    mix.setTPCTreeStatus(t1_mix);
     
     // Define 2D histograms
     double dthetaRange = PI;
@@ -101,6 +121,9 @@ void analysis(int isBelle      = 0,		//
     int nEventProcessed=0;
     int nEventInMultBin=0;
     
+    /* int flavor; */
+    /* t1->SetBranchAddress("flavor", &flavor); */
+
     // Main Event Loop
     for (Int_t i=0;i<nevent_process;i++) {
        t1->GetEntry(i);
@@ -108,6 +131,9 @@ void analysis(int isBelle      = 0,		//
        if (i%10000==0) cout <<i<<"/"<<nevent_process<<endl;
        if (verbose) cout<<"nparticles="<<data.nParticle<<endl;
        
+       /* if (flavor == 0) {break;} */
+       /* if (flavor == 1) {continue;} */
+
        int selected=i+1;  //questo diventa il numero di evento estratto nel file +1
        int flag=0;	  //definisco una flag a zero
        
@@ -378,9 +404,27 @@ void analysis(int isBelle      = 0,		//
     TCanvas *c1 = CFViewer("c1","B",600,600);
     h_2Dmix->Draw("surf1");    
     
+    gStyle->SetOptStat(0);
+
     TCanvas *c2 = CFViewer("c2","Ratio",600,600);
     h_ratio->Draw("surf1");  
     
+    TLatex latex;
+    latex.SetTextSize(0.04);
+    latex.SetTextAlign(13);  //align at top
+
+    if (filename.Index("charm") >= 0) {
+      latex.DrawLatexNDC(.07, .9, "e^{+}e^{-}#rightarrow c#bar{c} MC");
+    } else if (filename.Index("uds") >= 0) {
+      latex.DrawLatexNDC(.07, .9, "e^{+}e^{-}#rightarrow q#bar{q} (q=u,d,s) MC");
+    } else if (filename.Index("bb") >= 0) {
+      latex.DrawLatexNDC(.07, .9, "#Upsilon {4S}#rightarrow B#bar{B} MC");
+    }
+
+    char nevt[50];
+    sprintf(nevt, "%.2g M events", nevent_process/1000000.);
+    latex.DrawLatexNDC(.73, .9, nevt);
+
     TCanvas *c3 = new TCanvas("c3","dphi",600,600);
     c3->Divide(2,2);
     for (int i=0;i<4;i++)
