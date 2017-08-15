@@ -127,11 +127,15 @@ void setupTPCTree(TTree *t1, TPCNtupleData &data)
     t1->SetBranchAddress("pid",data.pid);
     t1->SetBranchAddress("phi",data.phi);
     t1->SetBranchAddress("mass",data.mass);
-    t1->SetBranchAddress("pwflag",data.pwflag);
-    
-    t1->SetBranchAddress("px",data.px);
-    t1->SetBranchAddress("py",data.py);
-    t1->SetBranchAddress("pz",data.pz);
-    t1->SetBranchAddress("TTheta", &data.TTheta);
-    t1->SetBranchAddress("TPhi", &data.TPhi);
+
+    if (!data.isBelle) {
+        t1->SetBranchAddress("pwflag",data.pwflag);
+
+        t1->SetBranchAddress("px",data.px);
+        t1->SetBranchAddress("py",data.py);
+        t1->SetBranchAddress("pz",data.pz);
+        t1->SetBranchAddress("TTheta", &data.TTheta);
+        t1->SetBranchAddress("TPhi", &data.TPhi);
+    }
 }
+

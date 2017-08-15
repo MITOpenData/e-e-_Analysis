@@ -15,6 +15,10 @@ public:
     root->SetBranchAddress("GenInfo.idhep"   , &idhep[0]   );
     root->SetBranchAddress("GenInfo.daFirst" , &daFirst[0] );
     root->SetBranchAddress("GenInfo.daLast"  , &daLast[0]  );
+
+    root->SetBranchStatus("GenInfo.idhep", 1);
+    root->SetBranchStatus("GenInfo.daFirst", 1);
+    root->SetBranchStatus("GenInfo.daLast", 1);
   };
 };
 
@@ -38,6 +42,7 @@ public:
 
   tout->Branch("flavor", &flavor, "flavor/I");
 
+  root->SetBranchStatus("*", 0);
   // Get the generator information
   GenInfoBranches gen;
   gen.Register(t);

@@ -32,7 +32,7 @@ class Settings{
     float dEtaRangeToIntegrate[2] = {2.0,3.6};//try to make this correspond with bin edges based on above parameters
 
     //mixing
-    int nMixedEvents = 1;
+    int nMixedEvents = 5;
     int maxSkipSize  = 3;
 
 
@@ -59,6 +59,7 @@ Settings::Settings()
   std::cout << "Getting settings.." << std::endl;
   if(experiment == 3){//CMS
     inputFile = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneCUETP8M1_5p02TeV-pythia8-HINppWinter16DR-NoPU_75X_mcRun2_asymptotic_ppAt5TeV_forest_v2_track.root";
+    nMixedEvents = 5;
     trigPt[0] = 1; trigPt[1] = 3;
     assocPt[0] = 1; assocPt[1] = 3;
     nTrkPt[0] = 0.4; nTrkPt[1]=100;
