@@ -43,6 +43,7 @@ class Settings{
 
     //other
     bool doThrust = true;
+    float thrustMatchWindow = 0.1;
     bool doExcludeNTrigLT2 = true;
     bool doAllData = true;
     int nEvts = 10000;
