@@ -24,11 +24,12 @@ void Analyzer(){
   float nBkgrndEvts[s.nMultBins] = {0};
 
 
-  TH1D *h_mult_dist = new TH1D("hmulti","multiplicity distribution of charged particles;N_{trk}^{offline};Count",60,0,60);
   TH1D *h_phi = new TH1D("phi","phi",100,-TMath::Pi(),TMath::Pi());
   TH1D *h_eta = new TH1D("eta","eta",100,-5,5);
   TH1D *h_theta = new TH1D("theta","theta",100,0,TMath::Pi());
   TH1D *h_pt = new TH1D("pt","pt",100,0,10);
+  TH1D *h_Ttheta = new TH1D("T_theta","T_theta",100,0,TMath::Pi());
+  TH1D *h_Tphi = new TH1D("T_phi","T_phi",100,-TMath::Pi(),TMath::Pi());
   
   for(int i = 0; i<s.nMultBins; i++){
     signal2PC[i] = new TH2F(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaCut,2*s.etaCut,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
@@ -87,17 +88,18 @@ void Analyzer(){
     float nTrig = 0;
     for(int t = 0; t<nParticle; t++){
       if(pwflag[t]==0 || (s.doUseLeptons && (pwflag[t]==1 || pwflag[t]==2))){
-        if(TMath::Abs(eta[t]) > s.etaCut) continue;
+        if(TMath::Abs(eta[t]) >= s.etaCut) continue;
         if(pt[t]>s.nTrkPt[0] && pt[t]<s.nTrkPt[1])  nTrk++;//nTrk calculation
 
-        if(pt[t]<s.trigPt[0] || pt[t]>s.trigPt[1]) continue;//nTrig calculation
+        if(pt[t]<=s.trigPt[0] || pt[t]>=s.trigPt[1]) continue;//nTrig calculation
         float corr = 1.0/getEff(s,pt[t],eta[t]);
         nTrig += corr;
       }
     }
     multiplicity->Fill(nTrk);
-    h_mult_dist->Fill(nTrk);
     if(nTrig<1 && s.doExcludeNTrigLT2) continue;
+    h_Ttheta->Fill(TTheta);
+    h_Tphi->Fill(TPhi);
 
     int nMixed = 0; 
     //start at the next event and add maxSkipSize each time
@@ -114,7 +116,7 @@ void Analyzer(){
           thetaMix[i] = thetaFromThrust(thrust,p);
           phiMix[i]   = phiFromThrust(thrust,p);
         }
-    }
+      }
       for(int k = 0; k<s.nMultBins; k++){
         if(s.isInMultBin(nTrk,k) && nMixed==0)  nSignalEvts[k]++;
         if(s.isInMultBin(nTrk,k))  nBkgrndEvts[k]++;

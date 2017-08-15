@@ -68,14 +68,16 @@ inline double ptFromThrust(TVector3 thrust, TVector3 p){
 inline double thetaFromThrust(TVector3 thrust, TVector3 p){
   return p.Angle(thrust);
 }
+
+//this is actually rapidity w/ pion mass assumption
 inline double etaFromThrust(TVector3 thrust, TVector3 p){
-  double theta = thetaFromThrust(thrust,p);
-  return -TMath::Log(TMath::Tan(theta/2.0));
+  float pl = p*thrust.Unit();//logitudinal momentum component
+  float E = TMath::Power(p.Mag2()+0.13957*0.13957,0.5);//energy w/ mass assumption
+  return 0.5*TMath::Log((E+pl)/(E-pl));//rapidity
 }
 inline double phiFromThrust(TVector3 thrust, TVector3 p){
   double phi = (thrust.Cross(p)).Angle(thrust.Orthogonal());
-
-  if( ((thrust.Cross(p).Unit()).Cross(thrust.Orthogonal().Unit()))*thrust >= 0) return phi;
+  if( ((thrust.Orthogonal().Unit()).Cross(((thrust.Cross(p).Unit()))))*thrust >= 0) return phi;
   else return -phi;
 }
 
