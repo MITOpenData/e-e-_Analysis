@@ -6,6 +6,7 @@
 #include "TTree.h"
 #include "TRandom.h"
 #include "TAxis.h"
+#include "TVector3.h"
 #include <iostream>
 #include <cmath>
 
@@ -125,13 +126,13 @@ void Analyzer(){
     
       //fill signal histogram
       for(int j1 = 0; j1<nParticle; j1++){
+        if(TMath::Abs(eta[j1]) > s.etaCut) continue;
+        if(!(pwflag[j1]==0 || (s.doUseLeptons && (pwflag[j1]==1 || pwflag[j1]==2)))) continue;
         h_phi->Fill(phi[j1]);
         h_eta->Fill(eta[j1]);
         h_theta->Fill(theta[j1]);
         h_pt->Fill(pt[j1]);
-        if(TMath::Abs(eta[j1]) > s.etaCut) continue;
         if(pt[j1]<s.trigPt[0] || pt[j1]>s.trigPt[1]) continue;
-        if(!(pwflag[j1]==0 || (s.doUseLeptons && (pwflag[j1]==1 || pwflag[j1]==2)))) continue;
         float corr1 = 1.0/getEff(s,pt[j1],eta[j1]);
 
         //signal histogram
