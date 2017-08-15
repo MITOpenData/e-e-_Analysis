@@ -23,6 +23,8 @@
 // Yen-Jie Lee, Bibek Pandit, Anthony Badea, Gian Michele Innocenti 
 //
 // LOG
+//     2017/08/15 Added Thurst Axis based correlation function to the TPCNtupleData 
+//                Class (based on Austin's code)
 //
 /**************************************************************************************/
 
@@ -58,21 +60,24 @@ void analysis(int isBelle      = 0,		//
     
     //ALEPH data
     //filename = "cleaned_ALEPH_Data-all.aleph.root";
+
+       // With new Thrust code from Austin
+    filename = "cleaned_ALEPH_Data2-v3_Aug11_2017.root";
     
     //CMS PP MC at 5.02 TeV
-    filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneCUETP8M1_5p02TeV-pythia8-HINppWinter16DR-NoPU_75X_mcRun2_asymptotic_ppAt5TeV_forest_v2_track.root";
+    //filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneCUETP8M1_5p02TeV-pythia8-HINppWinter16DR-NoPU_75X_mcRun2_asymptotic_ppAt5TeV_forest_v2_track.root";
         
     TFile *f = new TFile(filename.Data());
     TTree *t1 = (TTree*)f->Get("t");
 
-    TPCNtupleData data(isBelle);
+    TPCNtupleData data(isBelle, isThrust);
     setupTPCTree(t1,data);
     
     // File for event mixing, use the same file for the moment
     TFile *f_mix = new TFile(filename.Data());
     TTree *t1_mix = (TTree*)f_mix->Get("t");
     
-    TPCNtupleData mix(isBelle);
+    TPCNtupleData mix(isBelle, isThrust);
     setupTPCTree(t1_mix,mix);
     
     // Define 2D histograms
@@ -92,40 +97,37 @@ void analysis(int isBelle      = 0,		//
     int nevent_process = nevent;
     if( maxevt>0 && maxevt<nevent ) nevent_process = maxevt;
     
-    double averageN=0;
-    double nEventProcessed=0;
-    double nEventInMultBin=0;
+    Float_t averageN=0;
+    int nEventProcessed=0;
+    int nEventInMultBin=0;
     
     // Main Event Loop
     for (Int_t i=0;i<nevent_process;i++) {
        t1->GetEntry(i);
+       data.update();
        if (i%10000==0) cout <<i<<"/"<<nevent_process<<endl;
        if (verbose) cout<<"nparticles="<<data.nParticle<<endl;
        
        int selected=i+1;  //questo diventa il numero di evento estratto nel file +1
        int flag=0;	  //definisco una flag a zero
        
-       // Yen-Jie: cut on maximum number of particles to avoid infinite loop, for the moment it is 100
-       // if (nparticles>mult_high) continue;
-       
-       // Yen-Jie: we would like to use a definition similar to CMS publication
+         // Yen-Jie: we would like to use a definition similar to CMS publication
        // all particles with pT > 0.4 GeV/c for the calculation of event multiplicity N        
 
-       double N=0;	// N_{trk}^{offline}
-       double N_TP=0;	// Number of particles used in the two particle correlation function calculation, can be different from N for event classification
-       double ptMinForN = 0.4;
-       double ptMaxForN = 100;
-       double etaCutForN = 2.4;
+       int N=0;	// N_{trk}^{offline}
+       int N_TP=0;	// Number of particles used in the two particle correlation function calculation, can be different from N for event classification
+       Float_t ptMinForN = 0.4;
+       Float_t ptMaxForN = 100;
+       Float_t etaCutForN = 2.4;
 
        // calculate the number of tracks in the passing selection
        for ( int j=0;j<data.nParticle;j++ ) {
-           float pt1 = data.pt[j];
+           Float_t pt1 = data.getPt(j);
            if (!data.isChargedHadron(j)) continue;
-	   if (fabs(data.eta[j])>=etaCutForN) continue;
+	   if (fabs(data.getEta(j))>=etaCutForN) continue;
 	   if (pt1>ptMinForN&&pt1<ptMaxForN) N++;
            if (pt1>ptMin&&pt1<ptMax) N_TP++;
        }
-       cout <<i<<" "<<N<<endl;
        h_mult_dist->Fill(N);
        averageN+=N;
        nEventProcessed++;
@@ -148,51 +150,17 @@ void analysis(int isBelle      = 0,		//
        // S calculation using multiplicity cut //
        /****************************************/
        for ( int j=0;j<data.nParticle;j++ ) {
-           int pid1 = data.pid[j];
-           float eta1 = data.eta[j];
-           float phi1 = data.phi[j];
-           float pt1 = data.pt[j];
-           float mass1 = data.mass[j];
-           float theta1 = data.theta[j];
-           if (isThrust == 1)
-           {
-               TVector3 v1;
-               float px1 = data.px[j];
-               float py1 = data.py[j];
-               float pz1 = data.pz[j];
-               v1.SetXYZ(px1,py1,pz1);
-               v1.Rotate(-data.TTheta, rotVec);
-               phi1 = v1.Phi();
-               eta1 = v1.PseudoRapidity();
-               pt1 = v1.Pt();
-               theta1 = v1.Theta();
-           }
-           
+           float eta1 = data.getEta(j);
+           float phi1 = data.getPhi(j);
+           float pt1 = data.getPt(j);
 	   if (!data.isChargedHadron(j)) continue;
 	   if (pt1<=ptMin||pt1>=ptMax) continue;
            
 	   // Signal loop, calculate S correlation function
            for ( int k=j+1;k<data.nParticle;k++ ) {
-               int pid2 = data.pid[k];
-               float eta2 = data.eta[k];
-               float phi2 = data.phi[k];
-               float pt2 = data.pt[k];
-               float mass2 = data.mass[k];
-               float theta2 = data.theta[k];
-               if (isThrust == 1)
-               {
-        	   TVector3 v2;
-        	   float px2 = data.px[k];
-        	   float py2 = data.py[k];
-        	   float pz2 = data.pz[k];
-        	   v2.SetXYZ(px2,py2,pz2);
-        	   v2.Rotate(-data.TTheta, rotVec);
-        	   phi2 = v2.Phi();
-        	   eta2 = v2.PseudoRapidity();
-        	   pt2 = v2.Pt();
-        	   theta2 = v2.Theta();
-               }
-               
+               float eta2 = data.getEta(k);
+               float phi2 = data.getPhi(k);
+               float pt2 = data.getPt(k);
                if (!data.isChargedHadron(k)) continue;
 	       if (pt2<=ptMin||pt2>=ptMax) continue;
                if (N!=0) {
@@ -220,13 +188,13 @@ void analysis(int isBelle      = 0,		//
               t1_mix->GetEntry ( selected );
           }
 
+          mix.update();
           double N2=0;
           double N2_TP=0;
           
           // calculate the number of tracks in the mixed event passing selection
           for ( int j=0;j<data.nParticle;j++ ) {
-             float pt1 = mix.pt[j];
-             int pid1 = mix.pid[j];
+             float pt1 = mix.getPt(j);
              if (!mix.isChargedHadron(j)) continue;
 	     if (pt1>ptMinForN&&pt1<ptMaxForN) N2++;
              if (pt1>ptMin&&pt1<ptMax) N2_TP++;
@@ -248,51 +216,18 @@ void analysis(int isBelle      = 0,		//
 	  //cout <<N_TP<<" "<<N2_TP<<endl;
 	  
           for ( int j=0;j<data.nParticle;j++ ) {
-              int pid1 = data.pid[j];
-              float eta1 = data.eta[j];
-              float phi1 = data.phi[j];
-              float pt1 = data.pt[j];
-              float mass1 = data.mass[j];
-              float theta1 = data.theta[j];
-              if (isThrust == 1){
-        	 TVector3 v1;
-        	 float px1 = data.px[j];
-        	 float py1 = data.py[j];
-        	 float pz1 = data.pz[j];
-        	 v1.SetXYZ(px1,py1,pz1);
-        	 v1.Rotate(-data.TTheta, rotVec);
-        	 phi1 = v1.Phi();
-        	 eta1 = v1.PseudoRapidity();
-        	 pt1 = v1.Pt();
-        	 theta1 = v1.Theta();
-              }
-           
+              float eta1 = data.getEta(j);
+              float phi1 = data.getPhi(j);
+              float pt1 = data.getPt(j);
               if (!data.isChargedHadron(j)) continue;
 	      if(pt1<=ptMin||pt1>=ptMax) continue;
            
               // Background loop, calculate B correlation function from mixed event
               for ( int k=0;k<mix.nParticle;k++ ) {
-        	 int pidmix = mix.pid[k];
-        	 float etamix = mix.eta[k];
-        	 float phimix = mix.phi[k];
-        	 float ptmix = mix.pt[k];
-        	 float massmix = mix.mass[k];
-        	 float thetamix = mix.theta[k];
-        	 if (isThrust == 1){
-        	   TVector3 vmix;
-        	   float pxmix = mix.px[k];
-        	   float pymix = mix.py[k];
-        	   float pzmix = mix.pz[k];
-        	   vmix.SetXYZ(pxmix,pymix,pzmix);
-        	   vmix.Rotate(-mix.TTheta, rotVec_mix);
-        	   phimix = vmix.Phi();
-        	   etamix = vmix.PseudoRapidity();
-        	   ptmix = vmix.Pt();
-        	   thetamix = vmix.Theta();
-        	 }
-               
+        	 float etamix = mix.getEta(k);
+        	 float phimix = mix.getPhi(k);
+        	 float ptmix = mix.getPt(k);
         	 if (!mix.isChargedHadron(k)) continue;
-	   
 		 if(ptmix<=ptMin||ptmix>=ptMax) continue;
 
 		 if (N!=0) {
@@ -353,7 +288,9 @@ void analysis(int isBelle      = 0,		//
                 ratio_phi = h_2D->GetYaxis()->GetBinCenter(y);
                 h_ratio->SetBinContent(x,y,ratio/normalization);
                 h_ratio->SetBinError(x,y,errrel_ratio*ratio/normalization);
-            }
+            } else {
+	      h_ratio->SetBinContent(x,y,0);
+	    }
         }
         
     }
