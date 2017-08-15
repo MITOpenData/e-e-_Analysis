@@ -20,6 +20,8 @@
 //
 // ridge_check.c
 //
+// Yen-Jie Lee, Bibek Pandit, Anthony Badea, Gian Michele Innocenti 
+//
 // LOG
 //
 /**************************************************************************************/
@@ -42,17 +44,23 @@ void analysis(int isBelle      = 0,		//
               double ptMax     = 4,             // max pT of the particles used for correlation function
               double detaRange = 4              //  deta window
 	     ) {
+
     // Input File
     TString filename;
     
     //BELLE data
-    filename = "/data/flowex/Datasamples/Belle_Data/TPCNtuple-HadronBJ-e07-00.root";
+    //filename = "/data/flowex/Datasamples/Belle_Data/TPCNtuple-HadronBJ-e07-00.root";
+    
+    // BELLE MC
+    //filename = "/data/flowex/MCsamples/Belle_MC/TPCNtuple-bbmc-e07-00.root";
+    //filename = "/data/flowex/MCsamples/Belle_MC/TPCNtuple-qqmc-e07-00.root";
+    //filename = "/data/flowex/MCsamples/Belle_MC/TPCNtuple-qq+bbmc-e07-00.root";
     
     //ALEPH data
     //filename = "cleaned_ALEPH_Data-all.aleph.root";
     
     //CMS PP MC at 5.02 TeV
-    //filename = "/data/flowex/CMSsample/cleaned_MinBias_TuneCUETP8M1_5p02TeV-pythia8-HINppWinter16DR-NoPU_75X_mcRun2_asymptotic_ppAt5TeV_forest_v2_track.root";
+    filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneCUETP8M1_5p02TeV-pythia8-HINppWinter16DR-NoPU_75X_mcRun2_asymptotic_ppAt5TeV_forest_v2_track.root";
         
     TFile *f = new TFile(filename.Data());
     TTree *t1 = (TTree*)f->Get("t");
@@ -73,7 +81,7 @@ void analysis(int isBelle      = 0,		//
     TH2F *h_2D = new TH2F ( "h_2D", "#eta-#phi of all particles ",nbin, -detaRange, detaRange,nbin, -3.1416/2., 3.1416*1.5);
     TH2F *h_2Dmix = new TH2F ( "h_2Dmix", "#eta-#phi of all particles ",nbin, -detaRange, detaRange,nbin, -3.1416/2., 3.1416*1.5);
     TH2F *h_ratio = new TH2F ( "h_ratio", "#eta-#phi of all particles ", nbin, -detaRange, detaRange,nbin, -3.1416/2.,3.1416*1.5);
-    TH1D *h_mult_dist = new TH1D("multi","multiplicity distribution of charged particles;N_{trk}^{offline};Count",60,0,60);
+    TH1D *h_mult_dist = new TH1D("h_multi","multiplicity distribution of charged particles;N_{trk}^{offline};Count",60,0,60);
     h_2D->Sumw2();
     h_2Dmix->Sumw2();
     h_ratio->Sumw2();
@@ -107,20 +115,24 @@ void analysis(int isBelle      = 0,		//
        double N_TP=0;	// Number of particles used in the two particle correlation function calculation, can be different from N for event classification
        double ptMinForN = 0.4;
        double ptMaxForN = 100;
+       double etaCutForN = 2.4;
 
        // calculate the number of tracks in the passing selection
        for ( int j=0;j<data.nParticle;j++ ) {
            float pt1 = data.pt[j];
            if (!data.isChargedHadron(j)) continue;
+	   if (fabs(data.eta[j])>=etaCutForN) continue;
 	   if (pt1>ptMinForN&&pt1<ptMaxForN) N++;
            if (pt1>ptMin&&pt1<ptMax) N_TP++;
        }
+       cout <<i<<" "<<N<<endl;
        h_mult_dist->Fill(N);
        averageN+=N;
        nEventProcessed++;
        
        if (N<mult_low) continue;
-       if (N>mult_high) continue;
+       if (N>=mult_high) continue;
+       if (N_TP<1) continue;
        nEventInMultBin++;
        
        TVector3 thrust(1, 1, 1);
@@ -157,7 +169,7 @@ void analysis(int isBelle      = 0,		//
            }
            
 	   if (!data.isChargedHadron(j)) continue;
-	   if (pt1<ptMin||pt1>ptMax) continue;
+	   if (pt1<=ptMin||pt1>=ptMax) continue;
            
 	   // Signal loop, calculate S correlation function
            for ( int k=j+1;k<data.nParticle;k++ ) {
@@ -182,7 +194,7 @@ void analysis(int isBelle      = 0,		//
                }
                
                if (!data.isChargedHadron(k)) continue;
-	       if (pt2<ptMin||pt2>ptMax) continue;
+	       if (pt2<=ptMin||pt2>=ptMax) continue;
                if (N!=0) {
         	   h_2D->Fill(eta1-eta2,dphi(phi1,phi2),1./N_TP);
         	   h_2D->Fill(eta1-eta2,dphi(phi2,phi1),1./N_TP);
@@ -256,7 +268,7 @@ void analysis(int isBelle      = 0,		//
               }
            
               if (!data.isChargedHadron(j)) continue;
-	      if(pt1<ptMin||pt1>ptMax) continue;
+	      if(pt1<=ptMin||pt1>=ptMax) continue;
            
               // Background loop, calculate B correlation function from mixed event
               for ( int k=0;k<mix.nParticle;k++ ) {
@@ -281,21 +293,20 @@ void analysis(int isBelle      = 0,		//
                
         	 if (!mix.isChargedHadron(k)) continue;
 	   
-		 if(ptmix<ptMin||ptmix>ptMax) continue;
+		 if(ptmix<=ptMin||ptmix>=ptMax) continue;
 
-        	 //cout <<eta1-etamix<<endl;
 		 if (N!=0) {
-        	   h_2Dmix->Fill(eta1-etamix,dphi(phi1,phimix),1./N2_TP);
-        	   h_2Dmix->Fill(eta1-etamix,dphi(phimix,phi1),1./N2_TP);
-        	   h_2Dmix->Fill(etamix-eta1,dphi(phi1,phimix),1./N2_TP);
-        	   h_2Dmix->Fill(etamix-eta1,dphi(phimix,phi1),1./N2_TP);
+        	   h_2Dmix->Fill(eta1-etamix,dphi(phi1,phimix),1./N_TP);
+        	   h_2Dmix->Fill(eta1-etamix,dphi(phimix,phi1),1./N_TP);
+        	   h_2Dmix->Fill(etamix-eta1,dphi(phi1,phimix),1./N_TP);
+        	   h_2Dmix->Fill(etamix-eta1,dphi(phimix,phi1),1./N_TP);
         	 }
                } //end of mixed event loop
            } // end of working event loop
        } // end of nMix loop      
     } // end of loop over events
     
-    cout<<"nEventInMultBin"<<nEventInMultBin<<endl;
+    cout<<"nEventInMultBin "<<nEventInMultBin<<endl;
     
     h_2Dmix->Scale(1./nEventInMultBin);
     h_2D->Scale(1./nEventInMultBin);
@@ -366,14 +377,10 @@ void analysis(int isBelle      = 0,		//
     TH1D*h_deltaphi[7];
     TH1D*h_deltaphi_theta[3];
     
-    //h_deltaphi  = (TH1D*) h_ratio->ProjectionY("h_deltaphi",0,-1);
-    //h_deltaphi->Sumw2();
-    
     for (int i=0;i<7;i =i+2){
         // if (i==0) h_deltaphi[i]->SetFillColor(kRed);
         minbin =  h_ratio->GetXaxis()->FindBin(etaranges[i]);
         maxbin =  h_ratio->GetXaxis()->FindBin(etaranges[i+1]);
-        cout<<"1"<<" "<<minbin<<" "<<maxbin<<endl;
         
         h_deltaphi[i]  = (TH1D*) h_ratio->ProjectionY(Form("h_deltaphi%d",i),minbin,maxbin);
         h_deltaphi[i]->Sumw2();
@@ -383,16 +390,16 @@ void analysis(int isBelle      = 0,		//
         h_deltaphi[i]->GetXaxis()->SetTitle("#Delta#phi");
         h_deltaphi[i]->SetTitle(Form("#Delta#phi, #Delta#eta (%f, %f), Multipliplicity (%d, %d)",etaranges[i],etaranges[i+1], mult_low, mult_high));
         h_deltaphi[i]->GetYaxis()->SetTitle("Y(#Delta#phi)");
-        cout<<1./(maxbin-minbin+1)<<endl;
-        h_deltaphi[i]->Scale(1./(maxbin-minbin+1));
+        
+	h_deltaphi[i]->Scale(1./(maxbin-minbin+1));
     }
     
     
     for (int i=0;i<3;i++){
         minbin =  h_ratio_theta->GetXaxis()->FindBin(thetaranges[i]);
         maxbin =  h_ratio_theta->GetXaxis()->FindBin(thetaranges[i+1]);
-        cout<<minbin<<" "<<maxbin<<endl;
-        h_deltaphi_theta[i]  = (TH1D*) h_ratio_theta->ProjectionY(Form("h_deltaphi_thetamin%d_max%d",thetaranges[i],thetaranges[i+1]),minbin,maxbin);
+        
+	h_deltaphi_theta[i]  = (TH1D*) h_ratio_theta->ProjectionY(Form("h_deltaphi_thetamin%d_max%d",thetaranges[i],thetaranges[i+1]),minbin,maxbin);
         
         h_deltaphi_theta[i]->Sumw2();
         
@@ -406,13 +413,15 @@ void analysis(int isBelle      = 0,		//
     h_ratio->GetXaxis()->SetTitle("#Delta#eta");
     h_ratio->GetYaxis()->SetTitle("#Delta#phi");
     h_ratio->GetZaxis()->SetTitle("#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi}");
-    h_ratio->SetTitleOffset(2,"Z");
+    h_ratio->SetTitleOffset(2.2,"X");
+    h_ratio->SetTitleOffset(2.2,"Y");
+    h_ratio->SetTitleOffset(2.2,"Z");
     h_ratio->GetXaxis()->CenterTitle();
     h_ratio->GetYaxis()->CenterTitle();
     h_ratio->GetZaxis()->CenterTitle();
     
     /**************************************************************************************/
-    // Plot the results
+    // Save and plot the results
     /**************************************************************************************/
     
     TFile *background = new TFile(Form("correlation_%d_%d_%d.root", isThrust,mult_low, mult_high), "recreate");
@@ -426,19 +435,13 @@ void analysis(int isBelle      = 0,		//
     TCanvas *c0 = new TCanvas("c0","Multiplicity",600,600);
     h_mult_dist->Draw("e");     
 
-    TCanvas *c = new TCanvas("c","S",600,600);
-    c->SetTheta(60.839);
-    c->SetPhi(38.0172);
+    TCanvas *c = CFViewer("c","S",600,600);
     h_2D->Draw("surf1");    
     
-    TCanvas *c1 = new TCanvas("c1","B",600,600);
-    c1->SetTheta(60.839);
-    c1->SetPhi(38.0172);
+    TCanvas *c1 = CFViewer("c1","B",600,600);
     h_2Dmix->Draw("surf1");    
     
-    TCanvas *c2 = new TCanvas("c2","Ratio",600,600);
-    c2->SetTheta(60.839);
-    c2->SetPhi(38.0172);
+    TCanvas *c2 = CFViewer("c2","Ratio",600,600);
     h_ratio->Draw("surf1");  
     
     TCanvas *c3 = new TCanvas("c3","dphi",600,600);
