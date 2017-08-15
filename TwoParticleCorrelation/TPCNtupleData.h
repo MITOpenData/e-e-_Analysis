@@ -38,6 +38,27 @@ class TPCNtupleData{
        
        return 1;
     }
+
+    void setTPCTreeStatus(TTree *t1){
+      t1->SetBranchStatus("*", 0);
+      t1->SetBranchStatus("nParticle", 1);
+      t1->SetBranchStatus("pt", 1);
+      t1->SetBranchStatus("eta", 1);
+      t1->SetBranchStatus("theta", 1);
+      t1->SetBranchStatus("pid", 1);
+      t1->SetBranchStatus("phi", 1);
+      t1->SetBranchStatus("mass", 1);
+
+      if (!isBelle) {
+        t1->SetBranchStatus("pwflag", 1);
+
+        t1->SetBranchStatus("px", 1);
+        t1->SetBranchStatus("py", 1);
+        t1->SetBranchStatus("pz", 1);
+        t1->SetBranchStatus("TTheta", 1);
+        t1->SetBranchStatus("TPhi", 1);
+      }
+    }
 };
 
 
@@ -51,11 +72,15 @@ void setupTPCTree(TTree *t1, TPCNtupleData &data)
     t1->SetBranchAddress("pid",data.pid);
     t1->SetBranchAddress("phi",data.phi);
     t1->SetBranchAddress("mass",data.mass);
-    t1->SetBranchAddress("pwflag",data.pwflag);
-    
-    t1->SetBranchAddress("px",data.px);
-    t1->SetBranchAddress("py",data.py);
-    t1->SetBranchAddress("pz",data.pz);
-    t1->SetBranchAddress("TTheta", &data.TTheta);
-    t1->SetBranchAddress("TPhi", &data.TPhi);
+
+    if (!data.isBelle) {
+        t1->SetBranchAddress("pwflag",data.pwflag);
+
+        t1->SetBranchAddress("px",data.px);
+        t1->SetBranchAddress("py",data.py);
+        t1->SetBranchAddress("pz",data.pz);
+        t1->SetBranchAddress("TTheta", &data.TTheta);
+        t1->SetBranchAddress("TPhi", &data.TPhi);
+    }
 }
+
