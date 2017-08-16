@@ -27,11 +27,12 @@
 //
 // ridge_check.c
 //
-// Yen-Jie Lee, Bibek Pandit, Anthony Badea, Gian Michele Innocenti 
+// Yen-Jie Lee, Bibek Pandit, Anthony Badea, Gian Michele Innocenti, Tzu-An Sheng
 //
 // LOG
 //     2017/08/15 Added Thurst Axis based correlation function to the TPCNtupleData 
 //                Class (based on Austin's code). Added filename to the class.
+//     2017/08/16 Cleanup and change the plotting style. Add Fourier Fit.
 //
 /**************************************************************************************/
 
@@ -52,32 +53,14 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
 	      Int_t num_runs     = 5,		// 
               double ptMin     = 0.4,           // min pT of the particles used for correlation function
               double ptMax     = 4,             // max pT of the particles used for correlation function
-              double detaRange = 4              //  deta window
+              double detaRange = 3.5,             // deta window of the correlation function
+              Float_t ptMinForN = 0.4,          // pT min for the N_{trk}^{offline} calculation (used for event classification) 
+              Float_t ptMaxForN = 100,          // pT max for the N_{trk}^{offline} calculation (used for event classification)
+              Float_t etaCutForN = 2.4          // eta window for the N_{trk}^{offline} calculation (used for event classification)
 	     ) {
     // ROOT Global setting
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
-    
-    
-    //BELLE data
-    //filename = "/data/flowex/Datasamples/Belle_Data/TPCNtuple-HadronBJ-e07-00.root";
-    
-    // BELLE MC
-    //filename = "/data/flowex/MCsamples/Belle_MC/TPCNtuple-bbmc-e07-00.root";
-    //filename = "/data/flowex/MCsamples/Belle_MC/TPCNtuple-qqmc-e07-00.root";
-    //filename = "/data/flowex/MCsamples/Belle_MC/TPCNtuple-qq+bbmc-e07-00.root";
-    
-    //ALEPH data
-    //filename = "cleaned_ALEPH_Data-all.aleph.root";
-
-       // With new Thrust code from Austin
-    //filename = "cleaned_ALEPH_Data2-v3_Aug11_2017.root";
-    
-    //CMS PP MC at 5.02 TeV
-    /* filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneCUETP8M1_5p02TeV-pythia8-HINppWinter16DR-NoPU_75X_mcRun2_asymptotic_ppAt5TeV_forest_v2_track.root"; */
-        
-    /* TFile *f = new TFile(filename.Data()); */
-    /* TTree *t1 = (TTree*)f->Get("t"); */
 
     TChain *t1 = new TChain("t");
     t1->Add(filename);
@@ -90,7 +73,6 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     TPCNtupleData data(isBelle, isThrust);
     setupTPCTree(t1,data);
     data.setTPCTreeStatus(t1);
-
     
     // File for event mixing, use the same file for the moment
     /* TFile *f_mix = new TFile(filename.Data()); */
@@ -107,12 +89,12 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     // Define 2D histograms
     Float_t dthetaRange = PI;
     Float_t normalization = detaRange*2/nbin*2*3.14159/nbin;
-    TH2F *h_2D = CFTH2F ( "h_2D", "#eta-#phi of all particles;#Delta#eta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -3.1416/2., 3.1416*1.5);
-    TH2F *h_2Dmix = CFTH2F ( "h_2Dmix", "#eta-#phi of all particles;#Delta#eta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -3.1416/2., 3.1416*1.5);
-    TH2F *h_ratio = CFTH2F ( "h_ratio", "#eta-#phi of all particles;#Delta#eta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi} ", nbin, -detaRange, detaRange,nbin, -3.1416/2.,3.1416*1.5);
+    TH2F *h_2D = CFTH2F ( "h_2D", "#eta-#phi of all particles;#Delta#eta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -PI/2., PI*1.5);
+    TH2F *h_2Dmix = CFTH2F ( "h_2Dmix", "#eta-#phi of all particles;#Delta#eta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -PI/2., PI*1.5);
+    TH2F *h_ratio = CFTH2F ( "h_ratio", "#eta-#phi of all particles;#Delta#eta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi} ", nbin, -detaRange, detaRange,nbin, -PI/2.,PI*1.5);
     TH1D *h_mult_dist = new TH1D("h_multi","multiplicity distribution of charged particles;N_{trk}^{offline};Count",60,0,60);
     TH1D *h_phi = new TH1D("h_phi","Phi distribution",60,-PI,PI);
-    TH2F *h_ratio_theta = new TH2F ( "h_ratio_theta", "theta-phi of all particles ", nbin, -PI*1.1, PI/6.,nbin, -3.1416/2.,3.1416*1.5);
+    TH2F *h_ratio_theta = new TH2F ( "h_ratio_theta", "theta-phi of all particles ", nbin, -PI*1.1, PI/6.,nbin, -PI/2.,PI*1.5);
     
     // all entries and fill the histograms
     Int_t nevent = (Int_t)t1->GetEntries();
@@ -127,7 +109,9 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     /* Int_t flavor; */
     /* t1->SetBranchAddress("flavor", &flavor); */
 
+    /****************************************/
     // Main Event Loop
+    /****************************************/
     for (Int_t i=0;i<nevent_process;i++) {
        t1->GetEntry(i);
        data.update();
@@ -146,10 +130,6 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
        Int_t N=0;	// N_{trk}^{offline}
        Int_t N_TP=0;	// Number of particles used in the two particle correlation function calculation, can be different from N for event classification
 
-       Float_t ptMinForN = 0.4;
-       Float_t ptMaxForN = 100;
-       Float_t etaCutForN = 2.4;
-
        // calculate the number of tracks in the passing selection
        for ( Int_t j=0;j<data.nParticle;j++ ) {
            Float_t pt1 = data.getPt(j);
@@ -166,15 +146,6 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
        
        if (N<mult_low||N>=mult_high||N_TP<1) continue;
        nEventInMultBin++;
-       
-       TVector3 thrust(1, 1, 1);
-       thrust.SetTheta(data.TTheta);
-       thrust.SetPhi(data.TPhi);
-       
-       
-       TVector3 rotVec;
-       rotVec.SetX(-thrust.Y());
-       rotVec.SetY(thrust.X());
        
        /****************************************/
        // S calculation using multiplicity cut //
@@ -268,12 +239,13 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     
     averageN=averageN/nEventProcessed;
     cout <<"Average N = "<<averageN<<endl;
+    
+    // calculate the  correlation function
+    
     double ratio;
     double errrel_ratio;
     double errrel_num;
     double errrel_den;
-    
-    // calculate the  correlation function
     
     double b00_x=h_2Dmix->GetXaxis()->FindBin(0.);
     double b00_y=h_2Dmix->GetYaxis()->FindBin(0.);
@@ -284,50 +256,31 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     
     cout<<"x axis "<<h_2Dmix->GetXaxis()->GetBinCenter(b00_x)<<endl;
     cout<<"y axis "<<h_2Dmix->GetYaxis()->GetBinCenter(b00_y)<<endl;
-    
-    double ratio_phi;
-    double ratio_eta;
-        
+            
     for (Int_t x=0;x<=h_2D->GetNbinsX();x++){        
         for (Int_t y=0;y<=h_2D->GetNbinsY();y++){
-            
-            
             if(h_2Dmix->GetBinContent(x,y)>0){
-                
                 ratio=B00*(h_2D->GetBinContent(x,y)/h_2Dmix->GetBinContent(x,y));
                 errrel_num=h_2D->GetBinError(x,y)/h_2D->GetBinContent(x,y);
                 errrel_den=h_2Dmix->GetBinError(x,y)/h_2Dmix->GetBinContent(x,y);
-                errrel_ratio=TMath::Sqrt(errrel_num*errrel_num+errrel_den*errrel_den+errrel_B00*errrel_B00);
+                // Yen-Jie: Take out the error of B00 for the moment since this is a global uncertainty
+		errrel_ratio=TMath::Sqrt(errrel_num*errrel_num+errrel_den*errrel_den);   // +errrel_B00*errrel_B00
                 
-                ratio_eta = h_2D->GetXaxis()->GetBinCenter(x);
-                ratio_phi = h_2D->GetYaxis()->GetBinCenter(y);
                 h_ratio->SetBinContent(x,y,ratio/normalization);
                 h_ratio->SetBinError(x,y,errrel_ratio*ratio/normalization);
             } else {
 	      h_ratio->SetBinContent(x,y,0);
+	      h_ratio->SetBinError(x,y,0);
 	    }
         }
-        
     }
     
-    for(Int_t binIterX = 0; binIterX < h_ratio->GetNbinsX(); ++binIterX){
-        for(Int_t binIterY = 0; binIterY < h_ratio->GetNbinsX(); ++binIterY){
-            double eta = h_ratio->GetXaxis()->GetBinCenter(binIterX+1);
-            double phi = h_ratio->GetYaxis()->GetBinCenter(binIterY+1);
-            double val = h_ratio->GetBinContent(binIterX,binIterY);
-            double err = h_ratio->GetBinError(binIterX,binIterY);
-            double theta = -2*TMath::ATan(exp(-eta));
-            h_ratio_theta->Fill(theta,phi,val);
-        }
-        
-    }
-    cout<<"bin"<<h_ratio_theta->GetBinContent(0,0)<<endl;
-    double etaranges[8]={1.5,3.5,1.5,3, 2,3, 2,3.5};
+    // Perform 1D projection
+    double etaranges[8]={2,3.2,2.2,3.2,2.4,3.2,2.6,3.2};
     Int_t minbin,maxbin;
     Int_t thetaranges[4] = {-3,-2,-1,0};
     
     TH1D*h_deltaphi[7];
-    TH1D*h_deltaphi_theta[3];
     
     for (Int_t i=0;i<7;i =i+2){
         // if (i==0) h_deltaphi[i]->SetFillColor(kRed);
@@ -335,7 +288,7 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
         maxbin =  h_ratio->GetXaxis()->FindBin(etaranges[i+1]);
         
         h_deltaphi[i]  = (TH1D*) h_ratio->ProjectionY(Form("h_deltaphi%d",i),minbin,maxbin);
-        h_deltaphi[i]->Sumw2();
+        //h_deltaphi[i]->Sumw2();
         h_deltaphi[i]->SetName(Form("h_deltaphi_%d",i));
         h_deltaphi[i]->GetXaxis()->SetTitle("#Delta#phi");
         h_deltaphi[i]->SetTitle(Form("#Delta#phi, #Delta#eta (%f, %f), Multipliplicity (%d, %d)",etaranges[i],etaranges[i+1], mult_low, mult_high));
@@ -343,34 +296,11 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
         
 	h_deltaphi[i]->Scale(1./(maxbin-minbin+1));
     }
-    
-    
-    for (Int_t i=0;i<3;i++){
-        minbin =  h_ratio_theta->GetXaxis()->FindBin(thetaranges[i]);
-        maxbin =  h_ratio_theta->GetXaxis()->FindBin(thetaranges[i+1]);
-        
-	h_deltaphi_theta[i]  = (TH1D*) h_ratio_theta->ProjectionY(Form("h_deltaphi_thetamin%d_max%d",thetaranges[i],thetaranges[i+1]),minbin,maxbin);
-        h_deltaphi_theta[i]->Sumw2();
-        h_deltaphi_theta[i]->GetXaxis()->SetTitle("#Delta#phi For #theta");
-        h_deltaphi_theta[i]->SetTitle(Form("deltaphi theta (%d, %d)",thetaranges[i],thetaranges[i+1]));
-        
-        h_deltaphi_theta[i]->Scale(1./(maxbin-minbin+1));
-    }
 
-    
     /**************************************************************************************/
     // Save and plot the results
     /**************************************************************************************/
     
-    TFile *background = new TFile(Form("correlation_%d_%d_%d.root", isThrust,mult_low, mult_high), "recreate");
-    h_deltaphi[0]->Write();
-    h_ratio->Write();
-    h_2D->Write();
-    h_2Dmix->Write();
-    h_mult_dist->Write();
-    h_phi->Write();
-    nt->Write();
-    background->Close();
     
     TCanvas *c0 = new TCanvas("c0","Multiplicity",600,600);
     h_mult_dist->Draw("e");     
@@ -404,12 +334,36 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
 
     TCanvas *c3 = new TCanvas("c3","dphi",600,600);
     c3->Divide(2,2);
-    for (Int_t i=0;i<4;i++)
-    {
+    
+    // Fourier decomposition
+    TF1 *f = new TF1("f","[0]*(1+2*([1]*cos(1*x)+[2]*cos(2*x)+[3]*cos(3*x)+[4]*cos(4*x)+[5]*cos(5*x)+[6]*cos(6*x)))");
+    for (Int_t i=0;i<4;i++) {
       c3->cd(i+1);
       h_deltaphi[i*2]->Draw();
+      if (i==0){
+         h_deltaphi[0]->Fit("f");
+         h_deltaphi[0]->Fit("f");
+	 h_deltaphi[0]->SetStats(0);
+      }
     }
+
+    // Save the results
+    TFile *background = new TFile(Form("correlation_%d_%d_%d.root", isThrust,mult_low, mult_high), "recreate");
+    h_deltaphi[0]->Write();
+    h_deltaphi[2]->Write();
+    h_deltaphi[4]->Write();
+    h_deltaphi[6]->Write();
+    h_ratio->Write();
+    h_2D->Write();
+    h_2Dmix->Write();
+    h_mult_dist->Write();
+    h_phi->Write();
+    nt->Write();
+    background->Close();
+    f->Write();
     
+    cout <<"Minimum = "<<f->GetMinimum()<<" at dphi = "<<f->GetMinimumX()<<endl;
+    cout <<"ZYAM =  "<< f->Integral(0,f->GetMinimumX())-f->GetMinimumX()*f->GetMinimum() <<" +- "<<f->IntegralError(0,f->GetMinimumX())<<endl;
 }
 
 /**************************************************************************************/
