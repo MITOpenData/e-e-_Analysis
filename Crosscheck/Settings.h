@@ -15,7 +15,9 @@ class Settings{
 
     int experiment = 0;
     //ALEPH data
-    std::string inputFile = "/data/abaty/ALEPHTrees/cleaned_ALEPH_Data2-v3_Aug11_2017.root";
+    //std::string inputFile = "/data/abaty/ALEPHTrees/cleaned_ALEPH_Data2-v3_Aug11_2017.root";
+    std::string inputFile = "/data/abaty/EpEmStudies/ALEPH_Thrust/thrust_Aug16.root";
+
 
     //cuts
     bool doUseLeptons = false;
@@ -43,7 +45,7 @@ class Settings{
 
     //other
     bool doThrust = true;
-    float thrustMatchWindow = 0.1;
+    float thrustMatchWindow = 10;
     bool doExcludeNTrigLT2 = true;
     bool doAllData = true;
     int nEvts = 10000;
