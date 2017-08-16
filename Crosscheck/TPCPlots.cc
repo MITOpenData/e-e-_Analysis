@@ -44,7 +44,7 @@ void TPCPlots(){
   TH1D * LRCYield[s.nMultBins];
 
   TFile * f = TFile::Open("Analyzer_Output.root","read");
-  for(int i = 0; i<2;i++){//s.nMultBins; i++){
+  for(int i = 0; i<s.nMultBins; i++){
     sig[i] = (TH2D*)f->Get(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
     bkg[i] = (TH2D*)f->Get(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
     ratio[i] = (TH2D*)f->Get(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
