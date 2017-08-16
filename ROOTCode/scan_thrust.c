@@ -118,7 +118,7 @@ void thrust(int isBelle, float x[], float y[]){
           TVector3 ptot = TVector3(0,0,0);
  
           for(int k = 0; k<n; k++){ //loop through all 3rd particles not used for the cross product
-            if(k!=i && i!=j){
+            if(k!=i && k!=j){
               if(pVec.at(k)*cross > 0){//if dot product is >0
                 ptot += pVec.at(k); 
               }
