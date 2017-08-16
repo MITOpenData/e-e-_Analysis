@@ -108,7 +108,7 @@ void Analyzer(){
       if( i2>=t->GetEntries()) i2 = (int)(s.maxSkipSize*randGen.Rndm())+1;
       tMix->GetEntry(i2);
       if(s.doThrust){
-        if(TMath::Abs(TTheta-TThetaMix)<s.thrustMatchWindow && TMath::ACos(TMath::Cos(TPhi-TPhiMix))<s.thrustMatchWindow) continue;
+        if(TMath::Abs(TTheta-TThetaMix)>s.thrustMatchWindow || TMath::ACos(TMath::Cos(TPhi-TPhiMix))>s.thrustMatchWindow) continue;
         for(int i = 0; i<nParticleMix; i++){
           TVector3 thrust = TVector3(0,0,0);
           thrust.SetMagThetaPhi(1,TThetaMix,TPhiMix);
