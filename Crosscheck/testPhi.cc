@@ -38,6 +38,7 @@ void testPhi(){
     std::cout << theta << std::endl;
     htheta->Fill(theta);
     temp.SetMagThetaPhi(1,theta,phi);
+  //  if(TMath::Abs(TMath::Pi()/2.0-temp.Theta())>1.3) continue;
     v.push_back(temp);
   }
 
@@ -47,7 +48,7 @@ void testPhi(){
   thrust.SetMagThetaPhi(1,tTheta,tPhi);
 
   std::cout << tTheta << " " << tPhi << std::endl;
-  for(int i = 0; i<10000; i++){
+  for(auto i = 0; i<v.size(); i++){
     TVector3 p = TVector3(v.at(i).Px(),v.at(i).Py(),v.at(i).Pz());
     hphi2->Fill(phiFromThrust(thrust,p));
     htheta2->Fill(thetaFromThrust(thrust,p));
