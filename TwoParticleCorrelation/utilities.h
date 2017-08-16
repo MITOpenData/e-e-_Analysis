@@ -18,7 +18,7 @@ double dphi(double phi1,double phi2)
     return a;
 }
 
-TCanvas *CFViewer(char *canvasName, char *title, double x, double y)
+TCanvas *CFViewer(const char *canvasName, const char *title, double x, double y)
 {
    TCanvas *c = new TCanvas(canvasName,title,x,y);
    // The MAGIC angle
@@ -41,8 +41,13 @@ inline double etaFromThrust(TVector3 thrust, TVector3 p){
   return 0.5*TMath::Log((E+pl)/(E-pl));//rapidity
 }
 inline double phiFromThrust(TVector3 thrust, TVector3 p){
-  double phi = (thrust.Cross(p)).Angle(thrust.Orthogonal());
-  if( ((thrust.Orthogonal().Unit()).Cross(((thrust.Cross(p).Unit()))))*thrust >= 0) return phi;
+  TVector3 pt = p-((p*thrust.Unit())*thrust.Unit());//pt vector
+  TVector3 z = TVector3(0,0,1);
+  TVector3 phiOrigin = thrust.Unit().Cross((thrust.Unit().Cross(z)));//vector that will be phi=0 (in plane of thrust and beam line
+  double phi = pt.Angle(phiOrigin);//get phi from 0 to pi
+  
+  //determine sign of phi based on cross product of pt and origin
+  if( (phiOrigin.Cross(pt.Unit()))*thrust >= 0) return phi;
   else return -phi;
 }
 
