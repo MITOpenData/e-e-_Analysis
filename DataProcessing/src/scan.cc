@@ -19,7 +19,7 @@
 #include "include/particleData.h"
 #include "include/jetData.h"
 
-int scan(std::string inFileName="LEP2MCGGCCY1997E183_recons_aftercut-001.aleph")
+int scan(std::string inFileName, std::string outFileName="")
 {
   if(!checkFile(inFileName)){
     std::cout << "Given inFileName \'" << inFileName << "\' is invalid, return 1." << std::endl;
@@ -30,7 +30,12 @@ int scan(std::string inFileName="LEP2MCGGCCY1997E183_recons_aftercut-001.aleph")
   FILE *fp=fopen(Form("%s",inFileName.c_str()),"r");
   float _px,_py,_pz,_m,_charge,_pwflag;
   
-  TFile *hf = new TFile(Form("%s.root",inFileName.c_str()), "RECREATE");
+  if(outFileName.size() == 0){
+    outFileName = inFileName + ".root";
+    while(outFileName.find("/") != std::string::npos){outFileName.replace(0, outFileName.find("/")+1,"");}
+  }
+
+  TFile *hf = new TFile(outFileName.c_str(), "RECREATE");
   TTree *tout = new TTree("t","");
   TTree *jout = new TTree("jetTree","");
 
@@ -135,14 +140,14 @@ int scan(std::string inFileName="LEP2MCGGCCY1997E183_recons_aftercut-001.aleph")
 
 int main(int argc, char *argv[])
 {
-  if(argc != 1 && argc != 2){
-    std::cout << "Usage: ./bin/scan.exe <OPT-inFileName>" << std::endl;
+  if(argc != 2 && argc != 3){
+    std::cout << "Usage: ./bin/scan.exe <inFileName> <OPT-outFileName>" << std::endl;
     return 1;
   }
 
   std::cout << "Begin processing..." << std::endl;
   int retVal = 0;
-  if(argc == 1) retVal += scan();
-  else if(argc == 2) retVal += scan(argv[1]);
+  if(argc == 2) retVal += scan(argv[1]);
+  else if(argc == 3) retVal += scan(argv[1], argv[2]);
   return retVal;
 }
