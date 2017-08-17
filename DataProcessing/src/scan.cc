@@ -12,12 +12,13 @@
 #include "TNamed.h"
 
 //fastjet dependencies
-#include "fastjet/ClusterSequence.hh"
+#include "fastjet/PseudoJet.hh"
 
 //local dependencies
 #include "include/checkMakeDir.h"
 #include "include/particleData.h"
 #include "include/jetData.h"
+#include "include/simpleJetMaker.h"
 
 std::vector<std::string> processAlephString(std::string inStr)
 {
@@ -44,6 +45,26 @@ bool check999(std::string inStr)
   if(inStr.find("-999.") != std::string::npos && inStr.size() == 5) return true;
   return false;
 }
+
+
+void processJets(std::vector<fastjet::PseudoJet> p, simpleJetMaker j, jetData *d)
+{
+  d->nref = 0;
+  if(p.size() > 0){
+    std::vector<fastjet::PseudoJet> jets = j.getSimpleJets(p);
+    for(unsigned int i = 0; i < jets.size(); ++i){
+      if(jets.at(i).pt() < .1) break; //Arbitrarily low cut on jets, removes spike at phi zero when things become ill defined
+      d->jtpt[d->nref] = jets.at(i).pt();
+      d->jtphi[d->nref] = jets.at(i).phi_std();
+      d->jteta[d->nref] = jets.at(i).eta();
+      ++d->nref;
+    }
+    jets.clear();
+    std::vector<fastjet::PseudoJet>().swap(jets);
+  }
+  return;
+}
+
 
 int scan(std::string inFileName, std::string outFileName="")
 {
@@ -96,7 +117,7 @@ int scan(std::string inFileName, std::string outFileName="")
 
   std::vector<fastjet::PseudoJet> particles;
   const double rParam = 0.4;
-  fastjet::JetDefinition jetDef(fastjet::antikt_algorithm, rParam);
+  simpleJetMaker jMaker(rParam);
 
   while(std::getline(file,getStr)){
     if(getStr.size() == 0) continue;
@@ -107,18 +128,7 @@ int scan(std::string inFileName, std::string outFileName="")
       if(counterEntries>0) tout->Fill(); 
 
       //Processing particles->jets
-      jData.nref = 0;
-      if(particles.size() > 0){
-	fastjet::ClusterSequence cs(particles, jetDef);
-	std::vector<fastjet::PseudoJet> jets = fastjet::sorted_by_pt(cs.inclusive_jets());
-	for(unsigned int j = 0; j < jets.size(); ++j){
-	  if(jets.at(j).pt() < .1) break; //Arbitrarily low cut on jets, removes spike at phi zero when things become ill defined
-	  jData.jtpt[jData.nref] = jets.at(j).pt();
-	  jData.jtphi[jData.nref] = jets.at(j).phi_std();
-	  jData.jteta[jData.nref] = jets.at(j).eta();
-	  ++jData.nref;
-	}
-      }
+      processJets(particles, jMaker, &jData);
       if(counterEntries>0) jout->Fill();
       //clear particles for next iteration clustering
       particles.clear();
@@ -157,6 +167,11 @@ int scan(std::string inFileName, std::string outFileName="")
     ++counterParticles;	
     ++counterEntries;	
   }
+  //Have to fill one last time since the condition for fill is dependent on NEXT EVENT existing, else we would lose last event per file
+  pData.nParticle=counterParticles;
+  if(counterEntries>0) tout->Fill(); 
+  processJets(particles, jMaker, &jData);
+  if(counterEntries>0) jout->Fill();
 
   hf->cd();
 
