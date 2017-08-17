@@ -39,7 +39,6 @@ std::vector<std::string> processAlephString(std::string inStr)
   return retV;
 }
 
-
 bool check999(std::string inStr)
 {
   if(inStr.find("-999.") != std::string::npos && inStr.size() == 5) return true;
@@ -113,16 +112,15 @@ int scan(std::string inFileName, std::string outFileName="")
 	fastjet::ClusterSequence cs(particles, jetDef);
 	std::vector<fastjet::PseudoJet> jets = fastjet::sorted_by_pt(cs.inclusive_jets());
 	for(unsigned int j = 0; j < jets.size(); ++j){
+	  if(jets.at(j).pt() < .1) break; //Arbitrarily low cut on jets, removes spike at phi zero when things become ill defined
 	  jData.jtpt[jData.nref] = jets.at(j).pt();
 	  jData.jtphi[jData.nref] = jets.at(j).phi_std();
 	  jData.jteta[jData.nref] = jets.at(j).eta();
 	  ++jData.nref;
 	}
       }
-
       if(counterEntries>0) jout->Fill();
-
-      //clear particles for next iteration
+      //clear particles for next iteration clustering
       particles.clear();
 
       pData.RunNo = std::stoi(num.at(4));
