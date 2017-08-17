@@ -33,6 +33,7 @@
 //     2017/08/15 Added Thurst Axis based correlation function to the TPCNtupleData 
 //                Class (based on Austin's code). Added filename to the class.
 //     2017/08/16 Cleanup and change the plotting style. Add Fourier Fit.
+//     2017/08/17 Add Thetabased analysis.
 //
 /**************************************************************************************/
 
