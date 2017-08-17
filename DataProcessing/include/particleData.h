@@ -18,7 +18,7 @@ class particleData{
   Float_t theta[nMaxPart];
   Float_t phi[nMaxPart];
   Float_t mass[nMaxPart];
-  Int_t charge[nMaxPart];
+  Float_t charge[nMaxPart];
   Int_t pwflag[nMaxPart];
   Int_t pid[nMaxPart];
 };

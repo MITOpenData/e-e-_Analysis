@@ -19,6 +19,33 @@
 #include "include/particleData.h"
 #include "include/jetData.h"
 
+std::vector<std::string> processAlephString(std::string inStr)
+{
+  std::vector<std::string> retV;
+
+  while(inStr.size() != 0){
+    while(inStr.substr(0,1).find(" ") != std::string::npos){inStr.replace(0,1,"");}
+
+    if(inStr.find(" ") != std::string::npos){
+      retV.push_back(inStr.substr(0,inStr.find(" ")));
+      inStr.replace(0,inStr.find(" ")+1,"");
+    }
+    else if(inStr.size() != 0){
+      retV.push_back(inStr);
+      inStr = "";
+    }
+  }
+
+  return retV;
+}
+
+
+bool check999(std::string inStr)
+{
+  if(inStr.find("-999.") != std::string::npos && inStr.size() == 5) return true;
+  return false;
+}
+
 int scan(std::string inFileName, std::string outFileName="")
 {
   if(!checkFile(inFileName)){
@@ -27,8 +54,8 @@ int scan(std::string inFileName, std::string outFileName="")
   }
 
   // "/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph"
-  FILE *fp=fopen(Form("%s",inFileName.c_str()),"r");
-  float _px,_py,_pz,_m,_charge,_pwflag;
+  std::ifstream file(Form("%s",inFileName.c_str()));
+  std::string getStr;
   
   if(outFileName.size() == 0){
     outFileName = inFileName + ".root";
@@ -55,7 +82,7 @@ int scan(std::string inFileName, std::string outFileName="")
   tout->Branch("eta", pData.eta,"eta[nParticle]/F");
   tout->Branch("theta", pData.theta,"theta[nParticle]/F");
   tout->Branch("phi", pData.phi,"phi[nParticle]/F");
-  tout->Branch("charge", pData.charge,"charge[nParticle]/I");
+  tout->Branch("charge", pData.charge,"charge[nParticle]/F");
   tout->Branch("pwflag", pData.pwflag,"pwflag[nParticle]/I");
   tout->Branch("pid", pData.pid,"pid[nParticle]/I");
 
@@ -72,19 +99,19 @@ int scan(std::string inFileName, std::string outFileName="")
   const double rParam = 0.4;
   fastjet::JetDefinition jetDef(fastjet::antikt_algorithm, rParam);
 
-  while(fscanf(fp,"%f %f %f %f %f %f",&_px,&_py,&_pz,&_m,&_charge,&_pwflag)!=EOF){
-    if(_px==-999. && _py==-999. && _pz==-999.){ 
+  while(std::getline(file,getStr)){
+    if(getStr.size() == 0) continue;
+    std::vector<std::string> num = processAlephString(getStr);
+    if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2))){ 
       pData.nParticle=counterParticles;
 
       if(counterEntries>0) tout->Fill(); 
-
 
       //Processing particles->jets
       jData.nref = 0;
       if(particles.size() > 0){
 	fastjet::ClusterSequence cs(particles, jetDef);
 	std::vector<fastjet::PseudoJet> jets = fastjet::sorted_by_pt(cs.inclusive_jets());
-
 	for(unsigned int j = 0; j < jets.size(); ++j){
 	  jData.jtpt[jData.nref] = jets.at(j).pt();
 	  jData.jtphi[jData.nref] = jets.at(j).phi_std();
@@ -92,19 +119,27 @@ int scan(std::string inFileName, std::string outFileName="")
 	  ++jData.nref;
 	}
       }
+
       if(counterEntries>0) jout->Fill();
 
       //clear particles for next iteration
       particles.clear();
 
-      pData.RunNo=_m; 
-      pData.EventNo=_charge; 
-      pData.Energy=_pwflag; 
+      pData.RunNo = std::stoi(num.at(4));
+      pData.EventNo= std::stoi(num.at(5));
+      pData.Energy= std::stof(num.at(6));
+
       counterParticles=0;   
 
       continue;
-    }  
+    }
 
+    float _px = std::stof(num.at(0));
+    float _py = std::stof(num.at(1));
+    float _pz = std::stof(num.at(2));
+    float _m = std::stof(num.at(3));
+    float _charge = std::stof(num.at(4));
+    int _pwflag = std::stoi(num.at(5));
 
     pData.px[counterParticles]=_px;
     pData.py[counterParticles]=_py;
