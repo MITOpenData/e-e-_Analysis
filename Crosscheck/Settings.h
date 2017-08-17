@@ -39,13 +39,15 @@ class Settings{
 
 
     //plots
-    static const int nMultBins = 6;
-    int multBinsLow[nMultBins]  = {0,   0 , 15, 25, 35,  0};
-    int multBinsHigh[nMultBins] = {999, 15, 25, 35, 999, 35};
+    static const int nMultBins = 8;
+    int multBinsLow[nMultBins]  = {0,   0 , 15, 25, 35,  0 , 30, 40};
+    int multBinsHigh[nMultBins] = {999, 15, 25, 35, 999, 35,999,999};
 
     //other
     bool doThrust = true;
     float thrustMatchWindow = 10;
+    bool doMissPCut = true;
+    float MissPCut = 20;
     bool doExcludeNTrigLT2 = true;
     bool doAllData = true;
     int nEvts = 10000;

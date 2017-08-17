@@ -56,6 +56,7 @@ void Analyzer(){
   float phi[500],    phiMix[500];
   float TTheta,      TThetaMix;
   float TPhi,        TPhiMix;
+  float MissP;
 
 
   t->SetBranchAddress("nParticle",&nParticle); tMix->SetBranchAddress("nParticle",&nParticleMix);
@@ -69,6 +70,7 @@ void Analyzer(){
   t->SetBranchAddress("phi",&phi);             tMix->SetBranchAddress("phi",&phiMix);
   t->SetBranchAddress("TTheta",&TTheta);       tMix->SetBranchAddress("TTheta",&TThetaMix);
   t->SetBranchAddress("TPhi",&TPhi);           tMix->SetBranchAddress("TPhi",&TPhiMix);
+  t->SetBranchAddress("MissP",&MissP);
 
   for(int i = 0; i< (s.doAllData?t->GetEntries():s.nEvts); i++){
     t->GetEntry(i);
@@ -99,6 +101,7 @@ void Analyzer(){
     }
     multiplicity->Fill(nTrk);
     if(nTrig<1 && s.doExcludeNTrigLT2) continue;
+    if(MissP>s.MissPCut && s.doMissPCut) continue;
     h_Ttheta->Fill(TTheta);
     h_Tphi->Fill(TPhi);
 
@@ -107,6 +110,7 @@ void Analyzer(){
     for(int i2 = i+1; nMixed<s.nMixedEvents; i2 += (int)(s.maxSkipSize*randGen.Rndm())+1 ){
       if( i2>=t->GetEntries()) i2 = (int)(s.maxSkipSize*randGen.Rndm())+1;
       tMix->GetEntry(i2);
+      if(MissP>s.MissPCut && s.doMissPCut) continue;
       if(s.doThrust){
         if(TMath::Abs(TTheta-TThetaMix)>s.thrustMatchWindow || TMath::ACos(TMath::Cos(TPhi-TPhiMix))>s.thrustMatchWindow) continue;
         for(int i = 0; i<nParticleMix; i++){
@@ -126,12 +130,14 @@ void Analyzer(){
     
       //fill signal histogram
       for(int j1 = 0; j1<nParticle; j1++){
-        if(TMath::Abs(eta[j1]) > s.etaCut) continue;
         if(!(pwflag[j1]==0 || (s.doUseLeptons && (pwflag[j1]==1 || pwflag[j1]==2)))) continue;
-        h_phi->Fill(phi[j1]);
-        h_eta->Fill(eta[j1]);
-        h_theta->Fill(theta[j1]);
-        h_pt->Fill(pt[j1]);
+        if(nMixed == 0){
+          h_phi->Fill(phi[j1]);
+          h_eta->Fill(eta[j1]);
+          h_theta->Fill(theta[j1]);
+          h_pt->Fill(pt[j1]);
+        }
+        if(TMath::Abs(eta[j1]) > s.etaCut) continue;
         if(pt[j1]<s.trigPt[0] || pt[j1]>s.trigPt[1]) continue;
         float corr1 = 1.0/getEff(s,pt[j1],eta[j1]);
 

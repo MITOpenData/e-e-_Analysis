@@ -8,6 +8,7 @@
 #include <TVector3.h>
 #include <vector>
 #include <iostream>
+#include "Tools.h"
 
 using namespace std;
 
@@ -25,6 +26,31 @@ double dphi(double phi1,double phi2)
     return a;
 }
 
+inline double ptFromThrust(TVector3 thrust, TVector3 p){
+  return p.Perp(thrust); 
+}
+
+inline double thetaFromThrust(TVector3 thrust, TVector3 p){
+  return p.Angle(thrust);
+}
+
+//this is actually rapidity w/ pion mass assumption
+inline double etaFromThrust(TVector3 thrust, TVector3 p){
+  float pl = p*thrust.Unit();//logitudinal momentum component
+  float E = TMath::Power(p.Mag2()+0.13957*0.13957,0.5);//energy w/ mass assumption
+  return 0.5*TMath::Log((E+pl)/(E-pl));//rapidity
+}
+
+inline double phiFromThrust(TVector3 thrust, TVector3 p){
+  TVector3 pt = p-((p*thrust.Unit())*(thrust.Unit()));//pt vector
+  TVector3 z = TVector3(0,0,1);
+  TVector3 phiOrigin = thrust.Unit().Cross((thrust.Unit().Cross(z)));//vector that will be phi=0 (in plane of thrust and beam line
+  double phi = pt.Angle(phiOrigin);//get phi from 0 to pi
+
+  //determine sign of phi based on cross product of pt and origin
+  if( (phiOrigin.Cross(pt.Unit()))*thrust >= 0) return phi;
+  else return -phi;
+}
 
 //based on code from herwig: http://herwig.hepforge.org/svn/tags/herwig-2-0-beta/Analysis/EventShapes.cc
 //ported by A. Baty
@@ -62,9 +88,9 @@ void thrust(int isBelle, float x[], float y[], float xch[], float ych[]){
   t1->SetBranchAddress("mass",mass);
   t1->SetBranchAddress("pwflag",pwflag);
 
-  for (int i=0;i<1337;i++) 
+  for (int i=0;i<t1->GetEntries();i++) 
   {  
-    if (i%100==0) cout <<i<<"/"<<t1->GetEntries()<<endl;
+    if (i%1000==0) cout <<i<<"/"<<t1->GetEntries()<<endl;
     t1->GetEntry(i);
 
     
@@ -148,9 +174,10 @@ void thrust(int isBelle, float x[], float y[], float xch[], float ych[]){
     y[i] = thrust.Phi();
   }
 
-  for (int i=0;i<1337;i++) 
+  std::cout << "Calculating charged hadron thrust axis... " << std::endl;
+  for (int i=0;i<t1->GetEntries();i++) 
   {  
-    if (i%100==0) cout <<i<<"/"<<t1->GetEntries()<<endl;
+    if (i%1000==0) cout <<i<<"/"<<t1->GetEntries()<<endl;
     t1->GetEntry(i);
     float nTrk = 0;
     for(int t = 0; t<n; t++){
@@ -315,7 +342,7 @@ void thrustLegacy(int isBelle, float x[], float y[], float xch[], float ych[]){
   double maxscalar,theta_max,phi_max;
   
     // all entries and fill the histograms
-  Int_t nevent = 1337;
+  Int_t nevent = t1->GetEntries();
   
   int nevent_process = nevent; //59874
   
@@ -370,13 +397,9 @@ void scan_thrust(){
   TString filename;
   //filename="/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/DataFiles/ROOTfiles/cleaned_ALEPH_Data-all.aleph.root";
   filename = "/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_DATA-all.aleph.root";
-
-
   
   TFile *f = new TFile(filename.Data());
   TTree *t1 = (TTree*)f->Get("t");
-  
-  
   
   int nParticle;
   int EventNo;
@@ -384,8 +407,8 @@ void scan_thrust(){
   float Energy;
   float TTheta; //to be added
   float TPhi; //to be added
-  float TchTheta;
-  float TchPhi;
+  float TTheta_charged;
+  float TPhi_charged;
 
 
   Float_t px[100000];
@@ -415,29 +438,51 @@ void scan_thrust(){
   t1->SetBranchAddress("charge",charge);
   t1->SetBranchAddress("pwflag", pwflag);
   t1->SetBranchAddress("pid",pid);
-  
-
-  
-  
-
 
   //TFile *g = new TFile("/mnt/c/Users/Bibek Kumar Pandit/Desktop/Root_Directory/StudyMult/DataFiles/ROOTfiles/cleaned_ALEPH_Data2-all.aleph.root", "RECREATE");
 
-  TFile *g = new TFile("/data/abaty/EpEmStudies/ALEPH_Thrust/thrust_Aug16.root","RECREATE");
- 
+  TFile *g = new TFile("localOut.root","RECREATE");
 
   TTree *newtree = t1->CloneTree(0); // Do no copy the data yet
   // DO NOT delete the old tree and close the old file
   //add the branch to the new tree and try to fill it
+  Float_t theta_wrtThr[10000];
+  Float_t y_wrtThr[10000];
+  Float_t phi_wrtThr[10000];
+  Float_t pt_wrtThr[10000];
+  Float_t theta_wrtChThr[10000];
+  Float_t y_wrtChThr[10000];
+  Float_t phi_wrtChThr[10000];
+  Float_t pt_wrtChThr[10000];
+  Float_t MissP;
+  Float_t MissTheta;
+  Float_t MissPhi;
+  Float_t MissP_charged;
+  Float_t MissTheta_charged;
+  Float_t MissPhi_charged;
   newtree->Branch("TTheta", &TTheta, "TTheta/F");
   newtree->Branch("TPhi", &TPhi, "TPhi/F");
-  newtree->Branch("TchTheta", &TchTheta, "TchTheta/F");
-  newtree->Branch("TchPhi", &TchPhi, "TchPhi/F");
+  newtree->Branch("TTheta_charged", &TTheta_charged, "TTheta_charged/F");
+  newtree->Branch("TPhi_charged", &TPhi_charged, "TPhi_charged/F");
+  newtree->Branch("MissP", &MissP, "MissP/F");
+  newtree->Branch("MissTheta", &MissTheta, "MissTheta/F");
+  newtree->Branch("MissPhi", &MissPhi, "MissPhi/F");
+  newtree->Branch("MissP_charged", &MissP_charged, "MissP_charged/F");
+  newtree->Branch("MissTheta_charged", &MissTheta_charged, "MissTheta_charged/F");
+  newtree->Branch("MissPhi_charged", &MissPhi_charged, "MissPhi_charged/F");
+  newtree->Branch("theta_wrtThr", &theta_wrtThr, "theta_wrtThr[nParticle]/F");
+  newtree->Branch("y_wrtThr", &y_wrtThr, "y_wrtThr[nParticle]/F");
+  newtree->Branch("phi_wrtThr", &phi_wrtThr, "phi_wrtThr[nParticle]/F");
+  newtree->Branch("pt_wrtThr", &pt_wrtThr, "pt_wrtThr[nParticle]/F");
+  newtree->Branch("theta_wrtChThr", &theta_wrtChThr, "theta_wrtChThr[nParticle]/F");
+  newtree->Branch("y_wrtChThr", &y_wrtChThr, "y_wrtChThr[nParticle]/F");
+  newtree->Branch("phi_wrtChThr", &phi_wrtChThr, "phi_wrtChThr[nParticle]/F");
+  newtree->Branch("pt_wrtChThr", &pt_wrtChThr, "pt_wrtChThr[nParticle]/F");
   
   
   //int nentries=newtree->GetEntries();
   //Int_t nevent = (Int_t)t1->GetEntries();
-  Int_t nevent = 1337;
+  Int_t nevent = t1->GetEntries();
  
   int nevent_process = nevent;
 
@@ -449,21 +494,54 @@ void scan_thrust(){
   float y[nevent_process];
   memset(y, 0, nevent*sizeof(float)); 
   
-  float xch[nevent_process];
-  memset(xch, 0, nevent*sizeof(float));
+  float x_ch[nevent_process];
+  memset(x_ch, 0, nevent*sizeof(float));
   
-  float ych[nevent_process];
-  memset(ych, 0, nevent*sizeof(float)); 
+  float y_ch[nevent_process];
+  memset(y_ch, 0, nevent*sizeof(float)); 
  
-  thrust(0,x,y,xch,ych);
+  thrust(0,x,y,x_ch,y_ch);
 
   
   for( int i=0; i < nevent_process; i++){
      t1->GetEntry(i);
      TTheta = x[i];
      TPhi = y[i];
-     TchTheta = xch[i];
-     TchPhi = ych[i];
+     TTheta_charged = x_ch[i];
+     TPhi_charged = y_ch[i];
+  
+     TVector3 netP = TVector3(0,0,0);
+     TVector3 netP_charged = TVector3(0,0,0);
+     TVector3 thr = TVector3(0,0,0);
+     TVector3 chthr = TVector3(0,0,0);
+     thr.SetMagThetaPhi(1,TTheta,TPhi);    
+     chthr.SetMagThetaPhi(1,TTheta_charged,TPhi_charged);    
+     for(int j = 0; j<nParticle; j++){ 
+       if(pwflag[j]==0){
+         TVector3 p_charged = TVector3(px[j],py[j],pz[j]);
+         netP_charged -= p_charged;
+       }
+       TVector3 p = TVector3(px[j],py[j],pz[j]);
+       netP -= p;
+
+       phi_wrtThr[j] = phiFromThrust(thr,p);
+       theta_wrtThr[j] = thetaFromThrust(thr,p);
+       y_wrtThr[j] = etaFromThrust(thr,p);
+       pt_wrtThr[j] = ptFromThrust(thr,p);
+       phi_wrtChThr[j] = phiFromThrust(chthr,p);
+       theta_wrtChThr[j] = thetaFromThrust(chthr,p);
+       y_wrtChThr[j] = etaFromThrust(chthr,p);
+       pt_wrtChThr[j] = ptFromThrust(chthr,p);
+     }
+
+     //missing momentum variables
+     MissP = netP.Mag();
+     MissTheta = netP.Theta();
+     MissPhi = netP.Phi();
+     MissP_charged = netP_charged.Mag();
+     MissTheta_charged = netP_charged.Theta();
+     MissPhi_charged = netP_charged.Phi();
+
      newtree->Fill();
   }
   g->Write();

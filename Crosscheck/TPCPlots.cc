@@ -75,17 +75,17 @@ void TPCPlots(){
     bkg[i]->Draw("surf1 fb");
     l->Draw("same");
     bkg[i]->GetZaxis()->SetRangeUser(0.9*bkg[i]->GetMinimum(),1.1*bkg[i]->GetMaximum());
-    c1->SaveAs(Form("img/signal_%d_%d.png",s.multBinsLow[i],s.multBinsHigh[i])); 
-    c1->SaveAs(Form("img/signal_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i])); 
-    c1->SaveAs(Form("img/signal_%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("img/background_%d_%d.png",s.multBinsLow[i],s.multBinsHigh[i])); 
+    c1->SaveAs(Form("img/background_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i])); 
+    c1->SaveAs(Form("img/background_%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
 
     formatTPCAxes(ratio[i],1.5,1.5,2);
     ratio[i]->Draw("surf1 fb");
     l->Draw("same");
     ratio[i]->GetZaxis()->SetRangeUser(0.9*ratio[i]->GetMinimum(),0.4*ratio[i]->GetMaximum());
-    c1->SaveAs(Form("img/signal_%d_%d.png",s.multBinsLow[i],s.multBinsHigh[i])); 
-    c1->SaveAs(Form("img/signal_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i])); 
-    c1->SaveAs(Form("img/signal_%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("img/ratio_%d_%d.png",s.multBinsLow[i],s.multBinsHigh[i])); 
+    c1->SaveAs(Form("img/ratio_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i])); 
+    c1->SaveAs(Form("img/ratio_%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
  
     delete c1; 
 
