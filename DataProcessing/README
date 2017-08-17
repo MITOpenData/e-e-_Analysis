@@ -1,0 +1,6 @@
+Build w/ 'make'
+
+Upon successful build, to process a Aleph file do
+./bin/scan.exe <inFileName>
+
+to clean do 'make clean'
