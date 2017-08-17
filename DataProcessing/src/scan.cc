@@ -82,9 +82,14 @@ int scan(std::string inFileName, std::string outFileName="")
     while(outFileName.find("/") != std::string::npos){outFileName.replace(0, outFileName.find("/")+1,"");}
   }
 
+  //define jetMaker here so rParam can be used in jetTree name for clarity
+  const double rParam = 0.4;
+  simpleJetMaker jMaker(rParam);
+  const std::string jetTreeName = "ak" + std::to_string(int(rParam*10)) + "JetTree";
+
   TFile *hf = new TFile(outFileName.c_str(), "RECREATE");
   TTree *tout = new TTree("t","");
-  TTree *jout = new TTree("jetTree","");
+  TTree *jout = new TTree(jetTreeName.c_str(),"");
 
   particleData pData;
   jetData jData;
@@ -116,8 +121,6 @@ int scan(std::string inFileName, std::string outFileName="")
   TLorentzVector v;
 
   std::vector<fastjet::PseudoJet> particles;
-  const double rParam = 0.4;
-  simpleJetMaker jMaker(rParam);
 
   while(std::getline(file,getStr)){
     if(getStr.size() == 0) continue;
