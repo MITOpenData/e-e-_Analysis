@@ -43,8 +43,9 @@ using namespace std;
 /**************************************************************************************/
 
 void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneCUETP8M1_5p02TeV-pythia8-HINppWinter16DR-NoPU_75X_mcRun2_asymptotic_ppAt5TeV_forest_v2_track.root",
-              Int_t isBelle      = 0,		//
-              Int_t isThrust     = 0, 		//
+              Int_t isBelle      = 0,		// BELLE analysis = 1, CMS/ALEPH analysis = 0
+              Int_t isThrust     = 0, 		// Thurst Axis analysis = 1, Beam Axis analysis = 0
+              Int_t isTheta      = 0, 		// Use Theta angle = 1, Use Eta = 0
 	      Int_t maxevt       = 1000000,	// Max number of events to be processed, 0 = all events
 	      Int_t mult_low     = 0,		// Lower cut on the event multiplicity
 	      Int_t mult_high    = 100,		// Upper cut on the event multiplicity
@@ -84,17 +85,24 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     setupTPCTree(t1_mix,mix);
     mix.setTPCTreeStatus(t1_mix);
     
-    TNtuple *nt = new TNtuple("nt","","pEta:pTheta:pPhi:theta:phi:TTheta:TPhi");
+    //TNtuple *nt = new TNtuple("nt","","pEta:pTheta:pPhi:theta:phi:TTheta:TPhi");
     
     // Define 2D histograms
     Float_t dthetaRange = PI;
     Float_t normalization = detaRange*2/nbin*2*3.14159/nbin;
-    TH2F *h_2D = CFTH2F ( "h_2D", "#eta-#phi of all particles;#Delta#eta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -PI/2., PI*1.5);
-    TH2F *h_2Dmix = CFTH2F ( "h_2Dmix", "#eta-#phi of all particles;#Delta#eta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -PI/2., PI*1.5);
-    TH2F *h_ratio = CFTH2F ( "h_ratio", "#eta-#phi of all particles;#Delta#eta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi} ", nbin, -detaRange, detaRange,nbin, -PI/2.,PI*1.5);
+    TH2F *h_2D, *h_2Dmix, *h_ratio;
+
+    if (isTheta){
+      h_2D    = CFTH2F ( "h_2D",    "#theta-#phi of all particles;#Delta#theta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#thetad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -PI/2., PI*1.5);
+      h_2Dmix = CFTH2F ( "h_2Dmix", "#theta-#phi of all particles;#Delta#theta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#thetad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -PI/2., PI*1.5);
+      h_ratio = CFTH2F ( "h_ratio", "#theta-#phi of all particles;#Delta#theta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#thetad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -PI/2., PI*1.5);
+    } else {
+      h_2D    = CFTH2F ( "h_2D",    "#eta-#phi of all particles;#Delta#eta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -PI/2., PI*1.5);
+      h_2Dmix = CFTH2F ( "h_2Dmix", "#eta-#phi of all particles;#Delta#eta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -PI/2., PI*1.5);
+      h_ratio = CFTH2F ( "h_ratio", "#eta-#phi of all particles;#Delta#eta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -PI/2., PI*1.5);
+    }
     TH1D *h_mult_dist = new TH1D("h_multi","multiplicity distribution of charged particles;N_{trk}^{offline};Count",60,0,60);
     TH1D *h_phi = new TH1D("h_phi","Phi distribution",60,-PI,PI);
-    TH2F *h_ratio_theta = new TH2F ( "h_ratio_theta", "theta-phi of all particles ", nbin, -PI*1.1, PI/6.,nbin, -PI/2.,PI*1.5);
     
     // all entries and fill the histograms
     Int_t nevent = (Int_t)t1->GetEntries();
@@ -138,7 +146,7 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
 	   if (pt1>ptMinForN&&pt1<ptMaxForN) N++;
            if (pt1>ptMin&&pt1<ptMax) N_TP++;
 	   h_phi->Fill(data.getPhi(j));
-	   nt->Fill(data.eta[j],data.theta[j],data.phi[j],data.getTheta(j),data.getPhi(j),data.TTheta,data.TPhi);
+	   //nt->Fill(data.eta[j],data.theta[j],data.phi[j],data.getTheta(j),data.getPhi(j),data.TTheta,data.TPhi);
        }
        h_mult_dist->Fill(N);
        averageN+=N;
@@ -151,7 +159,8 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
        // S calculation using multiplicity cut //
        /****************************************/
        for ( Int_t j=0;j<data.nParticle;j++ ) {
-           Float_t eta1 = data.getEta(j);
+           Float_t angle1;
+	   if (isTheta) angle1 = data.getTheta(j); else angle1 = data.getEta(j);
            Float_t phi1 = data.getPhi(j);
            Float_t pt1 = data.getPt(j);
 	   if (!data.isChargedHadron(j)) continue;
@@ -159,16 +168,17 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
            
 	   // Signal loop, calculate S correlation function
            for ( Int_t k=j+1;k<data.nParticle;k++ ) {
-               Float_t eta2 = data.getEta(k);
+               Float_t angle2;
+	       if (isTheta) angle2 = data.getTheta(k); else angle2 = data.getEta(k);
                Float_t phi2 = data.getPhi(k);
                Float_t pt2 = data.getPt(k);
                if (!data.isChargedHadron(k)) continue;
 	       if (pt2<=ptMin||pt2>=ptMax) continue;
                if (N!=0) {
-        	   h_2D->Fill(eta1-eta2,dphi(phi1,phi2),1./N_TP);
-        	   h_2D->Fill(eta1-eta2,dphi(phi2,phi1),1./N_TP);
-        	   h_2D->Fill(eta2-eta1,dphi(phi1,phi2),1./N_TP);
-        	   h_2D->Fill(eta2-eta1,dphi(phi2,phi1),1./N_TP);
+        	   h_2D->Fill(angle1-angle2,dphi(phi1,phi2),1./N_TP);
+        	   h_2D->Fill(angle1-angle2,dphi(phi2,phi1),1./N_TP);
+        	   h_2D->Fill(angle2-angle1,dphi(phi1,phi2),1./N_TP);
+        	   h_2D->Fill(angle2-angle1,dphi(phi2,phi1),1./N_TP);
                }
            }
        }
@@ -207,7 +217,8 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
           }
 	  
           for ( Int_t j=0;j<data.nParticle;j++ ) {
-              Float_t eta1 = data.getEta(j);
+              Float_t angle1;
+	      if (isTheta) angle1 = data.getTheta(j); else angle1 = data.getEta(j);
               Float_t phi1 = data.getPhi(j);
               Float_t pt1 = data.getPt(j);
               if (!data.isChargedHadron(j)) continue;
@@ -215,17 +226,18 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
            
               // Background loop, calculate B correlation function from mixed event
               for ( Int_t k=0;k<mix.nParticle;k++ ) {
-        	 Float_t etamix = mix.getEta(k);
+        	 Float_t anglemix;
+		 if (isTheta) anglemix = mix.getTheta(k); else anglemix = mix.getEta(k);
         	 Float_t phimix = mix.getPhi(k);
         	 Float_t ptmix = mix.getPt(k);
         	 if (!mix.isChargedHadron(k)) continue;
 		 if(ptmix<=ptMin||ptmix>=ptMax) continue;
 
 		 if (N!=0) {
-        	   h_2Dmix->Fill(eta1-etamix,dphi(phi1,phimix),1./N_TP);
-        	   h_2Dmix->Fill(eta1-etamix,dphi(phimix,phi1),1./N_TP);
-        	   h_2Dmix->Fill(etamix-eta1,dphi(phi1,phimix),1./N_TP);
-        	   h_2Dmix->Fill(etamix-eta1,dphi(phimix,phi1),1./N_TP);
+        	   h_2Dmix->Fill(angle1-anglemix,dphi(phi1,phimix),1./N_TP);
+        	   h_2Dmix->Fill(angle1-anglemix,dphi(phimix,phi1),1./N_TP);
+        	   h_2Dmix->Fill(anglemix-angle1,dphi(phi1,phimix),1./N_TP);
+        	   h_2Dmix->Fill(anglemix-angle1,dphi(phimix,phi1),1./N_TP);
         	 }
                } //end of mixed event loop
            } // end of working event loop
@@ -242,39 +254,8 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     
     // calculate the  correlation function
     
-    double ratio;
-    double errrel_ratio;
-    double errrel_num;
-    double errrel_den;
-    
-    double b00_x=h_2Dmix->GetXaxis()->FindBin(0.);
-    double b00_y=h_2Dmix->GetYaxis()->FindBin(0.);
-    double B00=h_2Dmix->GetBinContent(b00_x,b00_y);
-    double errrel_B00=h_2Dmix->GetBinError(b00_x,b00_y)/B00;
-    
-    cout<<"value of B(0,0)="<<B00<<endl;
-    
-    cout<<"x axis "<<h_2Dmix->GetXaxis()->GetBinCenter(b00_x)<<endl;
-    cout<<"y axis "<<h_2Dmix->GetYaxis()->GetBinCenter(b00_y)<<endl;
-            
-    for (Int_t x=0;x<=h_2D->GetNbinsX();x++){        
-        for (Int_t y=0;y<=h_2D->GetNbinsY();y++){
-            if(h_2Dmix->GetBinContent(x,y)>0){
-                ratio=B00*(h_2D->GetBinContent(x,y)/h_2Dmix->GetBinContent(x,y));
-                errrel_num=h_2D->GetBinError(x,y)/h_2D->GetBinContent(x,y);
-                errrel_den=h_2Dmix->GetBinError(x,y)/h_2Dmix->GetBinContent(x,y);
-                // Yen-Jie: Take out the error of B00 for the moment since this is a global uncertainty
-		errrel_ratio=TMath::Sqrt(errrel_num*errrel_num+errrel_den*errrel_den);   // +errrel_B00*errrel_B00
-                
-                h_ratio->SetBinContent(x,y,ratio/normalization);
-                h_ratio->SetBinError(x,y,errrel_ratio*ratio/normalization);
-            } else {
-	      h_ratio->SetBinContent(x,y,0);
-	      h_ratio->SetBinError(x,y,0);
-	    }
-        }
-    }
-    
+    calculateRatio(h_2D,h_2Dmix,h_ratio);
+        
     // Perform 1D projection
     double etaranges[8]={2,3.2,2.2,3.2,2.4,3.2,2.6,3.2};
     Int_t minbin,maxbin;
@@ -291,7 +272,8 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
         //h_deltaphi[i]->Sumw2();
         h_deltaphi[i]->SetName(Form("h_deltaphi_%d",i));
         h_deltaphi[i]->GetXaxis()->SetTitle("#Delta#phi");
-        h_deltaphi[i]->SetTitle(Form("#Delta#phi, #Delta#eta (%f, %f), Multipliplicity (%d, %d)",etaranges[i],etaranges[i+1], mult_low, mult_high));
+        if (isTheta)  h_deltaphi[i]->SetTitle(Form("#Delta#phi, #Delta#theta (%f, %f), Multipliplicity (%d, %d)",etaranges[i],etaranges[i+1], mult_low, mult_high));
+        else          h_deltaphi[i]->SetTitle(Form("#Delta#phi, #Delta#eta (%f, %f), Multipliplicity (%d, %d)",etaranges[i],etaranges[i+1], mult_low, mult_high));
         h_deltaphi[i]->GetYaxis()->SetTitle("Y(#Delta#phi)");
         
 	h_deltaphi[i]->Scale(1./(maxbin-minbin+1));
@@ -358,12 +340,16 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     h_2Dmix->Write();
     h_mult_dist->Write();
     h_phi->Write();
-    nt->Write();
-    background->Close();
+    //nt->Write();
     f->Write();
     
+    TNtuple *ntResult = new TNtuple("ntResult","result","mL:mH:ZYAM:ZYAMError");
     cout <<"Minimum = "<<f->GetMinimum()<<" at dphi = "<<f->GetMinimumX()<<endl;
     cout <<"ZYAM =  "<< f->Integral(0,f->GetMinimumX())-f->GetMinimumX()*f->GetMinimum() <<" +- "<<f->IntegralError(0,f->GetMinimumX())<<endl;
+    ntResult->Fill(mult_low,mult_high,f->Integral(0,f->GetMinimumX())-f->GetMinimumX()*f->GetMinimum(),f->IntegralError(0,f->GetMinimumX()));
+    ntResult->Write();
+    background->Close();
+    
 }
 
 /**************************************************************************************/

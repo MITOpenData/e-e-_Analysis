@@ -20,6 +20,10 @@ class TPCNtupleData{
     Float_t pz[100000];
     Float_t TTheta;
     Float_t TPhi;
+    
+    Float_t N;
+    Float_t N_TP;
+    
     bool isBelle;
     bool doThrust;
     Float_t memory;
@@ -79,6 +83,10 @@ class TPCNtupleData{
     // Return theta angle
     Float_t getTheta(int j){
      selfCheck();
+     if (doThrust){
+      p.SetXYZ(px[j],py[j],pz[j]);
+      return thetaFromThrust(thrust,p);
+     }
      return theta[j];
     }
 

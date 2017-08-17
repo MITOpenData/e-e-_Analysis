@@ -5,7 +5,8 @@
 #include <TVector3.h>
 #include <TH1F.h>
 #include <TH2F.h>
-
+#include <iostream>
+#include <TMath.h>
 
 #define PI 3.14159265358979
 
@@ -50,12 +51,6 @@ TH2F *CFTH2F(const char *name, const char *title, Int_t nBinX, Float_t xL, Float
    h->SetNdivisions(505,"Z");
    return h;   
 }
-inline double ptFromThrust(TVector3 thrust, TVector3 p){
-  return p.Perp(thrust); 
-}
-inline double thetaFromThrust(TVector3 thrust, TVector3 p){
-  return p.Angle(thrust);
-}
 
 
 /**************************************************************************************/
@@ -63,11 +58,20 @@ inline double thetaFromThrust(TVector3 thrust, TVector3 p){
 /**************************************************************************************/
 
 //this is actually rapidity w/ pion mass assumption
+inline double ptFromThrust(TVector3 thrust, TVector3 p){
+  return p.Perp(thrust); 
+}
+
+inline double thetaFromThrust(TVector3 thrust, TVector3 p){
+  return p.Angle(thrust);
+}
+
 inline double etaFromThrust(TVector3 thrust, TVector3 p){
   float pl = p*thrust.Unit();//logitudinal momentum component
   float E = TMath::Power(p.Mag2()+0.13957*0.13957,0.5);//energy w/ mass assumption
   return 0.5*TMath::Log((E+pl)/(E-pl));//rapidity
 }
+
 inline double phiFromThrust(TVector3 thrust, TVector3 p){
   TVector3 pt = p-((p*thrust.Unit())*thrust.Unit());//pt vector
   TVector3 z = TVector3(0,0,1);
@@ -79,11 +83,53 @@ inline double phiFromThrust(TVector3 thrust, TVector3 p){
   else return -phi;
 }
 
-
+/**************************************************************************************/
 // BELLE Particle Definition 
+/**************************************************************************************/
 enum SIMPLEPID {BELLE_PHOTON, BELLE_ELECTRON, BELLE_PION, BELLE_MUON, BELLE_KAON, BELLE_PROTON};
 
+/**************************************************************************************/
 // ALEPH Particle Flow Classification
+/**************************************************************************************/
 enum SIMPLEPWFLAG {ALEPH_CHARGED_TRACK, ALEPH_CHARGED_LEPTONS1, ALEPH_CHARGED_LEPTONS2, ALEPH_V0, ALEPH_PHOTON, ALEPH_NEUTRAL_HADRON};
 
 
+/**************************************************************************************/
+// Calculate 2D correlation function ratios
+/**************************************************************************************/
+void calculateRatio(TH2F *h_2D, TH2F *h_2Dmix, TH2F *h_ratio)
+{
+    double normalization = h_2D->GetXaxis()->GetBinWidth(1)*h_2D->GetYaxis()->GetBinWidth(1);
+    double ratio;
+    double errrel_ratio;
+    double errrel_num;
+    double errrel_den;
+    
+    double b00_x=h_2Dmix->GetXaxis()->FindBin(0.);
+    double b00_y=h_2Dmix->GetYaxis()->FindBin(0.);
+    double B00=h_2Dmix->GetBinContent(b00_x,b00_y);
+    double errrel_B00=h_2Dmix->GetBinError(b00_x,b00_y)/B00;
+    
+    cout<<"value of B(0,0)="<<B00<<endl;
+    
+    cout<<"x axis "<<h_2Dmix->GetXaxis()->GetBinCenter(b00_x)<<endl;
+    cout<<"y axis "<<h_2Dmix->GetYaxis()->GetBinCenter(b00_y)<<endl;
+            
+    for (Int_t x=0;x<=h_2D->GetNbinsX();x++){        
+        for (Int_t y=0;y<=h_2D->GetNbinsY();y++){
+            if(h_2Dmix->GetBinContent(x,y)>0){
+                ratio=B00*(h_2D->GetBinContent(x,y)/h_2Dmix->GetBinContent(x,y));
+                errrel_num=h_2D->GetBinError(x,y)/h_2D->GetBinContent(x,y);
+                errrel_den=h_2Dmix->GetBinError(x,y)/h_2Dmix->GetBinContent(x,y);
+                // Yen-Jie: Take out the error of B00 for the moment since this is a global uncertainty
+		errrel_ratio=TMath::Sqrt(errrel_num*errrel_num+errrel_den*errrel_den);   // +errrel_B00*errrel_B00
+                
+                h_ratio->SetBinContent(x,y,ratio/normalization);
+                h_ratio->SetBinError(x,y,errrel_ratio*ratio/normalization);
+            } else {
+	      h_ratio->SetBinContent(x,y,0);
+	      h_ratio->SetBinError(x,y,0);
+	    }
+        }
+    }
+}
