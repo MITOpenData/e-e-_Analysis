@@ -1,5 +1,4 @@
 #path var + dir commands
-
 LOCAL=$(PWD)
 ROOT=`root-config --cflags --glibs`
 CXX=g++
@@ -26,6 +25,8 @@ clean:
 	rm -f $(LOCAL)/include/*~
 	rm -f $(LOCAL)/src/#*.*#
 	rm -f $(LOCAL)/src/*~
+	rm -f $(LOCAL)/bash/#*.*#
+	rm -f $(LOCAL)/bash/*~
 	rm -f $(LOCAL)/bin/*.exe
 	rmdir bin
 .PHONY: all

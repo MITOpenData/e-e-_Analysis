@@ -125,9 +125,24 @@ int scan(std::string inFileName, std::string outFileName="")
   while(std::getline(file,getStr)){
     if(getStr.size() == 0) continue;
     std::vector<std::string> num = processAlephString(getStr);
-    if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2))){ 
-      pData.nParticle=counterParticles;
 
+    // check the number of columns before assigning values
+    bool assumePID = false;
+    if(num.size() == 6) assumePID = false; 
+    else if(num.size() == 7) assumePID = true; 
+    else{//return, this is an invalid format (or fix code here if format valid
+      std::cout << "Number of columns for line \'" << getStr << "\' is invalid, size \'" << num.size() << "\'. return 1" << std::endl;
+      //gotta cleanup before return
+      delete tout;
+      delete jout;
+      hf->Close();
+      delete hf;
+
+      return 1;
+    }
+
+    if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2)) && check999(num.at(3))){ 
+      pData.nParticle=counterParticles;
       if(counterEntries>0) tout->Fill(); 
 
       //Processing particles->jets
@@ -166,7 +181,10 @@ int scan(std::string inFileName, std::string outFileName="")
     
     pData.charge[counterParticles]=_charge;
     pData.pwflag[counterParticles]=_pwflag;
-    pData.pid[counterParticles]=0;
+    //check before assigning PID
+    if(assumePID) pData.pid[counterParticles]=std::stoi(num.at(6));
+    else pData.pid[counterParticles]=-999;
+
     ++counterParticles;	
     ++counterEntries;	
   }
