@@ -20,6 +20,19 @@
 #include "include/jetData.h"
 #include "include/simpleJetMaker.h"
 
+bool getIsMC(std::string inStr)
+{
+  if(inStr.find("MC") != std::string::npos && inStr.find("Data") != std::string::npos) return true;
+  else return false;
+}
+
+bool getIsRecons(std::string inStr)
+{
+  if(!getIsMC(inStr)) return true;
+  if(inStr.find("_recons_") != std::string::npos) return true;
+  else return false;
+}
+
 //currently compatible with aleph filepaths
 int yearFromPath(std::string inStr)
 {
@@ -127,6 +140,13 @@ int scan(std::string inFileName, std::string outFileName="")
     return 1;
   }
 
+  if(fileList.size() == 0){
+    std::cout << "File list empty for input \'" << inFileName << "\'. return 1" << std::endl;
+    return 1;
+  }
+
+  const bool isMC = getIsMC(fileList.at(0));
+  const bool isRecons = getIsRecons(fileList.at(0));
 
   if(outFileName.size() == 0){
     outFileName = inFileName;
@@ -138,14 +158,34 @@ int scan(std::string inFileName, std::string outFileName="")
   //define jetMaker here so rParam can be used in jetTree name for clarity
   const double rParam = 0.4;
   simpleJetMaker jMaker(rParam);
+
+  const std::string partTreeName = "t";
+  const std::string genPartTreeName = "tgen";
   const std::string jetTreeName = "ak" + std::to_string(int(rParam*10)) + "JetTree";
+  const std::string genJetTreeName = "ak" + std::to_string(int(rParam*10)) + "GenJetTree";
+
+  std::string finalPartTreeName = partTreeName;
+  if(!isRecons) finalPartTreeName = genPartTreeName;
+  std::string finalJetTreeName = jetTreeName;
+  if(!isRecons) finalJetTreeName = genJetTreeName;
 
   TFile *hf = new TFile(outFileName.c_str(), "RECREATE");
-  TTree *tout = new TTree("t","");
-  TTree *jout = new TTree(jetTreeName.c_str(),"");
+  TTree *tout = new TTree(finalPartTreeName.c_str(), "");
+  TTree *jout = new TTree(finalJetTreeName.c_str(), "");
+
+  TTree *tgout=0;
+  TTree *jgout=0;
+
+  if(isRecons && isMC){
+    tgout = new TTree(genPartTreeName.c_str(),"");
+    jgout = new TTree(genJetTreeName.c_str(),"");
+  }
 
   particleData pData;
   jetData jData;
+
+  particleData pgData;
+  jetData jgData;
 
   tout->Branch("year", &pData.year, "year/I");
   tout->Branch("EventNo", &pData.EventNo,"EventNo/I");
@@ -171,10 +211,36 @@ int scan(std::string inFileName, std::string outFileName="")
   jout->Branch("jteta", jData.jteta,"jteta[nref]/F");
   jout->Branch("jtphi", jData.jtphi,"jtphi[nref]/F");
 
+  if(isRecons && isMC){
+    tgout->Branch("year", &pgData.year, "year/I");
+    tgout->Branch("EventNo", &pgData.EventNo,"EventNo/I");
+    tgout->Branch("RunNo", &pgData.RunNo,"RunNo/I");
+    tgout->Branch("Energy", &pgData.Energy,"Energy/F");
+    tgout->Branch("process", &pgData.process, "process/I");
+    tgout->Branch("nParticle", &pgData.nParticle,"nParticle/I");
+    tgout->Branch("px", pgData.px,"px[nParticle]/F");
+    tgout->Branch("py", pgData.py,"py[nParticle]/F");
+    tgout->Branch("pz", pgData.pz,"pz[nParticle]/F");
+    tgout->Branch("pt", pgData.pt,"pt[nParticle]/F");
+    tgout->Branch("pmag", pgData.pmag,"pmag[nParticle]/F");//Added later on
+    tgout->Branch("mass", pgData.mass,"mass[nParticle]/F");
+    tgout->Branch("eta", pgData.eta,"eta[nParticle]/F");
+    tgout->Branch("theta", pgData.theta,"theta[nParticle]/F");
+    tgout->Branch("phi", pgData.phi,"phi[nParticle]/F");
+    tgout->Branch("charge", pgData.charge,"charge[nParticle]/F");
+    tgout->Branch("pwflag", pgData.pwflag,"pwflag[nParticle]/I");
+    tgout->Branch("pid", pgData.pid,"pid[nParticle]/I");
+    
+    jgout->Branch("nref", &jgData.nref,"nref/I");
+    jgout->Branch("jtpt", jgData.jtpt,"jtpt[nref]/F");
+    jgout->Branch("jteta", jgData.jteta,"jteta[nref]/F");
+    jgout->Branch("jtphi", jgData.jtphi,"jtphi[nref]/F");
+  }
+
   for(unsigned int fI = 0; fI < fileList.size(); ++fI){
     const int year = yearFromPath(fileList.at(fI));
     const int process = processFromPath(fileList.at(fI));
-    // "/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph"
+
     std::ifstream file(Form("%s",fileList.at(fI).c_str()));
     std::string getStr;
     
@@ -257,6 +323,12 @@ int scan(std::string inFileName, std::string outFileName="")
     if(counterEntries>0) tout->Fill(); 
     processJets(particles, jMaker, &jData);
     if(counterEntries>0) jout->Fill();
+
+    if(isRecons && isMC){
+      std::string genFileStr = fileList.at(fI);
+      genFileStr.replace(genFileStr.find("_recons_"), 8, "_mctrue_aftercut_");
+      std::cout << genFileStr << std::endl;
+    }
   }
 
   hf->cd();
@@ -265,6 +337,13 @@ int scan(std::string inFileName, std::string outFileName="")
   delete tout;
   jout->Write("", TObject::kOverwrite);
   delete jout;
+
+  if(isMC && isRecons){
+    tgout->Write("", TObject::kOverwrite);
+    delete tgout;
+    jgout->Write("", TObject::kOverwrite);
+    delete jgout;
+  }
   
   hf->Close();
   delete hf;
