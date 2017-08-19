@@ -23,8 +23,8 @@
 //currently compatible with aleph filepaths
 int yearFromPath(std::string inStr)
 {
-  const int nY=4;
-  int years[nY] = {1997,1998,1999,2000};
+  const int nY=6;
+  int years[nY] = {1995,1996,1997,1998,1999,2000};
   for(int i = 0; i < nY; ++i){
     if(inStr.find("/"+ std::to_string(years[i]) + "/") != std::string::npos) return years[i];
     if(inStr.find("Data"+ std::to_string(years[i])) != std::string::npos) return years[i];
@@ -32,7 +32,6 @@ int yearFromPath(std::string inStr)
   std::cout << "Given string \'" << inStr << "\' does not contain valid year. return -1" << std::endl;
   return -1;
 }
-
 
 //implemented as according to here https://www.dropbox.com/s/zujvnpftoqb7w6k/MC_alephstatus.pdf?dl=0, s3, with mod for GGTT and GGUS
 int processFromPath(std::string inStr)
@@ -45,10 +44,20 @@ int processFromPath(std::string inStr)
   return -1;
 }
 
-
 std::vector<std::string> processAlephString(std::string inStr)
 {
+  bool addDummy = false;
+  if(inStr.find("ALEPH_DATA") != std::string::npos) addDummy = true;
+
+  const std::string goodChar = "0123456789-. ";
+  unsigned int pos = 0;
+  while(inStr.size() > pos){
+    if(goodChar.find(inStr.substr(pos,1)) == std::string::npos) inStr.replace(pos,1,"");
+    else ++pos;
+  }
+
   std::vector<std::string> retV;
+  if(addDummy){retV.push_back("-999."); retV.push_back("-999."); retV.push_back("-999."); retV.push_back("-999.");}
 
   while(inStr.size() != 0){
     while(inStr.substr(0,1).find(" ") != std::string::npos){inStr.replace(0,1,"");}
@@ -72,7 +81,6 @@ bool check999(std::string inStr)
   return false;
 }
 
-
 void processJets(std::vector<fastjet::PseudoJet> p, simpleJetMaker j, jetData *d)
 {
   d->nref = 0;
@@ -91,7 +99,6 @@ void processJets(std::vector<fastjet::PseudoJet> p, simpleJetMaker j, jetData *d
   return;
 }
 
-
 int scan(std::string inFileName, std::string outFileName="")
 {
   if(!checkFile(inFileName)){
@@ -99,14 +106,32 @@ int scan(std::string inFileName, std::string outFileName="")
     return 1;
   }
 
-  const int year = yearFromPath(inFileName);
-  const int process = processFromPath(inFileName);
-  // "/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph"
-  std::ifstream file(Form("%s",inFileName.c_str()));
-  std::string getStr;
-  
+  std::vector<std::string> fileList;
+  if(inFileName.size() < 5){
+    std::cout << "Given inFileName \'" << inFileName << "\' is invalid, return 1." << std::endl;
+    return 1;
+  }
+  else if(inFileName.substr(inFileName.size()-4, 4).find(".txt") != std::string::npos){
+    std::ifstream pathFile(inFileName.c_str());
+    std::string paths;
+    while(std::getline(pathFile, paths)){
+      if(paths.size() == 0) continue;
+      fileList.push_back(paths);
+    }
+    pathFile.close();
+  }
+  else if(inFileName.substr(inFileName.size()-5, 5).find(".list") != std::string::npos) fileList.push_back(inFileName);
+  else if(inFileName.substr(inFileName.size()-6, 6).find(".aleph") != std::string::npos) fileList.push_back(inFileName);
+  else{
+    std::cout << "Given inFileName \'" << inFileName << "\' is invalid, return 1." << std::endl;
+    return 1;
+  }
+
+
   if(outFileName.size() == 0){
-    outFileName = inFileName + ".root";
+    outFileName = inFileName;
+    if(outFileName.rfind(".") != std::string::npos) outFileName = outFileName.substr(0,outFileName.rfind("."));
+    outFileName = outFileName + ".root";
     while(outFileName.find("/") != std::string::npos){outFileName.replace(0, outFileName.find("/")+1,"");}
   }
 
@@ -146,93 +171,101 @@ int scan(std::string inFileName, std::string outFileName="")
   jout->Branch("jteta", jData.jteta,"jteta[nref]/F");
   jout->Branch("jtphi", jData.jtphi,"jtphi[nref]/F");
 
-  int counterEntries=0;
-  int counterParticles=0;
-  TLorentzVector v;
-
-  std::vector<fastjet::PseudoJet> particles;
-
-  while(std::getline(file,getStr)){
-    if(getStr.size() == 0) continue;
-    std::vector<std::string> num = processAlephString(getStr);
-
-    // check the number of columns before assigning values
-    bool assumePID = false;
-    if(num.size() == 6) assumePID = false; 
-    else if(num.size() == 7) assumePID = true; 
-    else{//return, this is an invalid format (or fix code here if format valid
-      std::cout << "Number of columns for line \'" << getStr << "\' is invalid, size \'" << num.size() << "\'. return 1" << std::endl;
-      //gotta cleanup before return
-      delete tout;
-      delete jout;
-      hf->Close();
-      delete hf;
-
-      return 1;
-    }
-
-    if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2)) && check999(num.at(3))){ 
-      pData.nParticle=counterParticles;
-      if(counterEntries>0) tout->Fill(); 
-
-      //Processing particles->jets
-      processJets(particles, jMaker, &jData);
-      if(counterEntries>0) jout->Fill();
-      //clear particles for next iteration clustering
-      particles.clear();
-
-      pData.year = year;
-      pData.process = process;
-      pData.RunNo = std::stoi(num.at(4));
-      pData.EventNo= std::stoi(num.at(5));
-      pData.Energy= std::stof(num.at(6));
-
-      counterParticles=0;   
-
-      continue;
-    }
-
-    float _px = std::stof(num.at(0));
-    float _py = std::stof(num.at(1));
-    float _pz = std::stof(num.at(2));
-    float _m = std::stof(num.at(3));
-    float _charge = std::stof(num.at(4));
-    int _pwflag = std::stoi(num.at(5));
-
-    pData.px[counterParticles]=_px;
-    pData.py[counterParticles]=_py;
-    pData.pz[counterParticles]=_pz;
-    pData.mass[counterParticles]=_m;
-    v.SetXYZM(_px,_py,_pz,_m);
-    particles.push_back(fastjet::PseudoJet(_px,_py,_pz,v.E()));
-    pData.pt[counterParticles]=v.Pt();
-    pData.pmag[counterParticles]=v.Rho(); //Added later on
-    pData.eta[counterParticles]=v.PseudoRapidity();
-    pData.theta[counterParticles]=v.Theta();
-    pData.phi[counterParticles]=v.Phi();
+  for(unsigned int fI = 0; fI < fileList.size(); ++fI){
+    const int year = yearFromPath(fileList.at(fI));
+    const int process = processFromPath(fileList.at(fI));
+    // "/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph"
+    std::ifstream file(Form("%s",fileList.at(fI).c_str()));
+    std::string getStr;
     
-    pData.charge[counterParticles]=_charge;
-    pData.pwflag[counterParticles]=_pwflag;
-    //check before assigning PID
-    if(assumePID) pData.pid[counterParticles]=std::stoi(num.at(6));
-    else pData.pid[counterParticles]=-999;
-
-    ++counterParticles;	
-    ++counterEntries;	
+    int counterEntries=0;
+    int counterParticles=0;
+    TLorentzVector v;
+    std::vector<fastjet::PseudoJet> particles;
+    while(std::getline(file,getStr)){
+      if(getStr.size() == 0) continue;
+      else if(getStr.find("END_EVENT") != std::string::npos) continue;
+      else if(getStr.find("END_FILE") != std::string::npos) continue;
+      std::vector<std::string> num = processAlephString(getStr);
+      
+      // check the number of columns before assigning values
+      bool assumePID = false;
+      if(num.size() == 6) assumePID = false; 
+      else if(num.size() == 7) assumePID = true; 
+      else{//return, this is an invalid format (or fix code here if format valid
+	std::cout << "Number of columns for line \'" << getStr << "\' is invalid, size \'" << num.size() << "\'. return 1" << std::endl;
+	//gotta cleanup before return
+	delete tout;
+	delete jout;
+	hf->Close();
+	delete hf;
+	
+	return 1;
+      }
+      
+      if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2)) && check999(num.at(3))){ 
+	pData.nParticle=counterParticles;
+	if(counterEntries>0) tout->Fill(); 
+	
+	//Processing particles->jets
+	processJets(particles, jMaker, &jData);
+	if(counterEntries>0) jout->Fill();
+	//clear particles for next iteration clustering
+	particles.clear();
+	
+	pData.year = year;
+	pData.process = process;
+	pData.RunNo = std::stoi(num.at(4));
+	pData.EventNo= std::stoi(num.at(5));
+	pData.Energy= std::stof(num.at(6));
+	
+	counterParticles=0;   
+	
+	continue;
+      }
+      
+      float _px = std::stof(num.at(0));
+      float _py = std::stof(num.at(1));
+      float _pz = std::stof(num.at(2));
+      float _m = std::stof(num.at(3));
+      float _charge = std::stof(num.at(4));
+      int _pwflag = std::stoi(num.at(5));
+      
+      pData.px[counterParticles]=_px;
+      pData.py[counterParticles]=_py;
+      pData.pz[counterParticles]=_pz;
+      pData.mass[counterParticles]=_m;
+      v.SetXYZM(_px,_py,_pz,_m);
+      particles.push_back(fastjet::PseudoJet(_px,_py,_pz,v.E()));
+      pData.pt[counterParticles]=v.Pt();
+      pData.pmag[counterParticles]=v.Rho(); //Added later on
+      pData.eta[counterParticles]=v.PseudoRapidity();
+      pData.theta[counterParticles]=v.Theta();
+      pData.phi[counterParticles]=v.Phi();
+      
+      pData.charge[counterParticles]=_charge;
+      pData.pwflag[counterParticles]=_pwflag;
+      //check before assigning PID
+      if(assumePID) pData.pid[counterParticles]=std::stoi(num.at(6));
+      else pData.pid[counterParticles]=-999;
+      
+      ++counterParticles;	
+      ++counterEntries;	
+    }
+    //Have to fill one last time since the condition for fill is dependent on NEXT EVENT existing, else we would lose last event per file
+    pData.nParticle=counterParticles;
+    if(counterEntries>0) tout->Fill(); 
+    processJets(particles, jMaker, &jData);
+    if(counterEntries>0) jout->Fill();
   }
-  //Have to fill one last time since the condition for fill is dependent on NEXT EVENT existing, else we would lose last event per file
-  pData.nParticle=counterParticles;
-  if(counterEntries>0) tout->Fill(); 
-  processJets(particles, jMaker, &jData);
-  if(counterEntries>0) jout->Fill();
 
   hf->cd();
-
+  
   tout->Write("", TObject::kOverwrite);
   delete tout;
   jout->Write("", TObject::kOverwrite);
   delete jout;
-
+  
   hf->Close();
   delete hf;
 
