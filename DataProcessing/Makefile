@@ -27,6 +27,8 @@ clean:
 	rm -f $(LOCAL)/src/*~
 	rm -f $(LOCAL)/bash/#*.*#
 	rm -f $(LOCAL)/bash/*~
+	rm -f $(LOCAL)/paths/#*.*#
+	rm -f $(LOCAL)/paths/*~
 	rm -f $(LOCAL)/bin/*.exe
 	rmdir bin
 .PHONY: all
