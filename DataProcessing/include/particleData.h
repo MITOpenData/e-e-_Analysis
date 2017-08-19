@@ -8,6 +8,8 @@ class particleData{
   int nParticle;
   int EventNo;
   int RunNo;
+  int year;
+  int process;
   float Energy;
   Float_t px[nMaxPart];
   Float_t py[nMaxPart];
