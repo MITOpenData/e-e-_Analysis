@@ -1571,7 +1571,6 @@
 /data/flowex/MCsamples/1999/202/ZNN/DIR001/LEP2MCZNNY1999E202_mctrue_aftercut-001.aleph
 /data/flowex/MCsamples/1999/202/ZNN/DIR002/LEP2MCZNNY1999E202_mctrue_aftercut-002.aleph
 /data/flowex/MCsamples/2000/205/GGBB/DIR001/LEP2MCGGBBY2000E205_mctrue_aftercut-001.aleph
-/data/flowex/MCsamples/2000/205/GGCC/DIR001/#LEP2MCGGCCY2000E205_mctrue_aftercut-001.aleph#
 /data/flowex/MCsamples/2000/205/GGCC/DIR001/LEP2MCGGCCY2000E205_mctrue_aftercut-001.aleph
 /data/flowex/MCsamples/2000/205/GGCC/DIR002/LEP2MCGGCCY2000E205_mctrue_aftercut-002.aleph
 /data/flowex/MCsamples/2000/205/GGCC/DIR003/LEP2MCGGCCY2000E205_mctrue_aftercut-003.aleph

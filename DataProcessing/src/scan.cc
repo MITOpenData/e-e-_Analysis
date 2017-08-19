@@ -33,6 +33,19 @@ int yearFromPath(std::string inStr)
   return -1;
 }
 
+
+//implemented as according to here https://www.dropbox.com/s/zujvnpftoqb7w6k/MC_alephstatus.pdf?dl=0, s3, with mod for GGTT and GGUS
+int processFromPath(std::string inStr)
+{
+  const int nProc = 13;
+  std::string proc[nProc] = {"GGBB", "GGCC", "GGSS", "GGTT", "GGUD", "KQQ", "KWENU", "KWW4F", "PZEE", "PZZ", "TT", "ZNN", "GGUS"};
+  for(int i = 0; i < nProc; ++i){
+    if(inStr.find("/" + proc[i] + "/") != std::string::npos) return i;
+  }
+  return -1;
+}
+
+
 std::vector<std::string> processAlephString(std::string inStr)
 {
   std::vector<std::string> retV;
@@ -87,6 +100,7 @@ int scan(std::string inFileName, std::string outFileName="")
   }
 
   const int year = yearFromPath(inFileName);
+  const int process = processFromPath(inFileName);
   // "/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph"
   std::ifstream file(Form("%s",inFileName.c_str()));
   std::string getStr;
@@ -168,6 +182,7 @@ int scan(std::string inFileName, std::string outFileName="")
       particles.clear();
 
       pData.year = year;
+      pData.process = process;
       pData.RunNo = std::stoi(num.at(4));
       pData.EventNo= std::stoi(num.at(5));
       pData.Energy= std::stof(num.at(6));

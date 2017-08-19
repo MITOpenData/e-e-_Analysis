@@ -1,7 +1,5 @@
 #!/bin/bash
-
 #made from command line option via Anthony - to be fixed
-
 for k in */; 
 do 
 
