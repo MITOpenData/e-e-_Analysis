@@ -20,6 +20,19 @@
 #include "include/jetData.h"
 #include "include/simpleJetMaker.h"
 
+//currently compatible with aleph filepaths
+int yearFromPath(std::string inStr)
+{
+  const int nY=4;
+  int years[nY] = {1997,1998,1999,2000};
+  for(int i = 0; i < nY; ++i){
+    if(inStr.find("/"+ std::to_string(years[i]) + "/") != std::string::npos) return years[i];
+    if(inStr.find("Data"+ std::to_string(years[i])) != std::string::npos) return years[i];
+  }
+  std::cout << "Given string \'" << inStr << "\' does not contain valid year. return -1" << std::endl;
+  return -1;
+}
+
 std::vector<std::string> processAlephString(std::string inStr)
 {
   std::vector<std::string> retV;
@@ -73,6 +86,7 @@ int scan(std::string inFileName, std::string outFileName="")
     return 1;
   }
 
+  const int year = yearFromPath(inFileName);
   // "/data/flowex/Datasamples/LEP2_MAIN/ROOTfiles/cleaned_ALEPH_Data-all.aleph"
   std::ifstream file(Form("%s",inFileName.c_str()));
   std::string getStr;
@@ -94,10 +108,12 @@ int scan(std::string inFileName, std::string outFileName="")
   particleData pData;
   jetData jData;
 
-  tout->Branch("nParticle", &pData.nParticle,"nParticle/I");
+  tout->Branch("year", &pData.year, "year/I");
   tout->Branch("EventNo", &pData.EventNo,"EventNo/I");
   tout->Branch("RunNo", &pData.RunNo,"RunNo/I");
   tout->Branch("Energy", &pData.Energy,"Energy/F");
+  tout->Branch("process", &pData.process, "process/I");
+  tout->Branch("nParticle", &pData.nParticle,"nParticle/I");
   tout->Branch("px", pData.px,"px[nParticle]/F");
   tout->Branch("py", pData.py,"py[nParticle]/F");
   tout->Branch("pz", pData.pz,"pz[nParticle]/F");
@@ -151,6 +167,7 @@ int scan(std::string inFileName, std::string outFileName="")
       //clear particles for next iteration clustering
       particles.clear();
 
+      pData.year = year;
       pData.RunNo = std::stoi(num.at(4));
       pData.EventNo= std::stoi(num.at(5));
       pData.Energy= std::stof(num.at(6));
