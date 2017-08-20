@@ -15,6 +15,7 @@
 #include "fastjet/PseudoJet.hh"
 
 //local dependencies
+#include "include/doLocalDebug.h"
 #include "include/checkMakeDir.h"
 #include "include/particleData.h"
 #include "include/jetData.h"
@@ -145,6 +146,8 @@ int scan(std::string inFileName, std::string outFileName="")
     return 1;
   }
 
+  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
   const bool isMC = getIsMC(fileList.at(0));
   const bool isRecons = getIsRecons(fileList.at(0));
 
@@ -174,6 +177,8 @@ int scan(std::string inFileName, std::string outFileName="")
   TFile *hf = new TFile(outFileName.c_str(), "RECREATE");
   TTree *tout = new TTree(finalPartTreeName.c_str(), "");
   TTree *jout = new TTree(finalJetTreeName.c_str(), "");
+
+  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
   TTree *tgout=0;
   TTree *jgout=0;
@@ -239,6 +244,8 @@ int scan(std::string inFileName, std::string outFileName="")
     jgout->Branch("jtphi", jgData.jtphi,"jtphi[nref]/F");
   }
 
+  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
   for(unsigned int fI = 0; fI < fileList.size(); ++fI){
     std::cout << "Processing \'" << fileList.at(fI) << "\'" << std::endl;
     const int year = yearFromPath(fileList.at(fI));
@@ -257,6 +264,7 @@ int scan(std::string inFileName, std::string outFileName="")
 
     while(std::getline(file,getStr)){
       if(getStr.size() == 0) continue;
+      else if(getStr.find("******") != std::string::npos) continue;
       else if(getStr.find("END_EVENT") != std::string::npos) continue;
       else if(getStr.find("END_FILE") != std::string::npos) continue;
       std::vector<std::string> num = processAlephString(getStr);
@@ -303,11 +311,12 @@ int scan(std::string inFileName, std::string outFileName="")
 	pData.RunNo = std::stoi(num.at(runPos));
 	pData.EventNo= std::stoi(num.at(evtPos));
 	pData.Energy= std::stof(num.at(ePos));
-	
+      
 	runNo.push_back(pData.RunNo);
 	evtNo.push_back(pData.EventNo);
 
 	counterParticles=0;   
+	++counterEntries;	
 	
 	continue;
       }
@@ -318,6 +327,8 @@ int scan(std::string inFileName, std::string outFileName="")
       float _m = std::stof(num.at(3));
       float _charge = std::stof(num.at(4));
       int _pwflag = std::stoi(num.at(5));
+
+      if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
       
       pData.px[counterParticles]=_px;
       pData.py[counterParticles]=_py;
@@ -338,7 +349,6 @@ int scan(std::string inFileName, std::string outFileName="")
       else pData.pid[counterParticles]=-999;
       
       ++counterParticles;	
-      ++counterEntries;	
     }
     //Have to fill one last time since the condition for fill is dependent on NEXT EVENT existing, else we would lose last event per file
     pData.nParticle=counterParticles;
@@ -346,7 +356,7 @@ int scan(std::string inFileName, std::string outFileName="")
     processJets(particles, jMaker, &jData);
     if(counterEntries>0) jout->Fill();
     file.close();
-
+  
     if(isRecons && isMC){
       std::string genFileStr = fileList.at(fI);
       genFileStr.replace(genFileStr.find("_recons_"), 8, "_mctrue_");
@@ -354,8 +364,10 @@ int scan(std::string inFileName, std::string outFileName="")
       std::ifstream fileGen(genFileStr.c_str());
       counterEntries=0;
       counterParticles=0;
+
       while(std::getline(fileGen,getStr)){
 	if(getStr.size() == 0) continue;
+	else if(getStr.find("******") != std::string::npos) continue;
 	else if(getStr.find("END_EVENT") != std::string::npos) continue;
 	else if(getStr.find("END_FILE") != std::string::npos) continue;
 	std::vector<std::string> num = processAlephString(getStr);
@@ -380,16 +392,22 @@ int scan(std::string inFileName, std::string outFileName="")
 	
 	  return 1;
 	}
+
+	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
       
 	if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2)) && check999(num.at(3))){ 
 	  pgData.nParticle=counterParticles;
 	  if(counterEntries>0) tgout->Fill(); 
-	
+	  
+	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;	
+
 	  //Processing particles->jets
 	  processJets(particles, jMaker, &jgData);
 	  if(counterEntries>0) jgout->Fill();
 	  //clear particles for next iteration clustering
 	  particles.clear();
+
+	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
 	  unsigned int runPos = 4;
 	  unsigned int evtPos = 5;
@@ -397,11 +415,17 @@ int scan(std::string inFileName, std::string outFileName="")
 	  
 	  if(check999(num.at(4))){runPos++; evtPos++; ePos++;}
 
+	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
 	  pgData.year = year;
 	  pgData.process = process;
 	  pgData.RunNo = std::stoi(num.at(runPos));
 	  pgData.EventNo= std::stoi(num.at(evtPos));
 	  pgData.Energy= std::stof(num.at(ePos));
+
+	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << ", " << genFileStr << ", " << counterEntries << ", " << evtNo.size() << std::endl;
+	  if(doLocalDebug) std::cout << pgData.RunNo << ", " << pgData.EventNo << std::endl;
+	  if(doLocalDebug) std::cout << runNo.at(counterEntries) << ", " << evtNo.at(counterEntries) << std::endl;
 	  
 	  if(pgData.RunNo != runNo.at(counterEntries) && pgData.EventNo != evtNo.at(counterEntries)){
 	    std::cout << "Gen entries dont match reco for file \'" << genFileStr << "\'. return 1" << std::endl;
@@ -409,28 +433,42 @@ int scan(std::string inFileName, std::string outFileName="")
 	    delete tout;
 	    delete jout;
 
+	    if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
 	    if(isMC && isRecons){
 	      delete tgout;
 	      delete jgout;
 	    }
-	    
+
+	    if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
 	    hf->Close();
 	    delete hf;
 	    
 	    return 1;
 	  }
 
+	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
 	  counterParticles=0;   
+
+	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 	  
+	  ++counterEntries;	
+
 	  continue;
 	}
       
+	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
 	float _px = std::stof(num.at(0));
 	float _py = std::stof(num.at(1));
 	float _pz = std::stof(num.at(2));
 	float _m = std::stof(num.at(3));
 	float _charge = std::stof(num.at(4));
 	int _pwflag = std::stoi(num.at(5));
+
+	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 	
 	pgData.px[counterParticles]=_px;
 	pgData.py[counterParticles]=_py;
@@ -443,28 +481,41 @@ int scan(std::string inFileName, std::string outFileName="")
 	pgData.eta[counterParticles]=v.PseudoRapidity();
 	pgData.theta[counterParticles]=v.Theta();
 	pgData.phi[counterParticles]=v.Phi();
+
+	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 	
 	pgData.charge[counterParticles]=_charge;
 	pgData.pwflag[counterParticles]=_pwflag;
 	//check before assigning PID
 	if(assumePID) pgData.pid[counterParticles]=std::stoi(num.at(6));
 	else pgData.pid[counterParticles]=-999;
-	
+
+	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+      
 	++counterParticles;	
-	++counterEntries;	
+
+	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
       }
       //Have to fill one last time since the condition for fill is dependent on NEXT EVENT existing, else we would lose last event per file
+      if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
       pgData.nParticle=counterParticles;
       if(counterEntries>0) tgout->Fill(); 
       processJets(particles, jMaker, &jgData);
       if(counterEntries>0) jgout->Fill();
       
+      if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
       fileGen.close();
     }
+
+    if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     
     runNo.clear();
     evtNo.clear();
   }
+
+  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
   hf->cd();
   
