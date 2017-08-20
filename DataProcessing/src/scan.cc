@@ -238,6 +238,7 @@ int scan(std::string inFileName, std::string outFileName="")
   }
 
   for(unsigned int fI = 0; fI < fileList.size(); ++fI){
+    std::cout << "Processing \'" << fileList.at(fI) << "\'" << std::endl;
     const int year = yearFromPath(fileList.at(fI));
     const int process = processFromPath(fileList.at(fI));
 
@@ -257,7 +258,7 @@ int scan(std::string inFileName, std::string outFileName="")
       // check the number of columns before assigning values
       bool assumePID = false;
       if(num.size() == 6) assumePID = false; 
-      else if(num.size() == 7) assumePID = true; 
+      else if(num.size() == 7 || num.size() == 8) assumePID = true; 
       else{//return, this is an invalid format (or fix code here if format valid
 	std::cout << "Number of columns for line \'" << getStr << "\' is invalid, size \'" << num.size() << "\'. return 1" << std::endl;
 	//gotta cleanup before return
@@ -278,12 +279,18 @@ int scan(std::string inFileName, std::string outFileName="")
 	if(counterEntries>0) jout->Fill();
 	//clear particles for next iteration clustering
 	particles.clear();
-	
+
+	unsigned int runPos = 4;
+	unsigned int evtPos = 5;
+	unsigned int ePos = 6;
+
+	if(check999(num.at(4))){runPos++; evtPos++; ePos++;}
+
 	pData.year = year;
 	pData.process = process;
-	pData.RunNo = std::stoi(num.at(4));
-	pData.EventNo= std::stoi(num.at(5));
-	pData.Energy= std::stof(num.at(6));
+	pData.RunNo = std::stoi(num.at(runPos));
+	pData.EventNo= std::stoi(num.at(evtPos));
+	pData.Energy= std::stof(num.at(ePos));
 	
 	counterParticles=0;   
 	
