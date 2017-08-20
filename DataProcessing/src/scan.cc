@@ -251,6 +251,10 @@ int scan(std::string inFileName, std::string outFileName="")
     int counterParticles=0;
     TLorentzVector v;
     std::vector<fastjet::PseudoJet> particles;
+
+    std::vector<int> runNo;
+    std::vector<int> evtNo;
+
     while(std::getline(file,getStr)){
       if(getStr.size() == 0) continue;
       else if(getStr.find("END_EVENT") != std::string::npos) continue;
@@ -266,6 +270,12 @@ int scan(std::string inFileName, std::string outFileName="")
 	//gotta cleanup before return
 	delete tout;
 	delete jout;
+
+	if(isMC && isRecons){
+	  delete tgout;
+	  delete jgout;
+	}
+	
 	hf->Close();
 	delete hf;
 	
@@ -294,6 +304,9 @@ int scan(std::string inFileName, std::string outFileName="")
 	pData.EventNo= std::stoi(num.at(evtPos));
 	pData.Energy= std::stof(num.at(ePos));
 	
+	runNo.push_back(pData.RunNo);
+	evtNo.push_back(pData.EventNo);
+
 	counterParticles=0;   
 	
 	continue;
@@ -332,12 +345,125 @@ int scan(std::string inFileName, std::string outFileName="")
     if(counterEntries>0) tout->Fill(); 
     processJets(particles, jMaker, &jData);
     if(counterEntries>0) jout->Fill();
+    file.close();
 
     if(isRecons && isMC){
       std::string genFileStr = fileList.at(fI);
       genFileStr.replace(genFileStr.find("_recons_"), 8, "_mctrue_");
-      std::cout << genFileStr << std::endl;
+
+      std::ifstream fileGen(genFileStr.c_str());
+      counterEntries=0;
+      counterParticles=0;
+      while(std::getline(fileGen,getStr)){
+	if(getStr.size() == 0) continue;
+	else if(getStr.find("END_EVENT") != std::string::npos) continue;
+	else if(getStr.find("END_FILE") != std::string::npos) continue;
+	std::vector<std::string> num = processAlephString(getStr);
+      
+	// check the number of columns before assigning values
+	bool assumePID = false;
+	if(num.size() == 6) assumePID = false; 
+	else if(num.size() == 7 || num.size() == 8) assumePID = true; 
+	else{//return, this is an invalid format (or fix code here if format valid
+	  std::cout << "Number of columns for line \'" << getStr << "\' is invalid, size \'" << num.size() << "\'. return 1" << std::endl;
+	  //gotta cleanup before return
+	  delete tout;
+	  delete jout;
+
+	  if(isMC && isRecons){
+	    delete tgout;
+	    delete jgout;
+	  }
+
+	  hf->Close();
+	  delete hf;
+	
+	  return 1;
+	}
+      
+	if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2)) && check999(num.at(3))){ 
+	  pgData.nParticle=counterParticles;
+	  if(counterEntries>0) tgout->Fill(); 
+	
+	  //Processing particles->jets
+	  processJets(particles, jMaker, &jgData);
+	  if(counterEntries>0) jgout->Fill();
+	  //clear particles for next iteration clustering
+	  particles.clear();
+
+	  unsigned int runPos = 4;
+	  unsigned int evtPos = 5;
+	  unsigned int ePos = 6;
+	  
+	  if(check999(num.at(4))){runPos++; evtPos++; ePos++;}
+
+	  pgData.year = year;
+	  pgData.process = process;
+	  pgData.RunNo = std::stoi(num.at(runPos));
+	  pgData.EventNo= std::stoi(num.at(evtPos));
+	  pgData.Energy= std::stof(num.at(ePos));
+	  
+	  if(pgData.RunNo != runNo.at(counterEntries) && pgData.EventNo != evtNo.at(counterEntries)){
+	    std::cout << "Gen entries dont match reco for file \'" << genFileStr << "\'. return 1" << std::endl;
+	    //gotta cleanup before return
+	    delete tout;
+	    delete jout;
+
+	    if(isMC && isRecons){
+	      delete tgout;
+	      delete jgout;
+	    }
+	    
+	    hf->Close();
+	    delete hf;
+	    
+	    return 1;
+	  }
+
+	  counterParticles=0;   
+	  
+	  continue;
+	}
+      
+	float _px = std::stof(num.at(0));
+	float _py = std::stof(num.at(1));
+	float _pz = std::stof(num.at(2));
+	float _m = std::stof(num.at(3));
+	float _charge = std::stof(num.at(4));
+	int _pwflag = std::stoi(num.at(5));
+	
+	pgData.px[counterParticles]=_px;
+	pgData.py[counterParticles]=_py;
+	pgData.pz[counterParticles]=_pz;
+	pgData.mass[counterParticles]=_m;
+	v.SetXYZM(_px,_py,_pz,_m);
+	particles.push_back(fastjet::PseudoJet(_px,_py,_pz,v.E()));
+	pgData.pt[counterParticles]=v.Pt();
+	pgData.pmag[counterParticles]=v.Rho(); //Added later on
+	pgData.eta[counterParticles]=v.PseudoRapidity();
+	pgData.theta[counterParticles]=v.Theta();
+	pgData.phi[counterParticles]=v.Phi();
+	
+	pgData.charge[counterParticles]=_charge;
+	pgData.pwflag[counterParticles]=_pwflag;
+	//check before assigning PID
+	if(assumePID) pgData.pid[counterParticles]=std::stoi(num.at(6));
+	else pgData.pid[counterParticles]=-999;
+	
+	++counterParticles;	
+	++counterEntries;	
+      }
+      //Have to fill one last time since the condition for fill is dependent on NEXT EVENT existing, else we would lose last event per file
+      pgData.nParticle=counterParticles;
+      if(counterEntries>0) tgout->Fill(); 
+      processJets(particles, jMaker, &jgData);
+      if(counterEntries>0) jgout->Fill();
+      
+      fileGen.close();
     }
+    
+    runNo.clear();
+    evtNo.clear();
   }
 
   hf->cd();
