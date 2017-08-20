@@ -22,7 +22,7 @@
 
 bool getIsMC(std::string inStr)
 {
-  if(inStr.find("MC") != std::string::npos && inStr.find("Data") != std::string::npos) return true;
+  if(inStr.find("MC") != std::string::npos && inStr.find("Data") == std::string::npos) return true;
   else return false;
 }
 
@@ -147,6 +147,8 @@ int scan(std::string inFileName, std::string outFileName="")
 
   const bool isMC = getIsMC(fileList.at(0));
   const bool isRecons = getIsRecons(fileList.at(0));
+
+  std::cout << "IsMC, recons: " << isMC << ", " << isRecons << std::endl;
 
   if(outFileName.size() == 0){
     outFileName = inFileName;
@@ -333,7 +335,7 @@ int scan(std::string inFileName, std::string outFileName="")
 
     if(isRecons && isMC){
       std::string genFileStr = fileList.at(fI);
-      genFileStr.replace(genFileStr.find("_recons_"), 8, "_mctrue_aftercut_");
+      genFileStr.replace(genFileStr.find("_recons_"), 8, "_mctrue_");
       std::cout << genFileStr << std::endl;
     }
   }
