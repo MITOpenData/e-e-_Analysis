@@ -13,11 +13,13 @@ MKDIR_BIN=mkdir -p $(LOCAL)/bin
 
 #programs to make
 
-all: mkdirBin scan.exe
+all: mkdirBin scan.exe countNEvt.exe
 mkdirBin:
 	$(MKDIR_BIN)
 scan.exe: src/scan.cc
 	$(CXX) $(CXXFLAGS) $(ROOT) $(FASTJET) -I $(LOCAL) -o bin/scan.exe src/scan.cc
+countNEvt.exe: src/countNEvt.C
+	$(CXX) $(CXXFLAGS) $(ROOT) $(FASTJET) -I $(LOCAL) -o bin/countNEvt.exe src/countNEvt.C
 clean:
 	rm -f *~
 	rm -f \#*.*#
@@ -27,6 +29,8 @@ clean:
 	rm -f $(LOCAL)/src/*~
 	rm -f $(LOCAL)/bash/#*.*#
 	rm -f $(LOCAL)/bash/*~
+	rm -f $(LOCAL)/paths/#*.*#
+	rm -f $(LOCAL)/paths/*~
 	rm -f $(LOCAL)/bin/*.exe
 	rmdir bin
 .PHONY: all
