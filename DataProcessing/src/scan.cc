@@ -217,7 +217,13 @@ int scan(std::string inFileName, std::string outFileName="")
   tout->Branch("charge", pData.charge,"charge[nParticle]/F");
   tout->Branch("pwflag", pData.pwflag,"pwflag[nParticle]/I");
   tout->Branch("pid", pData.pid,"pid[nParticle]/I");
-  
+ 
+  //thrust quantities
+  tout->Branch("TTheta",&eData.TTheta,"TTheta/F");
+  tout->Branch("TPhi",&eData.TPhi,"TPhi/F");
+  tout->Branch("TTheta_charged",&eData.TTheta_charged,"TTheta_charged/F");
+  tout->Branch("TPhi_charged",&eData.TPhi_charged,"TPhi_charged/F");
+ 
   //derived quantities
   tout->Branch("missP",&eData.missP,"missP/F");
   tout->Branch("missPt",&eData.missPt,"missPt/F");
@@ -256,6 +262,12 @@ int scan(std::string inFileName, std::string outFileName="")
     tgout->Branch("charge", pgData.charge,"charge[nParticle]/F");
     tgout->Branch("pwflag", pgData.pwflag,"pwflag[nParticle]/I");
     tgout->Branch("pid", pgData.pid,"pid[nParticle]/I");
+  
+    //thrust quantities
+    tgout->Branch("TTheta",&egData.TTheta,"TTheta/F");
+    tgout->Branch("TPhi",&egData.TPhi,"TPhi/F");
+    tgout->Branch("TTheta_charged",&egData.TTheta_charged,"TTheta_charged/F");
+    tgout->Branch("TPhi_charged",&egData.TPhi_charged,"TPhi_charged/F");
 
     //derived quantities
     tgout->Branch("missP",&egData.missP,"missP/F");
@@ -294,7 +306,9 @@ int scan(std::string inFileName, std::string outFileName="")
     std::vector<int> runNo;
     std::vector<int> evtNo;
     TVector3 netP = TVector3(0,0,0);
+    TVector3 thrust = TVector3(0,0,0);
     TVector3 netP_charged = TVector3(0,0,0);
+    TVector3 thrust_charged = TVector3(0,0,0);
     int nTrk=0;
     int nTrk_GT0p4=0;
     int nTrk_GT0p4Thrust=0;
@@ -327,8 +341,16 @@ int scan(std::string inFileName, std::string outFileName="")
 	return 1;
       }
       
-      if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2)) && check999(num.at(3))){ 
+      if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2)) && check999(num.at(3))){
 	pData.nParticle=counterParticles;
+        thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz); 
+        thrust_charged = getChargedThrust(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag);
+        eData.TTheta = thrust.Theta();
+        eData.TPhi = thrust.Phi();
+        eData.TTheta_charged = thrust_charged.Theta();
+        eData.TPhi_charged = thrust_charged.Phi();
+      
+
 	if(counterEntries>0) tout->Fill(); 
 	
 	//Processing particles->jets
@@ -353,7 +375,9 @@ int scan(std::string inFileName, std::string outFileName="")
 	evtNo.push_back(pData.EventNo);
 
         netP = TVector3(0,0,0);
+        thrust = TVector3(0,0,0);
         netP_charged = TVector3(0,0,0);
+        thrust_charged = TVector3(0,0,0);
         nTrk=0;
         nTrk_GT0p4=0;
         nTrk_GT0p4Thrust=0;
@@ -428,7 +452,9 @@ int scan(std::string inFileName, std::string outFileName="")
       counterEntries=0;
       counterParticles=0;
       netP = TVector3(0,0,0);
+      thrust = TVector3(0,0,0);
       netP_charged = TVector3(0,0,0);
+      thrust_charged = TVector3(0,0,0);
       nTrk=0;
       nTrk_GT0p4=0;
       nTrk_GT0p4Thrust=0;
@@ -465,6 +491,14 @@ int scan(std::string inFileName, std::string outFileName="")
       
 	if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2)) && check999(num.at(3))){ 
 	  pgData.nParticle=counterParticles;
+          
+          thrust = getThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz); 
+          thrust_charged = getChargedThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag);
+          egData.TTheta = thrust.Theta();
+          egData.TPhi = thrust.Phi();
+          egData.TTheta_charged = thrust_charged.Theta();
+          egData.TPhi_charged = thrust_charged.Phi();
+
 	  if(counterEntries>0) tgout->Fill(); 
 	  
 	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;	
@@ -492,7 +526,9 @@ int scan(std::string inFileName, std::string outFileName="")
 	  pgData.Energy= std::stof(num.at(ePos));
 
           netP = TVector3(0,0,0);
+          thrust = TVector3(0,0,0);
           netP_charged = TVector3(0,0,0);
+          thrust_charged = TVector3(0,0,0);
           nTrk=0;
           nTrk_GT0p4=0;
           nTrk_GT0p4Thrust=0;

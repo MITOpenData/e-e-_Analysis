@@ -14,6 +14,12 @@ class eventData{
   Int_t nChargedHadrons;
   Int_t nChargedHadrons_GT0p4;
   Int_t nChargedHadrons_GT0p4Thrust;
+
+  //thrust axis variables
+  Float_t TTheta;
+  Float_t TPhi;
+  Float_t TTheta_charged;
+  Float_t TPhi_charged;
 };
 
 #endif
