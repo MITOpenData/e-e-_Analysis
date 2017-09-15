@@ -9,6 +9,7 @@
 #include <TFile.h>
 #include <TTree.h>
 #include "TLorentzVector.h"
+#include "TVector3.h"
 #include "TNamed.h"
 
 //fastjet dependencies
@@ -18,8 +19,10 @@
 #include "include/doLocalDebug.h"
 #include "include/checkMakeDir.h"
 #include "include/particleData.h"
+#include "include/eventData.h"
 #include "include/jetData.h"
 #include "include/simpleJetMaker.h"
+#include "include/thrustTools.h"
 
 bool getIsMC(std::string inStr)
 {
@@ -190,9 +193,11 @@ int scan(std::string inFileName, std::string outFileName="")
 
   particleData pData;
   jetData jData;
+  eventData eData;
 
   particleData pgData;
   jetData jgData;
+  eventData egData;
 
   tout->Branch("year", &pData.year, "year/I");
   tout->Branch("EventNo", &pData.EventNo,"EventNo/I");
@@ -212,11 +217,39 @@ int scan(std::string inFileName, std::string outFileName="")
   tout->Branch("charge", pData.charge,"charge[nParticle]/F");
   tout->Branch("pwflag", pData.pwflag,"pwflag[nParticle]/I");
   tout->Branch("pid", pData.pid,"pid[nParticle]/I");
+ 
+  //thrust quantities
+  tout->Branch("TTheta",&eData.TTheta,"TTheta/F");
+  tout->Branch("TPhi",&eData.TPhi,"TPhi/F");
+  tout->Branch("TTheta_charged",&eData.TTheta_charged,"TTheta_charged/F");
+  tout->Branch("TPhi_charged",&eData.TPhi_charged,"TPhi_charged/F");
+  tout->Branch("pt_wrtThr", pData.pt_wrtThr,"pt_wrtThr[nParticle]/F");
+  tout->Branch("eta_wrtThr", pData.eta_wrtThr,"eta_wrtThr[nParticle]/F");
+  tout->Branch("theta_wrtThr", pData.theta_wrtThr,"theta_wrtThr[nParticle]/F");
+  tout->Branch("phi_wrtThr", pData.phi_wrtThr,"phi_wrtThr[nParticle]/F");
+  tout->Branch("pt_wrtChThr", pData.pt_wrtChThr,"pt_wrtChThr[nParticle]/F");
+  tout->Branch("eta_wrtChThr", pData.eta_wrtChThr,"eta_wrtChThr[nParticle]/F");
+  tout->Branch("theta_wrtChThr", pData.theta_wrtChThr,"theta_wrtChThr[nParticle]/F");
+  tout->Branch("phi_wrtChThr", pData.phi_wrtChThr,"phi_wrtChThr[nParticle]/F");
+ 
+  //derived quantities
+  tout->Branch("missP",&eData.missP,"missP/F");
+  tout->Branch("missPt",&eData.missPt,"missPt/F");
+  tout->Branch("missTheta",&eData.missTheta,"missTheta/F");
+  tout->Branch("missPhi",&eData.missPhi,"missPhi/F");
+  tout->Branch("missChargedP",&eData.missChargedP,"missP/F");
+  tout->Branch("missChargedPt",&eData.missChargedPt,"missChargedPt/F");
+  tout->Branch("missChargedTheta",&eData.missChargedTheta,"missChargedTheta/F");
+  tout->Branch("missChargedPhi",&eData.missChargedPhi,"missChargedPhi/F");
+  tout->Branch("nChargedHadrons",&eData.nChargedHadrons,"nChargedHadrons/I");
+  tout->Branch("nChargedHadrons_GT0p4",&eData.nChargedHadrons_GT0p4,"nChargedHadrons_GT0p4/I");
+  tout->Branch("nChargedHadrons_GT0p4Thrust",&eData.nChargedHadrons_GT0p4Thrust,"nChargedHadrons_GT0p4Thrust/I");
 
   jout->Branch("nref", &jData.nref,"nref/I");
   jout->Branch("jtpt", jData.jtpt,"jtpt[nref]/F");
   jout->Branch("jteta", jData.jteta,"jteta[nref]/F");
   jout->Branch("jtphi", jData.jtphi,"jtphi[nref]/F");
+
 
   if(isRecons && isMC){
     tgout->Branch("year", &pgData.year, "year/I");
@@ -237,6 +270,33 @@ int scan(std::string inFileName, std::string outFileName="")
     tgout->Branch("charge", pgData.charge,"charge[nParticle]/F");
     tgout->Branch("pwflag", pgData.pwflag,"pwflag[nParticle]/I");
     tgout->Branch("pid", pgData.pid,"pid[nParticle]/I");
+  
+    //thrust quantities
+    tgout->Branch("TTheta",&egData.TTheta,"TTheta/F");
+    tgout->Branch("TPhi",&egData.TPhi,"TPhi/F");
+    tgout->Branch("TTheta_charged",&egData.TTheta_charged,"TTheta_charged/F");
+    tgout->Branch("TPhi_charged",&egData.TPhi_charged,"TPhi_charged/F");
+    tgout->Branch("pt_wrtThr", pgData.pt_wrtThr,"pt_wrtThr[nParticle]/F");
+    tgout->Branch("eta_wrtThr", pgData.eta_wrtThr,"eta_wrtThr[nParticle]/F");
+    tgout->Branch("theta_wrtThr", pgData.theta_wrtThr,"theta_wrtThr[nParticle]/F");
+    tgout->Branch("phi_wrtThr", pgData.phi_wrtThr,"phi_wrtThr[nParticle]/F");
+    tgout->Branch("pt_wrtChThr", pgData.pt_wrtChThr,"pt_wrtChThr[nParticle]/F");
+    tgout->Branch("eta_wrtChThr", pgData.eta_wrtChThr,"eta_wrtChThr[nParticle]/F");
+    tgout->Branch("theta_wrtChThr", pgData.theta_wrtChThr,"theta_wrtChThr[nParticle]/F");
+    tgout->Branch("phi_wrtChThr", pgData.phi_wrtChThr,"phi_wrtChThr[nParticle]/F");
+
+    //derived quantities
+    tgout->Branch("missP",&egData.missP,"missP/F");
+    tgout->Branch("missPt",&egData.missPt,"missPt/F");
+    tgout->Branch("missTheta",&egData.missTheta,"missTheta/F");
+    tgout->Branch("missPhi",&egData.missPhi,"missPhi/F");
+    tgout->Branch("missChargedP",&egData.missChargedP,"missP/F");
+    tgout->Branch("missChargedPt",&egData.missChargedPt,"missChargedPt/F");
+    tgout->Branch("missChargedTheta",&egData.missChargedTheta,"missChargedTheta/F");
+    tgout->Branch("missChargedPhi",&egData.missChargedPhi,"missChargedPhi/F");
+    tgout->Branch("nChargedHadrons",&egData.nChargedHadrons,"nChargedHadrons/I");
+    tgout->Branch("nChargedHadrons_GT0p4",&egData.nChargedHadrons_GT0p4,"nChargedHadrons_GT0p4/I");
+    tgout->Branch("nChargedHadrons_GT0p4Thrust",&egData.nChargedHadrons_GT0p4Thrust,"nChargedHadrons_GT0p4Thrust/I");
     
     jgout->Branch("nref", &jgData.nref,"nref/I");
     jgout->Branch("jtpt", jgData.jtpt,"jtpt[nref]/F");
@@ -261,6 +321,13 @@ int scan(std::string inFileName, std::string outFileName="")
 
     std::vector<int> runNo;
     std::vector<int> evtNo;
+    TVector3 netP = TVector3(0,0,0);
+    TVector3 thrust = TVector3(0,0,0);
+    TVector3 netP_charged = TVector3(0,0,0);
+    TVector3 thrust_charged = TVector3(0,0,0);
+    int nTrk=0;
+    int nTrk_GT0p4=0;
+    int nTrk_GT0p4Thrust=0;
 
     while(std::getline(file,getStr)){
       if(getStr.size() == 0) continue;
@@ -290,8 +357,17 @@ int scan(std::string inFileName, std::string outFileName="")
 	return 1;
       }
       
-      if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2)) && check999(num.at(3))){ 
+      if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2)) && check999(num.at(3))){
 	pData.nParticle=counterParticles;
+        thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz); 
+        thrust_charged = getChargedThrust(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag);
+        setThrustVariables(&pData, &eData, thrust, thrust_charged);
+        eData.TTheta = thrust.Theta();
+        eData.TPhi = thrust.Phi();
+        eData.TTheta_charged = thrust_charged.Theta();
+        eData.TPhi_charged = thrust_charged.Phi();
+      
+
 	if(counterEntries>0) tout->Fill(); 
 	
 	//Processing particles->jets
@@ -314,6 +390,14 @@ int scan(std::string inFileName, std::string outFileName="")
       
 	runNo.push_back(pData.RunNo);
 	evtNo.push_back(pData.EventNo);
+
+        netP = TVector3(0,0,0);
+        thrust = TVector3(0,0,0);
+        netP_charged = TVector3(0,0,0);
+        thrust_charged = TVector3(0,0,0);
+        nTrk=0;
+        nTrk_GT0p4=0;
+        nTrk_GT0p4Thrust=0;
 
 	counterParticles=0;   
 	++counterEntries;	
@@ -347,11 +431,39 @@ int scan(std::string inFileName, std::string outFileName="")
       //check before assigning PID
       if(assumePID) pData.pid[counterParticles]=std::stoi(num.at(6));
       else pData.pid[counterParticles]=-999;
-      
+     
+      //missing momentum calculation and multiplicity calculation
+      netP -= TVector3(_px,_py,_pz);
+      if(_pwflag==0){
+        netP_charged -= TVector3(_px,_py,_pz);
+        nTrk++;
+        if(v.Pt()>0.4) nTrk_GT0p4++; 
+        if(v.Pt()>0.4) nTrk_GT0p4Thrust++; 
+      } 
+      eData.missP = netP.Mag();
+      eData.missPt = netP.Perp();
+      eData.missTheta = netP.Theta();
+      eData.missPhi = netP.Phi();
+      eData.missChargedP = netP_charged.Mag();
+      eData.missChargedPt = netP_charged.Perp();
+      eData.missChargedTheta = netP_charged.Theta();
+      eData.missChargedPhi = netP_charged.Phi();
+      eData.nChargedHadrons = nTrk;
+      eData.nChargedHadrons_GT0p4 = nTrk_GT0p4; 
+      eData.nChargedHadrons_GT0p4Thrust = nTrk_GT0p4Thrust; 
+ 
       ++counterParticles;	
     }
     //Have to fill one last time since the condition for fill is dependent on NEXT EVENT existing, else we would lose last event per file
     pData.nParticle=counterParticles;
+    thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz); 
+    thrust_charged = getChargedThrust(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag);
+    setThrustVariables(&pData, &eData, thrust, thrust_charged);
+    eData.TTheta = thrust.Theta();
+    eData.TPhi = thrust.Phi();
+    eData.TTheta_charged = thrust_charged.Theta();
+    eData.TPhi_charged = thrust_charged.Phi();
+    
     if(counterEntries>0) tout->Fill(); 
     processJets(particles, jMaker, &jData);
     if(counterEntries>0) jout->Fill();
@@ -364,6 +476,13 @@ int scan(std::string inFileName, std::string outFileName="")
       std::ifstream fileGen(genFileStr.c_str());
       counterEntries=0;
       counterParticles=0;
+      netP = TVector3(0,0,0);
+      thrust = TVector3(0,0,0);
+      netP_charged = TVector3(0,0,0);
+      thrust_charged = TVector3(0,0,0);
+      nTrk=0;
+      nTrk_GT0p4=0;
+      nTrk_GT0p4Thrust=0;
 
       while(std::getline(fileGen,getStr)){
 	if(getStr.size() == 0) continue;
@@ -397,6 +516,15 @@ int scan(std::string inFileName, std::string outFileName="")
       
 	if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2)) && check999(num.at(3))){ 
 	  pgData.nParticle=counterParticles;
+          
+          thrust = getThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz); 
+          thrust_charged = getChargedThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag);
+          setThrustVariables(&pgData, &egData, thrust, thrust_charged);
+          egData.TTheta = thrust.Theta();
+          egData.TPhi = thrust.Phi();
+          egData.TTheta_charged = thrust_charged.Theta();
+          egData.TPhi_charged = thrust_charged.Phi();
+
 	  if(counterEntries>0) tgout->Fill(); 
 	  
 	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;	
@@ -422,6 +550,14 @@ int scan(std::string inFileName, std::string outFileName="")
 	  pgData.RunNo = std::stoi(num.at(runPos));
 	  pgData.EventNo= std::stoi(num.at(evtPos));
 	  pgData.Energy= std::stof(num.at(ePos));
+
+          netP = TVector3(0,0,0);
+          thrust = TVector3(0,0,0);
+          netP_charged = TVector3(0,0,0);
+          thrust_charged = TVector3(0,0,0);
+          nTrk=0;
+          nTrk_GT0p4=0;
+          nTrk_GT0p4Thrust=0;
 
 	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << ", " << genFileStr << ", " << counterEntries << ", " << evtNo.size() << std::endl;
 	  if(doLocalDebug) std::cout << pgData.RunNo << ", " << pgData.EventNo << std::endl;
@@ -491,6 +627,26 @@ int scan(std::string inFileName, std::string outFileName="")
 	else pgData.pid[counterParticles]=-999;
 
 	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+        //missing momentum calculation and multiplicity calculation
+        netP -= TVector3(_px,_py,_pz);
+        if(_pwflag==0){
+          netP_charged -= TVector3(_px,_py,_pz);
+          nTrk++;
+          if(v.Pt()>0.4) nTrk_GT0p4++; 
+          if(v.Pt()>0.4) nTrk_GT0p4Thrust++; 
+        } 
+        egData.missP = netP.Mag();
+        egData.missPt = netP.Perp();
+        egData.missTheta = netP.Theta();
+        egData.missPhi = netP.Phi();
+        egData.missChargedP = netP_charged.Mag();
+        egData.missChargedPt = netP_charged.Perp();
+        egData.missChargedTheta = netP_charged.Theta();
+        egData.missChargedPhi = netP_charged.Phi();
+        egData.nChargedHadrons = nTrk;
+        egData.nChargedHadrons_GT0p4 = nTrk_GT0p4; 
+        egData.nChargedHadrons_GT0p4Thrust = nTrk_GT0p4Thrust; 
       
 	++counterParticles;	
 
@@ -500,6 +656,14 @@ int scan(std::string inFileName, std::string outFileName="")
       if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
       pgData.nParticle=counterParticles;
+      thrust = getThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz); 
+      thrust_charged = getChargedThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag);
+      setThrustVariables(&pgData, &egData, thrust, thrust_charged);
+      egData.TTheta = thrust.Theta();
+      egData.TPhi = thrust.Phi();
+      egData.TTheta_charged = thrust_charged.Theta();
+      egData.TPhi_charged = thrust_charged.Phi();
+      
       if(counterEntries>0) tgout->Fill(); 
       processJets(particles, jMaker, &jgData);
       if(counterEntries>0) jgout->Fill();
