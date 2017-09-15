@@ -223,6 +223,14 @@ int scan(std::string inFileName, std::string outFileName="")
   tout->Branch("TPhi",&eData.TPhi,"TPhi/F");
   tout->Branch("TTheta_charged",&eData.TTheta_charged,"TTheta_charged/F");
   tout->Branch("TPhi_charged",&eData.TPhi_charged,"TPhi_charged/F");
+  tout->Branch("pt_wrtThr", pData.pt_wrtThr,"pt_wrtThr[nParticle]/F");
+  tout->Branch("eta_wrtThr", pData.eta_wrtThr,"eta_wrtThr[nParticle]/F");
+  tout->Branch("theta_wrtThr", pData.theta_wrtThr,"theta_wrtThr[nParticle]/F");
+  tout->Branch("phi_wrtThr", pData.phi_wrtThr,"phi_wrtThr[nParticle]/F");
+  tout->Branch("pt_wrtChThr", pData.pt_wrtChThr,"pt_wrtChThr[nParticle]/F");
+  tout->Branch("eta_wrtChThr", pData.eta_wrtChThr,"eta_wrtChThr[nParticle]/F");
+  tout->Branch("theta_wrtChThr", pData.theta_wrtChThr,"theta_wrtChThr[nParticle]/F");
+  tout->Branch("phi_wrtChThr", pData.phi_wrtChThr,"phi_wrtChThr[nParticle]/F");
  
   //derived quantities
   tout->Branch("missP",&eData.missP,"missP/F");
@@ -268,6 +276,14 @@ int scan(std::string inFileName, std::string outFileName="")
     tgout->Branch("TPhi",&egData.TPhi,"TPhi/F");
     tgout->Branch("TTheta_charged",&egData.TTheta_charged,"TTheta_charged/F");
     tgout->Branch("TPhi_charged",&egData.TPhi_charged,"TPhi_charged/F");
+    tgout->Branch("pt_wrtThr", pgData.pt_wrtThr,"pt_wrtThr[nParticle]/F");
+    tgout->Branch("eta_wrtThr", pgData.eta_wrtThr,"eta_wrtThr[nParticle]/F");
+    tgout->Branch("theta_wrtThr", pgData.theta_wrtThr,"theta_wrtThr[nParticle]/F");
+    tgout->Branch("phi_wrtThr", pgData.phi_wrtThr,"phi_wrtThr[nParticle]/F");
+    tgout->Branch("pt_wrtChThr", pgData.pt_wrtChThr,"pt_wrtChThr[nParticle]/F");
+    tgout->Branch("eta_wrtChThr", pgData.eta_wrtChThr,"eta_wrtChThr[nParticle]/F");
+    tgout->Branch("theta_wrtChThr", pgData.theta_wrtChThr,"theta_wrtChThr[nParticle]/F");
+    tgout->Branch("phi_wrtChThr", pgData.phi_wrtChThr,"phi_wrtChThr[nParticle]/F");
 
     //derived quantities
     tgout->Branch("missP",&egData.missP,"missP/F");
@@ -345,6 +361,7 @@ int scan(std::string inFileName, std::string outFileName="")
 	pData.nParticle=counterParticles;
         thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz); 
         thrust_charged = getChargedThrust(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag);
+        setThrustVariables(&pData, &eData, thrust, thrust_charged);
         eData.TTheta = thrust.Theta();
         eData.TPhi = thrust.Phi();
         eData.TTheta_charged = thrust_charged.Theta();
@@ -439,12 +456,13 @@ int scan(std::string inFileName, std::string outFileName="")
     }
     //Have to fill one last time since the condition for fill is dependent on NEXT EVENT existing, else we would lose last event per file
     pData.nParticle=counterParticles;
-    thrust = getThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz); 
-    thrust_charged = getChargedThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag);
-    egData.TTheta = thrust.Theta();
-    egData.TPhi = thrust.Phi();
-    egData.TTheta_charged = thrust_charged.Theta();
-    egData.TPhi_charged = thrust_charged.Phi();
+    thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz); 
+    thrust_charged = getChargedThrust(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag);
+    setThrustVariables(&pData, &eData, thrust, thrust_charged);
+    eData.TTheta = thrust.Theta();
+    eData.TPhi = thrust.Phi();
+    eData.TTheta_charged = thrust_charged.Theta();
+    eData.TPhi_charged = thrust_charged.Phi();
     
     if(counterEntries>0) tout->Fill(); 
     processJets(particles, jMaker, &jData);
@@ -501,6 +519,7 @@ int scan(std::string inFileName, std::string outFileName="")
           
           thrust = getThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz); 
           thrust_charged = getChargedThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag);
+          setThrustVariables(&pgData, &egData, thrust, thrust_charged);
           egData.TTheta = thrust.Theta();
           egData.TPhi = thrust.Phi();
           egData.TTheta_charged = thrust_charged.Theta();
@@ -639,6 +658,7 @@ int scan(std::string inFileName, std::string outFileName="")
       pgData.nParticle=counterParticles;
       thrust = getThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz); 
       thrust_charged = getChargedThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag);
+      setThrustVariables(&pgData, &egData, thrust, thrust_charged);
       egData.TTheta = thrust.Theta();
       egData.TPhi = thrust.Phi();
       egData.TTheta_charged = thrust_charged.Theta();

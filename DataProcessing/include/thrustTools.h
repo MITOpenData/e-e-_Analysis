@@ -4,6 +4,8 @@
 #include "TVector3.h"
 #include "TMath.h"
 #include <vector>
+#include "particleData.h"
+#include "eventData.h"
 
 double dphi(double phi1,double phi2)
 {
@@ -39,6 +41,25 @@ inline double phiFromThrust(TVector3 thrust, TVector3 p){
   //determine sign of phi based on cross product of pt and origin
   if( (phiOrigin.Cross(pt.Unit()))*thrust >= 0) return phi;
   else return -phi;
+}
+
+void setThrustVariables(particleData *p, eventData *e, TVector3 thrust, TVector3 chThrust){
+  int nTrk = 0;
+  for(int i = 0; i< p->nParticle; i++){
+    TVector3 part = TVector3(p->px[i], p->py[i], p->pz[i]);
+    p->pt_wrtThr[i] = ptFromThrust(thrust, part);
+    p->eta_wrtThr[i] = etaFromThrust(thrust, part);
+    p->theta_wrtThr[i] = thetaFromThrust(thrust, part);
+    p->phi_wrtThr[i] = phiFromThrust(thrust, part);
+    
+    p->pt_wrtChThr[i] = ptFromThrust(chThrust, part);
+    p->eta_wrtChThr[i] = etaFromThrust(chThrust, part);
+    p->theta_wrtChThr[i] = thetaFromThrust(chThrust, part);
+    p->phi_wrtChThr[i] = phiFromThrust(chThrust, part);
+    
+    if(p->pwflag[i]==0 && p->pt_wrtThr[i]>0.4) nTrk++;
+  }
+  e->nChargedHadrons_GT0p4Thrust = nTrk;
 }
 
 //based on code from herwig: http://herwig.hepforge.org/svn/tags/herwig-2-0-beta/Analysis/EventShapes.cc
