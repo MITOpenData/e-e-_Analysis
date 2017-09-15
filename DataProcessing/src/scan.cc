@@ -439,6 +439,13 @@ int scan(std::string inFileName, std::string outFileName="")
     }
     //Have to fill one last time since the condition for fill is dependent on NEXT EVENT existing, else we would lose last event per file
     pData.nParticle=counterParticles;
+    thrust = getThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz); 
+    thrust_charged = getChargedThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag);
+    egData.TTheta = thrust.Theta();
+    egData.TPhi = thrust.Phi();
+    egData.TTheta_charged = thrust_charged.Theta();
+    egData.TPhi_charged = thrust_charged.Phi();
+    
     if(counterEntries>0) tout->Fill(); 
     processJets(particles, jMaker, &jData);
     if(counterEntries>0) jout->Fill();
@@ -630,6 +637,13 @@ int scan(std::string inFileName, std::string outFileName="")
       if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
       pgData.nParticle=counterParticles;
+      thrust = getThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz); 
+      thrust_charged = getChargedThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag);
+      egData.TTheta = thrust.Theta();
+      egData.TPhi = thrust.Phi();
+      egData.TTheta_charged = thrust_charged.Theta();
+      egData.TPhi_charged = thrust_charged.Phi();
+      
       if(counterEntries>0) tgout->Fill(); 
       processJets(particles, jMaker, &jgData);
       if(counterEntries>0) jgout->Fill();
