@@ -40,8 +40,8 @@ bool getIsRecons(std::string inStr)
 //currently compatible with aleph filepaths
 int yearFromPath(std::string inStr)
 {
-  const int nY=6;
-  int years[nY] = {1995,1996,1997,1998,1999,2000};
+  const int nY=10;
+  int years[nY] = {1991,1992,1993,1994,1995,1996,1997,1998,1999,2000};
   for(int i = 0; i < nY; ++i){
     if(inStr.find("/"+ std::to_string(years[i]) + "/") != std::string::npos) return years[i];
     if(inStr.find("Data"+ std::to_string(years[i])) != std::string::npos) return years[i];

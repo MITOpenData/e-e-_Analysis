@@ -1,0 +1,15 @@
+/data/flowex/Datasamples/LEP1_MAIN/LEP1/1991/LEP1Data1991_recons_aftercut-001.aleph
+/data/flowex/Datasamples/LEP1_MAIN/LEP1/1991/LEP1Data1991_recons_aftercut-002.aleph
+/data/flowex/Datasamples/LEP1_MAIN/LEP1/1991/LEP1Data1991_recons_aftercut-003.aleph
+/data/flowex/Datasamples/LEP1_MAIN/LEP1/1991/LEP1Data1991_recons_aftercut-004.aleph
+/data/flowex/Datasamples/LEP1_MAIN/LEP1/1991/LEP1Data1991_recons_aftercut-005.aleph
+/data/flowex/Datasamples/LEP1_MAIN/LEP1/1991/LEP1Data1991_recons_aftercut-006.aleph
+/data/flowex/Datasamples/LEP1_MAIN/LEP1/1991/LEP1Data1991_recons_aftercut-007.aleph
+/data/flowex/Datasamples/LEP1_MAIN/LEP1/1991/LEP1Data1991_recons_aftercut-008.aleph
+/data/flowex/Datasamples/LEP1_MAIN/LEP1/1991/LEP1Data1991_recons_aftercut-009.aleph
+/data/flowex/Datasamples/LEP1_MAIN/LEP1/1991/LEP1Data1991_recons_aftercut-010.aleph
+/data/flowex/Datasamples/LEP1_MAIN/LEP1/1991/LEP1Data1991_recons_aftercut-011.aleph
+/data/flowex/Datasamples/LEP1_MAIN/LEP1/1991/LEP1Data1991_recons_aftercut-012.aleph
+/data/flowex/Datasamples/LEP1_MAIN/LEP1/1991/LEP1Data1991_recons_aftercut-013.aleph
+/data/flowex/Datasamples/LEP1_MAIN/LEP1/1991/LEP1Data1991_recons_aftercut-014.aleph
+/data/flowex/Datasamples/LEP1_MAIN/LEP1/1991/LEP1Data1991_recons_aftercut-015.aleph
