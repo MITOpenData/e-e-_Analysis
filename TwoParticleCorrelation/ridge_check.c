@@ -135,6 +135,7 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
        if (verbose) cout<<"nparticles="<<data.nParticle<<endl;
        
        if (isThrust==1&&fabs(data.TTheta-3.14159/2.)>0.8) continue;
+       if (isThrust==2&&acos(cos(data.jtphi[0]-data.jtphi[1]))<3.14159*2/3.) continue;
        
        /* if (flavor == 0) {break;} */
        /* if (flavor == 1) {continue;} */
@@ -314,7 +315,7 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
 
     TCanvas *c2 = CFViewer("c2","Ratio",600,600);
     h_ratio->Draw("surf1 fb");  
-    c2->SaveAs(Form("ratio_%d_%d_%d.pdf", isThrust,mult_low, mult_high));
+    c2->SaveAs(Form("ratio_%d_%.1f_%.1f_%d_%d.pdf", isThrust,ptMin,ptMax,mult_low, mult_high));
     
     TLatex latex;
     latex.SetTextSize(0.04);
@@ -346,11 +347,11 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
 	 h_deltaphi[0]->SetStats(0);
       }
     }
-    c3->SaveAs(Form("projection_%d_%d_%d.pdf", isThrust,mult_low, mult_high));
+    c3->SaveAs(Form("projection_%d_%.1f_%.1f_%d_%d.pdf", isThrust,ptMin,ptMax,mult_low, mult_high));
 
 
     // Save the results
-    TFile *background = new TFile(Form("correlation_%d_%d_%d.root", isThrust,mult_low, mult_high), "recreate");
+    TFile *background = new TFile(Form("correlation_%d_%.1f,%.1f_%d_%d.root", isThrust,ptMin,ptMax,mult_low, mult_high), "recreate");
     h_deltaphi[0]->Write();
     h_deltaphi[2]->Write();
     h_deltaphi[4]->Write();
