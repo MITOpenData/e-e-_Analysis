@@ -45,7 +45,7 @@ using namespace std;
 
 void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneCUETP8M1_5p02TeV-pythia8-HINppWinter16DR-NoPU_75X_mcRun2_asymptotic_ppAt5TeV_forest_v2_track.root",
               Int_t isBelle      = 0,		// BELLE analysis = 1, CMS/ALEPH analysis = 0
-              Int_t isThrust     = 0, 		// Thurst Axis analysis = 1, Beam Axis analysis = 0
+              Int_t isThrust     = 0, 		// Leading Jet Axis analysis = 2, Thurst Axis analysis = 1, Beam Axis analysis = 0
               Int_t isTheta      = 0, 		// Use Theta angle = 1, Use Eta = 0
 	      Int_t maxevt       = 1000000,	// Max number of events to be processed, 0 = all events
 	      Int_t mult_low     = 0,		// Lower cut on the event multiplicity
@@ -53,9 +53,9 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
 	      Int_t nbin         = 20,		// Number of bins in the correlation function
 	      bool verbose     = 0,		// Verbose mode
 	      Int_t num_runs     = 5,		// 
-              double ptMin     = 0.4,           // min pT of the particles used for correlation function
-              double ptMax     = 4,             // max pT of the particles used for correlation function
-              double detaRange = 3.5,             // deta window of the correlation function
+              double ptMin     = 0,           // min pT of the particles used for correlation function
+              double ptMax     = 4.0,             // max pT of the particles used for correlation function
+              double detaRange = 3.2,             // deta window of the correlation function
               Float_t ptMinForN = 0.4,          // pT min for the N_{trk}^{offline} calculation (used for event classification) 
               Float_t ptMaxForN = 100,          // pT max for the N_{trk}^{offline} calculation (used for event classification)
               Float_t etaCutForN = 2.4          // eta window for the N_{trk}^{offline} calculation (used for event classification)
@@ -67,13 +67,16 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     TChain *t1 = new TChain("t");
     t1->Add(filename);
 
+    TChain *t2 = new TChain("ak4JetTree");
+    t2->Add(filename);
+
     /* TString friendname =  "qqmc-e07-00_flavor.root"; */
     /* TFile *ff = new TFile(friendname); */
     /* TTree *tf = (TTree*)ff->Get("t"); */
     /* t1->AddFriend(tf); */
 
     TPCNtupleData data(isBelle, isThrust);
-    setupTPCTree(t1,data);
+    setupTPCTree(t1,t2,data);
     data.setTPCTreeStatus(t1);
     
     // File for event mixing, use the same file for the moment
@@ -81,9 +84,12 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     /* TTree *t1_mix = (TTree*)f_mix->Get("t"); */
     TChain *t1_mix = new TChain("t");
     t1_mix->Add(filename);
+
+    TChain *t2_mix = new TChain("ak4JetTree");
+    t2_mix->Add(filename);
     
     TPCNtupleData mix(isBelle, isThrust);
-    setupTPCTree(t1_mix,mix);
+    setupTPCTree(t1_mix,t2_mix,mix);
     mix.setTPCTreeStatus(t1_mix);
     
     //TNtuple *nt = new TNtuple("nt","","pEta:pTheta:pPhi:theta:phi:TTheta:TPhi");
@@ -123,9 +129,12 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     /****************************************/
     for (Int_t i=0;i<nevent_process;i++) {
        t1->GetEntry(i);
+       t2->GetEntry(i);
        data.update();
        if (i%10000==0) cout <<i<<"/"<<nevent_process<<endl;
        if (verbose) cout<<"nparticles="<<data.nParticle<<endl;
+       
+       if (isThrust==1&&fabs(data.TTheta-3.14159/2.)>0.8) continue;
        
        /* if (flavor == 0) {break;} */
        /* if (flavor == 1) {continue;} */
@@ -189,19 +198,26 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
        /****************************************/
        for (Int_t nMix = 0; nMix<num_runs; nMix++) {
           t1_mix->GetEntry ( selected );
+          t2_mix->GetEntry ( selected );
 
           // Select a matched event
 	  // Currently we are matching the total multiplicity in th event
 	  
-          while ((fabs(mix.nParticle-data.nParticle)>4&&data.nParticle<1000)||i==selected){
+	  flag=0;
+          while ((fabs(mix.nParticle-data.nParticle)>4&&data.nParticle<1000&&fabs(mix.jteta[0]-data.jteta[0])>0.2)||i==selected){
               selected++;
-              if (selected>nevent_process&&flag==1) break;
-              if (selected>nevent_process) flag=1;
+              if (selected>nevent_process&&flag==2) break;
+              if (selected>nevent_process) flag++;
               selected = selected % nevent_process;
               t1_mix->GetEntry ( selected );
+              t2_mix->GetEntry ( selected );
           }
 
-          mix.update();
+          // Use the Thrust axis from the signal event instead of mixed event
+          mix.TTheta=data.TTheta;
+	  mix.TPhi=data.TPhi;
+	  mix.update();
+	  
           Int_t N2_TP=0;
           
           // calculate the number of tracks in the mixed event passing selection
@@ -258,7 +274,7 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     calculateRatio(h_2D,h_2Dmix,h_ratio);
         
     // Perform 1D projection
-    double etaranges[8]={2,3.2,2.2,3.2,2.4,3.2,2.6,3.2};
+    double etaranges[8]={2,10,2.2,10,2.4,10,2.6,10};
     Int_t minbin,maxbin;
     Int_t thetaranges[4] = {-3,-2,-1,0};
     
@@ -298,6 +314,7 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
 
     TCanvas *c2 = CFViewer("c2","Ratio",600,600);
     h_ratio->Draw("surf1 fb");  
+    c2->SaveAs(Form("ratio_%d_%d_%d.pdf", isThrust,mult_low, mult_high));
     
     TLatex latex;
     latex.SetTextSize(0.04);
@@ -329,6 +346,8 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
 	 h_deltaphi[0]->SetStats(0);
       }
     }
+    c3->SaveAs(Form("projection_%d_%d_%d.pdf", isThrust,mult_low, mult_high));
+
 
     // Save the results
     TFile *background = new TFile(Form("correlation_%d_%d_%d.root", isThrust,mult_low, mult_high), "recreate");

@@ -7,30 +7,37 @@ class TPCNtupleData{
     public:
     
     Int_t nParticle;
-    Float_t pt[50000];
-    Float_t eta[50000];
-    Float_t theta[50000];
-    Float_t pid[50000];
-    Float_t phi[50000];
-    Float_t mass[50000];
-    Float_t pwflag[50000];
+    Float_t pt[5000];
+    Float_t eta[5000];
+    Float_t theta[5000];
+    Int_t pid[5000];
+    Float_t phi[5000];
+    Float_t mass[5000];
+    Int_t pwflag[5000];
     
-    Float_t px[100000];
-    Float_t py[100000];
-    Float_t pz[100000];
+    Float_t px[5000];
+    Float_t py[5000];
+    Float_t pz[5000];
     Float_t TTheta;
     Float_t TPhi;
     
     Float_t N;
     Float_t N_TP;
     
+    // Jet Tree
+    Int_t nref;
+    Float_t jtpt;
+    Float_t jteta[5000];
+    Float_t jtphi[5000];
+    
+    
     bool isBelle;
-    bool doThrust;
+    int doThrust;
     Float_t memory;
     TVector3 thrust;
     TVector3 p;
     
-    TPCNtupleData(bool ana=0, bool thrustAna=0){
+    TPCNtupleData(bool ana=0, int thrustAna=0){
        isBelle = ana;
        doThrust = thrustAna;
        thrust.SetXYZ(1,0,0);
@@ -53,7 +60,7 @@ class TPCNtupleData{
     // Return Transverse Momentum
     Float_t getPt(int j){
      selfCheck();
-     if (doThrust){
+     if (doThrust>0){
       p.SetXYZ(px[j],py[j],pz[j]);
       return ptFromThrust(thrust,p);
      }
@@ -63,7 +70,7 @@ class TPCNtupleData{
     // Return Pseudorapidity
     Float_t getEta(int j){
      selfCheck();
-     if (doThrust){
+     if (doThrust>0){
       p.SetXYZ(px[j],py[j],pz[j]);
       return etaFromThrust(thrust,p);
      }
@@ -73,7 +80,7 @@ class TPCNtupleData{
     // Return phi angle
     Float_t getPhi(int j){
      selfCheck();
-     if (doThrust){
+     if (doThrust>0){
       p.SetXYZ(px[j],py[j],pz[j]);
       return phiFromThrust(thrust,p);
      }
@@ -83,7 +90,7 @@ class TPCNtupleData{
     // Return theta angle
     Float_t getTheta(int j){
      selfCheck();
-     if (doThrust){
+     if (doThrust>0){
       p.SetXYZ(px[j],py[j],pz[j]);
       return thetaFromThrust(thrust,p);
      }
@@ -93,8 +100,13 @@ class TPCNtupleData{
     // 
     void update(){
        memory = pt[0]*1000+eta[0];
-       thrust.SetTheta(TTheta);
-       thrust.SetPhi(TPhi);
+       if (doThrust==1) {
+         thrust.SetTheta(TTheta);
+         thrust.SetPhi(TPhi);
+       } else if (doThrust==2) {
+         thrust.SetTheta(2*atan(exp(-jteta[0])));
+	 thrust.SetPhi(jtphi[0]);
+       }
     }
     
     // check if the class user remember to update the Thrust axis in the analysis code when getting a new entry.
@@ -126,7 +138,7 @@ class TPCNtupleData{
 
 
 // Set the branch addresses
-void setupTPCTree(TTree *t1, TPCNtupleData &data)
+void setupTPCTree(TTree *t1, TTree *t2, TPCNtupleData &data)
 {
     t1->SetBranchAddress("nParticle",&data.nParticle);
     t1->SetBranchAddress("pt",data.pt);
@@ -135,6 +147,11 @@ void setupTPCTree(TTree *t1, TPCNtupleData &data)
     t1->SetBranchAddress("pid",data.pid);
     t1->SetBranchAddress("phi",data.phi);
     t1->SetBranchAddress("mass",data.mass);
+
+    t2->SetBranchAddress("jteta",data.jteta);
+    t2->SetBranchAddress("jtphi",data.jtphi);
+    t2->SetBranchAddress("nref",&data.nref);
+    
 
     if (!data.isBelle) {
         t1->SetBranchAddress("pwflag",data.pwflag);
