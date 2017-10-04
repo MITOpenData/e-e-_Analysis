@@ -62,10 +62,104 @@ void setThrustVariables(particleData *p, eventData *e, TVector3 thrust, TVector3
   e->nChargedHadrons_GT0p4Thrust = nTrk;
 }
 
+
+/* Almost a direct copy and paste from Belle standard Thrust axis algorithm */
+template <class Iterator, class Function>
+TVector3 thrustBelleSTD(Iterator begin, Iterator end, Function func)
+{
+  // Temporary variables
+  Iterator p, q;
+  TVector3 rvec, Axis;
+
+  double sump = 0;
+  for (p = begin; p != end; p++)
+    sump += ((TVector3)func(*p)).Mag();
+
+  // Thrust and thrust vectors
+
+  double Thru = 0;
+  for (p = begin; p != end; p++) {
+    TVector3 rvec(func(*p));
+    if (rvec.z() <= 0.0) rvec = -rvec;
+
+    double s = rvec.Mag();
+    if (s != 0.0) rvec *= (1/s);
+
+    for (Iterator loopcount = begin; loopcount != end; loopcount++) {
+      TVector3 rprev(rvec);
+      rvec = TVector3(); // clear
+
+      for (q = begin; q != end; q++) {
+        const TVector3 qvec(func(*q));
+        rvec += (qvec.Dot(rprev) >= 0) ? qvec : - qvec;
+      }
+
+      for (q = begin; q != end; q++) {
+        const TVector3 qvec(func(*q));
+        if (qvec.Dot(rvec) * qvec.Dot(rprev) < 0) break;
+      }
+
+      if (q == end) break;
+    }
+
+    double ttmp = 0.0;
+    for (q = begin; q != end; q++) {
+      const TVector3 qvec = func(*q);
+      ttmp += std::fabs(qvec.Dot(rvec));
+    }
+    ttmp /= (sump * rvec.Mag());
+    rvec *= 1/rvec.Mag();
+    if (ttmp > Thru) {
+      Thru = ttmp;
+      Axis = rvec;
+    }
+  }
+  Axis *= Thru;
+  return Axis;
+}
+
+// ----------------------------------------------------------------------
+// SelfFunc - retrieve the pointer to a function which returns itself
+// example:
+//   list<Vector3> vl;
+//   Vector3 t = thrust(vl.begin(), vp.end(), SelfFunc(Vector3()));
+//
+//   list<Vector3 *> vp;
+//   Vector3 t = thrust(vp.begin(), vp.end(), SelfFunc(Vector3()));
+// ----------------------------------------------------------------------
+
+template <class T>
+class ptr_to_self_func {
+ protected:
+	typedef T (*pfun)(T &);
+ public:
+ ptr_to_self_func() : ptr(NULL) {};
+	T operator()(T& t) const { return t; };
+	T operator()(T *t) const { return *t; };
+	const T operator()(const T& t) const { return t; };
+	const T operator()(const T *t) const { return *t; };
+ protected:
+	const pfun ptr;
+};
+
+template <class T>
+ptr_to_self_func<T> SelfFunc(const T &) {
+	return ptr_to_self_func<T>();
+}
+
+/* wrapper of the Belle thrust axis algorithm */
+TVector3 getThrustBelle(int n, float *px, float *py, float *pz){
+  std::vector<TVector3> momenta;
+  for (int i = 0; i < n; ++i) {
+    momenta.push_back(TVector3(px[i], py[i], pz[i]));
+  }
+  return thrustBelleSTD(momenta.begin(), momenta.end(), SelfFunc(TVector3()));
+}
+
 //based on code from herwig: http://herwig.hepforge.org/svn/tags/herwig-2-0-beta/Analysis/EventShapes.cc
 //ported by A. Baty
 //n is number of particles, px,py,pz are arrays of momentum components
-TVector3 getThrust(int n, float *px, float *py, float *pz){
+TVector3 getThrustHerwig(int n, float *px, float *py, float *pz){
   TVector3 thrust = TVector3(0,0,0);
   if(n<=0) return thrust;
 
@@ -249,4 +343,31 @@ TVector3 getChargedThrust(int n, float *px, float *py, float *pz, int *pwflag){
   }
     return thrust;
 }
+
+
+struct THRUST
+{
+  enum algorithm {HERWIG, BELLE, OPTIMAL};
+};
+
+// Interface to the different algorithm to compute thrust axis
+TVector3 getThrust(int n, float *px, float *py, float *pz, THRUST::algorithm algo=THRUST::HERWIG){
+  TVector3 thrustAxis(0, 0, 0);
+  switch (algo) {
+  case THRUST::HERWIG: thrustAxis = getThrustHerwig(n, px, py, pz); break;
+  case THRUST::BELLE: thrustAxis = getThrustBelle(n, px, py, pz); break;
+  case THRUST::OPTIMAL: {
+    if (n < 4) {
+      thrustAxis = getThrustBelle(n, px, py, pz);
+    } else {
+      thrustAxis = getThrustHerwig(n, px, py, pz);
+    }
+    break;
+  }
+  default:
+    break;
+  }
+  return thrustAxis;
+}
+
 #endif
