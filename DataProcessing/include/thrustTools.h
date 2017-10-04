@@ -156,6 +156,15 @@ TVector3 getThrustBelle(int n, float *px, float *py, float *pz){
   return thrustBelleSTD(momenta.begin(), momenta.end(), SelfFunc(TVector3()));
 }
 
+TVector3 getChargedThrustBelle(int n, float *px, float *py, float *pz, int *pwflag){
+  std::vector<TVector3> momenta;
+  for (int i = 0; i < n; ++i) {
+    if(pwflag[i]!=0) continue;
+    momenta.push_back(TVector3(px[i], py[i], pz[i]));
+  }
+  return thrustBelleSTD(momenta.begin(), momenta.end(), SelfFunc(TVector3()));
+}
+
 //based on code from herwig: http://herwig.hepforge.org/svn/tags/herwig-2-0-beta/Analysis/EventShapes.cc
 //ported by A. Baty
 //n is number of particles, px,py,pz are arrays of momentum components
@@ -242,7 +251,7 @@ TVector3 getThrustHerwig(int n, float *px, float *py, float *pz){
 }
 
 //almost a straight copy of above, but filter for pwflag==0 (tracks)
-TVector3 getChargedThrust(int n, float *px, float *py, float *pz, int *pwflag){
+TVector3 getChargedThrustHerwig(int n, float *px, float *py, float *pz, int *pwflag){
   float nTrk = 0;
   for(int t = 0; t<n; t++){
     if(pwflag[t]!=0) continue;
@@ -361,6 +370,31 @@ TVector3 getThrust(int n, float *px, float *py, float *pz, THRUST::algorithm alg
       thrustAxis = getThrustBelle(n, px, py, pz);
     } else {
       thrustAxis = getThrustHerwig(n, px, py, pz);
+    }
+    break;
+  }
+  default:
+    break;
+  }
+  return thrustAxis;
+}
+
+TVector3 getChargedThrust(int n, float *px, float *py, float *pz, int *pwflag, THRUST::algorithm algo=THRUST::HERWIG){
+  float nTrk = 0;
+  for(int t = 0; t<n; t++){
+    if(pwflag[t]!=0) continue;
+    nTrk++;
+  }
+
+  TVector3 thrustAxis(0, 0, 0);
+  switch (algo) {
+  case THRUST::HERWIG: thrustAxis = getChargedThrustHerwig(n, px, py, pz, pwflag); break;
+  case THRUST::BELLE: thrustAxis = getChargedThrustBelle(n, px, py, pz, pwflag); break;
+  case THRUST::OPTIMAL: {
+    if (nTrk < 4) {
+      thrustAxis = getChargedThrustBelle(n, px, py, pz,pwflag);
+    } else {
+      thrustAxis = getChargedThrustHerwig(n, px, py, pz, pwflag);
     }
     break;
   }

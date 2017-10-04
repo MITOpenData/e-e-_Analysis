@@ -383,8 +383,8 @@ int scan(std::string inFileName, std::string outFileName="")
       
       if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2))/* not all files do four 999 && check999(num.at(3)*/){
 	pData.nParticle=counterParticles;
-        thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz); 
-        thrust_charged = getChargedThrust(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag);
+        thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz, THRUST::OPTIMAL); 
+        thrust_charged = getChargedThrust(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag, THRUST::OPTIMAL);
         setThrustVariables(&pData, &eData, thrust, thrust_charged);
         eData.TTheta = thrust.Theta();
         eData.TPhi = thrust.Phi();
@@ -495,8 +495,8 @@ int scan(std::string inFileName, std::string outFileName="")
   
     //Have to fill one last time since the condition for fill is dependent on NEXT EVENT existing, else we would lose last event per file
     pData.nParticle=counterParticles;
-    thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz); 
-    thrust_charged = getChargedThrust(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag);
+    thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz, THRUST::OPTIMAL); 
+    thrust_charged = getChargedThrust(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag, THRUST::OPTIMAL);
     setThrustVariables(&pData, &eData, thrust, thrust_charged);
 
     eData.TTheta = thrust.Theta();
@@ -571,8 +571,8 @@ int scan(std::string inFileName, std::string outFileName="")
 	if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2)) /* && check999(num.at(3))*/){ 
 	  pgData.nParticle=counterParticles;
           
-          thrust = getThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz); 
-          thrust_charged = getChargedThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag);
+          thrust = getThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, THRUST::OPTIMAL); 
+          thrust_charged = getChargedThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag, THRUST::OPTIMAL);
           setThrustVariables(&pgData, &egData, thrust, thrust_charged);
           egData.TTheta = thrust.Theta();
           egData.TPhi = thrust.Phi();
@@ -718,8 +718,8 @@ int scan(std::string inFileName, std::string outFileName="")
       if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
       pgData.nParticle=counterParticles;
-      thrust = getThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz); 
-      thrust_charged = getChargedThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag);
+      thrust = getThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, THRUST::OPTIMAL); 
+      thrust_charged = getChargedThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag, THRUST::OPTIMAL );
       setThrustVariables(&pgData, &egData, thrust, thrust_charged);
       egData.TTheta = thrust.Theta();
       egData.TPhi = thrust.Phi();
