@@ -164,6 +164,7 @@ int scan(std::string inFileName, std::string outFileName="")
   }
 
   //define jetMaker here so rParam can be used in jetTree name for clarity
+  const double jtPtCut = 2.;
   const int nRParam = 2;
   const double rParam[nRParam] = {0.4, 0.8};
   simpleJetMaker* jMaker[nRParam];
@@ -426,8 +427,8 @@ int scan(std::string inFileName, std::string outFileName="")
 	
 	//Processing particles->jets
 	for(int jIter = 0; jIter < nRParam; ++jIter){
-	  processJets(particles, *(jMaker[jIter]), &(jData[jIter]), 5.);
-	  processJets(particles, *(jMakerEE[jIter]), &(jDataEE[jIter]), 5.);
+	  processJets(particles, *(jMaker[jIter]), &(jData[jIter]), jtPtCut);
+	  processJets(particles, *(jMakerEE[jIter]), &(jDataEE[jIter]), jtPtCut);
 	}
 
 	if(counterEntries>0){
@@ -540,8 +541,8 @@ int scan(std::string inFileName, std::string outFileName="")
     
     if(counterEntries>0) tout->Fill(); 
     for(int jIter = 0; jIter < nRParam; ++jIter){
-      processJets(particles, *(jMaker[jIter]), &(jData[jIter]), 5.);
-      processJets(particles, *(jMakerEE[jIter]), &(jDataEE[jIter]), 5.);
+      processJets(particles, *(jMaker[jIter]), &(jData[jIter]), jtPtCut);
+      processJets(particles, *(jMakerEE[jIter]), &(jDataEE[jIter]), jtPtCut);
     }
     if(counterEntries>0){
       for(int jIter = 0; jIter < nRParam; ++jIter){
@@ -621,8 +622,8 @@ int scan(std::string inFileName, std::string outFileName="")
 
 	  //Processing particles->jets
 	  for(int jIter = 0; jIter < nRParam; ++jIter){
-	    processJets(particles, *(jMaker[jIter]), &(jgData[jIter]), 5.);
-	    processJets(particles, *(jMakerEE[jIter]), &(jgDataEE[jIter]), 5.);
+	    processJets(particles, *(jMaker[jIter]), &(jgData[jIter]), jtPtCut);
+	    processJets(particles, *(jMakerEE[jIter]), &(jgDataEE[jIter]), jtPtCut);
 	    if(counterEntries>0){
 	      jgout[jIter]->Fill();
 	      jgoutEE[jIter]->Fill();
@@ -770,8 +771,8 @@ int scan(std::string inFileName, std::string outFileName="")
       
       if(counterEntries>0) tgout->Fill(); 
       for(int jIter = 0; jIter < nRParam; ++jIter){
-	processJets(particles, *(jMaker[jIter]), &(jgData[jIter]), 5.);
-	processJets(particles, *(jMakerEE[jIter]), &(jgDataEE[jIter]), 5.);
+	processJets(particles, *(jMaker[jIter]), &(jgData[jIter]), jtPtCut);
+	processJets(particles, *(jMakerEE[jIter]), &(jgDataEE[jIter]), jtPtCut);
 	if(counterEntries>0){
 	  jgout[jIter]->Fill();
 	  jgoutEE[jIter]->Fill();
