@@ -11,7 +11,7 @@
 
 class simpleJetMaker{
  public:
-  simpleJetMaker(double inR);
+  simpleJetMaker(double inR, fastjet::JetDefinition inDef);
   ~simpleJetMaker(){};
 
   double rParam;
@@ -19,10 +19,11 @@ class simpleJetMaker{
   std::vector<fastjet::PseudoJet> getSimpleJets(std::vector<fastjet::PseudoJet> particles);
 };
 
-simpleJetMaker::simpleJetMaker(double inR)
+simpleJetMaker::simpleJetMaker(double inR, fastjet::JetDefinition inDef)
 {
   rParam = inR;
-  jetDef = fastjet::JetDefinition(fastjet::antikt_algorithm, rParam);                                                                
+  jetDef = inDef;
+                                                                
   return;
 }
 
