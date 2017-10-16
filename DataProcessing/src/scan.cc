@@ -98,13 +98,13 @@ bool check999(std::string inStr)
   return false;
 }
 
-void processJets(std::vector<fastjet::PseudoJet> p, simpleJetMaker j, jetData *d)
+void processJets(std::vector<fastjet::PseudoJet> p, simpleJetMaker j, jetData *d, const double ptCut = 0.1)
 {
   d->nref = 0;
   if(p.size() > 0){
     std::vector<fastjet::PseudoJet> jets = j.getSimpleJets(p);
     for(unsigned int i = 0; i < jets.size(); ++i){
-      if(jets.at(i).pt() < .1) break; //Arbitrarily low cut on jets, removes spike at phi zero when things become ill defined
+      if(jets.at(i).pt() < ptCut) break; //Arbitrarily low cut on jets, removes spike at phi zero when things become ill defined
       d->jtpt[d->nref] = jets.at(i).pt();
       d->jtphi[d->nref] = jets.at(i).phi_std();
       d->jteta[d->nref] = jets.at(i).eta();
@@ -167,53 +167,71 @@ int scan(std::string inFileName, std::string outFileName="")
   const int nRParam = 2;
   const double rParam[nRParam] = {0.4, 0.8};
   simpleJetMaker* jMaker[nRParam];
+  simpleJetMaker* jMakerEE[nRParam];
   for(int i = 0; i < nRParam; ++i){
-    jMaker[i] = new simpleJetMaker(rParam[i]);
+    jMaker[i] = new simpleJetMaker(rParam[i], fastjet::JetDefinition(fastjet::antikt_algorithm, rParam[i]));
+    jMakerEE[i] = new simpleJetMaker(rParam[i], fastjet::JetDefinition(fastjet::ee_genkt_algorithm, rParam[i], -1));
   }
 
   const std::string partTreeName = "t";
   const std::string genPartTreeName = "tgen";
   std::string jetTreeName[nRParam];
   std::string genJetTreeName[nRParam];
+  std::string jetEETreeName[nRParam];
+  std::string genJetEETreeName[nRParam];
   for(int i = 0; i < nRParam; ++i){
     jetTreeName[i] = "ak" + std::to_string(int(rParam[i]*10)) + "JetTree";
     genJetTreeName[i] = "ak" + std::to_string(int(rParam[i]*10)) + "GenJetTree";
+
+    jetEETreeName[i] = "ak" + std::to_string(int(rParam[i]*10)) + "JetEETree";
+    genJetEETreeName[i] = "ak" + std::to_string(int(rParam[i]*10)) + "GenJetEETree";
   }
 
   std::string finalPartTreeName = partTreeName;
   if(!isRecons) finalPartTreeName = genPartTreeName;
+
   std::string finalJetTreeName[nRParam];
+  std::string finalJetEETreeName[nRParam];
   for(int i = 0; i < nRParam; ++i){
     finalJetTreeName[i] = jetTreeName[i];
     if(!isRecons) finalJetTreeName[i] = genJetTreeName[i];
+
+    finalJetEETreeName[i] = jetEETreeName[i];
+    if(!isRecons) finalJetEETreeName[i] = genJetEETreeName[i];
   }
 
   TFile *hf = new TFile(outFileName.c_str(), "RECREATE");
   TTree *tout = new TTree(finalPartTreeName.c_str(), "");
   TTree *jout[nRParam];
+  TTree *joutEE[nRParam];
   for(int i = 0; i < nRParam; ++i){
     jout[i] = new TTree(finalJetTreeName[i].c_str(), "");
+    joutEE[i] = new TTree(finalJetEETreeName[i].c_str(), "");
   }
 
   if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
   TTree *tgout=0;
   TTree *jgout[nRParam] = {0, 0};
+  TTree *jgoutEE[nRParam] = {0, 0};
 
   if(isRecons && isMC){
     tgout = new TTree(genPartTreeName.c_str(),"");
 
     for(int i = 0; i < nRParam; ++i){
       jgout[i] = new TTree(genJetTreeName[i].c_str(),"");
+      jgoutEE[i] = new TTree(genJetEETreeName[i].c_str(),"");
     }
   }
 
   particleData pData;
   jetData jData[nRParam];
+  jetData jDataEE[nRParam];
   eventData eData;
 
   particleData pgData;
   jetData jgData[nRParam];
+  jetData jgDataEE[nRParam];
   eventData egData;
 
   tout->Branch("year", &pData.year, "year/I");
@@ -267,6 +285,11 @@ int scan(std::string inFileName, std::string outFileName="")
     jout[i]->Branch("jtpt", jData[i].jtpt,"jtpt[nref]/F");
     jout[i]->Branch("jteta", jData[i].jteta,"jteta[nref]/F");
     jout[i]->Branch("jtphi", jData[i].jtphi,"jtphi[nref]/F");
+
+    joutEE[i]->Branch("nref", &jDataEE[i].nref,"nref/I");
+    joutEE[i]->Branch("jtpt", jDataEE[i].jtpt,"jtpt[nref]/F");
+    joutEE[i]->Branch("jteta", jDataEE[i].jteta,"jteta[nref]/F");
+    joutEE[i]->Branch("jtphi", jDataEE[i].jtphi,"jtphi[nref]/F");
   }
 
   if(isRecons && isMC){
@@ -321,6 +344,11 @@ int scan(std::string inFileName, std::string outFileName="")
       jgout[i]->Branch("jtpt", jgData[i].jtpt,"jtpt[nref]/F");
       jgout[i]->Branch("jteta", jgData[i].jteta,"jteta[nref]/F");
       jgout[i]->Branch("jtphi", jgData[i].jtphi,"jtphi[nref]/F");
+
+      jgoutEE[i]->Branch("nref", &jgDataEE[i].nref,"nref/I");
+      jgoutEE[i]->Branch("jtpt", jgDataEE[i].jtpt,"jtpt[nref]/F");
+      jgoutEE[i]->Branch("jteta", jgDataEE[i].jteta,"jteta[nref]/F");
+      jgoutEE[i]->Branch("jtphi", jgDataEE[i].jtphi,"jtphi[nref]/F");
     }
   }
 
@@ -366,12 +394,14 @@ int scan(std::string inFileName, std::string outFileName="")
 	delete tout;
 	for(int jIter = 0; jIter < nRParam; ++jIter){
 	  delete jout[jIter];
+	  delete joutEE[jIter];
 	}
 
 	if(isMC && isRecons){
 	  delete tgout;
 	  for(int jIter = 0; jIter < nRParam; ++jIter){
 	    delete jgout[jIter];
+	    delete jgoutEE[jIter];
 	  }
 	}
 	
@@ -396,12 +426,14 @@ int scan(std::string inFileName, std::string outFileName="")
 	
 	//Processing particles->jets
 	for(int jIter = 0; jIter < nRParam; ++jIter){
-	  processJets(particles, *(jMaker[jIter]), &(jData[jIter]));
+	  processJets(particles, *(jMaker[jIter]), &(jData[jIter]), 5.);
+	  processJets(particles, *(jMakerEE[jIter]), &(jDataEE[jIter]), 5.);
 	}
 
 	if(counterEntries>0){
 	  for(int jIter = 0; jIter < nRParam; ++jIter){
 	    jout[jIter]->Fill();
+	    joutEE[jIter]->Fill();
 	  }
 	}
 
@@ -508,11 +540,13 @@ int scan(std::string inFileName, std::string outFileName="")
     
     if(counterEntries>0) tout->Fill(); 
     for(int jIter = 0; jIter < nRParam; ++jIter){
-      processJets(particles, *(jMaker[jIter]), &(jData[jIter]));
+      processJets(particles, *(jMaker[jIter]), &(jData[jIter]), 5.);
+      processJets(particles, *(jMakerEE[jIter]), &(jDataEE[jIter]), 5.);
     }
     if(counterEntries>0){
       for(int jIter = 0; jIter < nRParam; ++jIter){
 	jout[jIter]->Fill();
+	joutEE[jIter]->Fill();
       }
     }
     file.close();
@@ -551,12 +585,14 @@ int scan(std::string inFileName, std::string outFileName="")
 	  delete tout;
 	  for(int jIter = 0; jIter < nRParam; ++jIter){
 	    delete jout[jIter];
+	    delete joutEE[jIter];
 	  }
 
 	  if(isMC && isRecons){
 	    delete tgout;
 	    for(int jIter = 0; jIter < nRParam; ++jIter){
 	      delete jgout[jIter];
+	      delete jgoutEE[jIter];
 	    }
 	  }
 
@@ -580,13 +616,17 @@ int scan(std::string inFileName, std::string outFileName="")
           egData.TPhi_charged = thrust_charged.Phi();
 
 	  if(counterEntries>0) tgout->Fill(); 
-	  
+
 	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;	
 
 	  //Processing particles->jets
 	  for(int jIter = 0; jIter < nRParam; ++jIter){
-	    processJets(particles, *(jMaker[jIter]), &(jgData[jIter]));
-	    if(counterEntries>0) jgout[jIter]->Fill();
+	    processJets(particles, *(jMaker[jIter]), &(jgData[jIter]), 5.);
+	    processJets(particles, *(jMakerEE[jIter]), &(jgDataEE[jIter]), 5.);
+	    if(counterEntries>0){
+	      jgout[jIter]->Fill();
+	      jgoutEE[jIter]->Fill();
+	    }
 	  }
 	  //clear particles for next iteration clustering
 	  particles.clear();
@@ -627,6 +667,7 @@ int scan(std::string inFileName, std::string outFileName="")
 
 	    for(int jIter = 0; jIter < nRParam; ++jIter){
 	      delete jout[jIter];
+	      delete joutEE[jIter];
 	    }
 
 	    if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
@@ -635,6 +676,7 @@ int scan(std::string inFileName, std::string outFileName="")
 	      delete tgout;
 	      for(int jIter = 0; jIter < nRParam; ++jIter){
 		delete jgout[jIter];
+		delete jgoutEE[jIter];
 	      }
 	    }
 
@@ -728,8 +770,12 @@ int scan(std::string inFileName, std::string outFileName="")
       
       if(counterEntries>0) tgout->Fill(); 
       for(int jIter = 0; jIter < nRParam; ++jIter){
-	processJets(particles, *(jMaker[jIter]), &(jgData[jIter]));
-	if(counterEntries>0) jgout[jIter]->Fill();
+	processJets(particles, *(jMaker[jIter]), &(jgData[jIter]), 5.);
+	processJets(particles, *(jMakerEE[jIter]), &(jgDataEE[jIter]), 5.);
+	if(counterEntries>0){
+	  jgout[jIter]->Fill();
+	  jgoutEE[jIter]->Fill();
+	}
       }
       
       if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
@@ -752,7 +798,9 @@ int scan(std::string inFileName, std::string outFileName="")
 
   for(int i = 0; i < nRParam; ++i){
     jout[i]->Write("", TObject::kOverwrite);
+    joutEE[i]->Write("", TObject::kOverwrite);
     delete jout[i];
+    delete joutEE[i];
   }
 
   if(isMC && isRecons){
@@ -761,7 +809,9 @@ int scan(std::string inFileName, std::string outFileName="")
 
     for(int jIter = 0; jIter < nRParam; ++jIter){
       jgout[jIter]->Write("", TObject::kOverwrite);
+      jgoutEE[jIter]->Write("", TObject::kOverwrite);
       delete jgout[jIter];
+      delete jgoutEE[jIter];
     }
   }
   
