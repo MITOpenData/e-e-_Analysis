@@ -21,6 +21,7 @@ class particleData{
   Float_t phi[nMaxPart];
   Float_t mass[nMaxPart];
   Float_t charge[nMaxPart];
+  // Starting from 0, pwflag (via Marcello) - CHARGED_TRACK, CHARGED_LEPTONS1, CHARGED_LEPTONS2, V0, PHOTON, NEUTRAL_HADRON
   Int_t pwflag[nMaxPart];
   Int_t pid[nMaxPart];
   
