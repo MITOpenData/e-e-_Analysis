@@ -356,7 +356,7 @@ int scan(std::string inFileName, std::string outFileName="")
   if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
   for(unsigned int fI = 0; fI < fileList.size(); ++fI){
-    std::cout << "Processing \'" << fileList.at(fI) << "\'" << std::endl;
+    std::cout << "Processing " << fI << "/" << fileList.size() << ", \'" << fileList.at(fI) << "\'" << std::endl;
     const int year = yearFromPath(fileList.at(fI));
     const int process = processFromPath(fileList.at(fI));
 
@@ -818,6 +818,8 @@ int scan(std::string inFileName, std::string outFileName="")
   
   hf->Close();
   delete hf;
+
+  std::cout << "Job complete, return 0." << std::endl;
 
   return 0;
 }
