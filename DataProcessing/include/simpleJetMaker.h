@@ -1,4 +1,4 @@
-//Chris McGinn; 2017.08.17
+41;326;0c//Chris McGinn; 2017.08.17
 #ifndef SIMPLEJETMAKER_H
 #define SIMPLEJETMAKER_H
 
