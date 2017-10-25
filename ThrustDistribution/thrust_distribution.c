@@ -22,6 +22,8 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
                          Float_t max_missP = 200,   // upper cut on missP   --> currently full range of missP
                          Float_t min_TTheta = 0.0, // lower cut on TTheta
                          Float_t max_TTheta = 3.5, // upper cut on TTheta --> currently full range of TTheta
+                         Float_t min_Energy = 0.0, // lower cut on Energy
+                         Float_t max_Energy = 100.0, // upper cut on Energy
                          Int_t isCharged = 0, // 0 to include all particle, 1 to only look at charged particles
                          Int_t isGen = 0    // 1 to use gen level
 )
@@ -98,6 +100,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     //for(Int_t i = 0;i<h_thrust->GetNbinsX();i++)cout<<h_thrust->GetBinContent(i)<<endl;
     // h_thrust->Print("ALL");
 }
+
 
 void run()
 {
