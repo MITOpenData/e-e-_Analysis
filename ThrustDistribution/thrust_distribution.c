@@ -21,10 +21,14 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
                          Float_t min_TTheta = 0.0, // lower cut on TTheta
                          Float_t max_TTheta = 3.5, // upper cut on TTheta --> currently full range of TTheta
                          Int_t isCharged = 0 // 0 to include all particle, 1 to only look at charged particles
+                         Int_t isGen = 0    // 1 to use gen level
 )
 {
     TFile *f = new TFile(filename);
-    TTree *t1 = (TTree*)f->Get("tgen");
+    TTree *t1;
+    t1 = (TTree*)f->Get("t");
+    if(isGen){t1 = (TTree*)f->Get("tgen");}
+    
     
     Int_t nParticle;
     Float_t px[5000];
