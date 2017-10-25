@@ -18,6 +18,8 @@
 #include "TCanvas.h"
 
 void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/alephDataPaths_LEP2_1995to2000.root", // file used
+                         Float_t min_missP = 0.0,   // lower cut on missP
+                         Float_t max_missP = 200,   // upper cut on missP   --> currently full range of missP
                          Float_t min_TTheta = 0.0, // lower cut on TTheta
                          Float_t max_TTheta = 3.5, // upper cut on TTheta --> currently full range of TTheta
                          Int_t isCharged = 0, // 0 to include all particle, 1 to only look at charged particles
@@ -38,6 +40,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     Float_t TPhi;
     Int_t pwflag[5000];
     Float_t Energy;
+    Float_t missP;
     
     t1->SetBranchAddress("nParticle",&nParticle);
     t1->SetBranchAddress("px",px);
@@ -47,6 +50,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     t1->SetBranchAddress("TPhi", &TPhi);
     t1->SetBranchAddress("pwflag",pwflag);
     t1->SetBranchAddress("Energy", &Energy);
+    t1->SetBranchAddress("missP", &missP);
     
     Int_t nevent = (Int_t)t1->GetEntries();
     Int_t nevent_process = nevent;
@@ -60,6 +64,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         if (i%10000==0) cout <<i<<"/"<<nevent_process<<endl;
         //      if(Energy>1&&Energy<2){cout<<ENERGY<<endl;continue;}
         if(TTheta<min_TTheta || TTheta>max_TTheta)continue;
+        if(missP<min_missP || missP>min_missP)continue;
         TVector3 v1(1,0,0);
         v1.SetPhi(TPhi);   // keeping rho and theta
         v1.SetTheta(TTheta); // keeping rho and phi
