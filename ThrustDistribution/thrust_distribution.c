@@ -12,6 +12,8 @@
 #include <vector>
 #include <TFile.h>
 #include <TTree.h>
+#include <TH1D.h>
+#include <TStyle.h>
 #include "TLorentzVector.h"
 #include "TCanvas.h"
 
@@ -80,10 +82,10 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     Double_t scale = 1.0/( h_thrust->GetXaxis()->GetBinWidth(1)*h_thrust->Integral());
     h_thrust->Scale(scale);
     
-    c2 = new TCanvas("c2","",200,10,500,500);
+    TCanvas *c2 = new TCanvas("c2","",200,10,500,500);
     gStyle->SetOptStat(0);
     h_thrust->Draw();
-    c2->SaveAs(Form("tDist_%d_%d_%d.pdf",min_TTheta,max_TTheta,isCharged));
+    c2->SaveAs(Form("tDist_%.2f_%.2f_%d.pdf",min_TTheta,max_TTheta,isCharged));
     //for(Int_t i = 0;i<h_thrust->GetNbinsX();i++)cout<<h_thrust->GetBinContent(i)<<endl;
     // h_thrust->Print("ALL");
 }
