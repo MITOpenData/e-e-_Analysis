@@ -76,6 +76,8 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         if(Energy<min_Energy){continue;}
         // Cut on TTheta
         if(TTheta<min_TTheta || TTheta>max_TTheta)continue;
+        // NUMBER 3: Cut of TTheta
+        if(fabs(cos(TTheta))>0.9)continue;
         // NUMBER 4: Cut on missP/Energy
         if(missP/Energy>cut_missP)continue;
         
@@ -92,8 +94,6 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         
         for (Int_t j=0;j<nParticle;j++)
         {
-            // NUMBER 3: Cut of particle theta
-            if(fabs(cos(theta[j]))>0.9)continue;
             //if(isCharged == 1 && pwflag[j]!=0){continue;}
             if(pwflag[i]==0)pwflag0+=1;
             TVector3 v2(px[j],py[j],pz[j]);
