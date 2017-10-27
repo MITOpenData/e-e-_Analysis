@@ -120,7 +120,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         {
             Float_t Thrust = T_sum/T_mag;
             h_thrust->Fill(Thrust);
-            if((1.0-Thrust)<.05){h_thrust_log->Fill(h_thrust->GetBinCenter(1));}
+            if((1.0-Thrust)<.05){h_thrust_log->Fill(h_thrust_log->GetBinCenter(1));}
             else{h_thrust_log->Fill(1-Thrust);}
         }
     }
