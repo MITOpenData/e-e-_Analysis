@@ -158,10 +158,6 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     hep->SetLineColor(kRed);
     hep->Draw("SAME");
     
-    TLegend *leg = new TLegend(.15,.15,.4,.4);
-    leg->AddEntry(h_thrust,"MITHIG","l");
-    leg->AddEntry(hep,"ALEPH","l");
-    leg->Draw();
     //c2->SaveAs(Form("tDist_%.2f_%.2f_%d.pdf",min_TTheta,max_TTheta,isCharged));
 
 }
