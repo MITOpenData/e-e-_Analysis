@@ -19,14 +19,16 @@
 #include "getLogBins.h"
 
 
-
-////// Thrust Distribution  //////
+////////////////////////////////////////////////////////////
+//////////////////// Thrust Distribution  //////////////////
 // Select events by the following criteria
+// Compile/Run with .x thrust_distribution.c+()
 // 1. Events accepted with at least 5 good tracks  Done
 // 2. Total charged energy > 15GeV  Not done
 // 3. Energy (91,91.5) to focus on Z pole
 // 3. |cos(TTheta)|<0.9  Done
 // 4. missP/Energy<0.3  Done
+////////////////////////////////////////////////////////////
 void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/alephDataPaths_LEP1.root", // file used
                          Float_t cut_missP = 0.3,   // upper bound on missP/energy
                          Float_t min_TTheta = 0.0, // lower cut on TTheta
@@ -71,7 +73,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     
     const int nBins = 100;
     Double_t bins[nBins+1];
-    getLogBins(.05, 1, nBins, bins)
+    getLogBins(.05, 1, nBins, bins);
     TH1D *h_thrust = new TH1D("h_thrust",";Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",nBins,bins);
     
     for(Int_t i=0;i<nevent_process;i++)
@@ -116,9 +118,14 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     }
 
     
-    Double_t scale = 1.0/( h_thrust->GetXaxis()->GetBinWidth(1)*h_thrust->Integral());
-    h_thrust->Scale(scale);
-    
+   // Double_t scale = 1.0/( h_thrust->GetXaxis()->GetBinWidth(1)*h_thrust->Integral());
+    h_thrust->Scale(h_thrust->Integral());
+    for(int i = 0; i < nBins; ++i)
+    {
+        h_thrust->SetBinContent(i+1, h_thrust->GetBinContent(i+1)/h_thrust->GetBinWidth(i+1);
+        h_thrust->SetBinError(i+1, h_thrust->GetBinError(i+1)/h_thrust->GetBinWidth(i+1);
+    }
+   
     TCanvas *c2 = new TCanvas("c2","",200,10,500,500);
     gStyle->SetOptStat(0);
     h_thrust->Draw();
