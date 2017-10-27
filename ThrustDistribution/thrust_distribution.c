@@ -133,8 +133,8 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     {
         Float_t binWidth = h_thrust_log->GetBinWidth(i+1);
         if(i==0)binWidth+=0.05;
-        h_thrust_log->SetBinContent(i+1, h_thrust->GetBinContent(i+1)/binWidth);
-        h_thrust_log->SetBinError(i+1, h_thrust->GetBinError(i+1)/binWidth);
+        h_thrust_log->SetBinContent(i+1, h_thrust_log->GetBinContent(i+1)/binWidth);
+        h_thrust_log->SetBinError(i+1, h_thrust_log->GetBinError(i+1)/binWidth);
     }
    
     TCanvas *c1 = new TCanvas("log(1-T)","",200,10,500,500);
