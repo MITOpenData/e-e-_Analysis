@@ -75,7 +75,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     Double_t bins[nBins+1];
     getLogBins(.05, 1, nBins, bins);
     TH1D *h_thrust = new TH1D("h_thrust",";Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",nBins,bins);
-    
+    h_thrust->Sumw2();
     for(Int_t i=0;i<nevent_process;i++)
     {
         //cout<<"EVENT "<<i<<endl;
