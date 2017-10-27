@@ -139,11 +139,29 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
    
     TCanvas *c1 = new TCanvas("log(1-T)","",200,10,500,500);
     gStyle->SetOptStat(0);
+    gPad->SetLogy();
+    gPad->SetLogX();
+    h_thrust_log->GetXaxis()->CenterTitle();
+    h_thrust_log->GetYaxis()->CenterTitle();
     h_thrust_log->Draw();
     
     TCanvas *c2 = new TCanvas("T","",200,10,500,500);
     gStyle->SetOptStat(0);
+    h_thrust->GetXaxis()->CenterTitle();
+    h_thrust->GetYaxis()->CenterTitle();
     h_thrust->Draw();
+    
+    TFile *hdata = new TFile("HEPData-ins636645-v1-Table54.root");
+    TH1F *hep;
+    hdata->cd("Table 54");
+    hep = (TH1F*)gDirectory->Get("Hist1D_y1");
+    hep->SetLineColor(kRed);
+    hep->Draw("SAME");
+    
+    TLegend *leg = new TLegend(.15,.15,.4,.4);
+    leg->AddEntry(h_thrust,"MITHIG","l");
+    leg->AddEntry(hep,"ALEPH","l");
+    leg->Draw();
     //c2->SaveAs(Form("tDist_%.2f_%.2f_%d.pdf",min_TTheta,max_TTheta,isCharged));
 
 }
