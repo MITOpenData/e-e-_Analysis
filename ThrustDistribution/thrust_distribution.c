@@ -155,8 +155,8 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     TH1F *hep;
     hdata->cd("Table 54");
     hep = (TH1F*)gDirectory->Get("Hist1D_y1");
-    hep->SetLineColor(kRed);
-    hep->Draw("SAME");
+    hep->SetMarkerStyle(5);
+    hep->Draw("hist p SAME");
     
     //c2->SaveAs(Form("tDist_%.2f_%.2f_%d.pdf",min_TTheta,max_TTheta,isCharged));
 
