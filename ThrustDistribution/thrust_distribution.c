@@ -140,7 +140,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     TCanvas *c1 = new TCanvas("log(1-T)","",200,10,500,500);
     gStyle->SetOptStat(0);
     gPad->SetLogy();
-    gPad->SetLogX();
+    gPad->SetLogx();
     h_thrust_log->GetXaxis()->CenterTitle();
     h_thrust_log->GetYaxis()->CenterTitle();
     h_thrust_log->Draw();
