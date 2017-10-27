@@ -119,7 +119,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
 
     
    // Double_t scale = 1.0/( h_thrust->GetXaxis()->GetBinWidth(1)*h_thrust->Integral());
-    h_thrust->Scale(h_thrust->Integral());
+    h_thrust->Scale(1.0/h_thrust->Integral());
     for(int i = 0; i < nBins; ++i)
     {
         h_thrust->SetBinContent(i+1, h_thrust->GetBinContent(i+1)/h_thrust->GetBinWidth(i+1));
