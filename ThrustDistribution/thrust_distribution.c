@@ -122,8 +122,8 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     h_thrust->Scale(h_thrust->Integral());
     for(int i = 0; i < nBins; ++i)
     {
-        h_thrust->SetBinContent(i+1, h_thrust->GetBinContent(i+1)/h_thrust->GetBinWidth(i+1);
-        h_thrust->SetBinError(i+1, h_thrust->GetBinError(i+1)/h_thrust->GetBinWidth(i+1);
+        h_thrust->SetBinContent(i+1, h_thrust->GetBinContent(i+1)/h_thrust->GetBinWidth(i+1));
+        h_thrust->SetBinError(i+1, h_thrust->GetBinError(i+1)/h_thrust->GetBinWidth(i+1));
     }
    
     TCanvas *c2 = new TCanvas("c2","",200,10,500,500);
