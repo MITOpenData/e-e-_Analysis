@@ -22,7 +22,7 @@
 // Select events by the following criteria
 // 1. Events accepted with at least 5 good tracks  Done
 // 2. Total charged energy > 15GeV  Done
-// 3. |cos(theta)|<0.9  To Do
+// 3. |cos(TTheta)|<0.9  Done
 // 4. missP/Energy<0.3  Done
 void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/alephDataPaths_LEP2_1995to2000.root", // file used
                          Float_t cut_missP = 0.3,   // upper bound on missP/energy
@@ -95,7 +95,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         for (Int_t j=0;j<nParticle;j++)
         {
             //if(isCharged == 1 && pwflag[j]!=0){continue;}
-            if(pwflag[i]==0)pwflag0+=1;
+            if(pwflag[j]==0)pwflag0+=1;
             TVector3 v2(px[j],py[j],pz[j]);
             if(fabs(v1.Dot(v2))>v2.Mag())cout<<"DOT = "<<abs(v1.Dot(v2))<<" V2 Magnitude = "<<v2.Mag()<<endl;
             T_sum += fabs(v1.Dot(v2));
