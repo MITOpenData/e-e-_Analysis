@@ -71,11 +71,12 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     Int_t nevent_process = nevent;
     std::vector<float> T;
     
-    const int nBins = 100;
+    const int nBins = 50;
     Double_t bins[nBins+1];
-    getLogBins(.05, 1, nBins, bins);
-    TH1D *h_thrust = new TH1D("h_thrust",";Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",nBins,bins);
+    getLogBins(.05, 0.5, nBins, bins);
+    TH1D *h_thrust_log = new TH1D("h_thrust_log",";1-Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",nBins,bins);
     h_thrust->Sumw2();
+    TH1D *h_thrust = new TH1D("h_thrust",";Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",50,0.5,1);
     for(Int_t i=0;i<nevent_process;i++)
     {
         //cout<<"EVENT "<<i<<endl;
@@ -114,22 +115,36 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         }
         
         // NUMBER 1: if we get 5 charged particles
-        if(pwflag0>=5)h_thrust->Fill(T_sum/T_mag);
+        if(pwflag0>=5)
+        {
+            Float_t Thrust = T_sum/T_mag;
+            h_thrust->Fill(Thrust);
+            if((1.0-Thrust)<.05){h_thrust_log->Fill(h_thrust->GetBinCenter(1));}
+            else{h_thrust_log->Fill(1-Thrust);}
+        }
     }
 
     
-   // Double_t scale = 1.0/( h_thrust->GetXaxis()->GetBinWidth(1)*h_thrust->Integral());
-    h_thrust->Scale(1.0/h_thrust->Integral());
+    Double_t scale = 1.0/( h_thrust->GetXaxis()->GetBinWidth(1)*h_thrust->Integral());
+    h_thrust->Scale(scale);
+    h_thrust_log->Scale(1.0/h_thrust_log->Integral());
     for(int i = 0; i < nBins; ++i)
     {
-        h_thrust->SetBinContent(i+1, h_thrust->GetBinContent(i+1)/h_thrust->GetBinWidth(i+1));
-        h_thrust->SetBinError(i+1, h_thrust->GetBinError(i+1)/h_thrust->GetBinWidth(i+1));
+        Float_t binWidth = h_thrust_log->GetBinWidth(i+1);
+        if(i==0)binWidth+=0.05;
+        h_thrust_log->SetBinContent(i+1, h_thrust->GetBinContent(i+1)/binWidth);
+        h_thrust_log->SetBinError(i+1, h_thrust->GetBinError(i+1)/binWidth);
     }
    
-    TCanvas *c2 = new TCanvas("c2","",200,10,500,500);
+    TCanvas *c1 = new TCanvas("log(1-T)","",200,10,500,500);
+    gStyle->SetOptStat(0);
+    h_thrust_log->Draw();
+    
+    TCanvas *c2 = new TCanvas("T","",200,10,500,500);
     gStyle->SetOptStat(0);
     h_thrust->Draw();
-    c2->SaveAs(Form("tDist_%.2f_%.2f_%d.pdf",min_TTheta,max_TTheta,isCharged));
+    //c2->SaveAs(Form("tDist_%.2f_%.2f_%d.pdf",min_TTheta,max_TTheta,isCharged));
+
 }
 
 
