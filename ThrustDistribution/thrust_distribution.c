@@ -16,19 +16,23 @@
 #include <TStyle.h>
 #include "TLorentzVector.h"
 #include "TCanvas.h"
+#include "getLogBins.h"
+
 
 
 ////// Thrust Distribution  //////
 // Select events by the following criteria
 // 1. Events accepted with at least 5 good tracks  Done
-// 2. Total charged energy > 15GeV  Done
+// 2. Total charged energy > 15GeV  Not done
+// 3. Energy (91,91.5) to focus on Z pole
 // 3. |cos(TTheta)|<0.9  Done
 // 4. missP/Energy<0.3  Done
-void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/alephDataPaths_LEP2_1995to2000.root", // file used
+void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/alephDataPaths_LEP1.root", // file used
                          Float_t cut_missP = 0.3,   // upper bound on missP/energy
                          Float_t min_TTheta = 0.0, // lower cut on TTheta
                          Float_t max_TTheta = 3.5, // upper cut on TTheta --> currently full range of TTheta
-                         Float_t min_Energy = 15, // lower cut on Energy set at 15GeV   i.e. Energy>15 to take event
+                         Float_t min_Energy = 91, // lower cut on Energy   i.e. Energy>91 to take event
+                         Float_t max_Energy = 91.5, // upper cut on Energy    i.e. Energy<91.5 to take event
                          Int_t isCharged = 0, // 0 to include all particle, 1 to only look at charged particles
                          Int_t isGen = 0    // 1 to use gen level
 )
@@ -64,16 +68,21 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     Int_t nevent = (Int_t)t1->GetEntries();
     Int_t nevent_process = nevent;
     std::vector<float> T;
-    TH1D *h_thrust = new TH1D("h_thrust","",100,0,1);
+    
+    const int nBins = 100;
+    Double_t bins[nBins+1];
+    getLogBins(.05, 1, nBins, bins)
+    TH1D *h_thrust = new TH1D("h_thrust",";Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",nBins,bins);
+    
     for(Int_t i=0;i<nevent_process;i++)
     {
         //cout<<"EVENT "<<i<<endl;
         
         t1->GetEntry(i);
         if (i%10000==0) cout <<i<<"/"<<nevent_process<<endl;
-        
+
         // NUMBER 2: Cut on Energy
-        if(Energy<min_Energy){continue;}
+        if(Energy<min_Energy || Energy>max_Energy){continue;}
         // Cut on TTheta
         if(TTheta<min_TTheta || TTheta>max_TTheta)continue;
         // NUMBER 3: Cut of TTheta
