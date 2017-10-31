@@ -170,36 +170,53 @@ TVector3 getChargedThrustBelle(int n, float *px, float *py, float *pz, int *pwfl
 //n is number of particles, px,py,pz are arrays of momentum components
 TVector3 getThrustHerwig(int n, float *px, float *py, float *pz){
   TVector3 thrust = TVector3(0,0,0);
+  float pSum = 0;
+  for(int t = 0; t<n; t++) pSum += TVector3(px[t],py[t],pz[t]).Mag();
+ 
   if(n<=0) return thrust;
 
   if(n==1){//thrust is just the particle
-    return TVector3(px[0],py[0],pz[0]);   
+    TVector3 thrust = TVector3(px[0],py[0],pz[0]);   
+    thrust.SetMag(thrust.Mag()/pSum);
+    return thrust;
   }
 
   if(n==2){//special case for 2 particles
     if(TMath::Power(px[0],2)+TMath::Power(py[0],2)+TMath::Power(pz[0],2) >= TMath::Power(px[1],2)+TMath::Power(py[1],2)+TMath::Power(pz[1],2)){
-      return TVector3(px[0],py[0],pz[0]);
+      TVector3 thrust = TVector3(px[0],py[0],pz[0]);   
+      thrust.SetMag(thrust.Mag()/pSum);
+      return thrust;
     }
     else{
-      return TVector3(px[1],py[1],pz[1]);
+      TVector3 thrust = TVector3(px[1],py[1],pz[1]);   
+      thrust.SetMag(thrust.Mag()/pSum);
+      return thrust;
     }
   }
 
   if(n==3){//combine lowest 2 magnitude momentum, then use same algo as n=2
     if(TMath::Power(px[0],2)+TMath::Power(py[0],2)+TMath::Power(pz[0],2) >= TMath::Power(px[1],2)+TMath::Power(py[1],2)+TMath::Power(pz[1],2)){
       if(TMath::Power(px[0],2)+TMath::Power(py[0],2)+TMath::Power(pz[0],2) >= TMath::Power(px[2],2)+TMath::Power(py[2],2)+TMath::Power(pz[2],2)){
-        return TVector3(px[0],py[0],pz[0]);//0 is largest momentum
+        TVector3 thrust = TVector3(px[0],py[0],pz[0]);   
+        thrust.SetMag(thrust.Mag()/pSum);
+        return thrust;
       }
       else{
-        return TVector3(px[2],py[2],pz[2]);//2 is largest momentum
+        TVector3 thrust = TVector3(px[2],py[2],pz[2]);   
+        thrust.SetMag(thrust.Mag()/pSum);
+        return thrust;
       } 
     }
     else{
       if(TMath::Power(px[1],2)+TMath::Power(py[1],2)+TMath::Power(pz[1],2) >= TMath::Power(px[2],2)+TMath::Power(py[2],2)+TMath::Power(pz[2],2)){
-        return TVector3(px[1],py[1],pz[1]);//1 is largest momentum
+        TVector3 thrust = TVector3(px[1],py[1],pz[1]);   
+        thrust.SetMag(thrust.Mag()/pSum);
+        return thrust;
       }
       else{
-        return TVector3(px[2],py[2],pz[2]);//2 is largest momentum
+        TVector3 thrust = TVector3(px[2],py[2],pz[2]);   
+        thrust.SetMag(thrust.Mag()/pSum);
+        return thrust;
       } 
     }
   }
@@ -247,14 +264,17 @@ TVector3 getThrustHerwig(int n, float *px, float *py, float *pz){
       }
     } 
   }
+  thrust.SetMag(thrust.Mag()/pSum);
   return thrust;
 }
 
 //almost a straight copy of above, but filter for pwflag==0 (tracks)
 TVector3 getChargedThrustHerwig(int n, float *px, float *py, float *pz, int *pwflag){
   float nTrk = 0;
+  float pSum = 0;
   for(int t = 0; t<n; t++){
     if(pwflag[t]!=0) continue;
+    pSum += TVector3(px[t],py[t],pz[t]).Mag();
     nTrk++;
   }
   
@@ -263,7 +283,11 @@ TVector3 getChargedThrustHerwig(int n, float *px, float *py, float *pz, int *pwf
 
   if(nTrk==1){//thrust is just the particle
     for(int t = 0; t<n; t++){
-      if(pwflag[t]==0) return TVector3(px[t],py[t],pz[t]);   
+      if(pwflag[t]==0){
+        TVector3 thrust = TVector3(px[t],py[t],pz[t]);   
+        thrust.SetMag(thrust.Mag()/pSum);
+        return thrust;
+      }
     }
   }
  
@@ -275,10 +299,14 @@ TVector3 getChargedThrustHerwig(int n, float *px, float *py, float *pz, int *pwf
     }
 
     if(TMath::Power(px[n1],2)+TMath::Power(py[n1],2)+TMath::Power(pz[n1],2) >= TMath::Power(px[n2],2)+TMath::Power(py[n2],2)+TMath::Power(pz[n2],2)){
-      return TVector3(px[n1],py[n1],pz[n1]);
+      TVector3 thrust = TVector3(px[n1],py[n1],pz[n1]);   
+      thrust.SetMag(thrust.Mag()/pSum);
+      return thrust;
     }
     else{
-      return TVector3(px[n2],py[n2],pz[n2]);
+      TVector3 thrust = TVector3(px[n2],py[n2],pz[n2]);   
+      thrust.SetMag(thrust.Mag()/pSum);
+      return thrust;
     }
   }
  
@@ -291,18 +319,26 @@ TVector3 getChargedThrustHerwig(int n, float *px, float *py, float *pz, int *pwf
     }
     if(TMath::Power(px[n1],2)+TMath::Power(py[n1],2)+TMath::Power(pz[n1],2) >= TMath::Power(px[n2],2)+TMath::Power(py[n2],2)+TMath::Power(pz[n2],2)){
       if(TMath::Power(px[n1],2)+TMath::Power(py[n1],2)+TMath::Power(pz[n1],2) >= TMath::Power(px[n3],2)+TMath::Power(py[n3],2)+TMath::Power(pz[n3],2)){
-        return TVector3(px[n1],py[n1],pz[n1]);//n1 is largest momentum
+        TVector3 thrust = TVector3(px[n1],py[n1],pz[n1]);//n1 is largest p   
+        thrust.SetMag(thrust.Mag()/pSum);
+        return thrust;
       }
       else{
-        return TVector3(px[n3],py[n3],pz[n3]);//2 is largest momentum
+        TVector3 thrust = TVector3(px[n3],py[n3],pz[n3]);//n3 is largest p   
+        thrust.SetMag(thrust.Mag()/pSum);
+        return thrust;
       } 
     }
     else{
       if(TMath::Power(px[n2],2)+TMath::Power(py[n2],2)+TMath::Power(pz[n2],2) >= TMath::Power(px[n3],2)+TMath::Power(py[n3],2)+TMath::Power(pz[n3],2)){
-        return TVector3(px[n2],py[n2],pz[n2]);//1 is largest momentum
+        TVector3 thrust = TVector3(px[n2],py[n2],pz[n2]);//n3 is largest p   
+        thrust.SetMag(thrust.Mag()/pSum);
+        return thrust;
       }
       else{
-        return TVector3(px[n3],py[n3],pz[n3]);//2 is largest momentum
+        TVector3 thrust = TVector3(px[n3],py[n3],pz[n3]);//n3 is largest p   
+        thrust.SetMag(thrust.Mag()/pSum);
+        return thrust;
       } 
     }
   }
@@ -350,7 +386,8 @@ TVector3 getChargedThrustHerwig(int n, float *px, float *py, float *pz, int *pwf
       }
     } 
   }
-    return thrust;
+  thrust.SetMag(thrust.Mag()/pSum);
+  return thrust;
 }
 
 

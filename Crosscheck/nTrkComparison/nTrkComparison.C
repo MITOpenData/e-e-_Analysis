@@ -71,7 +71,7 @@ void nTrkComparison(int nTrkLow = 0, int nTrkHigh = 999){
     }
     if(sumReco>0){
       nTrk_AlephMCGen->Fill(sumReco,sumReco/(double)sumGen);
-      nTrk_AlephMCGen_Cut->Fill(sumReco,sumReco/(double)sumGenCut);
+      if(sumGenCut>0) nTrk_AlephMCGen_Cut->Fill(sumReco,sumReco/(double)sumGenCut);
     }
   }
   nTrk_AlephMCGen->Print("All");

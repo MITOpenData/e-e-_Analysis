@@ -284,8 +284,10 @@ int scan(std::string inFileName, std::string outFileName="")
   tout->Branch("pid", pData.pid,"pid[nParticle]/I");
  
   //thrust quantities
+  tout->Branch("Thrust",&eData.Thrust,"Thrust/F");
   tout->Branch("TTheta",&eData.TTheta,"TTheta/F");
   tout->Branch("TPhi",&eData.TPhi,"TPhi/F");
+  tout->Branch("Thrust_charged",&eData.Thrust_charged,"Thrust_charged/F");
   tout->Branch("TTheta_charged",&eData.TTheta_charged,"TTheta_charged/F");
   tout->Branch("TPhi_charged",&eData.TPhi_charged,"TPhi_charged/F");
   tout->Branch("pt_wrtThr", pData.pt_wrtThr,"pt_wrtThr[nParticle]/F");
@@ -341,8 +343,10 @@ int scan(std::string inFileName, std::string outFileName="")
     tgout->Branch("pid", pgData.pid,"pid[nParticle]/I");
   
     //thrust quantities
+    tgout->Branch("Thrust",&egData.Thrust,"Thrust/F");
     tgout->Branch("TTheta",&egData.TTheta,"TTheta/F");
     tgout->Branch("TPhi",&egData.TPhi,"TPhi/F");
+    tgout->Branch("Thrust_charged",&egData.Thrust_charged,"Thrust_charged/F");
     tgout->Branch("TTheta_charged",&egData.TTheta_charged,"TTheta_charged/F");
     tgout->Branch("TPhi_charged",&egData.TPhi_charged,"TPhi_charged/F");
     tgout->Branch("pt_wrtThr", pgData.pt_wrtThr,"pt_wrtThr[nParticle]/F");
@@ -436,8 +440,10 @@ int scan(std::string inFileName, std::string outFileName="")
         thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz, THRUST::OPTIMAL); 
         thrust_charged = getChargedThrust(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag, THRUST::OPTIMAL);
         setThrustVariables(&pData, &eData, thrust, thrust_charged);
+        eData.Thrust = thrust.Mag();
         eData.TTheta = thrust.Theta();
         eData.TPhi = thrust.Phi();
+        eData.Thrust_charged = thrust_charged.Mag();
         eData.TTheta_charged = thrust_charged.Theta();
         eData.TPhi_charged = thrust_charged.Phi();
       
@@ -551,8 +557,10 @@ int scan(std::string inFileName, std::string outFileName="")
     thrust_charged = getChargedThrust(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag, THRUST::OPTIMAL);
     setThrustVariables(&pData, &eData, thrust, thrust_charged);
 
+    eData.Thrust = thrust.Mag();
     eData.TTheta = thrust.Theta();
     eData.TPhi = thrust.Phi();
+    eData.Thrust_charged = thrust_charged.Mag();
     eData.TTheta_charged = thrust_charged.Theta();
     eData.TPhi_charged = thrust_charged.Phi();
 
@@ -626,8 +634,10 @@ int scan(std::string inFileName, std::string outFileName="")
           thrust = getThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, THRUST::OPTIMAL); 
           thrust_charged = getChargedThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag, THRUST::OPTIMAL);
           setThrustVariables(&pgData, &egData, thrust, thrust_charged);
+          egData.Thrust = thrust.Mag();
           egData.TTheta = thrust.Theta();
           egData.TPhi = thrust.Phi();
+          egData.Thrust_charged = thrust_charged.Mag();
           egData.TTheta_charged = thrust_charged.Theta();
           egData.TPhi_charged = thrust_charged.Phi();
 
@@ -777,8 +787,10 @@ int scan(std::string inFileName, std::string outFileName="")
       thrust = getThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, THRUST::OPTIMAL); 
       thrust_charged = getChargedThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag, THRUST::OPTIMAL );
       setThrustVariables(&pgData, &egData, thrust, thrust_charged);
+      egData.Thrust = thrust.Mag();
       egData.TTheta = thrust.Theta();
       egData.TPhi = thrust.Phi();
+      egData.Thrust_charged = thrust_charged.Mag();
       egData.TTheta_charged = thrust_charged.Theta();
       egData.TPhi_charged = thrust_charged.Phi();
       
