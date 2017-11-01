@@ -14,9 +14,12 @@ class Settings{
     //3 = CMS
 
     int experiment = 0;
+    bool isMC = false;
+    int MCProcess = 5;
     //ALEPH data
     //std::string inputFile = "/data/abaty/ALEPHTrees/cleaned_ALEPH_Data2-v3_Aug11_2017.root";
-    std::string inputFile = "/data/abaty/EpEmStudies/ALEPH_Thrust/thrust_Aug16.root";
+    std::string inputFile = "/data/abaty/ALEPHTrees/mergedLEP1_20171022.root";
+    //std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/MC/20171022/alephMCRecoAfterCutPaths_1997_KQQAndKWW4F_1of2_20171022.root";
 
 
     //cuts
@@ -27,33 +30,45 @@ class Settings{
     float assocPt[2] = {0,999};
     float nTrkPt[2] = {0.4,100};
     
+    //float etaCut = 1.8;
     float etaCut = 1.8;
-    float dEtaBins = 36;//keep even
+    //beam  axis stuff
+    //float etaPlotRange = 1.8;//this gets multiplied by 2
+    //float dEtaBins = 36;//keep even
+    //float dPhiBins = 36;//keep factor of 4
+    float etaPlotRange = 3.6;//this gets multiplied by 2
+    float dEtaBins = 72;//keep even
     float dPhiBins = 36;//keep factor of 4
 
     float dEtaRangeToIntegrate[2] = {2.0,3.6};//try to make this correspond with bin edges based on above parameters
 
     //mixing
-    int nMixedEvents = 5;
+    int nMixedEvents = 1;
     int maxSkipSize  = 3;
 
 
     //plots
-    static const int nMultBins = 8;
-    int multBinsLow[nMultBins]  = {0,   0 , 15, 25, 35,  0 , 30, 40};
-    int multBinsHigh[nMultBins] = {999, 15, 25, 35, 999, 35,999,999};
+    static const int nMultBins = 5;
+    int multBinsLow[nMultBins]  = {0 , 16, 24, 32, 40};
+    int multBinsHigh[nMultBins] = {16, 24, 32, 40, 999};
 
     //other
     bool doThrust = true;
+    bool doChargedThrust = true;
     float thrustMatchWindow = 10;
+    bool doMultMatch = false;
     bool doMissPCut = true;
     float MissPCut = 20;
     bool doExcludeNTrigLT2 = true;
+    bool doAjCut = true;
+    float AjCut = 0.02;
+    float thirdJetCut = 0.05;
     bool doAllData = true;
-    int nEvts = 10000;
+    int nEvts = 50000;
 
     Settings();
     bool isInMultBin(int n, int bin);
+    bool isInSameMultBin(int n1, int n2);
 
   private:
 
@@ -84,4 +99,11 @@ bool Settings::isInMultBin(int n, int bin){
   return false;
 }
 
+bool Settings::isInSameMultBin(int n1, int n2){
+  bool isIt = false;
+  for(int i = 0; i<nMultBins; i++){
+    if(isInMultBin(n1,i) && isInMultBin(n2,i)) isIt = true;
+  }
+  return isIt;
+}
 #endif

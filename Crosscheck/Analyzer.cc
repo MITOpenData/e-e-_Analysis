@@ -33,60 +33,82 @@ void Analyzer(){
   TH1D *h_Tphi = new TH1D("T_phi","T_phi",100,-TMath::Pi(),TMath::Pi());
   
   for(int i = 0; i<s.nMultBins; i++){
-    signal2PC[i] = new TH2F(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaCut,2*s.etaCut,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
-    bkgrnd2PC[i] = new TH2F(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaCut,2*s.etaCut,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+    signal2PC[i] = new TH2F(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+    bkgrnd2PC[i] = new TH2F(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
     longRangeYield[i] = new TH1F(Form("longRangeYield_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#phi;Y(#Delta#Phi)",s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0); 
   }
   TH1F * multiplicity = new TH1F("multiplicity",";nTrk;nEvents",200,0,200);
 
   //files and variables for input
   TFile * f = TFile::Open(s.inputFile.c_str(),"read");
-  TTree * t = (TTree*)f->Get("t");  
+  TTree * t = (TTree*)f->Get("t"); 
+  TTree * jt = (TTree*)f->Get("ak4ESchemeJetTree"); 
   TFile * fMix = TFile::Open(s.inputFile.c_str(),"read");
   TTree * tMix = (TTree*)fMix->Get("t");
+  TTree * jtMix = (TTree*)fMix->Get("ak4ESchemeJetTree"); 
 
   int nParticle,     nParticleMix;
   float pt[500],     ptMix[500];
-  float px[500],     pxMix[500];
-  float py[500],     pyMix[500];
-  float pz[500],     pzMix[500];
-  float pwflag[500], pwflagMix[500];
   float eta[500],    etaMix[500];
   float theta[500],  thetaMix[500];
   float phi[500],    phiMix[500];
+  float pt_wrtThr[500],     ptMix_wrtThr[500];
+  float eta_wrtThr[500],    etaMix_wrtThr[500];
+  float theta_wrtThr[500],  thetaMix_wrtThr[500];
+  float phi_wrtThr[500],    phiMix_wrtThr[500];
+  float px[500],     pxMix[500];
+  float py[500],     pyMix[500];
+  float pz[500],     pzMix[500];
+  int pwflag[500], pwflagMix[500];
   float TTheta,      TThetaMix;
   float TPhi,        TPhiMix;
   float MissP;
-
+  int process,       processMix;
+  int nref,          nrefMix;
+  float jtpt[100],   jtptMix[100];
 
   t->SetBranchAddress("nParticle",&nParticle); tMix->SetBranchAddress("nParticle",&nParticleMix);
   t->SetBranchAddress("pt",&pt);               tMix->SetBranchAddress("pt",&ptMix);
+  t->SetBranchAddress("eta",&eta);             tMix->SetBranchAddress("eta",&etaMix);
+  t->SetBranchAddress("theta",&theta);         tMix->SetBranchAddress("theta",&thetaMix);
+  t->SetBranchAddress("phi",&phi);             tMix->SetBranchAddress("phi",&phiMix);
+  if(s.doChargedThrust){
+    t->SetBranchAddress("pt_wrtChThr",&pt_wrtThr);               tMix->SetBranchAddress("pt_wrtChThr",&ptMix_wrtThr);
+    t->SetBranchAddress("eta_wrtChThr",&eta_wrtThr);             tMix->SetBranchAddress("eta_wrtChThr",&etaMix_wrtThr);
+    t->SetBranchAddress("theta_wrtChThr",&theta_wrtThr);         tMix->SetBranchAddress("theta_wrtChThr",&thetaMix_wrtThr);
+    t->SetBranchAddress("phi_wrtChThr",&phi_wrtThr);             tMix->SetBranchAddress("phi_wrtChThr",&phiMix_wrtThr);
+    t->SetBranchAddress("TTheta_charged",&TTheta);       tMix->SetBranchAddress("TTheta_charged",&TThetaMix);
+    t->SetBranchAddress("TPhi_charged",&TPhi);           tMix->SetBranchAddress("TPhi_charged",&TPhiMix);
+  }else{
+    t->SetBranchAddress("pt_wrtThr",&pt_wrtThr);               tMix->SetBranchAddress("pt_wrtThr",&ptMix_wrtThr);
+    t->SetBranchAddress("eta_wrtThr",&eta_wrtThr);             tMix->SetBranchAddress("eta_wrtThr",&etaMix_wrtThr);
+    t->SetBranchAddress("theta_wrtThr",&theta_wrtThr);         tMix->SetBranchAddress("theta_wrtThr",&thetaMix_wrtThr);
+    t->SetBranchAddress("phi_wrtThr",&phi_wrtThr);             tMix->SetBranchAddress("phi_wrtThr",&phiMix_wrtThr);
+    t->SetBranchAddress("TTheta",&TTheta);       tMix->SetBranchAddress("TTheta",&TThetaMix);
+    t->SetBranchAddress("TPhi",&TPhi);           tMix->SetBranchAddress("TPhi",&TPhiMix);
+  }
   t->SetBranchAddress("px",&px);               tMix->SetBranchAddress("px",&pxMix);
   t->SetBranchAddress("py",&py);               tMix->SetBranchAddress("py",&pyMix);
   t->SetBranchAddress("pz",&pz);               tMix->SetBranchAddress("pz",&pzMix);
   t->SetBranchAddress("pwflag",&pwflag);       tMix->SetBranchAddress("pwflag",&pwflagMix);
-  t->SetBranchAddress("eta",&eta);             tMix->SetBranchAddress("eta",&etaMix);
-  t->SetBranchAddress("theta",&theta);         tMix->SetBranchAddress("theta",&thetaMix);
-  t->SetBranchAddress("phi",&phi);             tMix->SetBranchAddress("phi",&phiMix);
-  t->SetBranchAddress("TTheta",&TTheta);       tMix->SetBranchAddress("TTheta",&TThetaMix);
-  t->SetBranchAddress("TPhi",&TPhi);           tMix->SetBranchAddress("TPhi",&TPhiMix);
-  t->SetBranchAddress("MissP",&MissP);
+  t->SetBranchAddress("missP",&MissP);
+  t->SetBranchAddress("process",&process);     tMix->SetBranchAddress("process",&processMix);
+  jt->SetBranchAddress("nref",&nref);          jtMix->SetBranchAddress("nref",&nrefMix);
+  jt->SetBranchAddress("jtpt",&jtpt);          jtMix->SetBranchAddress("jtpt",&jtptMix);
 
   for(int i = 0; i< (s.doAllData?t->GetEntries():s.nEvts); i++){
     t->GetEntry(i);
     if(i%1000==0) std::cout << i << "/" << (s.doAllData?t->GetEntries():s.nEvts) << std::endl;
-    if(s.doThrust){
-      for(int i = 0; i<nParticle; i++){
-        TVector3 thrust = TVector3(0,0,0);
-        thrust.SetMagThetaPhi(1,TTheta,TPhi);
-        TVector3 p = TVector3(px[i],py[i],pz[i]);
-        pt[i]    = ptFromThrust(thrust,p);
-        eta[i]   = etaFromThrust(thrust,p);
-        theta[i] = thetaFromThrust(thrust,p);
-        phi[i]   = phiFromThrust(thrust,p);
-      }
-    }
+    
 
+    if(MissP>s.MissPCut && s.doMissPCut) continue;
+    if(s.isMC && process!=s.MCProcess) continue;
+    if(s.doAjCut && nref>=2){
+      jt->GetEntry(i);
+      if(TMath::Abs(jtpt[0]-jtpt[1])/(jtpt[0]+jtpt[1]) > s.AjCut) continue; 
+      if(nref>2 && 2*jtpt[2]/(jtpt[0]+jtpt[1]) > s.thirdJetCut) continue;
+    }
+ 
     int nTrk = 0;
     float nTrig = 0;
     for(int t = 0; t<nParticle; t++){
@@ -94,14 +116,14 @@ void Analyzer(){
         if(TMath::Abs(eta[t]) >= s.etaCut) continue;
         if(pt[t]>s.nTrkPt[0] && pt[t]<s.nTrkPt[1])  nTrk++;//nTrk calculation
 
-        if(pt[t]<=s.trigPt[0] || pt[t]>=s.trigPt[1]) continue;//nTrig calculation
+        if(s.doThrust && (pt[t]<=s.trigPt[0] || pt[t]>=s.trigPt[1])) continue;//nTrig calculation
+        if(!s.doThrust && (pt_wrtThr[t]<=s.trigPt[0] || pt_wrtThr[t]>=s.trigPt[1])) continue;//nTrig calculation
         float corr = 1.0/getEff(s,pt[t],eta[t]);
         nTrig += corr;
       }
     }
     multiplicity->Fill(nTrk);
     if(nTrig<1 && s.doExcludeNTrigLT2) continue;
-    if(MissP>s.MissPCut && s.doMissPCut) continue;
     h_Ttheta->Fill(TTheta);
     h_Tphi->Fill(TPhi);
 
@@ -111,18 +133,26 @@ void Analyzer(){
       if( i2>=t->GetEntries()) i2 = (int)(s.maxSkipSize*randGen.Rndm())+1;
       tMix->GetEntry(i2);
       if(MissP>s.MissPCut && s.doMissPCut) continue;
+      if(s.isMC && processMix!=s.MCProcess) continue;
+      if(s.doAjCut && nrefMix>=2){
+        jtMix->GetEntry(i2);
+        if(TMath::Abs(jtptMix[0]-jtptMix[1])/(jtptMix[0]+jtptMix[1]) > s.AjCut) continue;  
+        if(nrefMix>2 && 2*jtptMix[2]/(jtptMix[0]+jtptMix[1]) > s.thirdJetCut) continue;
+      }
       if(s.doThrust){
         if(TMath::Abs(TTheta-TThetaMix)>s.thrustMatchWindow || TMath::ACos(TMath::Cos(TPhi-TPhiMix))>s.thrustMatchWindow) continue;
-        for(int i = 0; i<nParticleMix; i++){
-          TVector3 thrust = TVector3(0,0,0);
-          thrust.SetMagThetaPhi(1,TThetaMix,TPhiMix);
-          TVector3 p = TVector3(pxMix[i],pyMix[i],pzMix[i]);
-          ptMix[i]    = ptFromThrust(thrust,p);
-          etaMix[i]   = etaFromThrust(thrust,p);
-          thetaMix[i] = thetaFromThrust(thrust,p);
-          phiMix[i]   = phiFromThrust(thrust,p);
-        }
       }
+      int nTrkMix = 0;
+      if(s.doMultMatch){
+        for(int t = 0; t<nParticleMix; t++){
+          if(pwflagMix[t]==0 || (s.doUseLeptons && (pwflagMix[t]==1 || pwflagMix[t]==2))){
+            if(TMath::Abs(etaMix[t]) >= s.etaCut) continue;
+            if(ptMix[t]>s.nTrkPt[0] && ptMix[t]<s.nTrkPt[1])  nTrkMix++;//nTrk calculation
+          }
+        }
+        if(!s.isInSameMultBin(nTrk,nTrkMix)) continue;
+      } 
+ 
       for(int k = 0; k<s.nMultBins; k++){
         if(s.isInMultBin(nTrk,k) && nMixed==0)  nSignalEvts[k]++;
         if(s.isInMultBin(nTrk,k))  nBkgrndEvts[k]++;
@@ -138,20 +168,23 @@ void Analyzer(){
           h_pt->Fill(pt[j1]);
         }
         if(TMath::Abs(eta[j1]) > s.etaCut) continue;
-        if(pt[j1]<s.trigPt[0] || pt[j1]>s.trigPt[1]) continue;
+        if(!s.doThrust && (pt[j1]<s.trigPt[0] || pt[j1]>s.trigPt[1])) continue;
+        if(s.doThrust && (pt_wrtThr[j1]<s.trigPt[0] || pt_wrtThr[j1]>s.trigPt[1])) continue;
         float corr1 = 1.0/getEff(s,pt[j1],eta[j1]);
 
         //signal histogram
         if(nMixed == 0){
           for(int j2 = 0; j2<j1; j2++){
             if(TMath::Abs(eta[j2]) > s.etaCut) continue;
-            if(pt[j2]<s.assocPt[0] || pt[j2]>s.assocPt[1]) continue;
+            if(s.doThrust && (pt[j2]<s.assocPt[0] || pt[j2]>s.assocPt[1])) continue;
+            if(!s.doThrust && (pt_wrtThr[j2]<s.assocPt[0] || pt_wrtThr[j2]>s.assocPt[1])) continue;
             if(!(pwflag[j2]==0 || (s.doUseLeptons && (pwflag[j2]==1 || pwflag[j2]==2)))) continue;
             float corr2 = 1.0/getEff(s,pt[j2],eta[j2]);
             //correct for both particles and also divide by hte bin widths
             for(int k = 0; k<s.nMultBins; k++){
               if(s.isInMultBin(nTrk,k)){
-                signal2PC[k]->Fill( dEta(eta[j1],eta[j2]), dPhi(phi[j1],phi[j2]), corr1*corr2/(4*s.etaCut/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+                if(!s.doThrust) signal2PC[k]->Fill( dEta(eta[j1],eta[j2]), dPhi(phi[j1],phi[j2]), corr1*corr2/(4*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+                if(s.doThrust) signal2PC[k]->Fill( dEta(eta_wrtThr[j1],eta_wrtThr[j2]), dPhi(phi_wrtThr[j1],phi_wrtThr[j2]), corr1*corr2/(4*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
               }
             }//end mult bin loop
           }//end 2nd particle loop
@@ -160,13 +193,15 @@ void Analyzer(){
         //background mixed event histogram  
         for(int j2 = 0; j2<nParticleMix; j2++){
           if(TMath::Abs(etaMix[j2]) > s.etaCut) continue;
-          if(ptMix[j2]<s.assocPt[0] || ptMix[j2]>s.assocPt[1]) continue;
+          if(!s.doThrust && (ptMix[j2]<s.assocPt[0] || ptMix[j2]>s.assocPt[1])) continue;
+          if(s.doThrust && (ptMix_wrtThr[j2]<s.assocPt[0] || ptMix_wrtThr[j2]>s.assocPt[1])) continue;
           if(!(pwflagMix[j2]==0 || (s.doUseLeptons && (pwflagMix[j2]==1 || pwflagMix[j2]==2)))) continue;
           float corr2 = 1.0/getEff(s,pt[j2],eta[j2]);
           //correct for both particles and also divide by hte bin widths
           for(int k = 0; k<s.nMultBins; k++){
             if(s.isInMultBin(nTrk,k)){
-              bkgrnd2PC[k]->Fill( dEta(eta[j1],etaMix[j2]), dPhi(phi[j1],phiMix[j2]), corr1*corr2/(4*s.etaCut/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+              if(!s.doThrust) bkgrnd2PC[k]->Fill( dEta(eta[j1],etaMix[j2]), dPhi(phi[j1],phiMix[j2]), corr1*corr2/(4*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+              if(s.doThrust) bkgrnd2PC[k]->Fill( dEta(eta_wrtThr[j1],etaMix_wrtThr[j2]), dPhi(phi_wrtThr[j1],phiMix_wrtThr[j2]), corr1*corr2/(4*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
             }
           }//end mult bin loop
         }//end mixed particle loop

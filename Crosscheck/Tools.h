@@ -33,7 +33,7 @@ void symmetrizeDetaDphi(TH2F * h, int etaBins, int phiBins){
 }
 
 void getLongRangeYield(Settings s, TH2F * h, TH1F * g){
-  float binArea = (4*s.etaCut/(float)s.dEtaBins)*(2*TMath::Pi()/(float)s.dPhiBins); 
+  float binArea = (4*s.etaPlotRange/(float)s.dEtaBins)*(2*TMath::Pi()/(float)s.dPhiBins); 
  
   for(int i = 0; i<s.dPhiBins; i++){
     float sum = 0; 
@@ -54,7 +54,7 @@ void getLongRangeYield(Settings s, TH2F * h, TH1F * g){
 
 float getEff(Settings s, float pt, float eta){
   if(s.experiment == 0){
-    return 0.98;
+    return 1;
   }
   if(s.experiment == 3){
     return 1;
