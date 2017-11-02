@@ -119,10 +119,10 @@ void EventDisplay(std::string inputFile = "/data/abaty/ALEPHTrees/mergedLEP1_201
     if(pt[i]<ptCut) continue;
     //jet tracks
     int trackColor = 0;
-    if(jtpt[0]>5 && dR(jteta[0],jtphi[0],eta[i],phi[i])<0.8) trackColor = 1;
-    if(jtpt[1]>5 && dR(jteta[1],jtphi[1],eta[i],phi[i])<0.8) trackColor = 2;
-    if(jtpt[2]>5 && dR(jteta[2],jtphi[2],eta[i],phi[i])<0.8) trackColor = 3;
-    if(jtpt[3]>5 && dR(jteta[3],jtphi[3],eta[i],phi[i])<0.8) trackColor = 4;
+    if(jtpt[0]*TMath::CosH(jteta[0])>5 && dR(jteta[0],jtphi[0],eta[i],phi[i])<0.8) trackColor = 1;
+    if(jtpt[1]*TMath::CosH(jteta[1])>5 && dR(jteta[1],jtphi[1],eta[i],phi[i])<0.8) trackColor = 2;
+    if(jtpt[2]*TMath::CosH(jteta[2])>5 && dR(jteta[2],jtphi[2],eta[i],phi[i])<0.8) trackColor = 3;
+    if(jtpt[3]*TMath::CosH(jteta[3])>5 && dR(jteta[3],jtphi[3],eta[i],phi[i])<0.8) trackColor = 4;
 
     //std::cout <<  jteta[0] << " " << jtphi[0] <<" " <<  eta[i] << " " << phi[i] << std::endl;
     //std::cout <<  dR(jteta[0],jtphi[0],eta[i],phi[i]) << std::endl;
