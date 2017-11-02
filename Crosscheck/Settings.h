@@ -48,14 +48,14 @@ class Settings{
 
 
     //plots
-    static const int nMultBins = 5;
-    int multBinsLow[nMultBins]  = {0 , 16, 24, 32, 40};
-    int multBinsHigh[nMultBins] = {16, 24, 32, 40, 999};
+    static const int nMultBins = 4;
+    int multBinsLow[nMultBins]  = {0 , 12, 22, 32};
+    int multBinsHigh[nMultBins] = {12, 22, 32, 999};
 
     //other
     bool doThrust = true;
     bool doChargedThrust = true;
-    float thrustMatchWindow = 10;
+    float thrustMatchWindow = 0.3;
     bool doMultMatch = false;
     bool doMissPCut = true;
     float MissPCut = 20;
