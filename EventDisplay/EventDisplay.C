@@ -8,7 +8,7 @@
 #include "TMath.h"
 #include "TVector3.h"
 #include "TView3D.h"
-#include "TCanavs.h"
+#include "TCanvas.h"
 
 //nasty global variables for nextEvent() function
 std::string currentFile;
