@@ -17,7 +17,7 @@
 #include "TLorentzVector.h"
 #include "TCanvas.h"
 #include "getLogBins.h"
-
+#include <TLine.h>
 
 ////////////////////////////////////////////////////////////
 //////////////////// Thrust Distribution  //////////////////
@@ -29,6 +29,9 @@
 // 3. |cos(TTheta)|<0.9  Done
 // 4. missP/Energy<0.3  Done
 ////////////////////////////////////////////////////////////
+
+std::vector<float> compute_errors();
+
 void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/alephDataPaths_LEP1.root", // file used
                          Float_t cut_missP = 0.3,   // upper bound on missP/energy
                          Float_t min_TTheta = 0.0, // lower cut on TTheta
@@ -143,8 +146,8 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         binHiEdge = binLowEdge + h_thrust->GetBinWidth(i);
         binval = h_thrust->GetBinContent(i);
         sys = quad_errors[i];
-        line_thrust->DrawLine(binLowEdge, binval - sys, binHiEdge, binVal - sys)
-        line_thrust->DrawLine(binLowEdge, binval + sys, binHiEdge, binVal + sys)
+        line_thrust->DrawLine(binLowEdge, binval - sys, binHiEdge, binval - sys);
+        line_thrust->DrawLine(binLowEdge, binval + sys, binHiEdge, binval + sys);
     }
     
     
