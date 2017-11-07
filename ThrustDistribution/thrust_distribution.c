@@ -200,18 +200,19 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         while(j<binHiEdge)
         {
             binx = h_thrust->GetXaxis()->FindBin(j);
-            cout<<"BINX "<<binx<<endl;
-            cout<<"QUAD_ERRORS "<<quad_errors[binx]<<endl;
             if(quad_errors[binx]>max_error)max_error = quad_errors[binx];
             j+=h_thrust->GetBinWidth(binx);
         }
         // Now we have the maximum error value
         //one_minus_T_errors.push_back(max_error);
         binval = h_one_minus_thrust->GetBinContent(i);
-        cout<<"binval,error "<<max_error<<endl;
         line_one_minus_thrust->DrawLine(binLowEdge_T, binval - max_error, binHiEdge_T, binval - max_error);
         line_one_minus_thrust->DrawLine(binLowEdge_T, binval + max_error, binHiEdge_T, binval + max_error);
-        if(max_error>0)h_ratio_one_minus_thrust->SetBinContent(i,h_one_minus_thrust->GetXaxis()->GetBinCenter(i)/max_error);
+        if(max_error>0)
+        {
+            h_ratio_one_minus_thrust->SetBinContent(i,h_one_minus_thrust->GetXaxis()->GetBinCenter(i)/max_error);
+            cout<<"central value = "<<h_one_minus_thrust->GetXaxis()->GetBinCenter(i)<<" error = "<<max_error<<endl;
+        }
     }
     
     TFile *hdata = new TFile("HEPData-ins636645-v1-Table54.root");
@@ -225,6 +226,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
 
     TCanvas *c3 = new TCanvas("ratio of central value and error for 1-T","",200,10,500,500);
     gStyle->SetOptStat(0);
+    h_ratio_one_minus_thrust->GetYaxis()->SetTitle("Central Value/Systematic");
     h_ratio_one_minus_thrust->Draw();
 }
 
