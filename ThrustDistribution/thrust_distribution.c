@@ -183,6 +183,9 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     float max_error;
     Int_t binx;
     //std::vector<float> one_minus_T_errors;
+    
+    // ratio of bin value to error
+    TH1D *h_ratio_one_minus_thrust = new TH1D("h_ratio_one_minus_thrust",";Central Value/Systematic",100,0,100);
     for (int i = 0;i<h_one_minus_thrust->GetNbinsX();i++)
     {
         // get low and high bins for 1-T
@@ -190,8 +193,8 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         binHiEdge_T = binLowEdge_T + h_one_minus_thrust->GetBinWidth(i);
         
         // get low and high bins for corresponding T values
-        binLowEdge = 1 - binLowEdge_T;
-        binHiEdge = 1 - binHiEdge_T;
+        binHiEdge = 1 - binLowEdge_T;
+        binLowEdge = 1 - binHiEdge_T;
         j = binLowEdge;
         max_error = 0.0;
         while(j<binHiEdge)
@@ -205,12 +208,10 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         // Now we have the maximum error value
         //one_minus_T_errors.push_back(max_error);
         binval = h_one_minus_thrust->GetBinContent(i);
-        cout<<"binLowEdge_T "<<binLowEdge_T<<endl;
-        cout<<"binHiEdge_T "<<binHiEdge_T<<endl;
-        cout<<"binval "<<binval<<endl;
-        cout<<"error "<<max_error<<endl;
+        cout<<"binval,error "<<max_error<<endl;
         line_one_minus_thrust->DrawLine(binLowEdge_T, binval - max_error, binHiEdge_T, binval - max_error);
         line_one_minus_thrust->DrawLine(binLowEdge_T, binval + max_error, binHiEdge_T, binval + max_error);
+        h_ratio_one_minus_thrust->Fill(h_one_minus_thrust-GetBinCenter(i)/max_error);
     }
     
     TFile *hdata = new TFile("HEPData-ins636645-v1-Table54.root");
@@ -222,6 +223,9 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     
     //c2->SaveAs(Form("tDist_%.2f_%.2f_%d.pdf",min_TTheta,max_TTheta,isCharged));
 
+    TCanvas *c3 = new TCanvas("ratio of central value and error for 1-T","",200,10,500,500);
+    gStyle->SetOptStat(0);
+    h_ratio_one_minus_thrust->Draw();
 }
 
 
