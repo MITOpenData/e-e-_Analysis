@@ -77,8 +77,8 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     const int nBins = 50;
     Double_t bins[nBins+1];
     getLogBins(.05, 0.5, nBins, bins);
-    TH1D *h_thrust_log = new TH1D("h_thrust_log",";1-Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",nBins,bins);
-    h_thrust_log->Sumw2();
+    TH1D *h_one_minus_thrust = new TH1D("h_one_minus_thrust",";1-Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",nBins,bins);
+    h_one_minus_thrust->Sumw2();
     TH1D *h_thrust = new TH1D("h_thrust",";Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",43,0.57,1);
     h_thrust->Sumw2();
     for(Int_t i=0;i<nevent_process;i++)
@@ -123,24 +123,16 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         {
             Float_t Thrust = T_sum/T_mag;
             h_thrust->Fill(Thrust);
-            if((1.0-Thrust)<.05){h_thrust_log->Fill(h_thrust_log->GetBinCenter(1));}
-            else{h_thrust_log->Fill(1-Thrust);}
+            if((1.0-Thrust)<.05){h_one_minus_thrust->Fill(h_one_minus_thrust->GetBinCenter(1));}
+            else{h_one_minus_thrust->Fill(1-Thrust);}
         }
     }
 
     
     Double_t scale = 1.0/( h_thrust->GetXaxis()->GetBinWidth(1)*h_thrust->Integral());
     h_thrust->Scale(scale);
-    h_thrust_log->Scale(1.0/h_thrust_log->Integral());
+    h_one_minus_thrust->Scale(1.0/h_one_minus_thrust->Integral());
     
-   
-    TCanvas *c1 = new TCanvas("log(1-T)","",200,10,500,500);
-    gStyle->SetOptStat(0);
-    gPad->SetLogy();
-    gPad->SetLogx();
-    h_thrust_log->GetXaxis()->CenterTitle();
-    h_thrust_log->GetYaxis()->CenterTitle();
-    h_thrust_log->Draw();
     
     TCanvas *c2 = new TCanvas("T","",200,10,500,500);
     gStyle->SetOptStat(0);
@@ -149,6 +141,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     h_thrust->SetMarkerStyle(4);
     h_thrust->Draw();
     
+    // drawing approximate errors from HEP data
     TLine* line_thrust = new TLine();
     Double_t binLowEdge = 0;
     Double_t binHiEdge = 0;
@@ -165,13 +158,54 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         line_thrust->DrawLine(binLowEdge, binval + sys, binHiEdge, binval + sys);
     }
     
+    
     for(int i = 0; i < nBins; ++i)
     {
-        Float_t binWidth = h_thrust_log->GetBinWidth(i+1);
+        Float_t binWidth = h_one_minus_thrust->GetBinWidth(i+1);
         if(i==0)binWidth+=0.05;
-        h_thrust_log->SetBinContent(i+1, h_thrust_log->GetBinContent(i+1)/binWidth);
-        h_thrust_log->SetBinError(i+1, h_thrust_log->GetBinError(i+1)/binWidth);
+        h_one_minus_thrust->SetBinContent(i+1, h_one_minus_thrust->GetBinContent(i+1)/binWidth);
+        h_one_minus_thrust->SetBinError(i+1, h_one_minus_thrust->GetBinError(i+1)/binWidth);
     }
+    
+    TCanvas *c1 = new TCanvas("log(1-T)","",200,10,500,500);
+    gStyle->SetOptStat(0);
+    gPad->SetLogy();
+    gPad->SetLogx();
+    h_one_minus_thrust->GetXaxis()->CenterTitle();
+    h_one_minus_thrust->GetYaxis()->CenterTitle();
+    h_one_minus_thrust->Draw();
+    
+    TLine* line_one_minus_thrust = new TLine();
+    Double_t binLowEdge_T = 0;
+    Double_t binHiEdge_T = 0;
+    Double_t j;
+    float max_error;
+    Int_t binx;
+    //std::vector<float> one_minus_T_errors;
+    for (int i = 0;i<h_one_minus_thrust->GetNbinsX();i++)
+    {
+        // get low and high bins for 1-T
+        binLowEdge_T = h_one_minus_thrust->GetBinLowEdge(i);
+        binHiEdge_T = binLowEdge_T + h_one_minus_thrust->GetBinWidth(i);
+        
+        // get low and high bins for corresponding T values
+        binLowEdge = 1 - binLowEdge_T;
+        binHiEdge = 1 - binHiEdge_T;
+        j = binLowEdge;
+        max_error = 0.0;
+        while(j<(binHiEdge-binLowEdge))
+        {
+            binx = h_thrust->GetXaxis()->FindBin(j);
+            if(quad_errors[binx]>max_error)max_error = quad_errors[binx];
+            j+=h_thrust->GetBinWidth(binx);
+        }
+        // Now we have the maximum error value
+        //one_minus_T_errors.push_back(max_error);
+        binval = h_one_minus_thrust->GetBinContent(i);
+        line_one_minus_thrust->DrawLine(binLowEdge_T, binval - max_error, binHiEdge_T, binval - max_error);
+        line_one_minus_thrust->DrawLine(binLowEdge_T, binval + max_error, binHiEdge_T, binval + max_error);
+    }
+    
     TFile *hdata = new TFile("HEPData-ins636645-v1-Table54.root");
     TH1F *hep;
     hdata->cd("Table 54");
