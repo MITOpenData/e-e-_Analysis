@@ -173,6 +173,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     gPad->SetLogx();
     h_one_minus_thrust->GetXaxis()->CenterTitle();
     h_one_minus_thrust->GetYaxis()->CenterTitle();
+    h_one_minus_thrust->SetMarkerStyle(4);
     h_one_minus_thrust->Draw();
     
     TLine* line_one_minus_thrust = new TLine();
@@ -193,7 +194,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         binHiEdge = 1 - binHiEdge_T;
         j = binLowEdge;
         max_error = 0.0;
-        while(j<(binHiEdge-binLowEdge))
+        while(j<binHiEdge)
         {
             binx = h_thrust->GetXaxis()->FindBin(j);
             if(quad_errors[binx]>max_error)max_error = quad_errors[binx];
@@ -202,6 +203,10 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         // Now we have the maximum error value
         //one_minus_T_errors.push_back(max_error);
         binval = h_one_minus_thrust->GetBinContent(i);
+        cout<<"binLowEdge_T "<<binLowEdge_T<<endl;
+        cout<<"binHiEdge_T "<<binHiEdge_T<<endl;
+        cout<<"binval "<<binval<<endl;
+        cout<<"error "<<max_error<<endl;
         line_one_minus_thrust->DrawLine(binLowEdge_T, binval - max_error, binHiEdge_T, binval - max_error);
         line_one_minus_thrust->DrawLine(binLowEdge_T, binval + max_error, binHiEdge_T, binval + max_error);
     }
