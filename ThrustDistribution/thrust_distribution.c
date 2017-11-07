@@ -177,3 +177,40 @@ void run()
 }
 
 
+void compute_errors()
+{
+    TString hep_file = "HEPData-ins636645-v1-Table54.root";
+    TFile *hdata = new TFile(hep_file);
+    hdata->cd("Table 54");
+    // e1 statistical error
+    // e2 systematic error 1
+    // e3 systematic error 2
+    TH1F *e2 = (TH1F*)gDirectory->Get("Hist1D_y1_e2");
+    TH1F *e3 = (TH1F*)gDirectory->Get("Hist1D_y1_e3");
+    
+    int nBins = 0;
+    if(e2->GetNbinsX() == e3->GetNbinsX()){nBins = e2->GetNbinsX(); cout<<"Number of Bins"<<e2->GetNbinsX()<<endl;}
+    else{cout<<"Different number of bins"<<endl;}
+    
+    // compute Quadrature of errors of e2,e3
+    std::vector<float> quad_errors;
+    
+    float error;
+    float e2_error;
+    float e3_error;
+    float sum;
+    
+    for (int i=0;i<=e2->GetNbinsX();i++)
+    {
+        e2_error = e2->GetBinError(i);
+        e3_error = e3->GetBinError(i);
+        cout<<"e2 error "<<e2->GetBinError(i)<<endl;
+        cout<<"e3 error "<<e3->GetBinError(i)<<endl;
+        sum  = pow(e2_error,2)+pow(e3_error,2);
+        error = pow(sum,0.5);
+        cout<<"quad error "<<error<<endl;
+        quad_errors.push_back(error);
+    }
+    
+}
+
