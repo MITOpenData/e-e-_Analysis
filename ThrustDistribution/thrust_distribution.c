@@ -141,6 +141,13 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     h_thrust->SetMarkerStyle(4);
     h_thrust->Draw();
     
+    TFile *hdata = new TFile("HEPData-ins636645-v1-Table54.root");
+    TH1F *hep;
+    hdata->cd("Table 54");
+    hep = (TH1F*)gDirectory->Get("Hist1D_y1");
+    hep->SetMarkerStyle(5);
+    hep->Draw("hist p SAME");
+    
     // drawing approximate errors from HEP data
     TLine* line_thrust = new TLine();
     Double_t binLowEdge = 0;
@@ -214,13 +221,6 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
             cout<<"central value = "<<h_one_minus_thrust->GetXaxis()->GetBinCenter(i)<<" error = "<<max_error<<endl;
         }
     }
-    
-    TFile *hdata = new TFile("HEPData-ins636645-v1-Table54.root");
-    TH1F *hep;
-    hdata->cd("Table 54");
-    hep = (TH1F*)gDirectory->Get("Hist1D_y1");
-    hep->SetMarkerStyle(5);
-    hep->Draw("hist p SAME");
     
     //c2->SaveAs(Form("tDist_%.2f_%.2f_%d.pdf",min_TTheta,max_TTheta,isCharged));
 
