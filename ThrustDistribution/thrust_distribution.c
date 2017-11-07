@@ -76,7 +76,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     getLogBins(.05, 0.5, nBins, bins);
     TH1D *h_thrust_log = new TH1D("h_thrust_log",";1-Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",nBins,bins);
     h_thrust_log->Sumw2();
-    TH1D *h_thrust = new TH1D("h_thrust",";Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",50,0.5,1);
+    TH1D *h_thrust = new TH1D("h_thrust",";Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",43,0.57,1);
     h_thrust->Sumw2();
     for(Int_t i=0;i<nevent_process;i++)
     {
@@ -129,6 +129,25 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     Double_t scale = 1.0/( h_thrust->GetXaxis()->GetBinWidth(1)*h_thrust->Integral());
     h_thrust->Scale(scale);
     h_thrust_log->Scale(1.0/h_thrust_log->Integral());
+    
+    
+    TLine* line_thrust = new TLine();
+    Double_t binLowEdge = 0;
+    Double_t binHiEdge = 0;
+    Double_t binval = 0;
+    Float_t sys = 0;
+    std::vector<float> quad_errors = compute_errors();
+    for (int i = 0;i<h_thrust->GetNbinsX();i++)
+    {
+        binLowEdge = h_thrust->GetBinLowEdge(i);
+        binHiEdge = binLowEdge + h_thrust->GetBinWidth(i);
+        binval = h_thrust->GetBinContent(i);
+        sys = quad_errors[i];
+        line_thrust->DrawLine(binLowEdge, binval - sys, binHiEdge, binVal - sys)
+        line_thrust->DrawLine(binLowEdge, binval + sys, binHiEdge, binVal + sys)
+    }
+    
+    
     for(int i = 0; i < nBins; ++i)
     {
         Float_t binWidth = h_thrust_log->GetBinWidth(i+1);
@@ -177,7 +196,7 @@ void run()
 }
 
 
-void compute_errors()
+std::vector<float> compute_errors()
 {
     TString hep_file = "HEPData-ins636645-v1-Table54.root";
     TFile *hdata = new TFile(hep_file);
@@ -211,6 +230,6 @@ void compute_errors()
         cout<<"quad error "<<error<<endl;
         quad_errors.push_back(error);
     }
-    
+    return quad_errors;
 }
 
