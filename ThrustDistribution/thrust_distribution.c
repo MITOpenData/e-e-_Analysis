@@ -185,7 +185,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     //std::vector<float> one_minus_T_errors;
     
     // ratio of bin value to error
-    TH1D *h_ratio_one_minus_thrust = new TH1D("h_ratio_one_minus_thrust",";Central Value/Systematic",100,0,100);
+    TH1D *h_ratio_one_minus_thrust = (TH1D*) h_one_minus_thrust->Clone();
     for (int i = 0;i<h_one_minus_thrust->GetNbinsX();i++)
     {
         // get low and high bins for 1-T
@@ -211,7 +211,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         cout<<"binval,error "<<max_error<<endl;
         line_one_minus_thrust->DrawLine(binLowEdge_T, binval - max_error, binHiEdge_T, binval - max_error);
         line_one_minus_thrust->DrawLine(binLowEdge_T, binval + max_error, binHiEdge_T, binval + max_error);
-        h_ratio_one_minus_thrust->Fill(h_one_minus_thrust->GetXaxis()->GetBinCenter(i)/max_error);
+        h_ratio_one_minus_thrust->SetBinContent(i,h_one_minus_thrust->GetXaxis()->GetBinCenter(i)/max_error);
     }
     
     TFile *hdata = new TFile("HEPData-ins636645-v1-Table54.root");
