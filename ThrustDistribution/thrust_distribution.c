@@ -146,6 +146,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     gStyle->SetOptStat(0);
     h_thrust->GetXaxis()->CenterTitle();
     h_thrust->GetYaxis()->CenterTitle();
+    h_thrust->SetMarkerStyle(4);
     h_thrust->Draw();
     
     TLine* line_thrust = new TLine();
