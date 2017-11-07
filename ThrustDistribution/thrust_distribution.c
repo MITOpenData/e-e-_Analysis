@@ -197,6 +197,8 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         while(j<binHiEdge)
         {
             binx = h_thrust->GetXaxis()->FindBin(j);
+            cout<<"BINX "<<binx<<endl;
+            cout<<"QUAD_ERRORS "<<quad_errors[binx]<<endl;
             if(quad_errors[binx]>max_error)max_error = quad_errors[binx];
             j+=h_thrust->GetBinWidth(binx);
         }
