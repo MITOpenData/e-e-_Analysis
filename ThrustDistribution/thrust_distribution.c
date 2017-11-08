@@ -188,6 +188,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     Double_t binHiEdge_T = 0;
     Double_t j;
     float max_error;
+    float error_temp;
     Int_t binx;
     //std::vector<float> one_minus_T_errors;
     
@@ -204,10 +205,12 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         binLowEdge = 1 - binHiEdge_T;
         j = binLowEdge;
         max_error = 0.0;
+        error_temp = 0.0;
         while(j<binHiEdge)
         {
             binx = h_thrust->GetXaxis()->FindBin(j);
-            if(quad_errors[binx]>max_error)max_error = quad_errors[binx];
+            error_temp = quad_errors[binx]/h_thrust->GetBinContent(binx) * h_one_minus_thrust->GetBinContent(i);
+            if(error_temp>max_error)max_error = error_temp;
             j+=h_thrust->GetBinWidth(binx);
         }
         // Now we have the maximum error value
