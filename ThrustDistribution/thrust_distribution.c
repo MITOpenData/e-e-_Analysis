@@ -80,7 +80,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     //getLogBins(.05, 0.5, nBins, bins);
     //TH1D *h_one_minus_thrust = new TH1D("h_one_minus_thrust",";1-Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",nBins,bins);
     
-    h_one_minus_thrust->Sumw2();
+    //h_one_minus_thrust->Sumw2();
     for(int i = 0;i<h_one_minus_thrust->GetNbinsX();i++){cout<<h_one_minus_thrust->GetBinLowEdge(i)<<endl;}
     TH1D *h_thrust = new TH1D("h_thrust",";Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",43,0.57,1);
     h_thrust->Sumw2();
@@ -214,6 +214,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     
     // ratio of bin value to error
     TH1D *h_ratio_one_minus_thrust = (TH1D*) h_one_minus_thrust->Clone();
+    h_one_minus_thrust->Sumw2();
     for (int i = 0;i<h_one_minus_thrust->GetNbinsX();i++)
     {
       cout<<"low "<<h_one_minus_thrust->GetBinLowEdge(i)<<endl;
