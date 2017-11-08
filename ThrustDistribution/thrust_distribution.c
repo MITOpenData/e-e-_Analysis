@@ -217,7 +217,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         line_one_minus_thrust->DrawLine(binLowEdge_T, binval + max_error, binHiEdge_T, binval + max_error);
         if(max_error>0)
         {
-            h_ratio_one_minus_thrust->SetBinContent(i,max_error/h_one_minus_thrust->GetXaxis()->GetBinCenter(i));
+            h_ratio_one_minus_thrust->SetBinContent(i,max_error/h_one_minus_thrust->GetBinContent(i));
             cout<<"central value = "<<h_one_minus_thrust->GetBinContent(i)<<" error = "<<max_error<<endl;
         }
     }
