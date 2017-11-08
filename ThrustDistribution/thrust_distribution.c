@@ -261,7 +261,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     const int nBins = 40;
     Double_t bins[nBins+1];
     getLogBins(0, 0.4, nBins, bins);
-    TH1D *h_one_minus_thrust_log = new TH1D("h_one_minus_thrust",";1-Thrust log scale;#frac{1}{#sigma} #frac{d#sigma}{dT}",nBins,bins);
+    TH1D *h_one_minus_thrust_log = new TH1D("h_one_minus_thrust_log",";1-Thrust log scale;#frac{1}{#sigma} #frac{d#sigma}{dT}",nBins,bins);
     h_one_minus_thrust_log->Sumw2();
     for (int i = 1;i<=h_thrust->GetNbinsX();i++)
     {
