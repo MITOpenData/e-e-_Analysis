@@ -43,10 +43,28 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
                          Int_t isGen = 0    // 1 to use gen level
 )
 {
-    TFile *f = new TFile(filename);
+  //declare some binnings first - just get it out of the way
+  const int nBins = 80;
+  Double_t bins[nBins+1];
+  const Double_t logLow = .05;
+  const Double_t logHi = .4;
+  getLogBins(logLow, logHi, nBins, bins);
+
+  TFile* outFile_p = new TFile("outFile.root", "RECREATE"); // we will write our th1 to a file for debugging purposes
+  TH1D *h_thrust = new TH1D("h_thrust",";Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",43,0.57,1); //moving declarations here for clarity
+  h_thrust->Sumw2();
+  TH1D *h_one_minus_thrust = new TH1D("h_one_minus_thrust",";1-Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",40,0.0,0.4);
+  h_one_minus_thrust->Sumw2();
+  TH1D *h_ratio_one_minus_thrust = (TH1D*)h_one_minus_thrust->Clone();
+  h_one_minus_thrust->Sumw2();
+  TH1D *h_one_minus_thrust_log = new TH1D("h_one_minus_thrust_log",";1-Thrust log scale;#frac{1}{#sigma} #frac{d#sigma}{dT}",nBins,bins);
+  h_one_minus_thrust_log->Sumw2();
+
+  
+  TFile *f = new TFile(filename, "READ"); //specify reading only - dont want to mod input
     TTree *t1;
-    t1 = (TTree*)f->Get("t");
-    if(isGen){t1 = (TTree*)f->Get("tgen");}
+    if(isGen) t1 = (TTree*)f->Get("tgen"); //a little strange to do both Get()'s in event isGen -> here only do one
+    else t1 = (TTree*)f->Get("t");
     
     
     Int_t nParticle;
@@ -76,8 +94,6 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     std::vector<float> T;
     
     //for(int i = 0;i<h_one_minus_thrust->GetNbinsX();i++){cout<<h_one_minus_thrust->GetBinLowEdge(i)<<endl;}
-    TH1D *h_thrust = new TH1D("h_thrust",";Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",43,0.57,1);
-    h_thrust->Sumw2();
     for(Int_t i=0;i<nevent_process;i++)
     {
         //cout<<"EVENT "<<i<<endl;
@@ -120,6 +136,8 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         {
             Float_t Thrust = T_sum/T_mag;
             h_thrust->Fill(Thrust);
+	    h_one_minus_thrust->Fill(1-Thrust); //You have unbinned data! Fill here
+	    h_one_minus_thrust_log->Fill(1-Thrust); //You have unbinned data! Fill here
             //if((1.0-Thrust)<=.05){h_one_minus_thrust->Fill(h_one_minus_thrust->GetBinCenter(1));}
             //else{h_one_minus_thrust->Fill(1-Thrust);}
         }
@@ -170,13 +188,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     
     
     // Fill the 1-T distribution after the correction to T
-    TH1D *h_one_minus_thrust = new TH1D("h_one_minus_thrust",";1-Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",40,0.0,0.4);
-    h_one_minus_thrust->Sumw2();
-
-    for (int i = 1;i<=h_thrust->GetNbinsX();i++)
-    {
-        h_one_minus_thrust->Fill(1-h_thrust->GetBinLowEdge(i),h_thrust->GetBinContent(i));
-    }
+    //Deleted version that was just rebin of binned data - when possible rebin starting from unbinned!
     Double_t scale_one_minus_T = 1.0/( h_one_minus_thrust->GetXaxis()->GetBinWidth(1)*h_one_minus_thrust->Integral());
     h_one_minus_thrust->Scale(scale_one_minus_T);
     
@@ -200,17 +212,15 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     //std::vector<float> one_minus_T_errors;
     
     // ratio of bin value to error
-    TH1D *h_ratio_one_minus_thrust = (TH1D*) h_one_minus_thrust->Clone();
-    h_one_minus_thrust->Sumw2();
     for (int i = 0;i<h_one_minus_thrust->GetNbinsX();i++)
     {
-      cout<<"low "<<h_one_minus_thrust->GetBinLowEdge(i)<<endl;
-      cout<<"count "<<h_one_minus_thrust->GetBinContent(i)<<endl;
-      cout<<"width "<<h_one_minus_thrust->GetBinWidth(i)<<endl;
+      cout<<"low "<<h_one_minus_thrust->GetBinLowEdge(i+1)<<endl;
+      cout<<"count "<<h_one_minus_thrust->GetBinContent(i+1)<<endl;
+      cout<<"width "<<h_one_minus_thrust->GetBinWidth(i+1)<<endl;
 
         // get low and high bins for 1-T
-        binLowEdge_T = h_one_minus_thrust->GetBinLowEdge(i);
-        binHiEdge_T = binLowEdge_T + h_one_minus_thrust->GetBinWidth(i);
+        binLowEdge_T = h_one_minus_thrust->GetBinLowEdge(i+1);
+        binHiEdge_T = binLowEdge_T + h_one_minus_thrust->GetBinWidth(i+1);
         
         // get low and high bins for corresponding T values
         binHiEdge = 1 - binLowEdge_T;
@@ -228,19 +238,19 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
             //cout<<"quad error "<<quad_errors[binx]<<endl;
             //cout<<"T"<<h_thrust->GetBinContent(binx)<<endl;
             //cout<<"1-T"<<h_one_minus_thrust->GetBinContent(i)<<endl;
-            error_temp = quad_errors[binx]/h_thrust->GetBinContent(binx) * h_one_minus_thrust->GetBinContent(i);
+            error_temp = quad_errors[binx]/h_thrust->GetBinContent(binx) * h_one_minus_thrust->GetBinContent(i+1);
             if(error_temp>max_error)max_error = error_temp;
             j+=h_thrust->GetBinWidth(binx);
         }
         //cout<<"MAX ERROR"<<max_error<<endl;
         // Now we have the maximum error value
         //one_minus_T_errors.push_back(max_error);
-        binval = h_one_minus_thrust->GetBinContent(i);
+        binval = h_one_minus_thrust->GetBinContent(i+1);
         line_one_minus_thrust->DrawLine(binLowEdge_T, binval - max_error, binHiEdge_T, binval - max_error);
         line_one_minus_thrust->DrawLine(binLowEdge_T, binval + max_error, binHiEdge_T, binval + max_error);
         if(max_error>0)
         {
-            h_ratio_one_minus_thrust->SetBinContent(i,max_error/h_one_minus_thrust->GetBinContent(i));
+	  h_ratio_one_minus_thrust->SetBinContent(i+1,max_error/h_one_minus_thrust->GetBinContent(i+1)); // switch to i+1, underflow is at i==0
             //cout<<"central value = "<<h_one_minus_thrust->GetBinContent(i)<<" error = "<<max_error<<endl;
         }
     }
@@ -258,23 +268,16 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     
     
     // 1-T distribution log scale
-    const int nBins = 40;
-    Double_t bins[nBins+1];
-    getLogBins(0.001, 0.4, nBins, bins);
-    TH1D *h_one_minus_thrust_log = new TH1D("h_one_minus_thrust_log",";1-Thrust log scale;#frac{1}{#sigma} #frac{d#sigma}{dT}",nBins,bins);
-    h_one_minus_thrust_log->Sumw2();
-    for (int i = 1;i<=h_thrust->GetNbinsX();i++)
-    {
-        h_one_minus_thrust_log->Fill(1-h_thrust->GetBinLowEdge(i),h_thrust->GetBinContent(i));
-    }
-    h_one_minus_thrust_log->Scale(1.0/h_one_minus_thrust->Integral());
-    
+    // deleted the fill scheme using binned data. Use unbinned!
+    h_one_minus_thrust_log->Scale(1.0/h_one_minus_thrust_log->Integral()); //SCALE BY THE HIST w/ *_LOG AT END
+
+    //*_thrust -> *_thrust_log
      for(int i = 0; i < nBins; ++i)
      {
-     Float_t binWidth = h_one_minus_thrust->GetBinWidth(i);
-         if(i==0)binWidth+=0.001;
-     h_one_minus_thrust->SetBinContent(i, h_one_minus_thrust->GetBinContent(i)/binWidth);
-     h_one_minus_thrust->SetBinError(i, h_one_minus_thrust->GetBinError(i)/binWidth);
+       Float_t binWidth = h_one_minus_thrust_log->GetBinWidth(i);
+         if(i==0)binWidth+=logLow;
+	 h_one_minus_thrust_log->SetBinContent(i+1, h_one_minus_thrust_log->GetBinContent(i+1)/binWidth);//switch to i+1, underflow bin is at i==0
+	 h_one_minus_thrust_log->SetBinError(i+1, h_one_minus_thrust_log->GetBinError(i+1)/binWidth);
      }
     
     
@@ -286,6 +289,17 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     h_one_minus_thrust_log->GetYaxis()->CenterTitle();
     h_one_minus_thrust_log->SetMarkerStyle(4);
     h_one_minus_thrust_log->Draw();
+
+
+    //cd back into outfile for write+clean
+    outFile_p->cd();
+    //write all, first arg name ("" == declaration name), second arg overwrites buffer saves in file
+    h_thrust->Write("", TObject::kOverwrite);
+    h_one_minus_thrust->Write("", TObject::kOverwrite);
+    h_one_minus_thrust->Write("", TObject::kOverwrite);
+    h_one_minus_thrust_log->Write("", TObject::kOverwrite);
+
+    return; //even if void - useful for searching the control path
 }
 
 
