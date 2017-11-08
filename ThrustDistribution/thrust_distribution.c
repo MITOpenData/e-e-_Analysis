@@ -208,11 +208,14 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         error_temp = 0.0;
         while(j<binHiEdge)
         {
+            cout<<"j "<<j<<endl;
             binx = h_thrust->GetXaxis()->FindBin(j);
             error_temp = quad_errors[binx]/h_thrust->GetBinContent(binx) * h_one_minus_thrust->GetBinContent(i);
+            cout<<"i "<<i<<" error_temp "<<error_temp<<endl;
             if(error_temp>max_error)max_error = error_temp;
             j+=h_thrust->GetBinWidth(binx);
         }
+        cout<<"MAX ERROR"<<endl;
         // Now we have the maximum error value
         //one_minus_T_errors.push_back(max_error);
         binval = h_one_minus_thrust->GetBinContent(i);
@@ -221,7 +224,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         if(max_error>0)
         {
             h_ratio_one_minus_thrust->SetBinContent(i,max_error/h_one_minus_thrust->GetBinContent(i));
-            cout<<"central value = "<<h_one_minus_thrust->GetBinContent(i)<<" error = "<<max_error<<endl;
+            //cout<<"central value = "<<h_one_minus_thrust->GetBinContent(i)<<" error = "<<max_error<<endl;
         }
     }
     
