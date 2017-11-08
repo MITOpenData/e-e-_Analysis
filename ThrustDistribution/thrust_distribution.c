@@ -179,6 +179,8 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     TH1D *h_one_minus_thrust = new TH1D("h_one_minus_thrust",";1-Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",40,0.0,0.4);
     for (int i = 1;i<=h_thrust->GetNbinsX();i++)
     {
+        cout<<"h_thrust->GetBinCenter(i) " <<h_thrust->GetBinCenter(i)<<endl;
+        cout<<"h_thrust->GetBinContent(i) " <<h_thrust->GetBinContent(i)<<endl;
         h_one_minus_thrust->Fill(1-h_thrust->GetBinCenter(i),h_thrust->GetBinContent(i));
     }
     Double_t scale_one_minus_T = 1.0/( h_one_minus_thrust->GetXaxis()->GetBinWidth(1)*h_one_minus_thrust->Integral());
