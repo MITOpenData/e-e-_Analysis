@@ -18,6 +18,7 @@
 #include "TCanvas.h"
 #include "getLogBins.h"
 #include <TLine.h>
+#include "correction.h"
 
 ////////////////////////////////////////////////////////////
 //////////////////// Thrust Distribution  //////////////////
@@ -32,7 +33,7 @@
 
 std::vector<float> compute_errors();
 
-void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/alephDataPaths_LEP1.root", // file used
+void thrust_distribution(TString filename = "~/Downloads/StudyMult-backup/TwoParticleCorrelation/alephDataPaths_LEP1.root", // file used
                          Float_t cut_missP = 0.3,   // upper bound on missP/energy
                          Float_t min_TTheta = 0.0, // lower cut on TTheta
                          Float_t max_TTheta = 3.5, // upper cut on TTheta --> currently full range of TTheta
@@ -134,6 +135,9 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     Double_t scale = 1.0/( h_thrust->GetXaxis()->GetBinWidth(1)*h_thrust->Integral());
     h_thrust->Scale(scale);
     h_one_minus_thrust->Scale(1.0/h_one_minus_thrust->Integral());
+    // NOTE: correct_thrust changes the lower limit of the input TH1 to
+    // the first low-edge above 0.6.
+    h_thrust = correct_thrust<TH1D>(h_thrust);
     
     
     TCanvas *c2 = new TCanvas("T","",200,10,500,500);
