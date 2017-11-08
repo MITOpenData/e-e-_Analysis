@@ -260,7 +260,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     // 1-T distribution log scale
     const int nBins = 40;
     Double_t bins[nBins+1];
-    getLogBins(0, 0.4, nBins, bins);
+    getLogBins(0.001, 0.4, nBins, bins);
     TH1D *h_one_minus_thrust_log = new TH1D("h_one_minus_thrust_log",";1-Thrust log scale;#frac{1}{#sigma} #frac{d#sigma}{dT}",nBins,bins);
     h_one_minus_thrust_log->Sumw2();
     for (int i = 1;i<=h_thrust->GetNbinsX();i++)
@@ -272,6 +272,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
      for(int i = 0; i < nBins; ++i)
      {
      Float_t binWidth = h_one_minus_thrust->GetBinWidth(i);
+         if(i==0)binWidth+=0.001;
      h_one_minus_thrust->SetBinContent(i, h_one_minus_thrust->GetBinContent(i)/binWidth);
      h_one_minus_thrust->SetBinError(i, h_one_minus_thrust->GetBinError(i)/binWidth);
      }
