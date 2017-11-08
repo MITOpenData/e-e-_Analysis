@@ -43,6 +43,7 @@ void EventDisplay(std::string inputFile = "/data/abaty/ALEPHTrees/mergedLEP1_201
   TFile * f = TFile::Open(inputFile.c_str(),"read");
   TTree * t = (TTree*)f->Get("t");
   TTree * jt = (TTree*)f->Get("ak8ESchemeJetTree"); 
+  TTree * wta = (TTree*)f->Get("ak8WTAmodpSchemeJetTree");
 
   int nParticle;
   float pt[500];
@@ -58,6 +59,11 @@ void EventDisplay(std::string inputFile = "/data/abaty/ALEPHTrees/mergedLEP1_201
   float jtpt[50];
   float jteta[50];
   float jtphi[50];
+  
+  int wtanref;
+  float wtajtpt[50];
+  float wtajteta[50];
+  float wtajtphi[50];
 
   float TTheta;
   float TPhi;
@@ -76,10 +82,20 @@ void EventDisplay(std::string inputFile = "/data/abaty/ALEPHTrees/mergedLEP1_201
   jt->SetBranchAddress("jtpt",&jtpt);
   jt->SetBranchAddress("jteta",&jteta);
   jt->SetBranchAddress("jtphi",&jtphi);
+  wta->SetBranchAddress("nref",&wtanref);
+  wta->SetBranchAddress("jtpt",&wtajtpt);
+  wta->SetBranchAddress("jteta",&wtajteta);
+  wta->SetBranchAddress("jtphi",&wtajtphi);
   t->GetEntry(eventIndx);
   jt->GetEntry(eventIndx);
+  wta->GetEntry(eventIndx);
+
   TVector3 thrust = TVector3(0,0,0);
   thrust.SetMagThetaPhi(10,TTheta,TPhi);
+  TVector3 wta1 = TVector3(0,0,0);
+  if(wtanref>0) wta1.SetMagThetaPhi(10,2*TMath::ATan(TMath::Exp(-wtajteta[0])),wtajtphi[0]);
+  TVector3 wta2 = TVector3(0,0,0);
+  if(wtanref>1) wta2.SetMagThetaPhi(10,2*TMath::ATan(TMath::Exp(-wtajteta[1])),wtajtphi[1]);
 
 
   TCanvas* c1 = new TCanvas("AzimuthalView","AzimuthalView",600,600);
@@ -112,6 +128,30 @@ void EventDisplay(std::string inputFile = "/data/abaty/ALEPHTrees/mergedLEP1_201
   helix[999]->Draw();
   c3->cd();
   helix[999]->Draw();
+  
+  helix[998] = new THelix(0,0,0,wta1.Px(),wta1.Py(),wta1.Pz(),0.000001);
+  if(wta1.Pz()<0) helix[998]->SetRange(-1,0);
+  if(wta1.Pz()>=0) helix[998]->SetRange(0,1);
+  helix[998]->SetLineColor(38);
+  helix[998]->SetLineWidth(3);
+  c1->cd();
+  helix[998]->Draw();
+  c2->cd();
+  helix[998]->Draw();
+  c3->cd();
+  helix[998]->Draw();
+  
+  helix[997] = new THelix(0,0,0,wta2.Px(),wta2.Py(),wta2.Pz(),0.000001);
+  if(wta2.Pz()<0) helix[997]->SetRange(-1,0);
+  if(wta2.Pz()>=0) helix[997]->SetRange(0,1);
+  helix[997]->SetLineColor(38);
+  helix[997]->SetLineWidth(3);
+  c1->cd();
+  helix[997]->Draw();
+  c2->cd();
+  helix[997]->Draw();
+  c3->cd();
+  helix[997]->Draw();
 
   int nHelix = 0;
   for(int i = 0; i<nParticle; i++){
