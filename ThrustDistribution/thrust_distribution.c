@@ -140,6 +140,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     h_thrust->GetXaxis()->CenterTitle();
     h_thrust->GetYaxis()->CenterTitle();
     h_thrust->SetMarkerStyle(4);
+    h_thrust->SetMarkerSize(0.8);
     h_thrust->Draw();
     
     TFile *hdata = new TFile("HEPData-ins636645-v1-Table54.root");
@@ -198,8 +199,8 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     for (int i = 0;i<h_one_minus_thrust->GetNbinsX();i++)
     {
         // get low and high bins for 1-T
-        binLowEdge_T = h_one_minus_thrust->GetBinLowEdge(i);
-        binHiEdge_T = binLowEdge_T + h_one_minus_thrust->GetBinWidth(i);
+        binLowEdge_T = h_one_minus_thrust->GetBinLowEdge(i+1);
+        binHiEdge_T = binLowEdge_T + h_one_minus_thrust->GetBinWidth(i+1);
         
         // get low and high bins for corresponding T values
         binHiEdge = 1 - binLowEdge_T;
@@ -217,19 +218,19 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
             cout<<"quad error "<<quad_errors[binx]<<endl;
             cout<<"T"<<h_thrust->GetBinContent(binx)<<endl;
             cout<<"1-T"<<h_one_minus_thrust->GetBinContent(i)<<endl;
-            error_temp = quad_errors[binx]/h_thrust->GetBinContent(binx) * h_one_minus_thrust->GetBinContent(i);
+            error_temp = quad_errors[binx]/h_thrust->GetBinContent(binx) * h_one_minus_thrust->GetBinContent(i+1);
             if(error_temp>max_error)max_error = error_temp;
             j+=h_thrust->GetBinWidth(binx);
         }
         cout<<"MAX ERROR"<<max_error<<endl;
         // Now we have the maximum error value
         //one_minus_T_errors.push_back(max_error);
-        binval = h_one_minus_thrust->GetBinContent(i);
+        binval = h_one_minus_thrust->GetBinContent(i+1);
         line_one_minus_thrust->DrawLine(binLowEdge_T, binval - max_error, binHiEdge_T, binval - max_error);
         line_one_minus_thrust->DrawLine(binLowEdge_T, binval + max_error, binHiEdge_T, binval + max_error);
         if(max_error>0)
         {
-            h_ratio_one_minus_thrust->SetBinContent(i,max_error/h_one_minus_thrust->GetBinContent(i));
+            h_ratio_one_minus_thrust->SetBinContent(i+1,max_error/h_one_minus_thrust->GetBinContent(i+1));
             //cout<<"central value = "<<h_one_minus_thrust->GetBinContent(i)<<" error = "<<max_error<<endl;
         }
     }
