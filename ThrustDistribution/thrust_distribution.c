@@ -75,12 +75,6 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     Int_t nevent_process = nevent;
     std::vector<float> T;
     
-    const int nBins = 50;
-    Double_t bins[nBins+1];
-    //getLogBins(.05, 0.5, nBins, bins);
-    //TH1D *h_one_minus_thrust = new TH1D("h_one_minus_thrust",";1-Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",nBins,bins);
-    
-    //h_one_minus_thrust->Sumw2();
     //for(int i = 0;i<h_one_minus_thrust->GetNbinsX();i++){cout<<h_one_minus_thrust->GetBinLowEdge(i)<<endl;}
     TH1D *h_thrust = new TH1D("h_thrust",";Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",43,0.57,1);
     h_thrust->Sumw2();
@@ -134,7 +128,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     
     Double_t scale = 1.0/( h_thrust->GetXaxis()->GetBinWidth(1)*h_thrust->Integral());
     h_thrust->Scale(scale);
-    //h_one_minus_thrust->Scale(1.0/h_one_minus_thrust->Integral());
+    
     // NOTE: correct_thrust changes the lower limit of the input TH1 to
     // the first low-edge above 0.6.
     h_thrust = correct_thrust<TH1D>(h_thrust);
@@ -177,26 +171,17 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     
     // Fill the 1-T distribution after the correction to T
     TH1D *h_one_minus_thrust = new TH1D("h_one_minus_thrust",";1-Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",40,0.0,0.4);
+    h_one_minus_thrust->Sumw2();
+
     for (int i = 1;i<=h_thrust->GetNbinsX();i++)
     {
-        cout<<"h_thrust->GetBinLowEdge(i) " <<h_thrust->GetBinLowEdge(i)<<endl;
-        cout<<"h_thrust->GetBinContent(i) " <<h_thrust->GetBinContent(i)<<endl;
         h_one_minus_thrust->Fill(1-h_thrust->GetBinLowEdge(i),h_thrust->GetBinContent(i));
     }
     Double_t scale_one_minus_T = 1.0/( h_one_minus_thrust->GetXaxis()->GetBinWidth(1)*h_one_minus_thrust->Integral());
     h_one_minus_thrust->Scale(scale_one_minus_T);
     
     
-    /*
-    for(int i = 0; i < nBins; ++i)
-    {
-        Float_t binWidth = h_one_minus_thrust->GetBinWidth(i);
-        if(i==0)binWidth=0.05;
-        h_one_minus_thrust->SetBinContent(i, h_one_minus_thrust->GetBinContent(i)/binWidth);
-        h_one_minus_thrust->SetBinError(i, h_one_minus_thrust->GetBinError(i)/binWidth);
-    }
-    */
-    TCanvas *c1 = new TCanvas("log(1-T)","",200,10,500,500);
+    TCanvas *c1 = new TCanvas("1-T","",200,10,500,500);
     gStyle->SetOptStat(0);
     //gPad->SetLogy();
     //gPad->SetLogx();
@@ -270,6 +255,36 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     h_ratio_one_minus_thrust->GetYaxis()->CenterTitle();
     h_ratio_one_minus_thrust->GetXaxis()->CenterTitle();
     h_ratio_one_minus_thrust->Draw();
+    
+    
+    // 1-T distribution log scale
+    const int nBins = 40;
+    Double_t bins[nBins+1];
+    getLogBins(0, 0.4, nBins, bins);
+    TH1D *h_one_minus_thrust_log = new TH1D("h_one_minus_thrust",";1-Thrust log scale;#frac{1}{#sigma} #frac{d#sigma}{dT}",nBins,bins);
+    h_one_minus_thrust_log->Sumw2();
+    for (int i = 1;i<=h_thrust->GetNbinsX();i++)
+    {
+        h_one_minus_thrust_log->Fill(1-h_thrust->GetBinLowEdge(i),h_thrust->GetBinContent(i));
+    }
+    h_one_minus_thrust_log->Scale(1.0/h_one_minus_thrust->Integral());
+    
+     for(int i = 0; i < nBins; ++i)
+     {
+     Float_t binWidth = h_one_minus_thrust->GetBinWidth(i);
+     h_one_minus_thrust->SetBinContent(i, h_one_minus_thrust->GetBinContent(i)/binWidth);
+     h_one_minus_thrust->SetBinError(i, h_one_minus_thrust->GetBinError(i)/binWidth);
+     }
+    
+    
+    TCanvas *c4 = new TCanvas("log(1-T)","",200,10,500,500);
+    gStyle->SetOptStat(0);
+    gPad->SetLogy();
+    gPad->SetLogx();
+    h_one_minus_thrust_log->GetXaxis()->CenterTitle();
+    h_one_minus_thrust_log->GetYaxis()->CenterTitle();
+    h_one_minus_thrust_log->SetMarkerStyle(4);
+    h_one_minus_thrust_log->Draw();
 }
 
 
