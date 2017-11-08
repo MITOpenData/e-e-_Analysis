@@ -49,6 +49,8 @@ hist* correct_hist(hist* h)
 		h_crop->SetBinError(i,h_crop->GetBinContent(i)*TMath::Sqrt(pow(h_crop->GetBinError(i)/h_crop->GetBinContent(i),2)+pow(corr->GetBinError(corrbin)/corr->GetBinContent(corrbin),2)));
 	}
 	return h_crop;
+	h->Delete();
+	corr->Delete();
 }
 
 Double_t correct_entry(Double_t t)
@@ -62,6 +64,8 @@ Double_t correct_entry(Double_t t)
 		corr->SetBinContent(i,corrs[i-1]);
 		corr->SetBinError(i,errs[i-1]);
 	}
-	return corr->Interpolate(t);
+	Double_t res = corr->Interpolate(t);
+	corr->Delete();
+	return res;
 }
 #endif
