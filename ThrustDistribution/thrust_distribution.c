@@ -33,7 +33,7 @@
 
 std::vector<float> compute_errors();
 
-void thrust_distribution(TString filename = "~/Downloads/StudyMult-backup/TwoParticleCorrelation/alephDataPaths_LEP1.root", // file used
+void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/alephDataPaths_LEP1.root", // file used
                          Float_t cut_missP = 0.3,   // upper bound on missP/energy
                          Float_t min_TTheta = 0.0, // lower cut on TTheta
                          Float_t max_TTheta = 3.5, // upper cut on TTheta --> currently full range of TTheta
@@ -162,12 +162,14 @@ void thrust_distribution(TString filename = "~/Downloads/StudyMult-backup/TwoPar
     Double_t binval = 0;
     Float_t sys = 0;
     std::vector<float> quad_errors = compute_errors();
-    for (int i = 0;i<h_thrust->GetNbinsX();i++)
+    for (int i = 1;i<=h_thrust->GetNbinsX();i++)
     {
         binLowEdge = h_thrust->GetBinLowEdge(i);
         binHiEdge = binLowEdge + h_thrust->GetBinWidth(i);
         binval = h_thrust->GetBinContent(i);
-        sys = quad_errors[i];
+        sys = quad_errors[i+2]; // +2 since thrust distribution starts at 0.6 while HEP errors start at 0.57
+	cout<<"binLow = "<<binLowEdge<<endl;
+	cout<<"quad_errors["<<i<<"] = "<<sys<<endl;
         line_thrust->DrawLine(binLowEdge, binval - sys, binHiEdge, binval - sys);
         line_thrust->DrawLine(binLowEdge, binval + sys, binHiEdge, binval + sys);
     }
@@ -298,11 +300,11 @@ std::vector<float> compute_errors()
     {
         e2_error = e2->GetBinError(i);
         e3_error = e3->GetBinError(i);
-        //cout<<"e2 error "<<e2->GetBinError(i)<<endl;
-        //cout<<"e3 error "<<e3->GetBinError(i)<<endl;
+        cout<<"e2 error "<<e2->GetBinError(i)<<endl;
+        cout<<"e3 error "<<e3->GetBinError(i)<<endl;
         sum  = pow(e2_error,2)+pow(e3_error,2);
         error = pow(sum,0.5);
-        //cout<<"quad error "<<error<<endl;
+        cout<<"quad error "<<error<<endl;
         quad_errors.push_back(error);
     }
     return quad_errors;
