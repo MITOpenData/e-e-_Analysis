@@ -211,10 +211,13 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         cout<<"bin hi edge "<<binHiEdge<<endl;
         while(j<binHiEdge)
         {
-            cout<<"j "<<j<<endl;
             binx = h_thrust->GetXaxis()->FindBin(j);
+            cout<<i<<endl;
+            cout<<"binx "<<binx<<endl;
+            cout<<"quad error "<<quad_errors[binx]<<endl;
+            cout<<"T"<<h_thrust->GetBinContent(binx)<<endl;
+            cout<<"1-T"<<h_one_minus_thrust->GetBinContent(i)<<endl;
             error_temp = quad_errors[binx]/h_thrust->GetBinContent(binx) * h_one_minus_thrust->GetBinContent(i);
-            cout<<"i "<<i<<" error_temp "<<error_temp<<endl;
             if(error_temp>max_error)max_error = error_temp;
             j+=h_thrust->GetBinWidth(binx);
         }
