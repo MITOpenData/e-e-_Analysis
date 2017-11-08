@@ -208,7 +208,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         error_temp = 0.0;
         cout<<"bin low edge "<<binLowEdge<<endl;
         cout<<"bin hi edge "<<binHiEdge<<endl;
-        while(j<binHiEdge)
+        while(j<(binHiEdge+h_thrust->GetBinWidth(0)))
         {
             cout<<"j "<<j<<endl;
             binx = h_thrust->GetXaxis()->FindBin(j);
