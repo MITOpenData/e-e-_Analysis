@@ -78,6 +78,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     Double_t bins[nBins+1];
     getLogBins(.05, 0.5, nBins, bins);
     TH1D *h_one_minus_thrust = new TH1D("h_one_minus_thrust",";1-Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",nBins,bins);
+    //        TH1D *h_one_minus_thrust = new TH1D("h_one_minus_thrust",";1-Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",43,0.0,0.43);
     h_one_minus_thrust->Sumw2();
     for(int i = 0;i<h_one_minus_thrust->GetNbinsX();i++){cout<<h_one_minus_thrust->GetBinLowEdge(i)<<endl;}
     TH1D *h_thrust = new TH1D("h_thrust",";Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",43,0.57,1);
@@ -124,7 +125,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         {
             Float_t Thrust = T_sum/T_mag;
             h_thrust->Fill(Thrust);
-            if((1.0-Thrust)<.05){h_one_minus_thrust->Fill(h_one_minus_thrust->GetBinCenter(1));}
+            if((1.0-Thrust)<=.05){h_one_minus_thrust->Fill(h_one_minus_thrust->GetBinCenter(1));}
             else{h_one_minus_thrust->Fill(1-Thrust);}
         }
     }
@@ -170,10 +171,10 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     
     for(int i = 0; i < nBins; ++i)
     {
-        Float_t binWidth = h_one_minus_thrust->GetBinWidth(i+1);
-        if(i==0)binWidth+=0.05;
-        h_one_minus_thrust->SetBinContent(i+1, h_one_minus_thrust->GetBinContent(i+1)/binWidth);
-        h_one_minus_thrust->SetBinError(i+1, h_one_minus_thrust->GetBinError(i+1)/binWidth);
+        Float_t binWidth = h_one_minus_thrust->GetBinWidth(i);
+        if(i==0)binWidth=0.05;
+        h_one_minus_thrust->SetBinContent(i, h_one_minus_thrust->GetBinContent(i)/binWidth);
+        h_one_minus_thrust->SetBinError(i, h_one_minus_thrust->GetBinError(i)/binWidth);
     }
     
     TCanvas *c1 = new TCanvas("log(1-T)","",200,10,500,500);
@@ -198,9 +199,13 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     TH1D *h_ratio_one_minus_thrust = (TH1D*) h_one_minus_thrust->Clone();
     for (int i = 0;i<h_one_minus_thrust->GetNbinsX();i++)
     {
+      cout<<"low "<<h_one_minus_thrust->GetBinLowEdge(i)<<endl;
+      cout<<"count "<<h_one_minus_thrust->GetBinContent(i)<<endl;
+      cout<<"width "<<h_one_minus_thrust->GetBinWidth(i)<<endl;
+
         // get low and high bins for 1-T
-        binLowEdge_T = h_one_minus_thrust->GetBinLowEdge(i+1);
-        binHiEdge_T = binLowEdge_T + h_one_minus_thrust->GetBinWidth(i+1);
+        binLowEdge_T = h_one_minus_thrust->GetBinLowEdge(i);
+        binHiEdge_T = binLowEdge_T + h_one_minus_thrust->GetBinWidth(i);
         
         // get low and high bins for corresponding T values
         binHiEdge = 1 - binLowEdge_T;
@@ -208,29 +213,29 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         j = binLowEdge;
         max_error = 0.0;
         error_temp = 0.0;
-        cout<<"bin low edge "<<binLowEdge<<endl;
-        cout<<"bin hi edge "<<binHiEdge<<endl;
+	//        cout<<"bin low edge "<<binLowEdge<<endl;
+        //cout<<"bin hi edge "<<binHiEdge<<endl;
         while(j<binHiEdge)
         {
             binx = h_thrust->GetXaxis()->FindBin(j);
             cout<<i<<endl;
-            cout<<"binx "<<binx<<endl;
-            cout<<"quad error "<<quad_errors[binx]<<endl;
-            cout<<"T"<<h_thrust->GetBinContent(binx)<<endl;
-            cout<<"1-T"<<h_one_minus_thrust->GetBinContent(i)<<endl;
-            error_temp = quad_errors[binx]/h_thrust->GetBinContent(binx) * h_one_minus_thrust->GetBinContent(i+1);
+	    //  cout<<"binx "<<binx<<endl;
+            //cout<<"quad error "<<quad_errors[binx]<<endl;
+            //cout<<"T"<<h_thrust->GetBinContent(binx)<<endl;
+            //cout<<"1-T"<<h_one_minus_thrust->GetBinContent(i)<<endl;
+            error_temp = quad_errors[binx]/h_thrust->GetBinContent(binx) * h_one_minus_thrust->GetBinContent(i);
             if(error_temp>max_error)max_error = error_temp;
             j+=h_thrust->GetBinWidth(binx);
         }
-        cout<<"MAX ERROR"<<max_error<<endl;
+        //cout<<"MAX ERROR"<<max_error<<endl;
         // Now we have the maximum error value
         //one_minus_T_errors.push_back(max_error);
-        binval = h_one_minus_thrust->GetBinContent(i+1);
+        binval = h_one_minus_thrust->GetBinContent(i);
         line_one_minus_thrust->DrawLine(binLowEdge_T, binval - max_error, binHiEdge_T, binval - max_error);
         line_one_minus_thrust->DrawLine(binLowEdge_T, binval + max_error, binHiEdge_T, binval + max_error);
         if(max_error>0)
         {
-            h_ratio_one_minus_thrust->SetBinContent(i+1,max_error/h_one_minus_thrust->GetBinContent(i+1));
+            h_ratio_one_minus_thrust->SetBinContent(i,max_error/h_one_minus_thrust->GetBinContent(i));
             //cout<<"central value = "<<h_one_minus_thrust->GetBinContent(i)<<" error = "<<max_error<<endl;
         }
     }
@@ -239,7 +244,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
 
     TCanvas *c3 = new TCanvas("ratio of central value and error for 1-T","",200,10,500,500);
     gStyle->SetOptStat(0);
-    gPad->SetLogx();
+    //    gPad->SetLogx();
     h_ratio_one_minus_thrust->GetYaxis()->SetTitle("Systematic/Central Value");
     h_ratio_one_minus_thrust->GetYaxis()->SetTitleOffset(1.5);
     h_ratio_one_minus_thrust->GetYaxis()->CenterTitle();
