@@ -218,7 +218,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         if(max_error>0)
         {
             h_ratio_one_minus_thrust->SetBinContent(i,max_error/h_one_minus_thrust->GetXaxis()->GetBinCenter(i));
-            cout<<"central value = "<<h_one_minus_thrust->GetXaxis()->GetBinCenter(i)<<" error = "<<max_error<<endl;
+            cout<<"central value = "<<h_one_minus_thrust->GetXaxis()->GetBinContent(i)<<" error = "<<max_error<<endl;
         }
     }
     
@@ -226,6 +226,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
 
     TCanvas *c3 = new TCanvas("ratio of central value and error for 1-T","",200,10,500,500);
     gStyle->SetOptStat(0);
+    gPad->SetLogx();
     h_ratio_one_minus_thrust->GetYaxis()->SetTitle("Systematic/Central Value");
     h_ratio_one_minus_thrust->GetYaxis()->SetTitleOffset(1.5);
     h_ratio_one_minus_thrust->GetYaxis()->CenterTitle();
