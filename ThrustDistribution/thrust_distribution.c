@@ -477,6 +477,8 @@ void relative_error()
     {
         val = h_one_minus_thrust_log_Graph->GetBinCenter(i);
         bin = h_one_minus_thrust_log->GetXaxis()->FindBin(val);
+        cout<<bin<<endl;
+        cout<<h_one_minus_thrust_log->GetBinContent(bin)<<endl;
         h_one_minus_thrust_log_Graph->SetBinContent(h_one_minus_thrust_log->GetBinContent(bin));
     }
     
