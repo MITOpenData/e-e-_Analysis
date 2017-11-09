@@ -189,8 +189,8 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         binHiEdge = binLowEdge + h_thrust->GetBinWidth(i);
         binval = h_thrust->GetBinContent(i);
         sys = quad_errors[i+2]; // +2 since thrust distribution starts at 0.6 while HEP errors start at 0.57
-	cout<<"binLow = "<<binLowEdge<<endl;
-	cout<<"quad_errors["<<i<<"] = "<<sys<<endl;
+	//cout<<"binLow = "<<binLowEdge<<endl;
+	//cout<<"quad_errors["<<i<<"] = "<<sys<<endl;
         line_thrust->DrawLine(binLowEdge, binval - sys, binHiEdge, binval - sys);
         line_thrust->DrawLine(binLowEdge, binval + sys, binHiEdge, binval + sys);
     }
@@ -226,9 +226,9 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     // ratio of bin value to error
     for (int i = 0;i<h_one_minus_thrust->GetNbinsX();i++)
     {
-      cout<<"low "<<h_one_minus_thrust->GetBinLowEdge(i+1)<<endl;
-      cout<<"count "<<h_one_minus_thrust->GetBinContent(i+1)<<endl;
-      cout<<"width "<<h_one_minus_thrust->GetBinWidth(i+1)<<endl;
+      //cout<<"low "<<h_one_minus_thrust->GetBinLowEdge(i+1)<<endl;
+      //cout<<"count "<<h_one_minus_thrust->GetBinContent(i+1)<<endl;
+      //cout<<"width "<<h_one_minus_thrust->GetBinWidth(i+1)<<endl;
 
         // get low and high bins for 1-T
         binLowEdge_T = h_one_minus_thrust->GetBinLowEdge(i+1);
@@ -245,7 +245,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         while(j<binHiEdge)
         {
             binx = h_thrust->GetXaxis()->FindBin(j);
-            cout<<i<<endl;
+            //cout<<i<<endl;
 	    //  cout<<"binx "<<binx<<endl;
             //cout<<"quad error "<<quad_errors[binx]<<endl;
             //cout<<"T"<<h_thrust->GetBinContent(binx)<<endl;
@@ -361,13 +361,13 @@ std::vector<float> compute_errors()
     
     for (int i=0;i<=e2->GetNbinsX();i++)
     {
-        e2_error = e2->GetBinError(i);
-        e3_error = e3->GetBinError(i);
-        cout<<"e2 error "<<e2->GetBinError(i)<<endl;
-        cout<<"e3 error "<<e3->GetBinError(i)<<endl;
+        e2_error = e2->GetBinContent(i+1);
+        e3_error = e3->GetBinContent(i+1);
+        //cout<<"e2 error "<<e2->GetBinContent(i+1)<<endl;
+        //cout<<"e3 error "<<e3->GetBinContent(i+1)<<endl;
         sum  = pow(e2_error,2)+pow(e3_error,2);
         error = pow(sum,0.5);
-        cout<<"quad error "<<error<<endl;
+        //cout<<"quad error "<<error<<endl;
         quad_errors.push_back(error);
     }
     return quad_errors;
