@@ -459,3 +459,35 @@ std::vector<float> compute_errors()
     return quad_errors;
 }
 
+void relative_error()
+{
+    TFile *outFile = new TFile("outFile.root");
+    TH1D *h_one_minus_thrust_log;
+    TH1D *h_one_minus_thrust_log_SysDownGraph;
+    TH1D *h_one_minus_thrust_log_SysUpGraph;
+    h_one_minus_thrust_log = (TH1D*)gDirectory->Get("h_one_minus_thrust_log");
+    h_one_minus_thrust_log_SysDownGraph = (TH1D*)gDirectory->Get("h_one_minus_thrust_log_SysDownGraph");
+    h_one_minus_thrust_log_SysUpGraph = (TH1D*)gDirectory->Get("h_one_minus_thrust_log_SysUpGraph");
+
+    TH1D *h_one_minus_thrust_log_Graph = (TH1D*)h_one_minus_thrust_log_SysDownGraph ->Clone();
+    
+    float val;
+    int bin;
+    for(int i = 0; i < h_one_minus_thrust_log_Graph->GetNBinsX(); ++i)
+    {
+        val = h_one_minus_thrust_log_Graph->GetBinCenter(i);
+        bin = h_one_minus_thrust_log->GetXaxis()->FindBin(val);
+        h_one_minus_thrust_log_Graph->SetBinContent(h_one_minus_thrust_log->GetBinContent(bin));
+    }
+    
+    h_one_minus_thrust_log_SysDownGraph->Divide(h_one_minus_thrust_log_Graph);
+    h_one_minus_thrust_log_SysUpGraph->Divide(h_one_minus_thrust_log_Graph);
+    
+    TCanvas *c1 = new TCanvas("log(1-T)","",200,10,500,500);
+    gStyle->SetOptStat(0);
+    gPad->SetLogx();
+    h_one_minus_thrust_log_SysDownGraph->Draw();
+    h_one_minus_thrust_log_SysUpGraph->Divide("HIST SAME");
+}
+
+
