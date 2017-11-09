@@ -234,6 +234,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         line_thrust->DrawLine(binLowEdge, binval + sys, binHiEdge, binval + sys);
     }
     
+    c2->SaveAs("mithig_aleph.pdf");
     
     // Fill the 1-T distribution after the correction to T
     //Deleted version that was just rebin of binned data - when possible rebin starting from unbinned!
