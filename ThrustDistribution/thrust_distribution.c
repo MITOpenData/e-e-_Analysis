@@ -19,6 +19,8 @@
 #include "getLogBins.h"
 #include <TLine.h>
 #include "correction.h"
+#include "include/alephThrustSyst.h"
+#include "include/doGlobalDebug.h"
 
 ////////////////////////////////////////////////////////////
 //////////////////// Thrust Distribution  //////////////////
@@ -45,10 +47,15 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
 {
   //declare some binnings first - just get it out of the way
   const int nBins = 80;
+  const int nBinsSys = 800000;
   Double_t bins[nBins+1];
+  Double_t binsSys[nBinsSys+1];
   const Double_t logLow = .005;
   const Double_t logHi = .4;
   getLogBins(logLow, logHi, nBins, bins);
+  getLogBins(logLow, logHi, nBinsSys, binsSys);
+
+  const std::string sysFileName = "HEPData-ins636645-v1-Table54.root";
 
   TFile* outFile_p = new TFile("outFile.root", "RECREATE"); // we will write our th1 to a file for debugging purposes
   TH1D *h_thrust = new TH1D("h_thrust",";Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",43,0.57,1); //moving declarations here for clarity
@@ -59,6 +66,34 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
   h_one_minus_thrust->Sumw2();
   TH1D *h_one_minus_thrust_log = new TH1D("h_one_minus_thrust_log",";1-Thrust log scale;#frac{1}{#sigma} #frac{d#sigma}{dT}",nBins,bins);
   h_one_minus_thrust_log->Sumw2();
+
+  TH1D* h_one_minus_thrust_log_SysUp = new TH1D("h_one_minus_thrust_log_SysUp", "", nBins, bins);
+  TH1D* h_one_minus_thrust_log_SysDown = new TH1D("h_one_minus_thrust_log_SysDown", "", nBins, bins);
+
+  TH1D* h_one_minus_thrust_log_SysUpGraph = new TH1D("h_one_minus_thrust_log_SysUpGraph", "", nBinsSys, binsSys);
+  TH1D* h_one_minus_thrust_log_SysDownGraph = new TH1D("h_one_minus_thrust_log_SysDownGraph", "", nBinsSys, binsSys);
+
+  alephThrustSyst relSyst(sysFileName.c_str());
+
+  h_one_minus_thrust_log_SysUpGraph->SetMarkerStyle(20);
+  h_one_minus_thrust_log_SysUpGraph->SetMarkerSize(0.01);
+  h_one_minus_thrust_log_SysUpGraph->SetMarkerColor(kRed);
+  h_one_minus_thrust_log_SysUpGraph->SetLineColor(kRed);
+
+  h_one_minus_thrust_log_SysDownGraph->SetMarkerStyle(20);
+  h_one_minus_thrust_log_SysDownGraph->SetMarkerSize(0.01);
+  h_one_minus_thrust_log_SysDownGraph->SetMarkerColor(kRed);
+  h_one_minus_thrust_log_SysDownGraph->SetLineColor(kRed);
+
+  h_one_minus_thrust_log_SysUp->SetMarkerStyle(20);
+  h_one_minus_thrust_log_SysUp->SetMarkerSize(0.01);
+  h_one_minus_thrust_log_SysUp->SetMarkerColor(kRed);
+  h_one_minus_thrust_log_SysUp->SetLineColor(kRed);
+
+  h_one_minus_thrust_log_SysDown->SetMarkerStyle(20);
+  h_one_minus_thrust_log_SysDown->SetMarkerSize(0.01);
+  h_one_minus_thrust_log_SysDown->SetMarkerColor(kRed);
+  h_one_minus_thrust_log_SysDown->SetLineColor(kRed);
 
   TH1D *h_thrustNoCorr = new TH1D("h_thrustNoCorr",";ThrustNoCorr;#frac{1}{#sigma} #frac{d#sigma}{dT}",43,0.57,1); //moving declarations here for clarity
   h_thrustNoCorr->Sumw2();
@@ -98,6 +133,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     
     Int_t nevent = (Int_t)t1->GetEntries();
     Int_t nevent_process = nevent;
+    if(doGlobalDebug) nevent_process = 1000;
     std::vector<float> T;
     
     //for(int i = 0;i<h_one_minus_thrust->GetNbinsX();i++){cout<<h_one_minus_thrust->GetBinLowEdge(i)<<endl;}
@@ -154,7 +190,8 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         }
     }
 
-    
+    if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
     Double_t scale = 1.0/( h_thrust->GetXaxis()->GetBinWidth(1)*h_thrust->Integral());
     h_thrust->Scale(scale);    
 
@@ -166,8 +203,10 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     h_thrust->GetXaxis()->CenterTitle();
     h_thrust->GetYaxis()->CenterTitle();
     h_thrust->SetMarkerStyle(4);
-    h_thrust->SetMarkerSize(0.8);
+    h_thrust->SetMarkerSize(0.7);
     h_thrust->Draw();
+
+    if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     
     TFile *hdata = new TFile("HEPData-ins636645-v1-Table54.root");
     TH1F *hep;
@@ -204,6 +243,8 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     scale_one_minus_T = 1.0/( h_one_minus_thrustNoCorr->GetXaxis()->GetBinWidth(1)*h_one_minus_thrustNoCorr->Integral());
     h_one_minus_thrustNoCorr->Scale(scale_one_minus_T);
     
+
+    if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     
     TCanvas *c1 = new TCanvas("1-T","",200,10,500,500);
     gStyle->SetOptStat(0);
@@ -267,6 +308,8 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         }
     }
     
+    if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
     //c2->SaveAs(Form("tDist_%.2f_%.2f_%d.pdf",min_TTheta,max_TTheta,isCharged));
 
     TCanvas *c3 = new TCanvas("ratio of central value and error for 1-T","",200,10,500,500);
@@ -278,12 +321,15 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     h_ratio_one_minus_thrust->GetXaxis()->CenterTitle();
     h_ratio_one_minus_thrust->Draw();
     
+
+    if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     
     // 1-T distribution log scale
     // deleted the fill scheme using binned data. Use unbinned!
     h_one_minus_thrust_log->Scale(1.0/h_one_minus_thrust_log->Integral()); //SCALE BY THE HIST w/ *_LOG AT END
     h_one_minus_thrustNoCorr_log->Scale(1.0/h_one_minus_thrustNoCorr_log->Integral()); //SCALE BY THE HIST w/ *_LOG AT END
 
+    if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     //*_thrust -> *_thrust_log
      for(int i = 0; i < nBins; ++i)
      {
@@ -295,6 +341,32 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
        h_one_minus_thrustNoCorr_log->SetBinContent(i+1, h_one_minus_thrustNoCorr_log->GetBinContent(i+1)/binWidth);//switch to i+1, underflow bin is at i==0
        h_one_minus_thrustNoCorr_log->SetBinError(i+1, h_one_minus_thrustNoCorr_log->GetBinError(i+1)/binWidth);
      }
+
+    if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+     for(int i = 0; i < nBins; ++i){
+       Double_t sysUp = h_one_minus_thrust_log->GetBinContent(i+1);
+       Double_t sysDown = h_one_minus_thrust_log->GetBinContent(i+1);
+       Double_t relSystBinCent = relSyst.getRelQuadSystFromThrust(1.-h_one_minus_thrust_log->GetBinCenter(i+1));
+
+       if(doGlobalDebug) std::cout << "Thrust, relSyst: " << 1.-h_one_minus_thrust_log->GetBinCenter(i+1) << ", " << relSystBinCent << std::endl;
+
+       sysUp += relSystBinCent*sysUp;
+       sysDown -= relSystBinCent*sysDown;
+
+       h_one_minus_thrust_log_SysUp->SetBinContent(i+1, sysUp);
+       h_one_minus_thrust_log_SysDown->SetBinContent(i+1, sysDown);
+     }
+
+    if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+     for(int i = 0; i < nBinsSys; ++i){
+       h_one_minus_thrust_log_SysUpGraph->SetBinContent(i+1, h_one_minus_thrust_log_SysUp->Interpolate(h_one_minus_thrust_log_SysUpGraph->GetBinCenter(i+1)));
+       h_one_minus_thrust_log_SysUpGraph->SetBinError(i+1, 0);
+
+       h_one_minus_thrust_log_SysDownGraph->SetBinContent(i+1, h_one_minus_thrust_log_SysDown->Interpolate(h_one_minus_thrust_log_SysDownGraph->GetBinCenter(i+1)));
+       h_one_minus_thrust_log_SysDownGraph->SetBinError(i+1, 0);
+     }
     
     
     TCanvas *c4 = new TCanvas("log(1-T)","",200,10,500,500);
@@ -304,7 +376,10 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     h_one_minus_thrust_log->GetXaxis()->CenterTitle();
     h_one_minus_thrust_log->GetYaxis()->CenterTitle();
     h_one_minus_thrust_log->SetMarkerStyle(4);
+    h_one_minus_thrust_log->SetMarkerSize(.8);
     h_one_minus_thrust_log->Draw();
+
+    if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
 
     //cd back into outfile for write+clean
@@ -314,9 +389,20 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     h_one_minus_thrust->Write("", TObject::kOverwrite);
     h_one_minus_thrust_log->Write("", TObject::kOverwrite);
 
+    if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
     h_thrustNoCorr->Write("", TObject::kOverwrite);
     h_one_minus_thrustNoCorr->Write("", TObject::kOverwrite);
     h_one_minus_thrustNoCorr_log->Write("", TObject::kOverwrite);
+
+    if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+    h_one_minus_thrust_log_SysUp->Write("", TObject::kOverwrite);
+    h_one_minus_thrust_log_SysDown->Write("", TObject::kOverwrite);
+    h_one_minus_thrust_log_SysUpGraph->Write("", TObject::kOverwrite);
+    h_one_minus_thrust_log_SysDownGraph->Write("", TObject::kOverwrite);
+
+    if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
     return; //even if void - useful for searching the control path
 }
