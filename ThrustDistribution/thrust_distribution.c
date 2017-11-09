@@ -490,7 +490,7 @@ void relative_error()
     h_one_minus_thrust_log_SysUp->GetYaxis()->CenterTitle();
     
     h_one_minus_thrust_log_SysUp->Draw("HIST");
-    h_one_minus_thrust_log_SysDown->Divide("HIST");
+    h_one_minus_thrust_log_SysDown->Draw("HIST SAME");
     
     gPad->RedrawAxis();
 }
