@@ -466,30 +466,33 @@ void relative_error()
     TH1D *h_one_minus_thrust_log_SysDownGraph;
     TH1D *h_one_minus_thrust_log_SysUpGraph;
     h_one_minus_thrust_log = (TH1D*)gDirectory->Get("h_one_minus_thrust_log");
-    h_one_minus_thrust_log_SysDownGraph = (TH1D*)gDirectory->Get("h_one_minus_thrust_log_SysDownGraph");
-    h_one_minus_thrust_log_SysUpGraph = (TH1D*)gDirectory->Get("h_one_minus_thrust_log_SysUpGraph");
+    h_one_minus_thrust_log_SysDown = (TH1D*)gDirectory->Get("h_one_minus_thrust_log_SysDown");
+    h_one_minus_thrust_log_SysUp = (TH1D*)gDirectory->Get("h_one_minus_thrust_log_SysUp");
 
-    TH1D *h_one_minus_thrust_log_Graph = (TH1D*)h_one_minus_thrust_log_SysDownGraph ->Clone();
+    // Divide
+    h_one_minus_thrust_log_SysUp->Divide(h_one_minus_thrust_log);
+    h_one_minus_thrust_log_SysDown->Divide(h_one_minus_thrust_log);
     
-    float val;
-    int bin;
-    for(int i = 0; i < h_one_minus_thrust_log_Graph->GetNbinsX(); ++i)
-    {
-        val = h_one_minus_thrust_log_Graph->GetBinCenter(i);
-        bin = h_one_minus_thrust_log->GetXaxis()->FindBin(val);
-        cout<<bin<<endl;
-        cout<<h_one_minus_thrust_log->GetBinContent(bin)<<endl;
-        h_one_minus_thrust_log_Graph->SetBinContent(h_one_minus_thrust_log->GetBinContent(bin));
-    }
+    // Set to same range
+    h_one_minus_thrust_log_SysUp->SetMinimum(0.65);
+    h_one_minus_thrust_log_SysUp->SetMaximum(1.35);
     
-    h_one_minus_thrust_log_SysDownGraph->Divide(h_one_minus_thrust_log_Graph);
-    h_one_minus_thrust_log_SysUpGraph->Divide(h_one_minus_thrust_log_Graph);
+    h_one_minus_thrust_log_SysDown->SetMinimum(0.65);
+    h_one_minus_thrust_log_SysDown->SetMaximum(1.35);
     
     TCanvas *c1 = new TCanvas("log(1-T)","",200,10,500,500);
     gStyle->SetOptStat(0);
     gPad->SetLogx();
-    h_one_minus_thrust_log_SysDownGraph->Draw();
-    h_one_minus_thrust_log_SysUpGraph->Divide("HIST SAME");
+    
+    h_one_minus_thrust_log_SysUp->GetXaxis()->SetTitle("1-Thrust");
+    h_one_minus_thrust_log_SysUp->GetXaxis()->CenterTitle();
+    h_one_minus_thrust_log_SysUp->GetYaxis()->SetTitle("Systematic Error");
+    h_one_minus_thrust_log_SysUp->GetYaxis()->CenterTitle();
+    
+    h_one_minus_thrust_log_SysUp->Draw("HIST");
+    h_one_minus_thrust_log_SysDown->Divide("HIST");
+    
+    gPad->RedrawAxis();
 }
 
 
