@@ -34,7 +34,7 @@
 ////////////////////////////////////////////////////////////
 
 std::vector<float> compute_errors();
-
+void relative_error();
 void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/alephDataPaths_LEP1.root", // file used
                          Float_t cut_missP = 0.3,   // upper bound on missP/energy
                          Float_t min_TTheta = 0.0, // lower cut on TTheta
@@ -403,6 +403,9 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     h_one_minus_thrust_log_SysDownGraph->Write("", TObject::kOverwrite);
 
     if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+    
+    relative_error();
+    
     return; //even if void - useful for searching the control path
 }
 
@@ -462,8 +465,8 @@ void relative_error()
 {
     TFile *outFile = new TFile("outFile.root");
     TH1D *h_one_minus_thrust_log;
-    TH1D *h_one_minus_thrust_log_SysDownGraph;
-    TH1D *h_one_minus_thrust_log_SysUpGraph;
+    TH1D *h_one_minus_thrust_log_SysDown;
+    TH1D *h_one_minus_thrust_log_SysUp;
     h_one_minus_thrust_log = (TH1D*)gDirectory->Get("h_one_minus_thrust_log");
     h_one_minus_thrust_log_SysDown = (TH1D*)gDirectory->Get("h_one_minus_thrust_log_SysDown");
     h_one_minus_thrust_log_SysUp = (TH1D*)gDirectory->Get("h_one_minus_thrust_log_SysUp");
