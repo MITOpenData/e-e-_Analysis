@@ -473,7 +473,7 @@ void relative_error()
     
     float val;
     int bin;
-    for(int i = 0; i < h_one_minus_thrust_log_Graph->GetNBinsX(); ++i)
+    for(int i = 0; i < h_one_minus_thrust_log_Graph->GetNbinsX(); ++i)
     {
         val = h_one_minus_thrust_log_Graph->GetBinCenter(i);
         bin = h_one_minus_thrust_log->GetXaxis()->FindBin(val);
