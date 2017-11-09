@@ -46,7 +46,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
   //declare some binnings first - just get it out of the way
   const int nBins = 80;
   Double_t bins[nBins+1];
-  const Double_t logLow = .05;
+  const Double_t logLow = .005;
   const Double_t logHi = .4;
   getLogBins(logLow, logHi, nBins, bins);
 
@@ -59,6 +59,13 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
   h_one_minus_thrust->Sumw2();
   TH1D *h_one_minus_thrust_log = new TH1D("h_one_minus_thrust_log",";1-Thrust log scale;#frac{1}{#sigma} #frac{d#sigma}{dT}",nBins,bins);
   h_one_minus_thrust_log->Sumw2();
+
+  TH1D *h_thrustNoCorr = new TH1D("h_thrustNoCorr",";ThrustNoCorr;#frac{1}{#sigma} #frac{d#sigma}{dT}",43,0.57,1); //moving declarations here for clarity
+  h_thrustNoCorr->Sumw2();
+  TH1D *h_one_minus_thrustNoCorr = new TH1D("h_one_minus_thrustNoCorr",";1-ThrustNoCorr;#frac{1}{#sigma} #frac{d#sigma}{dT}",40,0.0,0.4);
+  h_one_minus_thrustNoCorr->Sumw2();
+  TH1D *h_one_minus_thrustNoCorr_log = new TH1D("h_one_minus_thrustNoCorr_log",";1-ThrustNoCorr log scale;#frac{1}{#sigma} #frac{d#sigma}{dT}",nBins,bins);
+  h_one_minus_thrustNoCorr_log->Sumw2();
 
   
   TFile *f = new TFile(filename, "READ"); //specify reading only - dont want to mod input
@@ -135,9 +142,13 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         if(pwflag0>=5)
         {
             Float_t Thrust = T_sum/T_mag;
-            h_thrust->Fill(Thrust);
-	    h_one_minus_thrust->Fill(1-Thrust); //You have unbinned data! Fill here
-	    h_one_minus_thrust_log->Fill(1-Thrust); //You have unbinned data! Fill here
+            h_thrust->Fill(Thrust, correct_entry(Thrust));
+	    h_one_minus_thrust->Fill(1-Thrust, correct_entry(Thrust)); //You have unbinned data! Fill here
+	    h_one_minus_thrust_log->Fill(1-Thrust, correct_entry(Thrust)); //You have unbinned data! Fill here
+
+            h_thrustNoCorr->Fill(Thrust);
+	    h_one_minus_thrustNoCorr->Fill(1-Thrust); //You have unbinned data! Fill here
+	    h_one_minus_thrustNoCorr_log->Fill(1-Thrust); //You have unbinned data! Fill here
             //if((1.0-Thrust)<=.05){h_one_minus_thrust->Fill(h_one_minus_thrust->GetBinCenter(1));}
             //else{h_one_minus_thrust->Fill(1-Thrust);}
         }
@@ -145,12 +156,10 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
 
     
     Double_t scale = 1.0/( h_thrust->GetXaxis()->GetBinWidth(1)*h_thrust->Integral());
-    h_thrust->Scale(scale);
-    
-    // NOTE: correct_thrust changes the lower limit of the input TH1 to
-    // the first low-edge above 0.6.
-    h_thrust = correct_thrust<TH1D>(h_thrust);
-    
+    h_thrust->Scale(scale);    
+
+    scale = 1.0/( h_thrustNoCorr->GetXaxis()->GetBinWidth(1)*h_thrustNoCorr->Integral());
+    h_thrustNoCorr->Scale(scale);    
     
     TCanvas *c2 = new TCanvas("T","",200,10,500,500);
     gStyle->SetOptStat(0);
@@ -191,6 +200,9 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     //Deleted version that was just rebin of binned data - when possible rebin starting from unbinned!
     Double_t scale_one_minus_T = 1.0/( h_one_minus_thrust->GetXaxis()->GetBinWidth(1)*h_one_minus_thrust->Integral());
     h_one_minus_thrust->Scale(scale_one_minus_T);
+
+    scale_one_minus_T = 1.0/( h_one_minus_thrustNoCorr->GetXaxis()->GetBinWidth(1)*h_one_minus_thrustNoCorr->Integral());
+    h_one_minus_thrustNoCorr->Scale(scale_one_minus_T);
     
     
     TCanvas *c1 = new TCanvas("1-T","",200,10,500,500);
@@ -270,14 +282,18 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     // 1-T distribution log scale
     // deleted the fill scheme using binned data. Use unbinned!
     h_one_minus_thrust_log->Scale(1.0/h_one_minus_thrust_log->Integral()); //SCALE BY THE HIST w/ *_LOG AT END
+    h_one_minus_thrustNoCorr_log->Scale(1.0/h_one_minus_thrustNoCorr_log->Integral()); //SCALE BY THE HIST w/ *_LOG AT END
 
     //*_thrust -> *_thrust_log
      for(int i = 0; i < nBins; ++i)
      {
-       Float_t binWidth = h_one_minus_thrust_log->GetBinWidth(i);
-         if(i==0)binWidth+=logLow;
-	 h_one_minus_thrust_log->SetBinContent(i+1, h_one_minus_thrust_log->GetBinContent(i+1)/binWidth);//switch to i+1, underflow bin is at i==0
-	 h_one_minus_thrust_log->SetBinError(i+1, h_one_minus_thrust_log->GetBinError(i+1)/binWidth);
+       Float_t binWidth = h_one_minus_thrust_log->GetBinWidth(i+1);
+       if(i==0)binWidth+=logLow;
+       h_one_minus_thrust_log->SetBinContent(i+1, h_one_minus_thrust_log->GetBinContent(i+1)/binWidth);//switch to i+1, underflow bin is at i==0
+       h_one_minus_thrust_log->SetBinError(i+1, h_one_minus_thrust_log->GetBinError(i+1)/binWidth);
+
+       h_one_minus_thrustNoCorr_log->SetBinContent(i+1, h_one_minus_thrustNoCorr_log->GetBinContent(i+1)/binWidth);//switch to i+1, underflow bin is at i==0
+       h_one_minus_thrustNoCorr_log->SetBinError(i+1, h_one_minus_thrustNoCorr_log->GetBinError(i+1)/binWidth);
      }
     
     
@@ -296,8 +312,11 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     //write all, first arg name ("" == declaration name), second arg overwrites buffer saves in file
     h_thrust->Write("", TObject::kOverwrite);
     h_one_minus_thrust->Write("", TObject::kOverwrite);
-    h_one_minus_thrust->Write("", TObject::kOverwrite);
     h_one_minus_thrust_log->Write("", TObject::kOverwrite);
+
+    h_thrustNoCorr->Write("", TObject::kOverwrite);
+    h_one_minus_thrustNoCorr->Write("", TObject::kOverwrite);
+    h_one_minus_thrustNoCorr_log->Write("", TObject::kOverwrite);
 
     return; //even if void - useful for searching the control path
 }
