@@ -34,7 +34,6 @@
 ////////////////////////////////////////////////////////////
 
 std::vector<float> compute_errors();
-void relative_error();
 
 void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/alephDataPaths_LEP1.root", // file used
                          Float_t cut_missP = 0.3,   // upper bound on missP/energy
@@ -404,7 +403,6 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     h_one_minus_thrust_log_SysDownGraph->Write("", TObject::kOverwrite);
 
     if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-    relative_error();
     return; //even if void - useful for searching the control path
 }
 
