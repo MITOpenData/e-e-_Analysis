@@ -44,6 +44,7 @@ using namespace std;
 /**************************************************************************************/
 
 void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneCUETP8M1_5p02TeV-pythia8-HINppWinter16DR-NoPU_75X_mcRun2_asymptotic_ppAt5TeV_forest_v2_track.root",
+              TString savename = "TPCNtuple_MinBias_TuneCUETP8M1_5p02TeV-pythia8-HINppWinter16DR-NoPU_75X_mcRun2_asymptotic_ppAt5TeV_forest_v2_track", // used for saving the files
               Int_t isBelle      = 0,		// BELLE analysis = 1, CMS/ALEPH analysis = 0
               Int_t isThrust     = 0, 		// Leading Jet Axis analysis = 2, Thurst Axis analysis = 1, Beam Axis analysis = 0
               Int_t isTheta      = 0, 		// Use Theta angle = 1, Use Eta = 0
@@ -348,10 +349,10 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
 	 h_deltaphi[0]->SetStats(0);
       }
     }
-    c3->SaveAs(Form("proj_%s_%d_%d.pdf",filename.Data(),mult_low, mult_high));
+    c3->SaveAs(Form("proj_%s_%d_%d.pdf",savename.Data(),mult_low, mult_high));
              
     // Save the results
-    TFile *background = new TFile(Form("ridge_%s_%d_%d.root",filename.Data(),mult_low, mult_high), "recreate");
+    TFile *background = new TFile(Form("ridge_%s_%d_%d.root",savename.Data(),mult_low, mult_high), "recreate");
     h_deltaphi[0]->Write();
     h_deltaphi[2]->Write();
     h_deltaphi[4]->Write();
