@@ -116,7 +116,7 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     Int_t nevent = (Int_t)t1->GetEntries();
     
     Int_t nevent_process = nevent;
-    if( maxevt>0 && maxevt<nevent ) nevent_process = maxevt;
+    //if( maxevt>0 && maxevt<nevent ) nevent_process = maxevt;
     
     Float_t averageN=0;
     Int_t nEventProcessed=0;
@@ -348,10 +348,10 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
 	 h_deltaphi[0]->SetStats(0);
       }
     }
-    c3->SaveAs(Form("projection_%d_%d.pdf",mult_low, mult_high));
+    c3->SaveAs(Form("proj_%s_%d_%d.pdf",filename.Data(),mult_low, mult_high));
              
     // Save the results
-    TFile *background = new TFile(Form("ridge_%d_%d.root",mult_low, mult_high), "recreate");
+    TFile *background = new TFile(Form("ridge_%s_%d_%d.root",filename.Data(),mult_low, mult_high), "recreate");
     h_deltaphi[0]->Write();
     h_deltaphi[2]->Write();
     h_deltaphi[4]->Write();
