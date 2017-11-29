@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  28 NOV 2017 17:19
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  29 NOV 2017 00:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -145,9 +145,6 @@ LaTeX Warning: Label `sec:' multiply defined.
 
 
 LaTeX Warning: Label `sec:datasample' multiply defined.
-
-
-LaTeX Warning: Label `sec:systematic' multiply defined.
 
 )
 \openout1 = `ridgepaperALEPH.aux'.
@@ -328,32 +325,101 @@ Package natbib Warning: Citation `Dusling:2013qoz' on page 1 undefined on input
 <figure1.png, id=21, 744.7825pt x 680.5425pt>
 File: figure1.png Graphic file (type png)
  <use figure1.png>
-Package pdftex.def Info: figure1.png used on input line 101.
+Package pdftex.def Info: figure1.png used on input line 98.
 (pdftex.def)             Requested size: 229.49844pt x 209.69911pt.
 File: figure1.png Graphic file (type png)
 
 <use figure1.png>
-Package pdftex.def Info: figure1.png used on input line 109.
+Package pdftex.def Info: figure1.png used on input line 106.
 (pdftex.def)             Requested size: 229.49844pt x 209.69911pt.
  [2 <./figure1.png>]
 
 LaTeX Warning: A float is stuck (cannot be placed); try class option [floatfix]
- on input line 130.
+ on input line 127.
+
+
+<plots/GlobalObservables/LEP1/allmomlep1.pdf, id=28, 569.12625pt x 545.03625pt>
+File: plots/GlobalObservables/LEP1/allmomlep1.pdf Graphic file (type pdf)
+<use plots/GlobalObservables/LEP1/allmomlep1.pdf>
+Package pdftex.def Info: plots/GlobalObservables/LEP1/allmomlep1.pdf used on in
+put line 134.
+(pdftex.def)             Requested size: 203.99689pt x 195.36461pt.
+
+<plots/GlobalObservables/LEP1/allmultlep1.pdf, id=29, 569.12625pt x 545.03625pt
+>
+File: plots/GlobalObservables/LEP1/allmultlep1.pdf Graphic file (type pdf)
+ <use plots/GlobalObservables/LEP1/allmultlep1.pdf>
+Package pdftex.def Info: plots/GlobalObservables/LEP1/allmultlep1.pdf used on i
+nput line 140.
+(pdftex.def)             Requested size: 203.99689pt x 195.36461pt.
+
+<plots/GlobalObservables/LEP1/jetetalep1.pdf, id=30, 569.12625pt x 545.03625pt>
+File: plots/GlobalObservables/LEP1/jetetalep1.pdf Graphic file (type pdf)
+<use plots/GlobalObservables/LEP1/jetetalep1.pdf>
+Package pdftex.def Info: plots/GlobalObservables/LEP1/jetetalep1.pdf used on in
+put line 147.
+(pdftex.def)             Requested size: 203.99689pt x 195.36461pt.
+
+<plots/GlobalObservables/LEP1/jetptlep1.pdf, id=31, 569.12625pt x 545.03625pt>
+File: plots/GlobalObservables/LEP1/jetptlep1.pdf Graphic file (type pdf)
+
+<use plots/GlobalObservables/LEP1/jetptlep1.pdf>
+Package pdftex.def Info: plots/GlobalObservables/LEP1/jetptlep1.pdf used on inp
+ut line 153.
+(pdftex.def)             Requested size: 203.99689pt x 195.36461pt.
+
+<plots/GlobalObservables/LEP2/allmomlep2.pdf, id=32, 569.12625pt x 545.03625pt>
+File: plots/GlobalObservables/LEP2/allmomlep2.pdf Graphic file (type pdf)
+<use plots/GlobalObservables/LEP2/allmomlep2.pdf>
+Package pdftex.def Info: plots/GlobalObservables/LEP2/allmomlep2.pdf used on in
+put line 162.
+(pdftex.def)             Requested size: 229.49844pt x 219.78207pt.
+
+<plots/GlobalObservables/LEP2/allmultlep2.pdf, id=33, 569.12625pt x 545.03625pt
+>
+File: plots/GlobalObservables/LEP2/allmultlep2.pdf Graphic file (type pdf)
+ <use plots/GlobalObservables/LEP2/allmultlep2.pdf>
+Package pdftex.def Info: plots/GlobalObservables/LEP2/allmultlep2.pdf used on i
+nput line 168.
+(pdftex.def)             Requested size: 229.49844pt x 219.78207pt.
+
+<plots/GlobalObservables/LEP2/jetetalep2.pdf, id=34, 569.12625pt x 545.03625pt>
+File: plots/GlobalObservables/LEP2/jetetalep2.pdf Graphic file (type pdf)
+<use plots/GlobalObservables/LEP2/jetetalep2.pdf>
+Package pdftex.def Info: plots/GlobalObservables/LEP2/jetetalep2.pdf used on in
+put line 175.
+(pdftex.def)             Requested size: 229.49844pt x 219.78207pt.
+
+<plots/GlobalObservables/LEP2/jetptlep2.pdf, id=35, 569.12625pt x 545.03625pt>
+File: plots/GlobalObservables/LEP2/jetptlep2.pdf Graphic file (type pdf)
+
+<use plots/GlobalObservables/LEP2/jetptlep2.pdf>
+Package pdftex.def Info: plots/GlobalObservables/LEP2/jetptlep2.pdf used on inp
+ut line 181.
+(pdftex.def)             Requested size: 229.49844pt x 219.78207pt.
 
 No file ridgepaperALEPH.bbl.
 
 Package natbib Warning: There were undefined citations.
 
-[3] (./ridgepaperALEPH.aux)
+[3 <./plots/GlobalObservables/LEP1/allmomlep1.pdf, page is rotated 90 degrees> 
+<./plots/GlobalObservables/LEP1/allmultlep1.pdf, page is rotated 90 degrees> <.
+/plots/GlobalObservables/LEP1/jetetalep1.pdf, page is rotated 90 degrees>]
+[4 <./plots/GlobalObservables/LEP1/jetptlep1.pdf, page is rotated 90 degrees> <
+./plots/GlobalObservables/LEP2/allmomlep2.pdf, page is rotated 90 degrees>]
+[5 <./plots/GlobalObservables/LEP2/allmultlep2.pdf, page is rotated 90 degrees>
+ <./plots/GlobalObservables/LEP2/jetetalep2.pdf, page is rotated 90 degrees>]
+[6 <./plots/GlobalObservables/LEP2/jetptlep2.pdf, page is rotated 90 degrees>]
+(./ridgepaperALEPH.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 3523 strings out of 492995
- 46598 string characters out of 6132704
- 120534 words of memory out of 5000000
- 7023 multiletter control sequences out of 15000+600000
+ 3575 strings out of 492995
+ 48446 string characters out of 6132704
+ 122673 words of memory out of 5000000
+ 7065 multiletter control sequences out of 15000+600000
  14642 words of font info for 54 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  39i,7n,26p,1412b,306s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -373,10 +439,10 @@ e/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2017/t
 exmf-dist/fonts/type1/public/amsfonts/cm/cmti7.pfb></usr/local/texlive/2017/tex
 mf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb>
-Output written on ridgepaperALEPH.pdf (3 pages, 329915 bytes).
+Output written on ridgepaperALEPH.pdf (6 pages, 443929 bytes).
 PDF statistics:
- 81 PDF objects out of 1000 (max. 8388607)
- 57 compressed objects within 1 object stream
+ 444 PDF objects out of 1000 (max. 8388607)
+ 207 compressed objects within 3 object streams
  0 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 46 words of extra memory for PDF output out of 10000 (max. 10000000)
 
