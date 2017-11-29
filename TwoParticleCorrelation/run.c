@@ -4,7 +4,6 @@ void scan(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneCUETP
 {
     Int_t mult_low[3] = {0,20,30};
     Int_t mult_hig[3] = {20,30,9999};
-    
     for (int i=0;i<3;i++)
     {
         // check max event above 10000000
