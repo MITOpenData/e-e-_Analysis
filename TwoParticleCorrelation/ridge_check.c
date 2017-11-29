@@ -348,10 +348,10 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
 	 h_deltaphi[0]->SetStats(0);
       }
     }
-    c3->SaveAs(Form("projection_%s_%d_%d.pdf",filename,mult_low, mult_high));
+    c3->SaveAs(Form("projection_%d_%d.pdf",mult_low, mult_high));
              
     // Save the results
-    TFile *background = new TFile(Form("ridge_%s_%d_%d.root",filename,mult_low, mult_high), "recreate");
+    TFile *background = new TFile(Form("ridge_%d_%d.root",mult_low, mult_high), "recreate");
     h_deltaphi[0]->Write();
     h_deltaphi[2]->Write();
     h_deltaphi[4]->Write();
