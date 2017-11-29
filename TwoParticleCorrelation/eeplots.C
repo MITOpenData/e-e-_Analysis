@@ -1,0 +1,147 @@
+//
+// Plots variables from the LEP trees.
+// NOTE: In addition to StudyMult, requires the use of Djetanalysis repo, found at 
+// github.com/ginnocen/Djetanalysis
+// which should be cloned to the same level as the main StudyMult folder.
+//
+
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <TFile.h>
+#include <TTree.h>
+#include "TLorentzVector.h"
+#include "TCanvas.h"
+#include "../../Djetanalysis/includes/xjjrootuti.h"
+#include "../../Djetanalysis/djtana/djtana.h"
+void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoParticleCorrelation/alephDataPaths_LEP2_1995to2000.root")
+{
+    TString datalabel = "LEP2 Data";
+    xjjroot::setgstyle();
+    TFile *f = new TFile(filename);
+    TTree *t1 = (TTree*)f->Get("t");
+    t1->AddFriend("ak4JetTree");
+    TTree *ak4JetTree = (TTree*)f->Get("ak4JetTree");
+    TTree *ak8JetTree = (TTree*)f->Get("ak8JetTree");
+    
+    //// main Tree ////
+    Int_t nParticle;
+    Int_t nChargedHadrons;
+    Float_t pt[50000];
+    Float_t eta[50000];
+    Float_t theta[50000];
+    Float_t phi[50000];
+    Int_t pwflag[50000];
+
+    t1->SetBranchAddress("nParticle",&nParticle);
+    t1->SetBranchAddress("nChargedHadrons",&nChargedHadrons);
+    t1->SetBranchAddress("pt",pt);
+    t1->SetBranchAddress("eta",eta);
+    t1->SetBranchAddress("theta",theta);
+    t1->SetBranchAddress("phi",phi);
+    t1->SetBranchAddress("pwflag",pwflag);
+    
+    //// ak4JetTree ////
+    Int_t nref4;
+    Float_t jtpt4[100000];
+    Float_t jteta4[100000];
+    Float_t jtphi4[100000];
+    
+    t1->SetBranchAddress("nref",&nref4);
+    t1->SetBranchAddress("jtpt",jtpt4);
+    t1->SetBranchAddress("jteta",jteta4);
+    t1->SetBranchAddress("jtphi",jtphi4);
+
+    //// ak8JetTree ////
+    Int_t nref8;
+    Float_t jtpt8[100000];
+    Float_t jteta8[100000];
+    Float_t jtphi8[100000];
+    
+    ak8JetTree->SetBranchAddress("nref",&nref8);
+    ak8JetTree->SetBranchAddress("jtpt",jtpt8);
+    ak8JetTree->SetBranchAddress("jteta",jteta8);
+    ak8JetTree->SetBranchAddress("jtphi",jtphi8);
+
+    // Plot all, neutral, charged multiplicity
+    TCanvas *allmult = new TCanvas ("allmult","allmult",600,600);
+	TH2F *hempty = new TH2F("",";Multiplicity;Probability",1,0,95,1,0,0.1);
+    xjjroot::sethempty(hempty,0,0.3);
+    hempty->Draw();
+    t1->Draw("nParticle>>amult","","goff");
+    TH1F* amult = (TH1F*)gDirectory->Get("amult");
+    amult->Scale(1./amult->GetEntries());
+    xjjroot::setthgrstyle(amult, amcolor[0], 20, 1.2, amcolor[0], 1, 1, -1, -1, -1);
+    amult->Draw("pe same");
+    t1->Draw("nChargedHadrons>>cmult","","goff");
+    TH1F* cmult = (TH1F*)gDirectory->Get("cmult");
+    cmult->Scale(1./cmult->GetEntries());
+    xjjroot::setthgrstyle(cmult, amcolor[1], 21, 1.2, amcolor[1], 1, 1, -1, -1, -1);
+    cmult->Draw("pe same");
+    t1->Draw("(nParticle - nChargedHadrons)>>nmult","","goff");
+    TH1F* nmult = (TH1F*)gDirectory->Get("nmult");
+    nmult->Scale(1./nmult->GetEntries());
+    xjjroot::setthgrstyle(nmult, kBlue, 22, 1.2, kBlue, 1, 1, -1, -1, -1);
+    nmult->Draw("pe same");
+    TLegend* leg = new TLegend(0.42,0.7,0.85,0.88);
+    xjjroot::setleg(leg);
+    leg->AddEntry(amult,"All","p");
+    leg->AddEntry(cmult,"Charged Hadrons","p");
+    leg->AddEntry(nmult,"Neutral Hadrons + Photons","p");
+    leg->Draw();
+    xjjroot::drawtex(0.2,0.876,datalabel);
+
+    //Plot all, neutral, charged p_t
+    TCanvas *allmom = new TCanvas("allmom","allmom",600,600);
+    TH2F *hemptyp = new TH2F("",";pt;Probability",1,0,60,1,0,0.3);
+    xjjroot::sethempty(hemptyp,0,0.3);
+    hemptyp->Draw();
+    t1->Draw("pt>>amom","","goff");
+    TH1F* amom = (TH1F*)gDirectory->Get("amom");
+    amom->Scale(1./amom->GetEntries());
+    xjjroot::setthgrstyle(amom, amcolor[0], 20, 1.2, amcolor[0], 1, 1, -1, -1, -1);
+    amom->Draw("pe same");
+    t1->Draw("pt>>cmom","pwflag==0","goff");
+    TH1F* cmom = (TH1F*)gDirectory->Get("cmom");
+    cmom->Scale(1./cmom->GetEntries());
+    xjjroot::setthgrstyle(cmom, amcolor[1], 21, 1.2, amcolor[1], 1, 1, -1, -1, -1);
+    cmom->Draw("pe same");
+    t1->Draw("pt>>nmom","pwflag!=0","goff");
+    TH1F* nmom = (TH1F*)gDirectory->Get("nmom");
+    nmom->Scale(1./nmom->GetEntries());
+    xjjroot::setthgrstyle(nmom, kBlue, 22, 1.2, kBlue, 1, 1, -1, -1, -1);
+    nmom->Draw("pe same");
+    TLegend* pleg = new TLegend(0.42,0.7,0.85,0.88);
+    xjjroot::setleg(pleg);
+    pleg->AddEntry(amom,"All","p");
+    pleg->AddEntry(cmom,"Charged Hadrons","p");
+    pleg->AddEntry(nmom,"Neutral Hadrons + Photons","p");
+    pleg->Draw();
+    xjjroot::drawtex(0.2,0.876,datalabel);
+
+    // Plot jet eta
+    TCanvas *jeteta = new TCanvas("jeteta","jeteta",600,600);
+    TH2F *hemptye = new TH2F("",";Jet #eta;Probability",1,-3,3,1,0,0.05);
+    xjjroot::sethempty(hemptye,0,0.5);
+    hemptye->Draw();
+    t1->Draw("jteta>>jeta","","goff");
+    TH1F* jeta = (TH1F*)gDirectory->Get("jeta");
+    jeta->Scale(1./jeta->GetEntries());
+    xjjroot::setthgrstyle(jeta, amcolor[0], amstyle[0][0], 1.2, amcolor[0], 1, 1, -1, -1, -1);
+    jeta->Draw("pe same");
+    xjjroot::drawtex(0.2,0.876,datalabel);
+
+    // Plot jet pt
+    TCanvas *jetpt = new TCanvas("jetpt","jetpt",600,600);
+    TH2F *hemptyj = new TH2F("",";Jet pt;Probability",1,0,80,1,0,1);
+    xjjroot::sethempty(hemptyj,0,0.3);
+    hemptyj->Draw();
+    t1->Draw("jtpt>>jpt","","goff");
+    TH1F* jpt = (TH1F*)gDirectory->Get("jpt");
+    jpt->Scale(1./jpt->GetEntries());
+    xjjroot::setthgrstyle(jpt, amcolor[0], amstyle[0][0], 1.2, amcolor[0], 1, 1, -1, -1, -1);
+    jpt->Draw("pe same");
+    xjjroot::drawtex(0.2,0.876,datalabel);
+}
