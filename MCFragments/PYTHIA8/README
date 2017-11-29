@@ -1,0 +1,11 @@
+Throw the .cc files in the pythia8 examples directory
+
+Add the following to the Makefile in the examples dir after CXX_COMMON:
+
+ROOT=`root-config --cflags --glibs`
+FASTJET=`/afs/cern.ch/work/c/cmcginn/public/Fastjet/fastjet-install/bin/fastjet-config --cxxflags --libs --plugins`
+
+Modify the main% command as
+$(CXX_COMMON) -> $(CXX_COMMON) $(ROOT) $(FASTJET)
+
+now running make <NAME OF FRAGMENT> should build the pythia8
