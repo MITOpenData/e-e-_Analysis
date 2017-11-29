@@ -27,7 +27,7 @@
 //
 // ridge_check.c
 //
-// Yen-Jie Lee, Bibek Pandit, Anthony Badea, Gian Michele Innocenti, Tzu-An Sheng
+// Yen-Jie Lee, Gian Michele Innocenti, Anthony Badea, Bibek Pandit, Tzu-An Sheng
 //
 // LOG
 //     2017/08/15 Added Thurst Axis based correlation function to the TPCNtupleData 
@@ -84,7 +84,8 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     /* TTree *t1_mix = (TTree*)f_mix->Get("t"); */
     TChain *t1_mix = new TChain("t");
     t1_mix->Add(filename);
-
+             
+    // Not necessary
     TChain *t2_mix = new TChain("ak4JetTree");
     t2_mix->Add(filename);
     
