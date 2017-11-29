@@ -1,9 +1,9 @@
 #include "ridge_check.c"
 
-void scan(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneCUETP8M1_5p02TeV-pythia8-HINppWinter16DR-NoPU_75X_mcRun2_asymptotic_ppAt5TeV_forest_v2_track.root",)
+void scan(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneCUETP8M1_5p02TeV-pythia8-HINppWinter16DR-NoPU_75X_mcRun2_asymptotic_ppAt5TeV_forest_v2_track.root")
 {
     Int_t mult_low[4] = {0,20,30,0};
-    Int_t mult_hig[4] = {20,30,9999,9999};
+    Int_t mult_high[4] = {20,30,9999,9999};
     for (int i=0;i<4;i++)
     {
         // check max event above 10000000
