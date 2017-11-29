@@ -1,8 +1,5 @@
 //
 // Plots variables from the LEP trees.
-// NOTE: In addition to StudyMult, requires the use of Djetanalysis repo, found at 
-// github.com/ginnocen/Djetanalysis
-// which should be cloned to the same level as the main StudyMult folder.
 //
 
 #include <iostream>
@@ -14,11 +11,12 @@
 #include <TTree.h>
 #include "TLorentzVector.h"
 #include "TCanvas.h"
-#include "../../Djetanalysis/includes/xjjrootuti.h"
-#include "../../Djetanalysis/djtana/djtana.h"
+#include "xjjrootuti.h"
 void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoParticleCorrelation/alephDataPaths_LEP2_1995to2000.root")
 {
+    // Text in upper-left corner
     TString datalabel = "LEP2 Data";
+
     xjjroot::setgstyle();
     TFile *f = new TFile(filename);
     TTree *t1 = (TTree*)f->Get("t");
@@ -67,18 +65,18 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
 
     // Plot all, neutral, charged multiplicity
     TCanvas *allmult = new TCanvas ("allmult","allmult",600,600);
-	TH2F *hempty = new TH2F("",";Multiplicity;Probability",1,0,95,1,0,0.1);
+	TH2F *hempty = new TH2F("",";Multiplicity;Probability",1,0,95,1,0,0.15);
     xjjroot::sethempty(hempty,0,0.3);
     hempty->Draw();
     t1->Draw("nParticle>>amult","","goff");
     TH1F* amult = (TH1F*)gDirectory->Get("amult");
     amult->Scale(1./amult->GetEntries());
-    xjjroot::setthgrstyle(amult, amcolor[0], 20, 1.2, amcolor[0], 1, 1, -1, -1, -1);
+    xjjroot::setthgrstyle(amult, kBlack, 20, 1.2, kBlack, 1, 1, -1, -1, -1);
     amult->Draw("pe same");
     t1->Draw("nChargedHadrons>>cmult","","goff");
     TH1F* cmult = (TH1F*)gDirectory->Get("cmult");
     cmult->Scale(1./cmult->GetEntries());
-    xjjroot::setthgrstyle(cmult, amcolor[1], 21, 1.2, amcolor[1], 1, 1, -1, -1, -1);
+    xjjroot::setthgrstyle(cmult, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
     cmult->Draw("pe same");
     t1->Draw("(nParticle - nChargedHadrons)>>nmult","","goff");
     TH1F* nmult = (TH1F*)gDirectory->Get("nmult");
@@ -93,7 +91,7 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
     leg->Draw();
     xjjroot::drawtex(0.2,0.876,datalabel);
 
-    //Plot all, neutral, charged p_t
+    // Plot all, neutral, charged pt
     TCanvas *allmom = new TCanvas("allmom","allmom",600,600);
     TH2F *hemptyp = new TH2F("",";pt;Probability",1,0,60,1,0,0.3);
     xjjroot::sethempty(hemptyp,0,0.3);
@@ -101,12 +99,12 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
     t1->Draw("pt>>amom","","goff");
     TH1F* amom = (TH1F*)gDirectory->Get("amom");
     amom->Scale(1./amom->GetEntries());
-    xjjroot::setthgrstyle(amom, amcolor[0], 20, 1.2, amcolor[0], 1, 1, -1, -1, -1);
+    xjjroot::setthgrstyle(amom, kBlack, 20, 1.2, kRed, 1, 1, -1, -1, -1);
     amom->Draw("pe same");
     t1->Draw("pt>>cmom","pwflag==0","goff");
     TH1F* cmom = (TH1F*)gDirectory->Get("cmom");
     cmom->Scale(1./cmom->GetEntries());
-    xjjroot::setthgrstyle(cmom, amcolor[1], 21, 1.2, amcolor[1], 1, 1, -1, -1, -1);
+    xjjroot::setthgrstyle(cmom, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
     cmom->Draw("pe same");
     t1->Draw("pt>>nmom","pwflag!=0","goff");
     TH1F* nmom = (TH1F*)gDirectory->Get("nmom");
@@ -129,7 +127,7 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
     t1->Draw("jteta>>jeta","","goff");
     TH1F* jeta = (TH1F*)gDirectory->Get("jeta");
     jeta->Scale(1./jeta->GetEntries());
-    xjjroot::setthgrstyle(jeta, amcolor[0], amstyle[0][0], 1.2, amcolor[0], 1, 1, -1, -1, -1);
+    xjjroot::setthgrstyle(jeta, kBlack, 20, 1.2, kBlack, 1, 1, -1, -1, -1);
     jeta->Draw("pe same");
     xjjroot::drawtex(0.2,0.876,datalabel);
 
@@ -141,7 +139,7 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
     t1->Draw("jtpt>>jpt","","goff");
     TH1F* jpt = (TH1F*)gDirectory->Get("jpt");
     jpt->Scale(1./jpt->GetEntries());
-    xjjroot::setthgrstyle(jpt, amcolor[0], amstyle[0][0], 1.2, amcolor[0], 1, 1, -1, -1, -1);
+    xjjroot::setthgrstyle(jpt, kBlack, 20, 1.2, kBlack, 1, 1, -1, -1, -1);
     jpt->Draw("pe same");
     xjjroot::drawtex(0.2,0.876,datalabel);
 }
