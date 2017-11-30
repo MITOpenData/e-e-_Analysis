@@ -48,6 +48,7 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
               Int_t isBelle      = 0,		// BELLE analysis = 1, CMS/ALEPH analysis = 0
               Int_t isThrust     = 0, 		// Leading Jet Axis analysis = 2, Thurst Axis analysis = 1, Beam Axis analysis = 0
               Int_t isTheta      = 0, 		// Use Theta angle = 1, Use Eta = 0
+              Int_t isGen       = 0,         // Use isGen = 1 if gen level so no cut on charged particles, 0 if not gen level
 	      Int_t maxevt       = 1000000,	// Max number of events to be processed, 0 = all events
 	      Int_t mult_low     = 0,		// Lower cut on the event multiplicity
 	      Int_t mult_high    = 100,		// Upper cut on the event multiplicity
@@ -154,7 +155,7 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
        // calculate the number of tracks in the passing selection
        for ( Int_t j=0;j<data.nParticle;j++ ) {
            Float_t pt1 = data.getPt(j);
-           if (!data.isChargedHadron(j)) continue;
+           if (!isGen&&!data.isChargedHadron(j)) continue;
 	   if (fabs(data.getEta(j))>=etaCutForN) continue;
 	   if (pt1>ptMinForN&&pt1<ptMaxForN) N++;
            if (pt1>ptMin&&pt1<ptMax) N_TP++;
@@ -176,7 +177,7 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
 	   if (isTheta) angle1 = data.getTheta(j); else angle1 = data.getEta(j);
            Float_t phi1 = data.getPhi(j);
            Float_t pt1 = data.getPt(j);
-	   if (!data.isChargedHadron(j)) continue;
+	   if (!isGen&&!data.isChargedHadron(j)) continue;
 	   if (pt1<=ptMin||pt1>=ptMax) continue;
            
 	   // Signal loop, calculate S correlation function
@@ -185,7 +186,7 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
 	       if (isTheta) angle2 = data.getTheta(k); else angle2 = data.getEta(k);
                Float_t phi2 = data.getPhi(k);
                Float_t pt2 = data.getPt(k);
-               if (!data.isChargedHadron(k)) continue;
+               if (!isGen&&!data.isChargedHadron(k)) continue;
 	       if (pt2<=ptMin||pt2>=ptMax) continue;
                if (N!=0) {
         	   h_2D->Fill(angle1-angle2,dphi(phi1,phi2),1./N_TP);
@@ -226,7 +227,7 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
           // calculate the number of tracks in the mixed event passing selection
           for ( Int_t j=0;j<data.nParticle;j++ ) {
              Float_t pt1 = mix.getPt(j);
-             if (!mix.isChargedHadron(j)) continue;
+             if (!isGen&&!mix.isChargedHadron(j)) continue;
 	     if (pt1>ptMin&&pt1<ptMax) N2_TP++;
           }
 	  if (N2_TP==0) continue;
@@ -241,7 +242,7 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
 	      if (isTheta) angle1 = data.getTheta(j); else angle1 = data.getEta(j);
               Float_t phi1 = data.getPhi(j);
               Float_t pt1 = data.getPt(j);
-              if (!data.isChargedHadron(j)) continue;
+              if (!isGen&&!data.isChargedHadron(j)) continue;
 	      if(pt1<=ptMin||pt1>=ptMax) continue;
            
               // Background loop, calculate B correlation function from mixed event
@@ -250,7 +251,7 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
 		 if (isTheta) anglemix = mix.getTheta(k); else anglemix = mix.getEta(k);
         	 Float_t phimix = mix.getPhi(k);
         	 Float_t ptmix = mix.getPt(k);
-        	 if (!mix.isChargedHadron(k)) continue;
+        	 if (!!isGen&&!mix.isChargedHadron(k)) continue;
 		 if(ptmix<=ptMin||ptmix>=ptMax) continue;
 
 		 if (N!=0) {
