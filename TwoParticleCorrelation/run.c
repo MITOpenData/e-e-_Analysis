@@ -22,12 +22,12 @@ void run()
     TString pthat1_Zee_RopeWalk_save = "pthat1_Zee_RopeWalk";
     scan(pthat1_Zee_RopeWalk,pthat1_Zee_RopeWalk_save,1);
     */
-    // nParticle min 50 //
-    TString pthat1_Zee = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_minNPart50/outFile_MERGED.root";
-    TString pthat1_Zee_save = "pthat1_Zee_minNPart50";
+    // nParticle min 60 //
+    TString pthat1_Zee = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_minNPart60/outFile_MERGED.root";
+    TString pthat1_Zee_save = "pthat1_Zee_minNPart60";
     scan(pthat1_Zee,pthat1_Zee_save,1);
-    TString pthat1_Zee_RopeWalk = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_RopeWalk_minNPart50/outFile_MERGED.root";
-    TString pthat1_Zee_RopeWalk_save = "pthat1_Zee_RopeWalk_minNPart50";
+    TString pthat1_Zee_RopeWalk = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_RopeWalk_minNPart60/outFile_MERGED.root";
+    TString pthat1_Zee_RopeWalk_save = "pthat1_Zee_RopeWalk_minNPart60";
     scan(pthat1_Zee_RopeWalk,pthat1_Zee_RopeWalk_save,1);
     
     /// LEP DATA//
