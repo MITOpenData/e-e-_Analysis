@@ -155,6 +155,7 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
        // calculate the number of tracks in the passing selection
        for ( Int_t j=0;j<data.nParticle;j++ ) {
            Float_t pt1 = data.getPt(j);
+           // if isGen = 0 then we want to cut on charged particles so !0->1 then isCharged matter
            if (!isGen&&!data.isChargedHadron(j)) continue;
 	   if (fabs(data.getEta(j))>=etaCutForN) continue;
 	   if (pt1>ptMinForN&&pt1<ptMaxForN) N++;
