@@ -127,6 +127,9 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     /* Int_t flavor; */
     /* t1->SetBranchAddress("flavor", &flavor); */
 
+    // check number of fills
+    Int_t fill_count=0;
+    Int_t fill_count_mix=0;
     /****************************************/
     // Main Event Loop
     /****************************************/
@@ -194,6 +197,7 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
         	   h_2D->Fill(angle1-angle2,dphi(phi2,phi1),1./N_TP);
         	   h_2D->Fill(angle2-angle1,dphi(phi1,phi2),1./N_TP);
         	   h_2D->Fill(angle2-angle1,dphi(phi2,phi1),1./N_TP);
+                   fill_count+=4;
                }
            }
        }
@@ -260,6 +264,7 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
         	   h_2Dmix->Fill(angle1-anglemix,dphi(phimix,phi1),1./N_TP);
         	   h_2Dmix->Fill(anglemix-angle1,dphi(phi1,phimix),1./N_TP);
         	   h_2Dmix->Fill(anglemix-angle1,dphi(phimix,phi1),1./N_TP);
+             fill_count_mix+=4;
         	 }
                } //end of mixed event loop
            } // end of working event loop
@@ -373,6 +378,9 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     ntResult->Fill(mult_low,mult_high,f->Integral(0,f->GetMinimumX())-f->GetMinimumX()*f->GetMinimum(),f->IntegralError(0,f->GetMinimumX()));
     ntResult->Write();
     background->Close();
+             
+             cout<<"FILL COUNT = "<<fill_count<<endl;
+             cout<<"FILL COUNT = "<<fill_count_mix<<endl;
     
 }
 
