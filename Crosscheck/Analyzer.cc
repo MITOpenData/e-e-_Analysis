@@ -10,6 +10,8 @@
 #include <iostream>
 #include <cmath>
 
+inline float jtp(float pt, float eta){ return pt*TMath::CosH(eta); }
+
 void Analyzer(){
   TH1::SetDefaultSumw2();
   TRandom2 randGen = TRandom2();
@@ -31,6 +33,7 @@ void Analyzer(){
   TH1D *h_pt = new TH1D("pt","pt",100,0,10);
   TH1D *h_Ttheta = new TH1D("T_theta","T_theta",100,0,TMath::Pi());
   TH1D *h_Tphi = new TH1D("T_phi","T_phi",100,-TMath::Pi(),TMath::Pi());
+  TH1D *h_Aj = new TH1D("h_Aj","h_Aj",50,0,0.5);
   
   for(int i = 0; i<s.nMultBins; i++){
     signal2PC[i] = new TH2F(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
@@ -56,9 +59,9 @@ void Analyzer(){
   float eta_wrtThr[500],    etaMix_wrtThr[500];
   float theta_wrtThr[500],  thetaMix_wrtThr[500];
   float phi_wrtThr[500],    phiMix_wrtThr[500];
-  float px[500],     pxMix[500];
-  float py[500],     pyMix[500];
-  float pz[500],     pzMix[500];
+  //float px[500],     pxMix[500];
+  //float py[500],     pyMix[500];
+  //float pz[500],     pzMix[500];
   int pwflag[500], pwflagMix[500];
   float TTheta,      TThetaMix;
   float TPhi,        TPhiMix;
@@ -66,6 +69,7 @@ void Analyzer(){
   int process,       processMix;
   int nref,          nrefMix;
   float jtpt[100],   jtptMix[100];
+  float jteta[100],   jtetaMix[100];
 
   t->SetBranchAddress("nParticle",&nParticle); tMix->SetBranchAddress("nParticle",&nParticleMix);
   t->SetBranchAddress("pt",&pt);               tMix->SetBranchAddress("pt",&ptMix);
@@ -87,14 +91,15 @@ void Analyzer(){
     t->SetBranchAddress("TTheta",&TTheta);       tMix->SetBranchAddress("TTheta",&TThetaMix);
     t->SetBranchAddress("TPhi",&TPhi);           tMix->SetBranchAddress("TPhi",&TPhiMix);
   }
-  t->SetBranchAddress("px",&px);               tMix->SetBranchAddress("px",&pxMix);
-  t->SetBranchAddress("py",&py);               tMix->SetBranchAddress("py",&pyMix);
-  t->SetBranchAddress("pz",&pz);               tMix->SetBranchAddress("pz",&pzMix);
+  //t->SetBranchAddress("px",&px);               tMix->SetBranchAddress("px",&pxMix);
+  //t->SetBranchAddress("py",&py);               tMix->SetBranchAddress("py",&pyMix);
+  //t->SetBranchAddress("pz",&pz);               tMix->SetBranchAddress("pz",&pzMix);
   t->SetBranchAddress("pwflag",&pwflag);       tMix->SetBranchAddress("pwflag",&pwflagMix);
   t->SetBranchAddress("missP",&MissP);
   t->SetBranchAddress("process",&process);     tMix->SetBranchAddress("process",&processMix);
   jt->SetBranchAddress("nref",&nref);          jtMix->SetBranchAddress("nref",&nrefMix);
   jt->SetBranchAddress("jtpt",&jtpt);          jtMix->SetBranchAddress("jtpt",&jtptMix);
+  jt->SetBranchAddress("jteta",&jteta);          jtMix->SetBranchAddress("jteta",&jtetaMix);
 
   for(int i = 0; i< (s.doAllData?t->GetEntries():s.nEvts); i++){
     t->GetEntry(i);
@@ -103,10 +108,13 @@ void Analyzer(){
 
     if(MissP>s.MissPCut && s.doMissPCut) continue;
     if(s.isMC && process!=s.MCProcess) continue;
-    if(s.doAjCut && nref>=2){
+    if(s.doAjCut){
       jt->GetEntry(i);
-      if(TMath::Abs(jtpt[0]-jtpt[1])/(jtpt[0]+jtpt[1]) > s.AjCut) continue; 
-      if(nref>2 && 2*jtpt[2]/(jtpt[0]+jtpt[1]) > s.thirdJetCut) continue;
+      if(nref>=2){
+        h_Aj->Fill(TMath::Abs(jtp(jtpt[0],jteta[0])-jtp(jtpt[1],jteta[1]))/(jtp(jtpt[0],jteta[0])+jtp(jtpt[1],jteta[1]))); 
+        if(TMath::Abs(jtp(jtpt[0],jteta[0])-jtp(jtpt[1],jteta[1]))/(jtp(jtpt[0],jteta[0])+jtp(jtpt[1],jteta[1])) > s.AjCut) continue;
+        if(nref>2 && 2*jtp(jtpt[2],jteta[2])/(jtp(jtpt[0],jteta[0])+jtp(jtpt[1],jteta[1])) > s.thirdJetCut) continue;
+      }
     }
  
     int nTrk = 0;
@@ -134,10 +142,12 @@ void Analyzer(){
       tMix->GetEntry(i2);
       if(MissP>s.MissPCut && s.doMissPCut) continue;
       if(s.isMC && processMix!=s.MCProcess) continue;
-      if(s.doAjCut && nrefMix>=2){
+      if(s.doAjCut){
         jtMix->GetEntry(i2);
-        if(TMath::Abs(jtptMix[0]-jtptMix[1])/(jtptMix[0]+jtptMix[1]) > s.AjCut) continue;  
-        if(nrefMix>2 && 2*jtptMix[2]/(jtptMix[0]+jtptMix[1]) > s.thirdJetCut) continue;
+        if(nrefMix>=2){
+          if(TMath::Abs(jtp(jtptMix[0],jtetaMix[0])-jtp(jtptMix[1],jtetaMix[1]))/(jtp(jtptMix[0],jtetaMix[0])+jtp(jtptMix[1],jtetaMix[1])) > s.AjCut) continue;
+          if(nrefMix>2 && 2*jtp(jtptMix[2],jtetaMix[2])/(jtp(jtptMix[0],jtetaMix[0])+jtp(jtptMix[1],jtetaMix[1])) > s.thirdJetCut) continue;
+        }
       }
       if(s.doThrust){
         if(TMath::Abs(TTheta-TThetaMix)>s.thrustMatchWindow || TMath::ACos(TMath::Cos(TPhi-TPhiMix))>s.thrustMatchWindow) continue;

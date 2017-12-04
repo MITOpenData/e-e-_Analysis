@@ -48,23 +48,23 @@ class Settings{
 
 
     //plots
-    static const int nMultBins = 4;
-    int multBinsLow[nMultBins]  = {0 , 12, 22, 32};
-    int multBinsHigh[nMultBins] = {12, 22, 32, 999};
+    static const int nMultBins = 3;
+    int multBinsLow[nMultBins]  = {0 , 20, 30};
+    int multBinsHigh[nMultBins] = {20, 30, 999};
 
     //other
     bool doThrust = true;
     bool doChargedThrust = true;
-    float thrustMatchWindow = 0.3;
-    bool doMultMatch = false;
+    float thrustMatchWindow = 1.0;
+    bool doMultMatch = true;
     bool doMissPCut = true;
     float MissPCut = 20;
     bool doExcludeNTrigLT2 = true;
     bool doAjCut = true;
-    float AjCut = 0.02;
-    float thirdJetCut = 0.05;
+    float AjCut = 0.1;
+    float thirdJetCut = 0.03;
     bool doAllData = true;
-    int nEvts = 50000;
+    int nEvts = 5000;
 
     Settings();
     bool isInMultBin(int n, int bin);

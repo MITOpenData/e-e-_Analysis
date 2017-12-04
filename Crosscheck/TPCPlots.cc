@@ -35,6 +35,26 @@ void formatTH1D(TH1D * h, float offsetx, float offsety){
    h->SetStats(0);
 }
 
+void formatZaxis(TH2D * h, bool minIsZero = true){
+  float maximum = -1;
+  float minimum = 99999;
+  float averageSum = 0;
+  float averageCounter = 0;
+  for(int i = 1; i<h->GetXaxis()->GetNbins()+1; i++){
+    for(int j = 1; j<h->GetYaxis()->GetNbins()+1; j++){
+      if(h->GetBinContent(i,j)>=maximum) maximum = h->GetBinContent(i,j);
+      if(h->GetBinContent(i,j)<=minimum) minimum = h->GetBinContent(i,j);
+      averageSum += h->GetBinContent(i,j);
+      averageCounter++;   
+    }
+  }
+  float mean = averageSum/averageCounter;
+  std::cout << maximum << " " << minimum << " " << averageSum/averageCounter << std::endl;
+
+  if(minIsZero==true) h->GetZaxis()->SetRangeUser(0,maximum); 
+  else                h->GetZaxis()->SetRangeUser(minimum-0.2*(mean-minimum),mean+1.3*(mean-minimum)); 
+}
+
 void TPCPlots(){
   Settings s;
 
@@ -43,7 +63,7 @@ void TPCPlots(){
   TH2D * sig[s.nMultBins], *bkg[s.nMultBins], *ratio[s.nMultBins];
   TH1D * LRCYield[s.nMultBins];
 
-  TFile * f = TFile::Open("AnalyzerOutput_500k_Nov1.root","read");
+  TFile * f = TFile::Open("/afs/cern.ch/user/a/abaty/public/forAnthony/Output_LEP1_Nov27_ThrustAxis_Matching1p0_MissPCut_JetCuts.root","read");
   for(int i = 0; i<s.nMultBins; i++){
     sig[i] = (TH2D*)f->Get(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
     bkg[i] = (TH2D*)f->Get(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
@@ -64,25 +84,28 @@ void TPCPlots(){
     c1->SetTheta(60.839);
     c1->SetPhi(38.0172);
     formatTPCAxes(sig[i],1.5,1.5,2);
+    formatZaxis(sig[i],1);
     sig[i]->Draw("surf1 fb");
     l->Draw("same");
-    sig[i]->GetZaxis()->SetRangeUser(0.9*sig[i]->GetMinimum(),0.4*sig[i]->GetMaximum());
+    //sig[i]->GetZaxis()->SetRangeUser(0.9*sig[i]->GetMinimum(),0.4*sig[i]->GetMaximum());
     c1->SaveAs(Form("img/signal_%d_%d.png",s.multBinsLow[i],s.multBinsHigh[i])); 
     c1->SaveAs(Form("img/signal_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i])); 
     c1->SaveAs(Form("img/signal_%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
     
     formatTPCAxes(bkg[i],1.5,1.5,2);
+    formatZaxis(bkg[i],1);
     bkg[i]->Draw("surf1 fb");
     l->Draw("same");
-    bkg[i]->GetZaxis()->SetRangeUser(0.9*bkg[i]->GetMinimum(),1.1*bkg[i]->GetMaximum());
+    //bkg[i]->GetZaxis()->SetRangeUser(0.9*bkg[i]->GetMinimum(),1.1*bkg[i]->GetMaximum());
     c1->SaveAs(Form("img/background_%d_%d.png",s.multBinsLow[i],s.multBinsHigh[i])); 
     c1->SaveAs(Form("img/background_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i])); 
     c1->SaveAs(Form("img/background_%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
 
     formatTPCAxes(ratio[i],1.5,1.5,2);
+    formatZaxis(ratio[i],0);
     ratio[i]->Draw("surf1 fb");
     l->Draw("same");
-    ratio[i]->GetZaxis()->SetRangeUser(0.9*ratio[i]->GetMinimum(),0.4*ratio[i]->GetMaximum());
+    //ratio[i]->GetZaxis()->SetRangeUser(0.9*ratio[i]->GetMinimum(),0.4*ratio[i]->GetMaximum());
     c1->SaveAs(Form("img/ratio_%d_%d.png",s.multBinsLow[i],s.multBinsHigh[i])); 
     c1->SaveAs(Form("img/ratio_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i])); 
     c1->SaveAs(Form("img/ratio_%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
