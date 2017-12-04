@@ -18,8 +18,12 @@ class Settings{
     int MCProcess = 5;
     //ALEPH data
     //std::string inputFile = "/data/abaty/ALEPHTrees/cleaned_ALEPH_Data2-v3_Aug11_2017.root";
-    std::string inputFile = "/data/abaty/ALEPHTrees/mergedLEP1_20171022.root";
+    //std::string inputFile = "/data/abaty/ALEPHTrees/mergedLEP1_20171022.root";
     //std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/MC/20171022/alephMCRecoAfterCutPaths_1997_KQQAndKWW4F_1of2_20171022.root";
+    //std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_RopeWalk_minNPart60/outFile_PYTHIA8_0p0912_pthat1_Zee_RopeWalk_minNPart60_MERGED.root";
+    //std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_minNPart60/outFile_PYTHIA8_0p0912_pthat1_Zee_minNPart60_MERGED.root";
+    //std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee/outFile_PYTHIA8_0p0912_pthat1_Zee_MERGED.root";
+    std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_RopeWalk/outFile_PYTHIA8_0p0912_pthat1_Zee_RopeWalk_MERGED.root";
 
 
     //cuts
@@ -36,7 +40,7 @@ class Settings{
     //float etaPlotRange = 1.8;//this gets multiplied by 2
     //float dEtaBins = 36;//keep even
     //float dPhiBins = 36;//keep factor of 4
-    float etaPlotRange = 3.6;//this gets multiplied by 2
+    float etaPlotRange = 1.8;//this gets multiplied by 2
     float dEtaBins = 72;//keep even
     float dPhiBins = 36;//keep factor of 4
 
@@ -52,19 +56,21 @@ class Settings{
     int multBinsLow[nMultBins]  = {0 , 20, 30};
     int multBinsHigh[nMultBins] = {20, 30, 999};
 
+    bool calcKinematicsWrtThrust = true;
+
     //other
     bool doThrust = true;
-    bool doChargedThrust = true;
+    bool doChargedThrust = false;
     float thrustMatchWindow = 1.0;
     bool doMultMatch = true;
-    bool doMissPCut = true;
+    bool doMissPCut = false;
     float MissPCut = 20;
     bool doExcludeNTrigLT2 = true;
-    bool doAjCut = true;
+    bool doAjCut = false;
     float AjCut = 0.1;
     float thirdJetCut = 0.03;
     bool doAllData = true;
-    int nEvts = 5000;
+    int nEvts = 50000;
 
     Settings();
     bool isInMultBin(int n, int bin);

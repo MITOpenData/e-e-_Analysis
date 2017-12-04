@@ -52,7 +52,7 @@ void formatZaxis(TH2D * h, bool minIsZero = true){
   std::cout << maximum << " " << minimum << " " << averageSum/averageCounter << std::endl;
 
   if(minIsZero==true) h->GetZaxis()->SetRangeUser(0,maximum); 
-  else                h->GetZaxis()->SetRangeUser(minimum-0.2*(mean-minimum),mean+1.3*(mean-minimum)); 
+  else                h->GetZaxis()->SetRangeUser(minimum-0.2*(mean-minimum),mean+1.2*(mean-minimum)); 
 }
 
 void TPCPlots(){
@@ -63,8 +63,9 @@ void TPCPlots(){
   TH2D * sig[s.nMultBins], *bkg[s.nMultBins], *ratio[s.nMultBins];
   TH1D * LRCYield[s.nMultBins];
 
-  TFile * f = TFile::Open("/afs/cern.ch/user/a/abaty/public/forAnthony/Output_LEP1_Nov27_ThrustAxis_Matching1p0_MissPCut_JetCuts.root","read");
+  TFile * f = TFile::Open("Analyzer_Output.root","read");
   for(int i = 0; i<s.nMultBins; i++){
+    //if(i==0) continue;
     sig[i] = (TH2D*)f->Get(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
     bkg[i] = (TH2D*)f->Get(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
     ratio[i] = (TH2D*)f->Get(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));

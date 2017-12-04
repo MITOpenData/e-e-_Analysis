@@ -1,3 +1,4 @@
+#include "thrustTools.h"
 #include "Tools.h"
 #include "Settings.h"
 #include "TH1F.h"
@@ -59,9 +60,9 @@ void Analyzer(){
   float eta_wrtThr[500],    etaMix_wrtThr[500];
   float theta_wrtThr[500],  thetaMix_wrtThr[500];
   float phi_wrtThr[500],    phiMix_wrtThr[500];
-  //float px[500],     pxMix[500];
-  //float py[500],     pyMix[500];
-  //float pz[500],     pzMix[500];
+  float px[500],     pxMix[500];
+  float py[500],     pyMix[500];
+  float pz[500],     pzMix[500];
   int pwflag[500], pwflagMix[500];
   float TTheta,      TThetaMix;
   float TPhi,        TPhiMix;
@@ -91,9 +92,9 @@ void Analyzer(){
     t->SetBranchAddress("TTheta",&TTheta);       tMix->SetBranchAddress("TTheta",&TThetaMix);
     t->SetBranchAddress("TPhi",&TPhi);           tMix->SetBranchAddress("TPhi",&TPhiMix);
   }
-  //t->SetBranchAddress("px",&px);               tMix->SetBranchAddress("px",&pxMix);
-  //t->SetBranchAddress("py",&py);               tMix->SetBranchAddress("py",&pyMix);
-  //t->SetBranchAddress("pz",&pz);               tMix->SetBranchAddress("pz",&pzMix);
+  t->SetBranchAddress("px",&px);               tMix->SetBranchAddress("px",&pxMix);
+  t->SetBranchAddress("py",&py);               tMix->SetBranchAddress("py",&pyMix);
+  t->SetBranchAddress("pz",&pz);               tMix->SetBranchAddress("pz",&pzMix);
   t->SetBranchAddress("pwflag",&pwflag);       tMix->SetBranchAddress("pwflag",&pwflagMix);
   t->SetBranchAddress("missP",&MissP);
   t->SetBranchAddress("process",&process);     tMix->SetBranchAddress("process",&processMix);
@@ -135,6 +136,18 @@ void Analyzer(){
     h_Ttheta->Fill(TTheta);
     h_Tphi->Fill(TPhi);
 
+    if(s.calcKinematicsWrtThrust && s.doThrust){
+      TVector3 tempThr = TVector3();
+      tempThr.SetPtThetaPhi(1,TTheta,TPhi);
+      for(int t = 0; t<nParticle; t++){
+        TVector3 tempPart = TVector3();
+        tempPart.SetPtThetaPhi(pt[t],eta[t],phi[t]);
+        pt_wrtThr[t] = ptFromThrust(tempThr,tempPart); 
+        eta_wrtThr[t] = etaFromThrust(tempThr,tempPart); 
+        phi_wrtThr[t] = phiFromThrust(tempThr,tempPart); 
+      }
+    }
+
     int nMixed = 0; 
     //start at the next event and add maxSkipSize each time
     for(int i2 = i+1; nMixed<s.nMixedEvents; i2 += (int)(s.maxSkipSize*randGen.Rndm())+1 ){
@@ -166,6 +179,17 @@ void Analyzer(){
       for(int k = 0; k<s.nMultBins; k++){
         if(s.isInMultBin(nTrk,k) && nMixed==0)  nSignalEvts[k]++;
         if(s.isInMultBin(nTrk,k))  nBkgrndEvts[k]++;
+      }
+      if(s.calcKinematicsWrtThrust && s.doThrust){
+        TVector3 tempThr = TVector3();
+        tempThr.SetPtThetaPhi(1,TThetaMix,TPhiMix);
+        for(int t = 0; t<nParticleMix; t++){
+          TVector3 tempPart = TVector3();
+          tempPart.SetPtThetaPhi(ptMix[t],etaMix[t],phiMix[t]);
+          ptMix_wrtThr[t] = ptFromThrust(tempThr,tempPart); 
+          etaMix_wrtThr[t] = etaFromThrust(tempThr,tempPart); 
+          phiMix_wrtThr[t] = phiFromThrust(tempThr,tempPart); 
+        }
       }
     
       //fill signal histogram
