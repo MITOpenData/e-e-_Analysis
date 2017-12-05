@@ -35,19 +35,22 @@
 
 std::vector<float> compute_errors();
 void relative_error();
-void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/alephDataPaths_LEP1.root", // file used
+void thrust_distribution(TString filename = "~/Downloads/StudyMult-backup/TwoParticleCorrelation/alephDataPaths_LEP2_1995to2000.root", // file used
+                         std::string dataname = "LEP1",
                          Float_t cut_missP = 0.3,   // upper bound on missP/energy
                          Float_t min_TTheta = 0.0, // lower cut on TTheta
                          Float_t max_TTheta = 3.5, // upper cut on TTheta --> currently full range of TTheta
                          Float_t min_Energy = 91, // lower cut on Energy   i.e. Energy>91 to take event
                          Float_t max_Energy = 91.5, // upper cut on Energy    i.e. Energy<91.5 to take event
+                         Int_t min_nParticle = 0, // lower cut on multiplicity
+                         Int_t max_nParticle = 9999, // upper cut on multiplicity
                          Int_t isCharged = 0, // 0 to include all particle, 1 to only look at charged particles
                          Int_t isGen = 0    // 1 to use gen level
 )
 {
   //declare some binnings first - just get it out of the way
   const int nBins = 80;
-  const int nBinsSys = 800000;
+  const int nBinsSys = 8000;
   Double_t bins[nBins+1];
   Double_t binsSys[nBinsSys+1];
   const Double_t logLow = .005;
@@ -57,7 +60,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
 
   const std::string sysFileName = "HEPData-ins636645-v1-Table54.root";
 
-  TFile* outFile_p = new TFile("outFile.root", "RECREATE"); // we will write our th1 to a file for debugging purposes
+  TFile* outFile_p = new TFile(Form("outFile_%s_%d_%d.root",dataname.c_str(),min_nParticle,max_nParticle), "RECREATE"); // we will write our th1 to a file for debugging purposes
   TH1D *h_thrust = new TH1D("h_thrust",";Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",43,0.57,1); //moving declarations here for clarity
   h_thrust->Sumw2();
   TH1D *h_one_minus_thrust = new TH1D("h_one_minus_thrust",";1-Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",40,0.0,0.4);
@@ -152,7 +155,8 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         if(fabs(cos(TTheta))>0.9)continue;
         // NUMBER 4: Cut on missP/Energy
         if(missP/Energy>cut_missP)continue;
-        
+        // cut on multiplicity
+        //if(nParticle < min_nParticle || nParticle > max_nParticle) continue;
         
         TVector3 v1(1,0,0);
         v1.SetPhi(TPhi);   // keeping rho and theta
@@ -189,6 +193,8 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
             //else{h_one_minus_thrust->Fill(1-Thrust);}
         }
     }
+
+    for(int i=0;i<h_thrust->GetNbinsX();i++) std::cout << h_thrust->GetBinContent(i) << std::endl;
 
     if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
@@ -234,7 +240,7 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
         line_thrust->DrawLine(binLowEdge, binval + sys, binHiEdge, binval + sys);
     }
     
-    c2->SaveAs("mithig_aleph.pdf");
+    c2->SaveAs(Form("mithig_%s_%d_%d.pdf",dataname.c_str(),min_nParticle,max_nParticle));
     
     // Fill the 1-T distribution after the correction to T
     //Deleted version that was just rebin of binned data - when possible rebin starting from unbinned!
@@ -255,6 +261,8 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
     h_one_minus_thrust->GetYaxis()->CenterTitle();
     h_one_minus_thrust->SetMarkerStyle(4);
     h_one_minus_thrust->Draw();
+
+    
     
     TLine* line_one_minus_thrust = new TLine();
     Double_t binLowEdge_T = 0;
@@ -405,7 +413,18 @@ void thrust_distribution(TString filename = "/home/abadea/Documents/20171022/ale
 
     if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     
-    relative_error();
+    //relative_error();
+
+    delete h_thrust;
+    delete h_one_minus_thrust;
+    delete h_one_minus_thrust_log;
+    delete h_thrustNoCorr;
+    delete h_one_minus_thrustNoCorr;
+    delete h_one_minus_thrustNoCorr_log;
+    delete h_one_minus_thrust_log_SysUp;
+    delete h_one_minus_thrust_log_SysDown;
+    delete h_one_minus_thrust_log_SysUpGraph;
+    delete h_one_minus_thrust_log_SysDownGraph;
     
     return; //even if void - useful for searching the control path
 }
@@ -419,7 +438,7 @@ void run()
     {
         for(int j = 0;j<3;j++)
         {
-            thrust_distribution("/home/abadea/Documents/20171022/alephDataPaths_LEP2_1995to2000.root",min_TTheta[j],max_TTheta[j],i);
+            thrust_distribution("/home/abadea/Documents/20171022/alephDataPaths_LEP2_1995to2000.root","LEP1",min_TTheta[j],max_TTheta[j],i);
         }
     }
 }
