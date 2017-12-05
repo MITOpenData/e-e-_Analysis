@@ -141,7 +141,7 @@ void Analyzer(){
       tempThr.SetPtThetaPhi(1,TTheta,TPhi);
       for(int t = 0; t<nParticle; t++){
         TVector3 tempPart = TVector3();
-        tempPart.SetPtThetaPhi(pt[t],eta[t],phi[t]);
+        tempPart.SetPtThetaPhi(pt[t],theta[t],phi[t]);
         pt_wrtThr[t] = ptFromThrust(tempThr,tempPart); 
         eta_wrtThr[t] = etaFromThrust(tempThr,tempPart); 
         phi_wrtThr[t] = phiFromThrust(tempThr,tempPart); 
@@ -185,7 +185,7 @@ void Analyzer(){
         tempThr.SetPtThetaPhi(1,TThetaMix,TPhiMix);
         for(int t = 0; t<nParticleMix; t++){
           TVector3 tempPart = TVector3();
-          tempPart.SetPtThetaPhi(ptMix[t],etaMix[t],phiMix[t]);
+          tempPart.SetPtThetaPhi(ptMix[t],thetaMix[t],phiMix[t]);
           ptMix_wrtThr[t] = ptFromThrust(tempThr,tempPart); 
           etaMix_wrtThr[t] = etaFromThrust(tempThr,tempPart); 
           phiMix_wrtThr[t] = phiFromThrust(tempThr,tempPart); 
