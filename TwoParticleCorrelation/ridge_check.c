@@ -160,7 +160,7 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
            Float_t pt1 = data.getPt(j);
            // if isGen = 0 then we want to cut on charged particles so !0->1 then isCharged matter
            if (!isGen&&!data.isChargedHadron(j)) continue;
-           if(fabs(data.getEta[j])<2||fabs(data.geteEta[j])>3.6)continue;
+           if(fabs(data.getEta(j))<2||fabs(data.geteEta(j))>3.6)continue;
 	   //if (fabs(data.getEta(j))>=etaCutForN) continue;
 	   if (pt1>ptMinForN&&pt1<ptMaxForN) N++;
            if (pt1>ptMin&&pt1<ptMax) N_TP++;
@@ -190,7 +190,7 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
            {
                
                // Cut from austin to make dEta=[2,3.6]
-               if(fabs(data.getEta[i])<2||fabs(data.geteEta[i])>3.6)continue;
+               if(fabs(data.getEta(i)<2||fabs(data.getEta(i))>3.6)continue;
                Float_t angle2;
 	       if (isTheta) angle2 = data.getTheta(k); else angle2 = data.getEta(k);
                Float_t phi2 = data.getPhi(k);
