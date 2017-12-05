@@ -32,12 +32,13 @@ void run()
     scan(pthat1_Zee_RopeWalk_minNPart60,pthat1_Zee_RopeWalk_minNPart60_save,1,1,mult_low_minNPart60,mult_high_minNPart60);
     
     /// LEP DATA//
-    /*
+    Int_t mult_low_LEP[3] = {20,30,50};
+    Int_t mult_high_LEP[3] = {9999,9999,9999};
     TString LEP1 = "/home/abadea/Documents/20171022/alephDataPaths_LEP1.root";
     TString LEP1_save = "LEP1";
-    scan(LEP1,LEP1_save,0);
+    scan(LEP1,LEP1_save,0,1,mult_low_LEP,mult_high_LEP);
     TString LEP2 = "/home/abadea/Documents/20171022/alephDataPaths_LEP2_1995to2000.root";
     TString LEP2_save = "LEP2";
-    scan(LEP2,LEP2_save,0);
-    */
+    scan(LEP2,LEP2_save,0,1,mult_low_LEP,mult_high_LEP);
+    
 }
