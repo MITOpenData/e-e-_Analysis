@@ -343,17 +343,22 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
                   // apply cuts //
                   /**************/
                   
+                  
                   // Restrict to only charged particles
                   if (!data.isChargedHadron(k)) continue;
+                   cout<<"CUT 1"<<endl;
                   // Eta cut
                   if (fabs(data.getEta(k))>=etaCutForN) continue;
+                   cout<<"CUT 2"<<endl;
                   // PT cut for beam axis analysis
                   if(!isThrust){if (ptmix<=ptMin || ptmix>=ptMax) continue;}
                   else continue;
 
+                  cout<<"BEFORE FILLING"<<endl;
                   // fill background function
                   if (N!=0)
                   {
+                      cout<<"IN FILLING"<<endl;
                       h_2Dmix->Fill(angle1-anglemix,dphi(phi1,phimix),1./N_TP);
                       h_2Dmix->Fill(angle1-anglemix,dphi(phimix,phi1),1./N_TP);
                       h_2Dmix->Fill(anglemix-angle1,dphi(phi1,phimix),1./N_TP);
