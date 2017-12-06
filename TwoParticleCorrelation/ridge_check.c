@@ -179,11 +179,12 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
            if (fabs(data.getEta(j))>=etaCutForN) continue;
            
            // PT cut for beam axis analysis
-           if (!isThrust && pt1>ptMinForN && pt1<ptMaxForN) N++;
+           if(!isThrust){if (pt1>ptMinForN && pt1<ptMaxForN) N++;}
+           else N++;
 
-           // PT cut for the correlation function calculation
-           //if (pt1>ptMinForN&&pt1<ptMaxForN) N++;
-           if (pt1>ptMin&&pt1<ptMax) N_TP++;
+           // PT cut for the correlation function calculation for beam axis analysis
+           if(!isThrust){if (pt1>ptMin && pt1<ptMax) N_TP++;}
+           else N_TP++;
            h_phi->Fill(data.getPhi(j));
        }
        h_mult_dist->Fill(N);
@@ -214,7 +215,8 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
            // Eta cut
            if (fabs(data.getEta(j))>=etaCutForN) continue;
            // PT cut for beam axis analysis
-           if ( (!isThrust) && (pt1<=ptMin || pt1>=ptMax)) continue;
+           if(!isThrust){if (pt1<=ptMin || pt1>=ptMax) continue;}
+           else continue;
            
 	   // Signal loop, calculate S correlation function
            for ( Int_t k=j+1;k<data.nParticle;k++ )
@@ -234,7 +236,8 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
                // Eta cut
                if (fabs(data.getEta(k))>=etaCutForN) continue;
                // PT cut for beam axis analysis
-               if ( (!isThrust) && (pt2<=ptMin || pt2>=ptMax)) continue;
+               if(!isThrust){if (pt2<=ptMin || pt2>=ptMax) continue;}
+               else continue;
                
                // Fill Signal Histogram
                if (N!=0)
@@ -296,9 +299,9 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
               if (!mix.isChargedHadron(j)) continue;
               // Eta cut
               if (fabs(data.getEta(j))>=etaCutForN) continue;
-              // PT cut for the correlation function calculation
-              //if (pt1>ptMinForN&&pt1<ptMaxForN) N++;
-              if (pt1>ptMin&&pt1<ptMax) N2_TP++;
+              // PT cut for the correlation function calculation for beam axis analysis
+              if(!isThrust){if (pt1>ptMin && pt1<ptMax) N2_TP++;}
+              else N2_TP++;
           }
           if (N2_TP==0) continue;
        
@@ -324,7 +327,8 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
               // Eta cut
               if (fabs(data.getEta(j))>=etaCutForN) continue;
               // PT cut for beam axis analysis
-              if ((!isThrust) && (pt1<=ptMin || pt1>=ptMax)) continue;
+              if(!isThrust){if (pt1<=ptMin || pt1>=ptMax) continue;}
+              else continue;
            
               
               // Background loop, calculate B correlation function from mixed event
@@ -344,7 +348,8 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
                   // Eta cut
                   if (fabs(data.getEta(k))>=etaCutForN) continue;
                   // PT cut for beam axis analysis
-                  if ( (!isThrust) && (ptmix<=ptMin || ptmix>=ptMax) ) continue;
+                  if(!isThrust){if (ptmix<=ptMin || ptmix>=ptMax) continue;}
+                  else continue;
 
                   // fill background function
                   if (N!=0)
