@@ -2,19 +2,19 @@
 
 void scan(TString filename,TString savename,Int_t isGen,Int_t isThrust,Int_t mult_low[], Int_t mult_high[])
 {
-    Int_t isBelle      = 0,        // BELLE analysis = 1, CMS/ALEPH analysis = 0
-    Int_t isTheta      = 0,         // Use Theta angle = 1, Use Eta = 0
-    Int_t isGen       = 0,         // Use isGen = 1 if gen level so no cut on charged particles, 0 if not gen level
-    Int_t maxevt       = 1000000,    // Max number of events to be processed, 0 = all events
-    Int_t nbin         = 20,        // Number of bins in the correlation function
-    bool verbose     = 0,        // Verbose mode
-    Int_t num_runs     = 5,        //
-    double ptMin     = 0.4,           // min pT of the particles used for correlation function
-    double ptMax     = 100,             // max pT of the particles used for correlation function
-    double detaRange = 3.2,             // deta window of the correlation function
-    Float_t ptMinForN = 0.4,          // pT min for the N_{trk}^{offline} calculation (used for event classification)
-    Float_t ptMaxForN = 100,          // pT max for the N_{trk}^{offline} calculation (used for event classification)
-    Float_t etaCutForN = 1.8          // eta window for the N_{trk}^{offline} calculation (used for event classification)
+    Int_t isBelle      = 0;        // BELLE analysis = 1, CMS/ALEPH analysis = 0
+    Int_t isTheta      = 0;         // Use Theta angle = 1, Use Eta = 0
+    Int_t isGen       = 0;         // Use isGen = 1 if gen level so no cut on charged particles, 0 if not gen level
+    Int_t maxevt       = 1000000;    // Max number of events to be processed, 0 = all events
+    Int_t nbin         = 20;        // Number of bins in the correlation function
+    bool verbose     = 0;        // Verbose mode
+    Int_t num_runs     = 5;        //
+    double ptMin     = 0.4;           // min pT of the particles used for correlation function
+    double ptMax     = 100;             // max pT of the particles used for correlation function
+    double detaRange = 3.2;             // deta window of the correlation function
+    Float_t ptMinForN = 0.4;          // pT min for the N_{trk}^{offline} calculation (used for event classification)
+    Float_t ptMaxForN = 100;          // pT max for the N_{trk}^{offline} calculation (used for event classification)
+    Float_t etaCutForN = 1.8;          // eta window for the N_{trk}^{offline} calculation (used for event classification)
     
     int n = sizeof(mult_low)/sizeof(mult_low[0]);
     for (int i=0; i<n; i++)
