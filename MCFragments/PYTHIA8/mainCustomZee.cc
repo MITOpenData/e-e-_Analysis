@@ -20,6 +20,7 @@
 #include "include/jetData.h"
 #include "include/particleData.h"
 #include "include/thrustTools.h"
+#include "include/doGlobalDebug.h"
 
 void processJets(std::vector<fastjet::PseudoJet> p, fastjet::JetDefinition jDef, fastjet::JetDefinition jDefReclust, jetData *d, const double ptCut = 0.1)
 {
@@ -32,7 +33,6 @@ void processJets(std::vector<fastjet::PseudoJet> p, fastjet::JetDefinition jDef,
       d->jtpt[d->nref] = jets.at(i).pt();
       d->jtphi[d->nref] = jets.at(i).phi_std();
       d->jteta[d->nref] = jets.at(i).eta();
-
 
       std::vector<fastjet::PseudoJet> jetConst = jets.at(i).constituents();
       d->jtN[d->nref] = jetConst.size();
@@ -79,17 +79,30 @@ void processJets(std::vector<fastjet::PseudoJet> p, fastjet::JetDefinition jDef,
     jets.clear();
     std::vector<fastjet::PseudoJet>().swap(jets);
   }
+
   return;
 }
 
 
 int main(int argc, char* argv[])
 {
-  if(argc != 2){
-    std::cout << "Usage: ./mainCustom.exe <inFileName>" << std::endl;
+  if(argc != 2 && argc != 3 && argc != 4 && argc != 5){
+    std::cout << "Usage: ./mainCustom.exe <outFileName> <maxEvt> <nMinPartChgCut> <doRopeWalk>" << std::endl;
     return 1;
   }
+
+  int tempPartChg_ = 0;
+  if(argc >= 4) tempPartChg_ = std::stoi(argv[3]);
+  const int nMinPartChgCut_ = tempPartChg_;
+
+  int tempMaxEvent = 1000;
+  if(argc >= 3) tempMaxEvent = std::stoi(argv[2]);
+  const int maxEvent = tempMaxEvent;
   
+  bool tempRopeWalk = false;
+  if(argc >= 5) tempRopeWalk = std::stoi(argv[4]);
+  const bool doRopeWalk = tempRopeWalk;
+
   const double jtPtCut = .01;
   const int nJtAlgo = 4;
   const double rParam[nJtAlgo] = {0.4, 0.4, 0.8, 0.8};
@@ -109,8 +122,13 @@ int main(int argc, char* argv[])
     jDefReclust[i] = fastjet::JetDefinition(fastjet::ee_genkt_algorithm, 5, -1, fastjet::RecombinationScheme(recombScheme[i]));
   }
   
+  std::string outFileName = argv[1];
+  if(outFileName.find(".root") != std::string::npos) outFileName.replace(outFileName.find(".root"), 5, "");
+  outFileName = outFileName + "_nEvt" + std::to_string(maxEvent) + "_nMinChgPart" + std::to_string(nMinPartChgCut_) + "_RopeWalk" + std::to_string(doRopeWalk) + ".root";
   
-  TFile* inFile_p = new TFile(argv[1], "RECREATE");
+  if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+  TFile* outFile_p = new TFile(outFileName.c_str(), "RECREATE");
   TTree* genTree_p = new TTree("t", "t");
   TTree* jetTree_p[nJtAlgo];
   for(int i = 0; i < nJtAlgo; ++i){jetTree_p[i] = new TTree(jetTreeName[i].c_str(), jetTreeName[i].c_str());}
@@ -119,25 +137,51 @@ int main(int argc, char* argv[])
 
   Float_t pthat_;
   Float_t pthatWeight_;
+  Int_t scatterMom_;
+  std::vector<int> scatterMomDaughter_;
 
-  const int nMaxPart = 100000;
+  const int nMaxPart = 10000;
+  Int_t nParticleChg_;
+  Int_t nParticleChg_Pt0p4_Eta1p8_;
   Int_t nParticle_;
   Float_t px_[nMaxPart];
   Float_t py_[nMaxPart];
   Float_t pz_[nMaxPart];
   Float_t mass_[nMaxPart];
-  Float_t theta_[nMaxPart];
   Float_t pt_[nMaxPart];
   Float_t phi_[nMaxPart];
   Float_t eta_[nMaxPart];
+  Float_t theta_[nMaxPart];
+
+  Float_t pt_wrtThr_[nMaxPart];
+  Float_t phi_wrtThr_[nMaxPart];
+  Float_t eta_wrtThr_[nMaxPart];
+  Float_t theta_wrtThr_[nMaxPart];
+
+  Float_t pt_wrtChThr_[nMaxPart];
+  Float_t phi_wrtChThr_[nMaxPart];
+  Float_t eta_wrtChThr_[nMaxPart];
+  Float_t theta_wrtChThr_[nMaxPart];
+
   Int_t pid_[nMaxPart];
   Int_t pwflag_[nMaxPart];
 
+  Float_t Thrust_;
   Float_t TTheta_;
   Float_t TPhi_;
 
+  Float_t Thrust_charged_;
+  Float_t TTheta_charged_;
+  Float_t TPhi_charged_;
+
+  if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
   genTree_p->Branch("pthat", &pthat_, "pthat/F");
   genTree_p->Branch("pthatWeight", &pthatWeight_, "pthatWeight/F");
+  genTree_p->Branch("scatterMom", &scatterMom_, "scatterMom/I");
+  genTree_p->Branch("scatterMomDaughter", &scatterMomDaughter_);
+  genTree_p->Branch("nParticleChg", &nParticleChg_, "nParticleChg/I");
+  genTree_p->Branch("nParticleChg_Pt0p4_Eta1p8", &nParticleChg_Pt0p4_Eta1p8_, "nParticleChg_Pt0p4_Eta1p8/I");
   genTree_p->Branch("nParticle", &nParticle_, "nParticle/I");
   genTree_p->Branch("px", px_, "px[nParticle]/F");
   genTree_p->Branch("py", py_, "py[nParticle]/F");
@@ -147,10 +191,22 @@ int main(int argc, char* argv[])
   genTree_p->Branch("pt", pt_, "pt[nParticle]/F");
   genTree_p->Branch("phi", phi_, "phi[nParticle]/F");
   genTree_p->Branch("eta", eta_, "eta[nParticle]/F");
+  genTree_p->Branch("pt_wrtThr", pt_wrtThr_, "pt_wrtThr[nParticle]/F");
+  genTree_p->Branch("phi_wrtThr", phi_wrtThr_, "phi_wrtThr[nParticle]/F");
+  genTree_p->Branch("eta_wrtThr", eta_wrtThr_, "eta_wrtThr[nParticle]/F");
+  genTree_p->Branch("theta_wrtThr", theta_wrtThr_, "theta_wrtThr[nParticle]/F");
+  genTree_p->Branch("pt_wrtChThr", pt_wrtChThr_, "pt_wrtChThr[nParticle]/F");
+  genTree_p->Branch("phi_wrtChThr", phi_wrtChThr_, "phi_wrtChThr[nParticle]/F");
+  genTree_p->Branch("eta_wrtChThr", eta_wrtChThr_, "eta_wrtChThr[nParticle]/F");
+  genTree_p->Branch("theta_wrtChThr", theta_wrtChThr_, "theta_wrtChThr[nParticle]/F");
   genTree_p->Branch("pid", pid_, "pid[nParticle]/I");
   genTree_p->Branch("pwflag", pwflag_, "pwflag[nParticle]/I");
+  genTree_p->Branch("Thrust", &Thrust_, "Thrust/F");
   genTree_p->Branch("TTheta", &TTheta_, "TTheta/F");
   genTree_p->Branch("TPhi", &TPhi_, "TPhi/F");
+  genTree_p->Branch("Thrust_charged", &Thrust_charged_, "Thrust_charged/F");
+  genTree_p->Branch("TTheta_charged", &TTheta_charged_, "TTheta_charged/F");
+  genTree_p->Branch("TPhi_charged", &TPhi_charged_, "TPhi_charged/F");
 
   for(int i = 0; i < nJtAlgo; ++i){
     jetTree_p[i]->Branch("nref", &jData[i].nref,"nref/I");
@@ -161,8 +217,6 @@ int main(int argc, char* argv[])
     jetTree_p[i]->Branch("jtNPW", jData[i].jtNPW, "jtNPW[nref][6]/I");
     jetTree_p[i]->Branch("jtptFracPW", jData[i].jtptFracPW, "jtptFracPW[nref][6]/F");
   }
-
-
 
   Pythia8::Pythia pythia;
   double mZ = pythia.particleData.m0(23);
@@ -175,19 +229,61 @@ int main(int argc, char* argv[])
   pythia.readString("Random:setSeed = on");
   pythia.readString("Random:seed = 0");
 
-  pythia.init();  
+  if(doRopeWalk){
+    pythia.readString("Ropewalk:RopeHadronization = on");
+    pythia.readString("Ropewalk:doShoving = on");
+    pythia.readString("Ropewalk:doFlavour = off");
+    pythia.readString("Ropewalk:rCutOff = 10.0");
+    pythia.readString("Ropewalk:limitMom = on");
+    pythia.readString("Ropewalk:pTcut = 2.0");
+    pythia.readString("Ropewalk:r0 = 0.41");
+    pythia.readString("Ropewalk:m0 = 0.2");
+    pythia.readString("Ropewalk:gAmplitude = 10.0");
+    pythia.readString("Ropewalk:gExponent = 1.0");
+    pythia.readString("Ropewalk:deltat = 0.1");
+    pythia.readString("Ropewalk:tShove = 1.");
+    pythia.readString("Ropewalk:deltay = 0.1");
+    pythia.readString("Ropewalk:tInit = 1.5");
 
-  const int maxEvent = 100000;
+    pythia.readString("PartonVertex:setVertex = on");
+    pythia.readString("PartonVertex:protonRadius = 0.7");
+    pythia.readString("PartonVertex:emissionWidth = 0.1");
+  }
+
+  pythia.init();
+
+  if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+  int currTreeFills = -1;
   while(genTree_p->GetEntries() < maxEvent){
     if(!pythia.next()) continue;
+    if(pythia.event.size() < nMinPartChgCut_) continue;
+
+    if(genTree_p->GetEntries()%(maxEvent/100) == 0 && genTree_p->GetEntries() != currTreeFills){
+      std::cout << "GenTree fills: " << genTree_p->GetEntries() << std::endl;
+      currTreeFills = genTree_p->GetEntries();
+    }
 
     pthat_ = pythia.info.pTHat();
     pthatWeight_ = pythia.info.weight();
     nParticle_ = 0;
+    nParticleChg_ = 0;
+    nParticleChg_Pt0p4_Eta1p8_ = 0;
     particleData pData;
+    particleData pDataCh;
     std::vector<fastjet::PseudoJet> particles;
 
+    scatterMom_ = -999;
+    Int_t scatterMomPos = -1;
+    scatterMomDaughter_.clear();
+
     for(int i = 0; i < pythia.event.size(); ++i){
+      if(pythia.event[i].mother1() == 3 && pythia.event[i].mother2() == 4){
+	scatterMom_ = pythia.event[i].id();
+	scatterMomPos = i;
+      }
+      if(pythia.event[i].mother1() == scatterMomPos) scatterMomDaughter_.push_back(pythia.event[i].id());
+
       if(!pythia.event[i].isFinal()) continue;
       
       TLorentzVector temp(pythia.event[i].px(), pythia.event[i].py(), pythia.event[i].pz(), pythia.event[i].e());
@@ -207,40 +303,102 @@ int main(int argc, char* argv[])
       phi_[nParticle_] = temp.Phi();
       eta_[nParticle_] = temp.Eta();
       pid_[nParticle_] = pythia.event[i].id();
-      pwflag_[nParticle_] = pythia.event[i].charge();
+
+      //done based on here: https://github.com/ginnocen/StudyMult/blob/master/DataProcessing/src/createMC.c#L13
+      pwflag_[nParticle_] = -999;
+      if(TMath::Abs(pythia.event[i].id()) == 11) pwflag_[nParticle_] = 1;
+      else if(TMath::Abs(pythia.event[i].id()) == 13) pwflag_[nParticle_] = 2;
+      else if(TMath::Abs(pythia.event[pythia.event[i].mother1()].id()) == 310 && pythia.event[i].mother2() == 0) pwflag_[nParticle_] = 3;
+      else if(TMath::Abs(pythia.event[pythia.event[i].mother1()].id()) == 3122 && pythia.event[i].mother2() == 0) pwflag_[nParticle_] = 3;
+      else if(TMath::Abs(pythia.event[i].id()) == 22) pwflag_[nParticle_] = 4;
+      else if(pythia.event[i].charge() == 0) pwflag_[nParticle_] = 5;
+      else if(pythia.event[i].charge() != 0) pwflag_[nParticle_] = 0;
 
       pData.px[nParticle_] = pythia.event[i].px();
       pData.py[nParticle_] = pythia.event[i].py();
       pData.pz[nParticle_] = pythia.event[i].pz();
-      
+
       fastjet::PseudoJet particle(pythia.event[i].px(), pythia.event[i].py(), pythia.event[i].pz(), pythia.event[i].e());
       int tempFlag = TMath::Abs(pythia.event[i].charge());
       particle.set_user_index(tempFlag);
       particles.push_back(particle);
 
+      if(pwflag_[nParticle_] == 0){
+	pDataCh.px[nParticleChg_] = pythia.event[i].px();
+        pDataCh.py[nParticleChg_] = pythia.event[i].py();
+        pDataCh.pz[nParticleChg_] = pythia.event[i].pz();
+
+	++nParticleChg_;
+	if(temp.Pt() > 0.40 && TMath::Abs(temp.Eta()) < 1.8) ++nParticleChg_Pt0p4_Eta1p8_;
+      }
+
+      
+
       ++nParticle_;
     }
 
+    if(nParticleChg_Pt0p4_Eta1p8_ < nMinPartChgCut_) continue;
+
     pData.nParticle = nParticle_;
+    pDataCh.nParticle = nParticleChg_;
+
+    if(doGlobalDebug) std::cout << nParticleChg_ << ", " << nParticleChg_Pt0p4_Eta1p8_ << ", " << nParticle_ << ", " << nMinPartChgCut_ << std::endl;
+
+    if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
     if(nParticle_ > 0){
+      if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
       TVector3 thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz, THRUST::OPTIMAL);
+      if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+      TVector3 thrustCh = getThrust(pDataCh.nParticle, pDataCh.px, pDataCh.py, pDataCh.pz, THRUST::OPTIMAL);
+      if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+      Thrust_ = thrust.Mag();
       TTheta_ = thrust.Theta();
       TPhi_ = thrust.Phi();
+
+      if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+      Thrust_charged_ = thrustCh.Mag();
+      TTheta_charged_ = thrustCh.Theta();
+      TPhi_charged_ = thrustCh.Phi();
+      
+      if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+      for(int pI = 0; pI < nParticle_; ++pI){
+	pt_wrtThr_[pI] = ptFromThrust(thrust, TVector3(px_[pI], py_[pI], pz_[pI]));
+	theta_wrtThr_[pI] = thetaFromThrust(thrust, TVector3(px_[pI], py_[pI], pz_[pI]));
+	eta_wrtThr_[pI] = etaFromThrust(thrust, TVector3(px_[pI], py_[pI], pz_[pI]));
+	phi_wrtThr_[pI] = phiFromThrust(thrust, TVector3(px_[pI], py_[pI], pz_[pI]));
+
+	pt_wrtChThr_[pI] = ptFromThrust(thrustCh, TVector3(px_[pI], py_[pI], pz_[pI]));
+	theta_wrtChThr_[pI] = thetaFromThrust(thrustCh, TVector3(px_[pI], py_[pI], pz_[pI]));
+	eta_wrtChThr_[pI] = etaFromThrust(thrustCh, TVector3(px_[pI], py_[pI], pz_[pI]));
+	phi_wrtChThr_[pI] = phiFromThrust(thrustCh, TVector3(px_[pI], py_[pI], pz_[pI]));
+      }
+
+      if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
       for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	processJets(particles, jDef[jIter], jDefReclust[jIter], &(jData[jIter]), jtPtCut);
       }
+
+      if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
       genTree_p->Fill();
 
       for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	jetTree_p[jIter]->Fill();
       }
+
+      if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     }
   }
 
-  inFile_p->cd();
+  if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+  outFile_p->cd();
   genTree_p->Write("", TObject::kOverwrite);
   delete genTree_p;
 
@@ -249,8 +407,10 @@ int main(int argc, char* argv[])
     delete jetTree_p[jIter];
   }
 
-  inFile_p->Close();
-  delete inFile_p;
+  outFile_p->Close();
+  delete outFile_p;
+
+  std::cout << "Job Complete" << std::endl;
 
   return 0;
 }
