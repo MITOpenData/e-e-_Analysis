@@ -55,12 +55,12 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
 	      Int_t nbin         = 20,		// Number of bins in the correlation function
 	      bool verbose     = 0,		// Verbose mode
 	      Int_t num_runs     = 5,		// 
-              double ptMin     = 0,           // min pT of the particles used for correlation function
-              double ptMax     = 4.0,             // max pT of the particles used for correlation function
+              double ptMin     = 0.4,           // min pT of the particles used for correlation function
+              double ptMax     = 100.0,             // max pT of the particles used for correlation function
               double detaRange = 3.2,             // deta window of the correlation function
               Float_t ptMinForN = 0.4,          // pT min for the N_{trk}^{offline} calculation (used for event classification) 
               Float_t ptMaxForN = 100,          // pT max for the N_{trk}^{offline} calculation (used for event classification)
-              Float_t etaCutForN = 2.4          // eta window for the N_{trk}^{offline} calculation (used for event classification)
+              Float_t etaCutForN = 1.8          // eta window for the N_{trk}^{offline} calculation (used for event classification)
 	     ) {
     // ROOT Global setting
     TH1::SetDefaultSumw2();
@@ -140,8 +140,8 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
        if (i%10000==0) cout <<i<<"/"<<nevent_process<<endl;
        if (verbose) cout<<"nparticles="<<data.nParticle<<endl;
        
-       if (isThrust==1&&fabs(data.TTheta-3.14159/2.)>0.8) continue;
-       if (isThrust==2&&acos(cos(data.jtphi[0]-data.jtphi[1]))<3.14159*2/3.) continue;
+       //if (isThrust==1&&fabs(data.TTheta-3.14159/2.)>0.8) continue;
+       //if (isThrust==2&&acos(cos(data.jtphi[0]-data.jtphi[1]))<3.14159*2/3.) continue;
        
        /* if (flavor == 0) {break;} */
        /* if (flavor == 1) {continue;} */
