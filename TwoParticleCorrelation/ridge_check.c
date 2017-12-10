@@ -55,17 +55,17 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
 	      Int_t nbin         = 20,		// Number of bins in the correlation function
 	      bool verbose     = 0,		// Verbose mode
 	      Int_t num_runs     = 5,		// 
-              double ptMin     = 0.4,           // min pT of the particles used for correlation function
-              double ptMax     = 100,             // max pT of the particles used for correlation function
+              double ptMin     = 0,           // min pT of the particles used for correlation function
+              double ptMax     = 4.0,             // max pT of the particles used for correlation function
               double detaRange = 3.2,             // deta window of the correlation function
               Float_t ptMinForN = 0.4,          // pT min for the N_{trk}^{offline} calculation (used for event classification) 
               Float_t ptMaxForN = 100,          // pT max for the N_{trk}^{offline} calculation (used for event classification)
-              Float_t etaCutForN = 1.8          // eta window for the N_{trk}^{offline} calculation (used for event classification)
+              Float_t etaCutForN = 2.4          // eta window for the N_{trk}^{offline} calculation (used for event classification)
 	     ) {
     // ROOT Global setting
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
-    
+
     TChain *t1 = new TChain("t");
     t1->Add(filename);
 
@@ -102,20 +102,15 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     Float_t normalization = detaRange*2/nbin*2*3.14159/nbin;
     TH2F *h_2D, *h_2Dmix, *h_ratio;
 
-    if (isTheta)
-    {
+    if (isTheta){
       h_2D    = CFTH2F ( "h_2D",    "#theta-#phi of all particles;#Delta#theta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#thetad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -PI/2., PI*1.5);
       h_2Dmix = CFTH2F ( "h_2Dmix", "#theta-#phi of all particles;#Delta#theta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#thetad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -PI/2., PI*1.5);
       h_ratio = CFTH2F ( "h_ratio", "#theta-#phi of all particles;#Delta#theta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#thetad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -PI/2., PI*1.5);
+    } else {
+      h_2D    = CFTH2F ( "h_2D",    "#eta-#phi of all particles;#Delta#eta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -PI/2., PI*1.5);
+      h_2Dmix = CFTH2F ( "h_2Dmix", "#eta-#phi of all particles;#Delta#eta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -PI/2., PI*1.5);
+      h_ratio = CFTH2F ( "h_ratio", "#eta-#phi of all particles;#Delta#eta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -PI/2., PI*1.5);
     }
-    else
-    {
-        if(isThrust) detaRange = 2*PI;
-      h_2D    = CFTH2F ( "h_2D",    "#eta-#phi of all particles;#Delta#eta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi} ",nbin, -detaRange, detaRange, nbin, -PI/2., PI*1.5);
-      h_2Dmix = CFTH2F ( "h_2Dmix", "#eta-#phi of all particles;#Delta#eta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi} ",nbin, -detaRange, detaRange, nbin, -PI/2., PI*1.5);
-      h_ratio = CFTH2F ( "h_ratio", "#eta-#phi of all particles;#Delta#eta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi} ",nbin, -detaRange, detaRange, nbin, -PI/2., PI*1.5);
-    }
-
     TH1D *h_mult_dist = new TH1D("h_multi","multiplicity distribution of charged particles;N_{trk}^{offline};Count",60,0,60);
     TH1D *h_phi = new TH1D("h_phi","Phi distribution",60,-PI,PI);
     
@@ -138,17 +133,16 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     /****************************************/
     // Main Event Loop
     /****************************************/
-    for (Int_t i=0;i<nevent_process;i++)
-    {
+    for (Int_t i=0;i<nevent_process;i++) {
        t1->GetEntry(i);
        t2->GetEntry(i);
        data.update();
        if (i%10000==0) cout <<i<<"/"<<nevent_process<<endl;
        if (verbose) cout<<"nparticles="<<data.nParticle<<endl;
        
-       //if (isThrust==1&&fabs(data.TTheta-3.14159/2.)>0.8) continue;
+       if (isThrust==1&&fabs(data.TTheta-3.14159/2.)>0.8) continue;
        if (isThrust==2&&acos(cos(data.jtphi[0]-data.jtphi[1]))<3.14159*2/3.) continue;
-        
+       
        /* if (flavor == 0) {break;} */
        /* if (flavor == 1) {continue;} */
 
@@ -162,111 +156,64 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
        Int_t N_TP=0;	// Number of particles used in the two particle correlation function calculation, can be different from N for event classification
 
        // calculate the number of tracks in the passing selection
-       for ( Int_t j=0;j<data.nParticle;j++ )
-       {
+       for ( Int_t j=0;j<data.nParticle;j++ ) {
            Float_t pt1 = data.getPt(j);
-        
-           
-           /**************/
-           // apply cuts //
-           /**************/
-           // If gen level then do not apply charged hadron cut
-           //if (!isGen && !data.isChargedHadron(j)) continue;
-           
-           // Restrict to only charged particles
-           if (!data.isChargedHadron(j)) continue;
-           // Eta cut
-           if (fabs(data.getEta(j))>=etaCutForN) continue;
-           
-           // PT cut for beam axis analysis
-           if(!isThrust){if (pt1>ptMinForN && pt1<ptMaxForN) N++;}
-           else N++;
-
-           // PT cut for the correlation function calculation for beam axis analysis
-           if(!isThrust){if (pt1>ptMin && pt1<ptMax) N_TP++;}
-           else N_TP++;
-           h_phi->Fill(data.getPhi(j));
+           // if isGen = 0 then we want to cut on charged particles so !0->1 then isCharged matter
+           if (!isGen&&!data.isChargedHadron(j)) continue;
+	   if (fabs(data.getEta(j))>=etaCutForN) continue;
+	   if (pt1>ptMinForN&&pt1<ptMaxForN) N++;
+           if (pt1>ptMin&&pt1<ptMax) N_TP++;
+	   h_phi->Fill(data.getPhi(j));
+	   //nt->Fill(data.eta[j],data.theta[j],data.phi[j],data.getTheta(j),data.getPhi(j),data.TTheta,data.TPhi);
        }
        h_mult_dist->Fill(N);
        averageN+=N;
        nEventProcessed++;
        
-        // Apply multiplicity cut
        if (N<mult_low||N>=mult_high||N_TP<1) continue;
        nEventInMultBin++;
        
-        
        /****************************************/
        // S calculation using multiplicity cut //
        /****************************************/
-       for ( Int_t j=0;j<data.nParticle;j++ )
-       {
+       for ( Int_t j=0;j<data.nParticle;j++ ) {
            Float_t angle1;
-           if (isTheta) angle1 = data.getTheta(j); else angle1 = data.getEta(j);
+	   if (isTheta) angle1 = data.getTheta(j); else angle1 = data.getEta(j);
            Float_t phi1 = data.getPhi(j);
            Float_t pt1 = data.getPt(j);
-           
-           /**************/
-           // apply cuts //
-           /**************/
-           
-           // Restrict to only charged particles
-           if (!data.isChargedHadron(j)) continue;
-           // Eta cut
-           if (fabs(data.getEta(j))>=etaCutForN) continue;
-           // PT cut for beam axis analysis
-           if(!isThrust){if (pt1<=ptMin || pt1>=ptMax) continue;}
-           else continue;
+	   if (!isGen&&!data.isChargedHadron(j)) continue;
+	   if (pt1<=ptMin||pt1>=ptMax) continue;
            
 	   // Signal loop, calculate S correlation function
-           for ( Int_t k=j+1;k<data.nParticle;k++ )
-           {
-               // Defining angles
+           for ( Int_t k=j+1;k<data.nParticle;k++ ) {
                Float_t angle2;
-               if (isTheta) angle2 = data.getTheta(k); else angle2 = data.getEta(k);
+	       if (isTheta) angle2 = data.getTheta(k); else angle2 = data.getEta(k);
                Float_t phi2 = data.getPhi(k);
                Float_t pt2 = data.getPt(k);
-               
-               /**************/
-               // apply cuts //
-               /**************/
-               
-               // Restrict to only charged particles
-               if (!data.isChargedHadron(k)) continue;
-               // Eta cut
-               if (fabs(data.getEta(k))>=etaCutForN) continue;
-               // PT cut for beam axis analysis
-               if(!isThrust){if (pt2<=ptMin || pt2>=ptMax) continue;}
-               else continue;
-               
-               // Fill Signal Histogram
-               if (N!=0)
-               {
-                   h_2D->Fill(angle1-angle2,dphi(phi1,phi2),1./N_TP);
-                   h_2D->Fill(angle1-angle2,dphi(phi2,phi1),1./N_TP);
-                   h_2D->Fill(angle2-angle1,dphi(phi1,phi2),1./N_TP);
-                   h_2D->Fill(angle2-angle1,dphi(phi2,phi1),1./N_TP);
+               if (!isGen&&!data.isChargedHadron(k)) continue;
+	       if (pt2<=ptMin||pt2>=ptMax) continue;
+               if (N!=0) {
+        	   h_2D->Fill(angle1-angle2,dphi(phi1,phi2),1./N_TP);
+        	   h_2D->Fill(angle1-angle2,dphi(phi2,phi1),1./N_TP);
+        	   h_2D->Fill(angle2-angle1,dphi(phi1,phi2),1./N_TP);
+        	   h_2D->Fill(angle2-angle1,dphi(phi2,phi1),1./N_TP);
                    fill_count+=4;
                }
            }
        }
-        
-        
+           
        /****************************************/
        // B calculation using multiplicity cut //
        /****************************************/
-       for (Int_t nMix = 0; nMix<num_runs; nMix++)
-       {
-           
+       for (Int_t nMix = 0; nMix<num_runs; nMix++) {
           t1_mix->GetEntry ( selected );
           t2_mix->GetEntry ( selected );
 
           // Select a matched event
-          // Currently we are matching the total multiplicity in th event
+	  // Currently we are matching the total multiplicity in th event
 	  
-          flag=0;
-          while ((fabs(mix.nParticle-data.nParticle)>4&&data.nParticle<1000&&fabs(mix.jteta[0]-data.jteta[0])>0.2)||i==selected)
-          {
+	  flag=0;
+          while ((fabs(mix.nParticle-data.nParticle)>4&&data.nParticle<1000&&fabs(mix.jteta[0]-data.jteta[0])>0.2)||i==selected){
               selected++;
               if (selected>nevent_process&&flag==2) break;
               if (selected>nevent_process) flag++;
@@ -277,94 +224,48 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
 
           // Use the Thrust axis from the signal event instead of mixed event
           mix.TTheta=data.TTheta;
-          mix.TPhi=data.TPhi;
-          mix.update();
+	  mix.TPhi=data.TPhi;
+	  mix.update();
 	  
           Int_t N2_TP=0;
           
           // calculate the number of tracks in the mixed event passing selection
-          for ( Int_t j=0;j<data.nParticle;j++ )
-          {
+          for ( Int_t j=0;j<data.nParticle;j++ ) {
              Float_t pt1 = mix.getPt(j);
              if (!isGen&&!mix.isChargedHadron(j)) continue;
-              if (pt1>ptMin&&pt1<ptMax) N2_TP++;
-              
-              /**************/
-              // apply cuts //
-              /**************/
-              // If gen level then do not apply charged hadron cut
-              //if (!isGen && !data.isChargedHadron(j)) continue;
-              
-              // Restrict to only charged particles
-              if (!mix.isChargedHadron(j)) continue;
-              // Eta cut
-              if (fabs(data.getEta(j))>=etaCutForN) continue;
-              // PT cut for the correlation function calculation for beam axis analysis
-              if(!isThrust){if (pt1>ptMin && pt1<ptMax) N2_TP++;}
-              else N2_TP++;
+	     if (pt1>ptMin&&pt1<ptMax) N2_TP++;
           }
-          if (N2_TP==0) continue;
+	  if (N2_TP==0) continue;
        
-          if (i==selected) 
-          {
+          if (i==selected) {
              cout <<"Error in Mixing!"<<endl;
              continue;
           }
 	  
-          for ( Int_t j=0;j<data.nParticle;j++ )
-          {
+          for ( Int_t j=0;j<data.nParticle;j++ ) {
               Float_t angle1;
-              if (isTheta) angle1 = data.getTheta(j); else angle1 = data.getEta(j);
+	      if (isTheta) angle1 = data.getTheta(j); else angle1 = data.getEta(j);
               Float_t phi1 = data.getPhi(j);
               Float_t pt1 = data.getPt(j);
-              
-              /**************/
-              // apply cuts //
-              /**************/
-              
-              // Restrict to only charged particles
-              if (!data.isChargedHadron(j)) continue;
-              // Eta cut
-              if (fabs(data.getEta(j))>=etaCutForN) continue;
-              // PT cut for beam axis analysis
-              if(!isThrust){if (pt1<=ptMin || pt1>=ptMax) continue;}
-              else continue;
+              if (!isGen&&!data.isChargedHadron(j)) continue;
+	      if(pt1<=ptMin||pt1>=ptMax) continue;
            
-              
               // Background loop, calculate B correlation function from mixed event
-              for ( Int_t k=0;k<mix.nParticle;k++ )
-              {
-                  Float_t anglemix;
-                  if (isTheta) anglemix = mix.getTheta(k); else anglemix = mix.getEta(k);
-                  Float_t phimix = mix.getPhi(k);
-                  Float_t ptmix = mix.getPt(k);
-                  
-                  /**************/
-                  // apply cuts //
-                  /**************/
-                  
-                  
-                  // Restrict to only charged particles
-                  if (!data.isChargedHadron(k)) continue;
-                   cout<<"CUT 1"<<endl;
-                  // Eta cut
-                  if (fabs(data.getEta(k))>=etaCutForN) continue;
-                   cout<<"CUT 2"<<endl;
-                  // PT cut for beam axis analysis
-                  if(!isThrust){if (ptmix<=ptMin || ptmix>=ptMax) continue;}
-                  else continue;
+              for ( Int_t k=0;k<mix.nParticle;k++ ) {
+        	 Float_t anglemix;
+		 if (isTheta) anglemix = mix.getTheta(k); else anglemix = mix.getEta(k);
+        	 Float_t phimix = mix.getPhi(k);
+        	 Float_t ptmix = mix.getPt(k);
+        	 if (!!isGen&&!mix.isChargedHadron(k)) continue;
+		 if(ptmix<=ptMin||ptmix>=ptMax) continue;
 
-                  cout<<"BEFORE FILLING"<<endl;
-                  // fill background function
-                  if (N!=0)
-                  {
-                      cout<<"IN FILLING"<<endl;
-                      h_2Dmix->Fill(angle1-anglemix,dphi(phi1,phimix),1./N_TP);
-                      h_2Dmix->Fill(angle1-anglemix,dphi(phimix,phi1),1./N_TP);
-                      h_2Dmix->Fill(anglemix-angle1,dphi(phi1,phimix),1./N_TP);
-                      h_2Dmix->Fill(anglemix-angle1,dphi(phimix,phi1),1./N_TP);
-                      fill_count_mix+=4;
-                  }
+		 if (N!=0) {
+        	   h_2Dmix->Fill(angle1-anglemix,dphi(phi1,phimix),1./N_TP);
+        	   h_2Dmix->Fill(angle1-anglemix,dphi(phimix,phi1),1./N_TP);
+        	   h_2Dmix->Fill(anglemix-angle1,dphi(phi1,phimix),1./N_TP);
+        	   h_2Dmix->Fill(anglemix-angle1,dphi(phimix,phi1),1./N_TP);
+             fill_count_mix+=4;
+        	 }
                } //end of mixed event loop
            } // end of working event loop
        } // end of nMix loop      
@@ -372,20 +273,16 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     
     cout<<"nEventInMultBin "<<nEventInMultBin<<endl;
     
-             
-    // Normalization
     h_2Dmix->Scale(1./nEventInMultBin);
     h_2D->Scale(1./nEventInMultBin);
     
-             
     averageN=averageN/nEventProcessed;
     cout <<"Average N = "<<averageN<<endl;
     
-             
     // calculate the  correlation function
+    
     calculateRatio(h_2D,h_2Dmix,h_ratio);
-             
-             
+        
     // Perform 1D projection
     double etaranges[8]={2,10,2.2,10,2.4,10,2.6,10};
     Int_t minbin,maxbin;
@@ -393,8 +290,8 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     
     TH1D*h_deltaphi[7];
     
-    for (Int_t i=0;i<7;i =i+2)
-    {
+    for (Int_t i=0;i<7;i =i+2){
+        // if (i==0) h_deltaphi[i]->SetFillColor(kRed);
         minbin =  h_ratio->GetXaxis()->FindBin(etaranges[i]);
         maxbin =  h_ratio->GetXaxis()->FindBin(etaranges[i+1]);
         
@@ -402,18 +299,17 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
         //h_deltaphi[i]->Sumw2();
         h_deltaphi[i]->SetName(Form("h_deltaphi_%d",i));
         h_deltaphi[i]->GetXaxis()->SetTitle("#Delta#phi");
-        if (isTheta) h_deltaphi[i]->SetTitle(Form("#Delta#phi, #Delta#theta (%f, %f), Multipliplicity (%d, %d)",etaranges[i],etaranges[i+1], mult_low, mult_high));
-        else h_deltaphi[i]->SetTitle(Form("#Delta#phi, #Delta#eta (%f, %f), Multipliplicity (%d, %d)",etaranges[i],etaranges[i+1], mult_low, mult_high));
+        if (isTheta)  h_deltaphi[i]->SetTitle(Form("#Delta#phi, #Delta#theta (%f, %f), Multipliplicity (%d, %d)",etaranges[i],etaranges[i+1], mult_low, mult_high));
+        else          h_deltaphi[i]->SetTitle(Form("#Delta#phi, #Delta#eta (%f, %f), Multipliplicity (%d, %d)",etaranges[i],etaranges[i+1], mult_low, mult_high));
         h_deltaphi[i]->GetYaxis()->SetTitle("Y(#Delta#phi)");
         
-        h_deltaphi[i]->Scale(1./(maxbin-minbin+1));
+	h_deltaphi[i]->Scale(1./(maxbin-minbin+1));
     }
 
-             
-             
     /**************************************************************************************/
     // Save and plot the results
     /**************************************************************************************/
+    
     
     TCanvas *c0 = new TCanvas("c0","Multiplicity",600,600);
     h_mult_dist->Draw("e");     
@@ -434,16 +330,11 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     latex.SetTextSize(0.04);
     latex.SetTextAlign(13);  //align at top
 
-    if (filename.Index("charm") >= 0)
-    {
+    if (filename.Index("charm") >= 0) {
       latex.DrawLatexNDC(.07, .9, "e^{+}e^{-}#rightarrow c#bar{c} MC");
-    }
-    else if (filename.Index("uds") >= 0)
-    {
+    } else if (filename.Index("uds") >= 0) {
       latex.DrawLatexNDC(.07, .9, "e^{+}e^{-}#rightarrow q#bar{q} (q=u,d,s) MC");
-    }
-    else if (filename.Index("bb") >= 0)
-    {
+    } else if (filename.Index("bb") >= 0) {
       latex.DrawLatexNDC(.07, .9, "#Upsilon {4S}#rightarrow B#bar{B} MC");
     }
 
@@ -456,19 +347,17 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     
     // Fourier decomposition
     TF1 *f = new TF1("f","[0]*(1+2*([1]*cos(1*x)+[2]*cos(2*x)+[3]*cos(3*x)+[4]*cos(4*x)+[5]*cos(5*x)+[6]*cos(6*x)))");
-    for (Int_t i=0;i<4;i++)
-    {
+    for (Int_t i=0;i<4;i++) {
       c3->cd(i+1);
       h_deltaphi[i*2]->Draw();
-      if (i==0)
-      {
+      if (i==0){
          h_deltaphi[0]->Fit("f");
          h_deltaphi[0]->Fit("f");
-         h_deltaphi[0]->SetStats(0);
+	 h_deltaphi[0]->SetStats(0);
       }
     }
     c3->SaveAs(Form("proj_%s_%d_%d_%d.pdf",savename.Data(),mult_low, mult_high,isThrust));
-            
+             
     // Save the results
     TFile *background = new TFile(Form("ridge_%s_%d_%d_%d.root",savename.Data(),mult_low, mult_high,isThrust), "recreate");
     h_deltaphi[0]->Write();
@@ -490,8 +379,9 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     ntResult->Write();
     background->Close();
              
-    cout<<"FILL COUNT = "<<fill_count<<endl;
-    cout<<"FILL COUNT = "<<fill_count_mix<<endl;
+             cout<<"FILL COUNT = "<<fill_count<<endl;
+             cout<<"FILL COUNT = "<<fill_count_mix<<endl;
+    
 }
 
 /**************************************************************************************/
