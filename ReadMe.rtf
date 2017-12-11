@@ -1,0 +1,133 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf830
+{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;\f1\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red0\green0\blue0;\red0\green0\blue0;
+\red255\green255\blue255;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c0\c0\c0;\csgenericrgb\c0\c0\c0;
+\csgray\c100000;}
+\margl1440\margr1440\vieww18740\viewh14520\viewkind0
+\deftab720
+\pard\pardeftab720\sl280\partightenfactor0
+
+\f0\fs22 \cf2 \expnd0\expndtw0\kerning0
+MIT Working Group: \
+\pard\pardeftab720\sl280\partightenfactor0
+\cf3 \outl0\strokewidth0 \strokec3 Gian Michele, Yen-Jie Lee, Chris McGinn, Austin Baty, \cf2 \outl0\strokewidth0 Anthony Badea, \cf3 \outl0\strokewidth0 \strokec3 Michael Peters, Jesse Thaler\
+NTU Working Group:\
+Paoti Chang, Tzu-An Sheng, Bean Huang
+\f1\fs24 \cf2 \outl0\strokewidth0 \
+\pard\pardeftab720\sl280\partightenfactor0
+\cf2 \
+\
+\
+\
+-------------------------\
+Two Particle Correlation\
+-------------------------\cf3 \outl0\strokewidth0 \strokec3 \
+\pard\pardeftab720\sl280\partightenfactor0
+\cf3 Computes signal, background, and correlation functions as well as deltaphi projections.\
+\
+To run individual file:\
+cd /StudyMult/TwoParticleCorrelation\
+.L ridge_check.c\
+analysis(filename,savename,isBelle,isThrust,isTheta,isGen,maxevt,mult_low,mult_high,nbin,verbose,num_runs,ptMin,ptMax,detaRange,ptMinForN,ptMaxForN,etaCutForN)\
+\pard\tx543\pardeftab543\pardirnatural\partightenfactor0
+
+\f0\fs22 \cf4 \cb5 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 // analysis further commented in ridge_check.c\
+\
+\
+run.c for multiplicity dependent studies on multiple files:\
+
+\f1\fs24 \cf2 \cb1 \expnd0\expndtw0\kerning0
+cd /StudyMult/TwoParticleCorrelation\
+\pard\pardeftab720\sl280\partightenfactor0
+\cf2 .L run.c
+\f0\fs22 \cf4 \cb5 \kerning1\expnd0\expndtw0 \
+\pard\tx543\pardeftab543\pardirnatural\partightenfactor0
+\cf4 run(MB,min60,LEP,pythia8_12_8_17)\
+\
+Each variable takes value 1 (if you want to run on the sample) or 0 (if you do not want to run on the sample). Lower end of multiplicity cuts are listed below the group of data files they apply to. All upper bounds are 9999. \
+\
+This will run a variety of multiplicity cuts on the data samples that you choose. \
+\
+MB \'97 minimum bias sample done in Thrust Axis \cf2 \cb1 \expnd0\expndtw0\kerning0
+2017.11.04\
+	Includes: \cf4 \cb5 \kerning1\expnd0\expndtw0  \
+		PYTHIA8 e+e- \'97> Z on Z pole  
+\fs24 \cf3 \cb1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 \
+
+\fs22 \cf4 \cb5 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 		PYTHIA8 e+e- \'97> Z on Z pole RopeWalk variant\
+		Multiplicity Cuts: \{20,30,50\}\
+\
+\
+min60 \'97 nParticle>60 in Thrust Axis \cf2 \cb1 \expnd0\expndtw0\kerning0
+2017.11.04\
+	Includes: \cf4 \cb5 \kerning1\expnd0\expndtw0  \
+		PYTHIA8 e+e- \'97> Z on Z pole 
+\fs24 \cf2 \cb1 \expnd0\expndtw0\kerning0
+\
+\pard\tx543\pardeftab543\pardirnatural\partightenfactor0
+
+\fs22 \cf4 \cb5 \kerning1\expnd0\expndtw0 		PYTHIA8 e+e- \'97> Z on Z pole RopeWalk variant\cf4 \cb5 \
+		Multiplicity Cuts: \{60\}\
+\
+LEP \'97 LEP in Thrust Axis \cf2 \cb1 \expnd0\expndtw0\kerning0
+2017.11.04\
+	Includes: \cf4 \cb5 \kerning1\expnd0\expndtw0  \
+		LEP1 (not MC)\
+		LEP2 (not MC)\
+		Multiplicity Cuts: \{20,30,50\}\
+\
+pythia8_12_8_17 \'97 most recent PYTHIA8 in Thrust Axis \cf2 \cb1 \expnd0\expndtw0\kerning0
+2017.12.04\
+	Includes: \cf4 \cb5 \kerning1\expnd0\expndtw0  \
+		PYTHIA8 e+e- \'97> Z on Z pole  
+\fs24 \cf2 \cb1 \expnd0\expndtw0\kerning0
+\
+
+\fs22 \cf4 \cb5 \kerning1\expnd0\expndtw0 		PYTHIA8 e+e- \'97> Z on Z pole RopeWalk variant\
+		\cf4 \cb5 Multiplicity Cuts: \{20,30,40,50\}\cf4 \cb5 \
+\pard\tx543\pardeftab543\pardirnatural\partightenfactor0
+\cf4 \cb5 		PYTHIA8 e+e- \'97> Z on Z pole,  nMinChgPart = 30
+\fs24 \cf2 \cb1 \expnd0\expndtw0\kerning0
+\
+
+\fs22 \cf4 \cb5 \kerning1\expnd0\expndtw0 		PYTHIA8 e+e- \'97> Z on Z pole RopeWalk variant, nMinChgPart = 30\cf4 \cb5 \
+		\cf4 \cb5 Multiplicity Cuts: \{30,40,50\}\cf4 \cb5 \
+		
+\f1\fs24 \cf3 \cb1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 \
+\pard\pardeftab720\sl280\partightenfactor0
+\cf3 -----------------------\
+Thrust Distribution\
+-----------------------\
+\
+\pard\tx543\pardeftab543\pardirnatural\partightenfactor0
+
+\f0\fs22 \cf4 \cb5 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 //////////////////// Thrust Distribution  //////////////////\
+// Select events by the following criteria\
+// Compile/Run with .x thrust_distribution.c+()\
+// 1. Events accepted with at least 5 good tracks  Done\
+// 2. Total charged energy > 15GeV  Not done\
+// 3. Energy (91,91.5) to focus on Z pole\
+// 3. |cos(TTheta)|<0.9  Done\
+// 4. missP/Energy<0.3  Done\
+////////////////////////////////////////////////////////////\
+\
+cd /StudyMult/ThrustDistribution\
+.L thrust_distribution.c\
+thrust_distribution(filename,dataname,cut_missP,min_TTheta,max_TTheta,min_Energy,max_Energy,min_nParticle,max_nParticle,isCharged,isGen)\
+// thrust_distribution further commented in thrust_distribution.c\
+
+\f1\fs24 \cf3 \cb1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 \
+run_thrust.c 
+\f0\fs22 \cf4 \cb5 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 for multiplicity dependent studies on multiple files:\
+// runs thrust_distribution for multiplicity cuts \{20,30,50,60\} where all upper bounds are 9999. \
+.L run_thrust.c\
+run_thrust()\
+
+\f1\fs24 \cf3 \cb1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 \
+\
+}
