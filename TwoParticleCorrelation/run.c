@@ -69,17 +69,17 @@ void run(int MB = 0, int min60 = 0, int LEP = 0, int pythia8_12_8_17 = 0)
     
     
     //
-    if(int pythia8_12_8_17)
+    if(pythia8_12_8_17)
     {
         int n_12_8_17 = 4;
         Int_t mult_low_12_8_17[4] = {20,30,40,50};
         Int_t mult_high_12_8_17[4] = {9999,9999,9999,9999};
         TString pthat1_Zee = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee/20171208/outFile_MERGED_nEvt2000000_nMinChgPart0_RopeWalk0.root";
         TString pthat1_Zee_save = "pthat1_Zee_nMinChgPart0_RopeWalk0";
-        scan(pthat1_Zee,pthat1_Zee_save,1,1,mult_low_12_8_17,mult_high_12_8_17,n_mb_12_8_17);
+        scan(pthat1_Zee,pthat1_Zee_save,1,1,mult_low_12_8_17,mult_high_12_8_17,n_12_8_17);
         TString pthat1_Zee_RopeWalk = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_RopeWalk/20171208/outFile_MERGED_nEvt2000000_nMinChgPart0_RopeWalk1.root";
         TString pthat1_Zee_RopeWalk_save = "pthat1_Zee_nMinChgPart0_RopeWalk1";
-        scan(pthat1_Zee_RopeWalk,pthat1_Zee_RopeWalk_save,1,1,mult_low_12_8_17,mult_high_12_8_17,n_mb_12_8_17);
+        scan(pthat1_Zee_RopeWalk,pthat1_Zee_RopeWalk_save,1,1,mult_low_12_8_17,mult_high_12_8_17,n_12_8_17);
         
         int n_12_8_17_nMinChgPart30 = 3;
         Int_t mult_low_12_8_17_nMinChgPart30[3] = {30,40,50};
