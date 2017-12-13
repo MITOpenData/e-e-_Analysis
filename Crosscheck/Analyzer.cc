@@ -120,8 +120,12 @@ void Analyzer(){
       jt->GetEntry(i);
       if(nref>=2){
         h_Aj->Fill(TMath::Abs(jtp(jtpt[0],jteta[0])-jtp(jtpt[1],jteta[1]))/(jtp(jtpt[0],jteta[0])+jtp(jtpt[1],jteta[1]))); 
-        if(TMath::Abs(jtp(jtpt[0],jteta[0])-jtp(jtpt[1],jteta[1]))/(jtp(jtpt[0],jteta[0])+jtp(jtpt[1],jteta[1])) > s.AjCut) continue;
-        if(nref>2 && 2*jtp(jtpt[2],jteta[2])/(jtp(jtpt[0],jteta[0])+jtp(jtpt[1],jteta[1])) > s.thirdJetCut) continue;
+        if(!s.keep3jetEvts && TMath::Abs(jtp(jtpt[0],jteta[0])-jtp(jtpt[1],jteta[1]))/(jtp(jtpt[0],jteta[0])+jtp(jtpt[1],jteta[1])) > s.AjCut) continue;
+        if(!s.keep3jetEvts && nref>2 && 2*jtp(jtpt[2],jteta[2])/(jtp(jtpt[0],jteta[0])+jtp(jtpt[1],jteta[1])) > s.thirdJetCut) continue;
+        if(s.keep3jetEvts){
+          if(TMath::Abs(jtp(jtpt[0],jteta[0])-jtp(jtpt[1],jteta[1]))/(jtp(jtpt[0],jteta[0])+jtp(jtpt[1],jteta[1])) < s.AjCut) continue;
+          if(nref<2 || 2*jtp(jtpt[2],jteta[2])/(jtp(jtpt[0],jteta[0])+jtp(jtpt[1],jteta[1])) < s.thirdJetCut) continue;
+        }
       }
     }
  
@@ -165,8 +169,12 @@ void Analyzer(){
       if(s.doAjCut){
         jtMix->GetEntry(i2);
         if(nrefMix>=2){
-          if(TMath::Abs(jtp(jtptMix[0],jtetaMix[0])-jtp(jtptMix[1],jtetaMix[1]))/(jtp(jtptMix[0],jtetaMix[0])+jtp(jtptMix[1],jtetaMix[1])) > s.AjCut) continue;
-          if(nrefMix>2 && 2*jtp(jtptMix[2],jtetaMix[2])/(jtp(jtptMix[0],jtetaMix[0])+jtp(jtptMix[1],jtetaMix[1])) > s.thirdJetCut) continue;
+          if(!s.keep3jetEvts && TMath::Abs(jtp(jtptMix[0],jtetaMix[0])-jtp(jtptMix[1],jtetaMix[1]))/(jtp(jtptMix[0],jtetaMix[0])+jtp(jtptMix[1],jtetaMix[1])) > s.AjCut) continue;
+          if(!s.keep3jetEvts && nrefMix>2 && 2*jtp(jtptMix[2],jtetaMix[2])/(jtp(jtptMix[0],jtetaMix[0])+jtp(jtptMix[1],jtetaMix[1])) > s.thirdJetCut) continue;
+          if(s.keep3jetEvts){
+            if(TMath::Abs(jtp(jtptMix[0],jtetaMix[0])-jtp(jtptMix[1],jtetaMix[1]))/(jtp(jtptMix[0],jtetaMix[0])+jtp(jtptMix[1],jtetaMix[1])) < s.AjCut) continue;
+            if(nrefMix<2 || 2*jtp(jtptMix[2],jtetaMix[2])/(jtp(jtptMix[0],jtetaMix[0])+jtp(jtptMix[1],jtetaMix[1])) < s.thirdJetCut) continue;
+          }
         }
       }
       if(s.doThrust){
