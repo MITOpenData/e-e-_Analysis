@@ -24,6 +24,10 @@ void Analyzer(){
   TH2F * bkgrnd2PC[s.nMultBins];
   TH2F * ratio2PC[s.nMultBins]; 
   TH1F * longRangeYield[s.nMultBins]; 
+  TH2F * signal2PC_ptweighted[s.nMultBins]; 
+  TH2F * bkgrnd2PC_ptweighted[s.nMultBins];
+  TH2F * ratio2PC_ptweighted[s.nMultBins]; 
+  TH1F * longRangeYield_ptweighted[s.nMultBins]; 
   float nSignalEvts[s.nMultBins] = {0};
   float nBkgrndEvts[s.nMultBins] = {0};
 
@@ -40,6 +44,9 @@ void Analyzer(){
     signal2PC[i] = new TH2F(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
     bkgrnd2PC[i] = new TH2F(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
     longRangeYield[i] = new TH1F(Form("longRangeYield_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#phi;Y(#Delta#Phi)",s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0); 
+    signal2PC_ptweighted[i] = new TH2F(Form("signal2PC_ptweighted_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+    bkgrnd2PC_ptweighted[i] = new TH2F(Form("bkgrnd2PC_ptweighted_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+    longRangeYield_ptweighted[i] = new TH1F(Form("longRangeYield_ptweighted_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#phi;Y(#Delta#Phi)",s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0); 
   }
   TH1F * multiplicity = new TH1F("multiplicity",";nTrk;nEvents",200,0,200);
 
@@ -219,6 +226,8 @@ void Analyzer(){
               if(s.isInMultBin(nTrk,k)){
                 if(!s.doThrust) signal2PC[k]->Fill( dEta(eta[j1],eta[j2]), dPhi(phi[j1],phi[j2]), corr1*corr2/(4*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
                 if(s.doThrust) signal2PC[k]->Fill( dEta(eta_wrtThr[j1],eta_wrtThr[j2]), dPhi(phi_wrtThr[j1],phi_wrtThr[j2]), corr1*corr2/(4*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+                if(!s.doThrust) signal2PC_ptweighted[k]->Fill( dEta(eta[j1],eta[j2]), dPhi(phi[j1],phi[j2]), pt[j1]*pt[j2]*corr1*corr2/(4*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+                if(s.doThrust) signal2PC_ptweighted[k]->Fill( dEta(eta_wrtThr[j1],eta_wrtThr[j2]), dPhi(phi_wrtThr[j1],phi_wrtThr[j2]), pt_wrtThr[j1]*pt_wrtThr[j2]*corr1*corr2/(4*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
               }
             }//end mult bin loop
           }//end 2nd particle loop
@@ -236,6 +245,8 @@ void Analyzer(){
             if(s.isInMultBin(nTrk,k)){
               if(!s.doThrust) bkgrnd2PC[k]->Fill( dEta(eta[j1],etaMix[j2]), dPhi(phi[j1],phiMix[j2]), corr1*corr2/(4*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
               if(s.doThrust) bkgrnd2PC[k]->Fill( dEta(eta_wrtThr[j1],etaMix_wrtThr[j2]), dPhi(phi_wrtThr[j1],phiMix_wrtThr[j2]), corr1*corr2/(4*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+              if(!s.doThrust) bkgrnd2PC_ptweighted[k]->Fill( dEta(eta[j1],etaMix[j2]), dPhi(phi[j1],phiMix[j2]), pt[j1]*ptMix[j2]*corr1*corr2/(4*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+              if(s.doThrust) bkgrnd2PC_ptweighted[k]->Fill( dEta(eta_wrtThr[j1],etaMix_wrtThr[j2]), dPhi(phi_wrtThr[j1],phiMix_wrtThr[j2]), pt_wrtThr[j1]*ptMix_wrtThr[j2]*corr1*corr2/(4*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
             }
           }//end mult bin loop
         }//end mixed particle loop
@@ -255,6 +266,15 @@ void Analyzer(){
     ratio2PC[k]->Divide(bkgrnd2PC[k]);
     ratio2PC[k]->Scale(bkgrnd2PC[k]->GetBinContent(bkgrnd2PC[k]->FindBin(0,0))/4.0);
     getLongRangeYield(s,ratio2PC[k],longRangeYield[k]);
+    
+    signal2PC_ptweighted[k]->Scale(1.0/(float)nSignalEvts[k]);
+    symmetrizeDetaDphi(signal2PC_ptweighted[k],s.dEtaBins,s.dPhiBins);
+    bkgrnd2PC_ptweighted[k]->Scale(1.0/(float)nBkgrndEvts[k]);
+    symmetrizeDetaDphi(bkgrnd2PC_ptweighted[k],s.dEtaBins,s.dPhiBins);
+    ratio2PC_ptweighted[k] = (TH2F*)signal2PC_ptweighted[k]->Clone(Form("ratio2PC_ptweighted_%d_%d",s.multBinsLow[k],s.multBinsHigh[k]));
+    ratio2PC_ptweighted[k]->Divide(bkgrnd2PC_ptweighted[k]);
+    ratio2PC_ptweighted[k]->Scale(bkgrnd2PC_ptweighted[k]->GetBinContent(bkgrnd2PC_ptweighted[k]->FindBin(0,0))/4.0);
+    getLongRangeYield(s,ratio2PC_ptweighted[k],longRangeYield_ptweighted[k]);
   }
 
   f->Close();

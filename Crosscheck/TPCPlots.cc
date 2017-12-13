@@ -62,6 +62,8 @@ void TPCPlots(){
 
   TH2D * sig[s.nMultBins], *bkg[s.nMultBins], *ratio[s.nMultBins];
   TH1D * LRCYield[s.nMultBins];
+  TH2D * sig_w[s.nMultBins], *bkg_w[s.nMultBins], *ratio_w[s.nMultBins];
+  TH1D * LRCYield_w[s.nMultBins];
 
   TFile * f = TFile::Open("Analyzer_Output.root","read");
   for(int i = 0; i<s.nMultBins; i++){
@@ -70,6 +72,10 @@ void TPCPlots(){
     bkg[i] = (TH2D*)f->Get(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
     ratio[i] = (TH2D*)f->Get(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
     LRCYield[i] = (TH1D*)f->Get(Form("longRangeYield_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
+    sig_w[i] = (TH2D*)f->Get(Form("signal2PC_ptweighted_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
+    bkg_w[i] = (TH2D*)f->Get(Form("bkgrnd2PC_ptweighted_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
+    ratio_w[i] = (TH2D*)f->Get(Form("ratio2PC_ptweighted_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
+    LRCYield_w[i] = (TH1D*)f->Get(Form("longRangeYield_ptweighted_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
 
     TLegend * l = new TLegend(0.6,0.8,0.95,0.95);
     if(s.experiment==0)  l->AddEntry((TObject*)0,"ALEPH e^{+}e^{-}","");
@@ -93,6 +99,14 @@ void TPCPlots(){
     c1->SaveAs(Form("img/signal_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i])); 
     c1->SaveAs(Form("img/signal_%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
     
+    formatTPCAxes(sig_w[i],1.5,1.5,2);
+    formatZaxis(sig_w[i],1);
+    sig_w[i]->Draw("surf1 fb");
+    l->Draw("same");
+    c1->SaveAs(Form("img/signal_ptw_%d_%d.png",s.multBinsLow[i],s.multBinsHigh[i])); 
+    c1->SaveAs(Form("img/signal_ptw_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i])); 
+    c1->SaveAs(Form("img/signal_ptw__%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
+    
     formatTPCAxes(bkg[i],1.5,1.5,2);
     formatZaxis(bkg[i],1);
     bkg[i]->Draw("surf1 fb");
@@ -101,6 +115,14 @@ void TPCPlots(){
     c1->SaveAs(Form("img/background_%d_%d.png",s.multBinsLow[i],s.multBinsHigh[i])); 
     c1->SaveAs(Form("img/background_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i])); 
     c1->SaveAs(Form("img/background_%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
+    
+    formatTPCAxes(bkg_w[i],1.5,1.5,2);
+    formatZaxis(bkg_w[i],1);
+    bkg_w[i]->Draw("surf1 fb");
+    l->Draw("same");
+    c1->SaveAs(Form("img/background_ptw_%d_%d.png",s.multBinsLow[i],s.multBinsHigh[i])); 
+    c1->SaveAs(Form("img/background_ptw_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i])); 
+    c1->SaveAs(Form("img/background_ptw_%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
 
     formatTPCAxes(ratio[i],1.5,1.5,2);
     formatZaxis(ratio[i],0);
@@ -110,6 +132,15 @@ void TPCPlots(){
     c1->SaveAs(Form("img/ratio_%d_%d.png",s.multBinsLow[i],s.multBinsHigh[i])); 
     c1->SaveAs(Form("img/ratio_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i])); 
     c1->SaveAs(Form("img/ratio_%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
+    
+    formatTPCAxes(ratio_w[i],1.5,1.5,2);
+    formatZaxis(ratio_w[i],0);
+    ratio_w[i]->Draw("surf1 fb");
+    l->Draw("same");
+    //ratio[i]->GetZaxis()->SetRangeUser(0.9*ratio[i]->GetMinimum(),0.4*ratio[i]->GetMaximum());
+    c1->SaveAs(Form("img/ratio_ptw_%d_%d.png",s.multBinsLow[i],s.multBinsHigh[i])); 
+    c1->SaveAs(Form("img/ratio_ptw_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i])); 
+    c1->SaveAs(Form("img/ratio_ptw_%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
  
     delete c1; 
 
@@ -126,6 +157,18 @@ void TPCPlots(){
     c2->SaveAs(Form("img/LRCYield_%d_%d.png",s.multBinsLow[i],s.multBinsHigh[i])); 
     c2->SaveAs(Form("img/LRCYield_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i])); 
     c2->SaveAs(Form("img/LRCYield_%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
+    
+    formatTH1D(LRCYield_w[i],1.0,1.5); 
+    LRCYield_w[i]->SetMarkerStyle(8);
+    LRCYield_w[i]->SetMarkerColor(kBlack);  
+    LRCYield_w[i]->SetLineColor(kBlack);  
+    LRCYield_w[i]->Draw("p");
+    l->SetY1(0.65);  l->SetY2(0.8);
+    l->SetX1(0.5);  l->SetX2(0.8);
+    l->Draw("same");
+    c2->SaveAs(Form("img/LRCYield_ptw_%d_%d.png",s.multBinsLow[i],s.multBinsHigh[i])); 
+    c2->SaveAs(Form("img/LRCYield_ptw_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i])); 
+    c2->SaveAs(Form("img/LRCYield_ptw_%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
     delete c2;
     delete l;
   }

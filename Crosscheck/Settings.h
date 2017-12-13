@@ -23,7 +23,8 @@ class Settings{
     //std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_RopeWalk_minNPart60/outFile_PYTHIA8_0p0912_pthat1_Zee_RopeWalk_minNPart60_MERGED.root";
     //std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_minNPart60/outFile_PYTHIA8_0p0912_pthat1_Zee_minNPart60_MERGED.root";
     //std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee/outFile_PYTHIA8_0p0912_pthat1_Zee_MERGED.root";
-    std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_RopeWalk/outFile_PYTHIA8_0p0912_pthat1_Zee_RopeWalk_MERGED.root";
+    //std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_RopeWalk/outFile_PYTHIA8_0p0912_pthat1_Zee_RopeWalk_MERGED.root";
+    std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_RopeWalk/20171208/outFile_MERGED_nEvt2000000_nMinChgPart0_RopeWalk1.root";
 
 
     //cuts
@@ -41,8 +42,8 @@ class Settings{
     //float dEtaBins = 36;//keep even
     //float dPhiBins = 36;//keep factor of 4
     float etaPlotRange = 1.8;//this gets multiplied by 2
-    float dEtaBins = 72;//keep even
-    float dPhiBins = 36;//keep factor of 4
+    float dEtaBins = 36;//keep even
+    float dPhiBins = 20;//keep factor of 4
 
     float dEtaRangeToIntegrate[2] = {2.0,3.6};//try to make this correspond with bin edges based on above parameters
 
@@ -56,12 +57,12 @@ class Settings{
     int multBinsLow[nMultBins]  = {0 , 20, 30};
     int multBinsHigh[nMultBins] = {20, 30, 999};
 
-    bool calcKinematicsWrtThrust = true;
+    bool calcKinematicsWrtThrust = false;
 
     //other
-    bool doThrust = true;
-    bool doChargedThrust = false;
-    float thrustMatchWindow = 1.0;
+    bool doThrust = false;
+    bool doChargedThrust = true;
+    float thrustMatchWindow = 99.0;
     bool doMultMatch = true;
     bool doMissPCut = false;
     float MissPCut = 20;
@@ -69,7 +70,7 @@ class Settings{
     bool doAjCut = false;
     float AjCut = 0.1;
     float thirdJetCut = 0.03;
-    bool doAllData = true;
+    bool doAllData = false;
     int nEvts = 50000;
 
     Settings();
