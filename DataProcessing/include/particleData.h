@@ -3,7 +3,7 @@
 
 class particleData{
  public:
-  static const Int_t nMaxPart = 10000;
+  static const int nMaxPart = 10000;
 
   int nParticle;
   int EventNo;
@@ -11,29 +11,37 @@ class particleData{
   int year;
   int process;
   float Energy;
-  Float_t px[nMaxPart];
-  Float_t py[nMaxPart];
-  Float_t pz[nMaxPart];
-  Float_t pt[nMaxPart];
-  Float_t pmag[nMaxPart];
-  Float_t eta[nMaxPart];
-  Float_t theta[nMaxPart];
-  Float_t phi[nMaxPart];
-  Float_t mass[nMaxPart];
-  Float_t charge[nMaxPart];
+  int bFlag;
+  float bx;
+  float by;
+  float ebx;
+  float eby;
+  float px[nMaxPart];
+  float py[nMaxPart];
+  float pz[nMaxPart];
+  float pt[nMaxPart];
+  float pmag[nMaxPart];
+  float eta[nMaxPart];
+  float theta[nMaxPart];
+  float phi[nMaxPart];
+  float mass[nMaxPart];
+  float charge[nMaxPart];
   // Starting from 0, pwflag (via Marcello) - CHARGED_TRACK, CHARGED_LEPTONS1, CHARGED_LEPTONS2, V0, PHOTON, NEUTRAL_HADRON
-  Int_t pwflag[nMaxPart];
-  Int_t pid[nMaxPart];
+  int pwflag[nMaxPart];
+  int pid[nMaxPart];
+  float d0[nMaxPart];
+  float z0[nMaxPart];
+  int ntpc[nMaxPart];
   
   //thrust axis variables
-  Float_t pt_wrtThr[nMaxPart];
-  Float_t eta_wrtThr[nMaxPart];
-  Float_t theta_wrtThr[nMaxPart];
-  Float_t phi_wrtThr[nMaxPart];
-  Float_t pt_wrtChThr[nMaxPart];
-  Float_t eta_wrtChThr[nMaxPart];
-  Float_t theta_wrtChThr[nMaxPart];
-  Float_t phi_wrtChThr[nMaxPart];
+  float pt_wrtThr[nMaxPart];
+  float eta_wrtThr[nMaxPart];
+  float theta_wrtThr[nMaxPart];
+  float phi_wrtThr[nMaxPart];
+  float pt_wrtChThr[nMaxPart];
+  float eta_wrtChThr[nMaxPart];
+  float theta_wrtChThr[nMaxPart];
+  float phi_wrtChThr[nMaxPart];
 };
 
 #endif

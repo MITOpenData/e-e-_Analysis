@@ -64,7 +64,15 @@ int processFromPath(std::string inStr)
 std::vector<std::string> processAlephString(std::string inStr)
 {
   bool addDummy = false;
+  bool addDummy2 = false;
   if(inStr.find("ALEPH_DATA") != std::string::npos) addDummy = true;
+  if(inStr.find("Primary vertex info") != std::string::npos) addDummy2 = true;
+
+  const Int_t nSpecialRemoveStr = 2;
+  std::string specialRemoveStr[nSpecialRemoveStr] = {"d0", "z0"};
+  for(Int_t rI = 0; rI < nSpecialRemoveStr; ++rI){
+    while(inStr.find(specialRemoveStr[rI]) != std::string::npos) inStr.replace(inStr.find(specialRemoveStr[rI]), specialRemoveStr[rI].size(), "");
+  }
 
   const std::string goodChar = "0123456789-. ";
   unsigned int pos = 0;
@@ -75,6 +83,7 @@ std::vector<std::string> processAlephString(std::string inStr)
 
   std::vector<std::string> retV;
   if(addDummy){retV.push_back("-999."); retV.push_back("-999."); retV.push_back("-999."); retV.push_back("-999.");}
+  if(addDummy2){retV.push_back("-998."); retV.push_back("-998."); retV.push_back("-998."); retV.push_back("-998.");}
 
   while(inStr.size() != 0){
     while(inStr.substr(0,1).find(" ") != std::string::npos){inStr.replace(0,1,"");}
@@ -92,11 +101,14 @@ std::vector<std::string> processAlephString(std::string inStr)
   return retV;
 }
 
-bool check999(std::string inStr)
+
+bool checkGeneral(std::string inStr, std::string checkStr)
 {
-  if(inStr.find("-999.") != std::string::npos && inStr.size() == 5) return true;
+  if(inStr.find(checkStr) != std::string::npos && inStr.size() == checkStr.size()) return true;
   return false;
 }
+bool check999(std::string inStr){return checkGeneral(inStr, "-999.");}
+bool check998(std::string inStr){return checkGeneral(inStr, "-998.");}
 
 void processJets(std::vector<fastjet::PseudoJet> p, fastjet::JetDefinition jDef, fastjet::JetDefinition jDefReclust, jetData *d, const double ptCut = 0.1)
 {
@@ -110,7 +122,6 @@ void processJets(std::vector<fastjet::PseudoJet> p, fastjet::JetDefinition jDef,
       d->jtphi[d->nref] = jets.at(i).phi_std();
       d->jteta[d->nref] = jets.at(i).eta();
       
-
       std::vector<fastjet::PseudoJet> jetConst = jets.at(i).constituents();
       d->jtN[d->nref] = jetConst.size();
       std::vector< std::vector<fastjet::PseudoJet> > subJets;
@@ -159,7 +170,7 @@ void processJets(std::vector<fastjet::PseudoJet> p, fastjet::JetDefinition jDef,
   return;
 }
 
-int scan(std::string inFileName, std::string outFileName="")
+int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="")
 {
   if(!checkFile(inFileName)){
     std::cout << "Given inFileName \'" << inFileName << "\' is invalid, return 1." << std::endl;
@@ -269,6 +280,11 @@ int scan(std::string inFileName, std::string outFileName="")
   tout->Branch("RunNo", &pData.RunNo,"RunNo/I");
   tout->Branch("Energy", &pData.Energy,"Energy/F");
   tout->Branch("process", &pData.process, "process/I");
+  tout->Branch("bFlag", &pData.bFlag, "bFlag/I");
+  tout->Branch("bx", &pData.bx, "bx/F");
+  tout->Branch("by", &pData.by, "by/F");
+  tout->Branch("ebx", &pData.ebx, "ebx/F");
+  tout->Branch("eby", &pData.eby, "eby/F");
   tout->Branch("nParticle", &pData.nParticle,"nParticle/I");
   tout->Branch("px", pData.px,"px[nParticle]/F");
   tout->Branch("py", pData.py,"py[nParticle]/F");
@@ -282,6 +298,9 @@ int scan(std::string inFileName, std::string outFileName="")
   tout->Branch("charge", pData.charge,"charge[nParticle]/F");
   tout->Branch("pwflag", pData.pwflag,"pwflag[nParticle]/I");
   tout->Branch("pid", pData.pid,"pid[nParticle]/I");
+  tout->Branch("d0", pData.d0,"d0[nParticle]/F");
+  tout->Branch("z0", pData.z0,"z0[nParticle]/F");
+  tout->Branch("ntpc", pData.ntpc,"ntpc[nParticle]/I");
  
   //thrust quantities
   tout->Branch("Thrust",&eData.Thrust,"Thrust/F");
@@ -298,7 +317,7 @@ int scan(std::string inFileName, std::string outFileName="")
   tout->Branch("eta_wrtChThr", pData.eta_wrtChThr,"eta_wrtChThr[nParticle]/F");
   tout->Branch("theta_wrtChThr", pData.theta_wrtChThr,"theta_wrtChThr[nParticle]/F");
   tout->Branch("phi_wrtChThr", pData.phi_wrtChThr,"phi_wrtChThr[nParticle]/F");
- 
+
   //derived quantities
   tout->Branch("missP",&eData.missP,"missP/F");
   tout->Branch("missPt",&eData.missPt,"missPt/F");
@@ -328,6 +347,11 @@ int scan(std::string inFileName, std::string outFileName="")
     tgout->Branch("RunNo", &pgData.RunNo,"RunNo/I");
     tgout->Branch("Energy", &pgData.Energy,"Energy/F");
     tgout->Branch("process", &pgData.process, "process/I");
+    tgout->Branch("bFlag", &pgData.bFlag, "bFlag/I");
+    tgout->Branch("bx", &pgData.bx, "bx/F");
+    tgout->Branch("by", &pgData.by, "by/F");
+    tgout->Branch("ebx", &pgData.ebx, "ebx/F");
+    tgout->Branch("eby", &pgData.eby, "eby/F");
     tgout->Branch("nParticle", &pgData.nParticle,"nParticle/I");
     tgout->Branch("px", pgData.px,"px[nParticle]/F");
     tgout->Branch("py", pgData.py,"py[nParticle]/F");
@@ -341,7 +365,10 @@ int scan(std::string inFileName, std::string outFileName="")
     tgout->Branch("charge", pgData.charge,"charge[nParticle]/F");
     tgout->Branch("pwflag", pgData.pwflag,"pwflag[nParticle]/I");
     tgout->Branch("pid", pgData.pid,"pid[nParticle]/I");
-  
+    tgout->Branch("d0", pgData.d0,"d0[nParticle]/F");
+    tgout->Branch("z0", pgData.z0,"z0[nParticle]/F");
+    tgout->Branch("ntpc", pgData.ntpc,"ntpc[nParticle]/I");
+
     //thrust quantities
     tgout->Branch("Thrust",&egData.Thrust,"Thrust/F");
     tgout->Branch("TTheta",&egData.TTheta,"TTheta/F");
@@ -414,16 +441,13 @@ int scan(std::string inFileName, std::string outFileName="")
       else if(getStr.find("END_FILE") != std::string::npos) continue;
       std::vector<std::string> num = processAlephString(getStr);
       
-      // check the number of columns before assigning values
-      bool assumePID = false;
-      if(num.size() == 6) assumePID = false; 
-      else if(num.size() == 7 || num.size() == 8) assumePID = true; 
-      else{//return, this is an invalid format (or fix code here if format valid
+
+      if(num.size() < 5){
 	std::cout << "Number of columns for line \'" << getStr << "\' is invalid, size \'" << num.size() << "\'. return 1" << std::endl;
 	//gotta cleanup before return
 	delete tout;
 	for(int jIter = 0; jIter < nJtAlgo; ++jIter){delete jout[jIter];}
-
+	
 	if(isMC && isRecons){
 	  delete tgout;
 	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){delete jgout[jIter];}
@@ -434,7 +458,7 @@ int scan(std::string inFileName, std::string outFileName="")
 	
 	return 1;
       }
-      
+
       if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2))/* not all files do four 999 && check999(num.at(3)*/){
 	pData.nParticle=counterParticles;
         thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz, THRUST::OPTIMAL); 
@@ -476,6 +500,12 @@ int scan(std::string inFileName, std::string outFileName="")
 	pData.RunNo = std::stoi(num.at(runPos));
 	pData.EventNo= std::stoi(num.at(evtPos));
 	pData.Energy= std::stof(num.at(ePos));
+
+	pData.bFlag = -999;
+	pData.bx = -999.;
+	pData.by = -999.;
+	pData.ebx = -999.;
+	pData.eby = -999.;
       
 	runNo.push_back(pData.RunNo);
 	evtNo.push_back(pData.EventNo);
@@ -493,6 +523,40 @@ int scan(std::string inFileName, std::string outFileName="")
 	
 	continue;
       }
+      else if(check998(num.at(0)) && check998(num.at(1)) && check998(num.at(2))){
+	pData.bFlag = std::stoi(num.at(4));
+	pData.bx = std::stof(num.at(5));
+	pData.by = std::stof(num.at(6));
+	pData.ebx = std::stof(num.at(7));
+	pData.eby = std::stof(num.at(8));
+	
+	continue;
+      }
+
+      
+      // check the number of columns before assigning values
+      bool assumePID = false;
+      if(num.size() == 6 && !isNewInfo) assumePID = false; 
+      else if(num.size() == 9 && isNewInfo) assumePID = false; 
+      else if(!isNewInfo && (num.size() == 7 || num.size() == 8)) assumePID = true; 
+      else if(isNewInfo && (num.size() == 10 || num.size() == 11)) assumePID = true; 
+      else{//return, this is an invalid format (or fix code here if format valid
+	std::cout << "Number of columns for line \'" << getStr << "\' is invalid, size \'" << num.size() << "\'. return 1" << std::endl;
+	//gotta cleanup before return
+	delete tout;
+	for(int jIter = 0; jIter < nJtAlgo; ++jIter){delete jout[jIter];}
+
+	if(isMC && isRecons){
+	  delete tgout;
+	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){delete jgout[jIter];}
+	}
+	
+	hf->Close();
+	delete hf;
+	
+	return 1;
+      }
+      
       
       float _px = std::stof(num.at(0));
       float _py = std::stof(num.at(1));
@@ -523,6 +587,19 @@ int scan(std::string inFileName, std::string outFileName="")
       if(assumePID) pData.pid[counterParticles]=std::stoi(num.at(6));
       else pData.pid[counterParticles]=-999;
      
+      if(isNewInfo && _pwflag < 4){
+	int posOffset = 0;
+	if(assumePID) posOffset = 1;
+
+	pData.d0[counterParticles] = std::stof(num.at(6 + posOffset));
+	pData.z0[counterParticles] = std::stof(num.at(7 + posOffset));
+	pData.ntpc[counterParticles] =  std::stoi(num.at(8 + posOffset));	
+      }
+      else{
+	pData.d0[counterParticles] = -999.;
+	pData.z0[counterParticles] = -999.;
+	pData.ntpc[counterParticles] = -999;
+      }
 
       if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
@@ -600,12 +677,8 @@ int scan(std::string inFileName, std::string outFileName="")
 	else if(getStr.find("END_EVENT") != std::string::npos) continue;
 	else if(getStr.find("END_FILE") != std::string::npos) continue;
 	std::vector<std::string> num = processAlephString(getStr);
-      
-	// check the number of columns before assigning values
-	bool assumePID = false;
-	if(num.size() == 6) assumePID = false; 
-	else if(num.size() == 7 || num.size() == 8) assumePID = true; 
-	else{//return, this is an invalid format (or fix code here if format valid
+
+	if(num.size() < 5){
 	  std::cout << "Number of columns for line \'" << getStr << "\' is invalid, size \'" << num.size() << "\'. return 1" << std::endl;
 	  //gotta cleanup before return
 	  delete tout;
@@ -626,8 +699,6 @@ int scan(std::string inFileName, std::string outFileName="")
 	  return 1;
 	}
 
-	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-      
 	if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2)) /* && check999(num.at(3))*/){ 
 	  pgData.nParticle=counterParticles;
           
@@ -672,6 +743,12 @@ int scan(std::string inFileName, std::string outFileName="")
 	  pgData.EventNo= std::stoi(num.at(evtPos));
 	  pgData.Energy= std::stof(num.at(ePos));
 
+	  pgData.bFlag = -999;
+	  pgData.bx = -999.;
+	  pgData.by = -999.;
+	  pgData.ebx = -999.;
+	  pgData.eby = -999.;
+	  
           netP = TVector3(0,0,0);
           thrust = TVector3(0,0,0);
           netP_charged = TVector3(0,0,0);
@@ -720,7 +797,46 @@ int scan(std::string inFileName, std::string outFileName="")
 
 	  continue;
 	}
+	else if(check998(num.at(0)) && check998(num.at(1)) && check998(num.at(2))){
+	  pgData.bFlag = std::stoi(num.at(4));
+	  pgData.bx = std::stof(num.at(5));
+	  pgData.by = std::stof(num.at(6));
+	  pgData.ebx = std::stof(num.at(7));
+	  pgData.eby = std::stof(num.at(8));
+
+	  continue;
+	}
+	
+	// check the number of columns before assigning values
+	bool assumePID = false;
+	if(!isNewInfo && num.size() == 6) assumePID = false; 
+	else if(isNewInfo && num.size() == 9) assumePID = false; 
+	else if(!isNewInfo && (num.size() == 7 || num.size() == 8)) assumePID = true; 
+	else if(isNewInfo && (num.size() == 10 || num.size() == 11)) assumePID = true; 
+	else{//return, this is an invalid format (or fix code here if format valid
+	  std::cout << "Number of columns for line \'" << getStr << "\' is invalid, size \'" << num.size() << "\'. return 1" << std::endl;
+	  //gotta cleanup before return
+	  delete tout;
+	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){
+	    delete jout[jIter];
+	  }
+
+	  if(isMC && isRecons){
+	    delete tgout;
+	    for(int jIter = 0; jIter < nJtAlgo; ++jIter){
+	      delete jgout[jIter];
+	    }
+	  }
+
+	  hf->Close();
+	  delete hf;
+	
+	  return 1;
+	}
+
+	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
       
+
 	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
 	float _px = std::stof(num.at(0));
@@ -754,6 +870,20 @@ int scan(std::string inFileName, std::string outFileName="")
 	if(assumePID) pgData.pid[counterParticles]=std::stoi(num.at(6));
 	else pgData.pid[counterParticles]=-999;
 
+	if(isNewInfo && _pwflag < 4){
+	  int posOffset = 0;
+	  if(assumePID) posOffset += 1;
+	  
+	  pgData.d0[counterParticles] = std::stof(num.at(6 + posOffset));
+	  pgData.z0[counterParticles] = std::stof(num.at(7 + posOffset));
+	  pgData.ntpc[counterParticles] =  std::stoi(num.at(8 + posOffset));	
+	}
+	else{
+	  pgData.d0[counterParticles] = -999.;
+	  pgData.z0[counterParticles] = -999.;
+	  pgData.ntpc[counterParticles] = -999;
+	}
+	
 	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
         //missing momentum calculation and multiplicity calculation
@@ -845,14 +975,14 @@ int scan(std::string inFileName, std::string outFileName="")
 
 int main(int argc, char *argv[])
 {
-  if(argc != 2 && argc != 3){
-    std::cout << "Usage: ./bin/scan.exe <inFileName> <OPT-outFileName>" << std::endl;
+  if(argc != 3 && argc != 4){
+    std::cout << "Usage: ./bin/scan.exe <inFileName> <isNewInfo> <OPT-outFileName>" << std::endl;
     return 1;
   }
 
   std::cout << "Begin processing..." << std::endl;
   int retVal = 0;
-  if(argc == 2) retVal += scan(argv[1]);
-  else if(argc == 3) retVal += scan(argv[1], argv[2]);
+  if(argc == 3) retVal += scan(argv[1], std::stoi(argv[2]));
+  else if(argc == 4) retVal += scan(argv[1], std::stoi(argv[2]), argv[3]);
   return retVal;
 }
