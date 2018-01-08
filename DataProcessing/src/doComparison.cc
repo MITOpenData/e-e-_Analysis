@@ -46,7 +46,6 @@ void doFillArr(TH1F* hist1_p, TH1F* hist2_p, TH1F* histDelta_p, Int_t size1, Int
 int doComparison(const std::string inFileName1, const std::string inFileName2, std::string outFileName = "")
 {
   TDatime* date = new TDatime();
-
   std::string inFileNameCombo = inFileName1;
   while(inFileNameCombo.find("/") != std::string::npos) inFileNameCombo.replace(0, inFileNameCombo.find("/")+1, "");
   while(inFileNameCombo.find(".root") != std::string::npos) inFileNameCombo.replace(inFileNameCombo.find(".root"), 5, "");
@@ -58,6 +57,8 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
   while(inFileNameCombo.find(".root") != std::string::npos) inFileNameCombo.replace(inFileNameCombo.find(".root"), 5, "");    
 
   if(outFileName.size() == 0) outFileName = inFileNameCombo;
+  if(outFileName.find(".root") != std::string::npos){outFileName.replace(outFileName.find(".root"), 5, "");}
+
   outFileName = outFileName + "_DOCOMP_" + std::to_string(date->GetDate()) + ".root";
 
   std::vector<std::string> listOfCompBranches;
@@ -381,6 +382,12 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
     delete hist_Delta1From2_EvtByEvt_p[i];
   }
 
+  TNamed nameFile1("nameFile1", inFileName1.c_str());
+  TNamed nameFile2("nameFile2", inFileName2.c_str());
+
+  nameFile1.Write("", TObject::kOverwrite);
+  nameFile2.Write("", TObject::kOverwrite);
+
   outFile_p->Close();
   delete outFile_p;
 
@@ -399,9 +406,7 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
   tempStr = "";
   while(inFile2TexStr.find("_") != std::string::npos){
     tempStr = tempStr + inFile2TexStr.substr(0, inFile2TexStr.find("_"));
-    std::cout << tempStr << std::endl;
     tempStr = tempStr + "\\_";
-    std::cout << " " << tempStr << std::endl;
     inFile2TexStr.replace(0, inFile2TexStr.find("_")+1, "");
   }
   tempStr = tempStr + inFile2TexStr;
