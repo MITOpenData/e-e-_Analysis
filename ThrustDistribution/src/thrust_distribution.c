@@ -114,8 +114,7 @@ int thrust_distribution(TString filename, //file used
     TTree *t1;
     if(isGen) t1 = (TTree*)f->Get("tgen"); //a little strange to do both Get()'s in event isGen -> here only do one
     else t1 = (TTree*)f->Get("t");
-    
-    
+        
     Int_t nParticle;
     Float_t px[5000];
     Float_t py[5000];
