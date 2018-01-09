@@ -5,20 +5,25 @@
 //  Created by Anthony Badea on 10/24/17.
 //
 
+//c and c++ dependencies
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
+
+//root dependencies
 #include <TFile.h>
 #include <TTree.h>
 #include <TH1D.h>
 #include <TStyle.h>
 #include "TLorentzVector.h"
 #include "TCanvas.h"
-#include "getLogBins.h"
 #include <TLine.h>
-#include "correction.h"
+
+//local headers
+#include "include/getLogBins.h"
+#include "include/correction.h"
 #include "include/alephThrustSyst.h"
 #include "include/doGlobalDebug.h"
 
@@ -58,7 +63,7 @@ void thrust_distribution(TString filename = "~/Downloads/StudyMult-backup/TwoPar
   getLogBins(logLow, logHi, nBins, bins);
   getLogBins(logLow, logHi, nBinsSys, binsSys);
 
-  const std::string sysFileName = "HEPData-ins636645-v1-Table54.root";
+  const std::string sysFileName = "inputs/HEPData-ins636645-v1-Table54.root";
 
   TFile* outFile_p = new TFile(Form("outFile_%s_%d_%d.root",dataname.c_str(),min_nParticle,max_nParticle), "RECREATE"); // we will write our th1 to a file for debugging purposes
   TH1D *h_thrust = new TH1D("h_thrust",";Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",43,0.57,1); //moving declarations here for clarity
@@ -214,7 +219,7 @@ void thrust_distribution(TString filename = "~/Downloads/StudyMult-backup/TwoPar
 
     if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     
-    TFile *hdata = new TFile("HEPData-ins636645-v1-Table54.root");
+    TFile *hdata = new TFile("inputs/HEPData-ins636645-v1-Table54.root");
     TH1F *hep;
     hdata->cd("Table 54");
     hep = (TH1F*)gDirectory->Get("Hist1D_y1");
@@ -446,39 +451,34 @@ void run()
 
 std::vector<float> compute_errors()
 {
-    TString hep_file = "HEPData-ins636645-v1-Table54.root";
-    TFile *hdata = new TFile(hep_file);
-    hdata->cd("Table 54");
-    // e1 statistical error
-    // e2 systematic error 1
-    // e3 systematic error 2
-    TH1F *e2 = (TH1F*)gDirectory->Get("Hist1D_y1_e2");
-    TH1F *e3 = (TH1F*)gDirectory->Get("Hist1D_y1_e3");
-    
-    int nBins = 0;
-    if(e2->GetNbinsX() == e3->GetNbinsX()){nBins = e2->GetNbinsX(); cout<<"Number of Bins"<<e2->GetNbinsX()<<endl;}
-    else{cout<<"Different number of bins"<<endl;}
-    
-    // compute Quadrature of errors of e2,e3
-    std::vector<float> quad_errors;
-    
-    float error;
-    float e2_error;
-    float e3_error;
-    float sum;
-    
-    for (int i=0;i<=e2->GetNbinsX();i++)
-    {
-        e2_error = e2->GetBinContent(i+1);
-        e3_error = e3->GetBinContent(i+1);
-        //cout<<"e2 error "<<e2->GetBinContent(i+1)<<endl;
-        //cout<<"e3 error "<<e3->GetBinContent(i+1)<<endl;
-        sum  = pow(e2_error,2)+pow(e3_error,2);
-        error = pow(sum,0.5);
-        //cout<<"quad error "<<error<<endl;
-        quad_errors.push_back(error);
-    }
-    return quad_errors;
+  TString hep_file = "inputs/HEPData-ins636645-v1-Table54.root";
+  TFile *hdata = new TFile(hep_file);
+  hdata->cd("Table 54");
+  
+  TH1F *e2 = (TH1F*)gDirectory->Get("Hist1D_y1_e2");
+  TH1F *e3 = (TH1F*)gDirectory->Get("Hist1D_y1_e3");
+  
+  int nBins = 0;
+  if(e2->GetNbinsX() == e3->GetNbinsX()){nBins = e2->GetNbinsX(); cout<<"Number of Bins"<<e2->GetNbinsX()<<endl;}
+  else{cout<<"Different number of bins"<<endl;}
+  
+  // compute Quadrature of errors of e2,e3
+  std::vector<float> quad_errors;
+  
+  float error;
+  float e2_error;
+  float e3_error;
+  float sum;
+  
+  for(int i = 0; i <= e2->GetNbinsX(); i++){
+    e2_error = e2->GetBinContent(i+1);
+    e3_error = e3->GetBinContent(i+1);
+    sum  = pow(e2_error,2)+pow(e3_error,2);
+    error = pow(sum,0.5);
+    quad_errors.push_back(error);
+  }
+
+  return quad_errors;
 }
 
 void relative_error()
