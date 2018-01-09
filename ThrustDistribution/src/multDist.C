@@ -10,6 +10,7 @@
 #include "TDatime.h"
 #include "TH1F.h"
 #include "TMath.h"
+#include "TNamed.h"
 
 //include depdencies
 #include "include/eventData.h"
@@ -73,7 +74,9 @@ int multDist(const std::string inFileName, std::string outFileName = "")
     fig1L_Paper_h->SetBinError(i+1, 0.);
   }
 
-  Int_t goodEvent = 0;
+  Int_t goodEventf1L = 0;
+  Int_t badEventf1LEnergy = 0;
+  Int_t badEventf1LOther = 0;
 
   for(unsigned int fI = 0; fI < fileList.size(); ++fI){
     TFile* inFile_p = new TFile(fileList.at(fI).c_str(), "READ");
@@ -108,7 +111,10 @@ int multDist(const std::string inFileName, std::string outFileName = "")
       
       inTree_p->GetEntry(entry);
 
-      if(pData.Energy < energyLow || pData.Energy > energyHigh) continue;
+      if(pData.Energy < energyLow || pData.Energy > energyHigh){
+	++badEventf1LEnergy;
+	continue;
+      }
 
       Int_t nChg = 0.;
       Double_t eChg = 0.;
@@ -122,10 +128,12 @@ int multDist(const std::string inFileName, std::string outFileName = "")
       }
 
       //For these cuts see here: http://www.sciencedirect.com/science/article/pii/S0370157397000458
-      if(eChg < 15.) continue;
-      if(nChg < 5) continue;
+      if(eChg < 15. || nChg < 5){
+	++badEventf1LOther;
+	continue;
+      }
 
-      ++goodEvent;
+      ++goodEventf1L;
 
       year_p->Fill(pData.year);
       energy_p->Fill(pData.Energy);
@@ -143,8 +151,8 @@ int multDist(const std::string inFileName, std::string outFileName = "")
     delete inFile_p;
   }
 
-  fig1L_h->Scale(1./(Double_t)goodEvent);
-  fig1L_Corr_h->Scale(1./(Double_t)goodEvent);
+  fig1L_h->Scale(1./(Double_t)goodEventf1L);
+  fig1L_Corr_h->Scale(1./(Double_t)goodEventf1L);
 
   for(Int_t bI = 0; bI < fig1L_h->GetNbinsX(); ++bI){
     Double_t binCent = fig1L_h->GetBinCenter(bI+1);
@@ -166,6 +174,14 @@ int multDist(const std::string inFileName, std::string outFileName = "")
 
   TH1F* corr = f1L.getHist();
   corr->Write("", TObject::kOverwrite);
+
+  TNamed goodEventf1LName("goodEventf1L", std::to_string(goodEventf1L).c_str());
+  TNamed badEventf1LEnergyName("badEventf1LEnergy", std::to_string(badEventf1LEnergy).c_str());
+  TNamed badEventf1LOtherName("badEventf1LOther", std::to_string(badEventf1LOther).c_str());
+
+  goodEventf1LName.Write("", TObject::kOverwrite);
+  badEventf1LEnergyName.Write("", TObject::kOverwrite);
+  badEventf1LOtherName.Write("", TObject::kOverwrite);
 
   delete energy_p;
   delete year_p;
