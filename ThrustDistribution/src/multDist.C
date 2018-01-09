@@ -65,6 +65,7 @@ int multDist(const std::string inFileName, std::string outFileName = "")
   TH1F* energy_p = new TH1F("energy_h", ";Energy;Counts", 50, energyLow, energyHigh);
   TH1F* year_p = new TH1F("year_h", ";year;Counts", 10, 1990.5, 2000.5);
   TH1F* fig1L_h = new TH1F("fig1L_h", ";;", f1LNPts, f1LBins);
+  TH1F* fig1L_Corr_h = new TH1F("fig1L_Corr_h", ";;", f1LNPts, f1LBins);
   TH1F* fig1L_Paper_h = new TH1F("fig1L_Paper_h", ";;", f1LNPts, f1LBins);
 
   for(Int_t i = 0; i < f1LNPts; ++i){
@@ -89,6 +90,7 @@ int multDist(const std::string inFileName, std::string outFileName = "")
     inTree_p->SetBranchStatus("py", 1);
     inTree_p->SetBranchStatus("pz", 1);
     inTree_p->SetBranchStatus("pwflag", 1);
+    inTree_p->SetBranchStatus("charge", 1);
     
     inTree_p->SetBranchAddress("Energy", &(pData.Energy));
     inTree_p->SetBranchAddress("year", &(pData.year));
@@ -97,6 +99,7 @@ int multDist(const std::string inFileName, std::string outFileName = "")
     inTree_p->SetBranchAddress("py", pData.py);
     inTree_p->SetBranchAddress("pz", pData.pz);
     inTree_p->SetBranchAddress("pwflag", pData.pwflag);
+    inTree_p->SetBranchAddress("charge", pData.charge);
     
     const Int_t nEntries = inTree_p->GetEntries();
     
@@ -111,7 +114,7 @@ int multDist(const std::string inFileName, std::string outFileName = "")
       Double_t eChg = 0.;
       
       for(Int_t pI = 0; pI < pData.nParticle; ++pI){
-	if(pData.pwflag[pI] > 0) continue;
+	if(pData.charge[pI] == 0) continue;
 
 	++nChg;
 	Double_t mom = TMath::Sqrt(pData.px[pI]*pData.px[pI] + pData.py[pI]*pData.py[pI] + pData.pz[pI]*pData.pz[pI]);
@@ -128,10 +131,11 @@ int multDist(const std::string inFileName, std::string outFileName = "")
       energy_p->Fill(pData.Energy);
       
       for(Int_t pI = 0; pI < pData.nParticle; ++pI){
-	if(pData.pwflag[pI] > 0) continue;
+	if(pData.charge[pI] == 0) continue;
 	
 	Double_t mom = TMath::Sqrt(pData.px[pI]*pData.px[pI] + pData.py[pI]*pData.py[pI] + pData.pz[pI]*pData.pz[pI]);
 	fig1L_h->Fill(2.*mom/pData.Energy);
+	fig1L_Corr_h->Fill(2.*mom/pData.Energy);
       }
     }
     
@@ -140,21 +144,33 @@ int multDist(const std::string inFileName, std::string outFileName = "")
   }
 
   fig1L_h->Scale(1./(Double_t)goodEvent);
+  fig1L_Corr_h->Scale(1./(Double_t)goodEvent);
 
   for(Int_t bI = 0; bI < fig1L_h->GetNbinsX(); ++bI){
+    Double_t binCent = fig1L_h->GetBinCenter(bI+1);
+    Double_t corrVal = f1L.getCorrVal(binCent);
+
     fig1L_h->SetBinContent(bI+1, fig1L_h->GetBinContent(bI+1)/fig1L_h->GetBinWidth(bI+1));
     fig1L_h->SetBinError(bI+1, fig1L_h->GetBinError(bI+1)/fig1L_h->GetBinWidth(bI+1));
+
+    fig1L_Corr_h->SetBinContent(bI+1, corrVal*fig1L_Corr_h->GetBinContent(bI+1)/fig1L_Corr_h->GetBinWidth(bI+1));
+    fig1L_Corr_h->SetBinError(bI+1, corrVal*fig1L_Corr_h->GetBinError(bI+1)/fig1L_Corr_h->GetBinWidth(bI+1));
   }
 
   outFile_p->cd();
   energy_p->Write("", TObject::kOverwrite);
   year_p->Write("", TObject::kOverwrite);
   fig1L_h->Write("", TObject::kOverwrite);
+  fig1L_Corr_h->Write("", TObject::kOverwrite);
   fig1L_Paper_h->Write("", TObject::kOverwrite);
+
+  TH1F* corr = f1L.getHist();
+  corr->Write("", TObject::kOverwrite);
 
   delete energy_p;
   delete year_p;
   delete fig1L_h;
+  delete fig1L_Corr_h;
   delete fig1L_Paper_h;
 
   outFile_p->Close();
@@ -162,7 +178,7 @@ int multDist(const std::string inFileName, std::string outFileName = "")
 
   delete date;
 
-  return 1;
+  return 0;
 }
 
 int main(int argc, char* argv[])
