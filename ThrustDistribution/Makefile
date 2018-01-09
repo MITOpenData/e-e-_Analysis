@@ -11,13 +11,16 @@ FASTJET=`/afs/cern.ch/work/c/cmcginn/public/Fastjet/fastjet-install/bin/fastjet-
 MKDIR_BIN=mkdir -p $(PWD)/bin
 MKDIR_PDFDIR=mkdir -p $(PWD)/pdfDir
 
-all: mkdirBin mkdirPdfdir
+all: mkdirBin mkdirPdfdir thrust_distribution
 
 mkdirBin:
 	$(MKDIR_BIN)
 
 mkdirPdfdir:
 	$(MKDIR_PDFDIR)
+
+thrust_distribution: src/thrust_distribution.c
+	$(CXX) $(CXXFLAGS) $(ROOT) -pg -I $(PWD) -o bin/thrust_distribution.exe src/thrust_distribution.c
 
 clean:
 	rm *~ || true

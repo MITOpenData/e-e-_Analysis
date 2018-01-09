@@ -40,7 +40,7 @@
 
 std::vector<float> compute_errors();
 void relative_error();
-void thrust_distribution(TString filename = "~/Downloads/StudyMult-backup/TwoParticleCorrelation/alephDataPaths_LEP2_1995to2000.root", // file used
+int thrust_distribution(TString filename, //file used
                          std::string dataname = "LEP1",
                          Float_t cut_missP = 0.3,   // upper bound on missP/energy
                          Float_t min_TTheta = 0.0, // lower cut on TTheta
@@ -49,7 +49,6 @@ void thrust_distribution(TString filename = "~/Downloads/StudyMult-backup/TwoPar
                          Float_t max_Energy = 91.5, // upper cut on Energy    i.e. Energy<91.5 to take event
                          Int_t min_nParticle = 0, // lower cut on multiplicity
                          Int_t max_nParticle = 9999, // upper cut on multiplicity
-                         Int_t isCharged = 0, // 0 to include all particle, 1 to only look at charged particles
                          Int_t isGen = 0    // 1 to use gen level
 )
 {
@@ -144,13 +143,13 @@ void thrust_distribution(TString filename = "~/Downloads/StudyMult-backup/TwoPar
     if(doGlobalDebug) nevent_process = 1000;
     std::vector<float> T;
     
-    //for(int i = 0;i<h_one_minus_thrust->GetNbinsX();i++){cout<<h_one_minus_thrust->GetBinLowEdge(i)<<endl;}
+    //for(int i = 0;i<h_one_minus_thrust->GetNbinsX();i++){std::cout<<h_one_minus_thrust->GetBinLowEdge(i)<<std::endl;}
     for(Int_t i=0;i<nevent_process;i++)
     {
-        //cout<<"EVENT "<<i<<endl;
+        //std::cout<<"EVENT "<<i<<std::endl;
         
         t1->GetEntry(i);
-        if (i%10000==0) cout <<i<<"/"<<nevent_process<<endl;
+        if (i%10000==0) std::cout <<i<<"/"<<nevent_process<<std::endl;
 
         // NUMBER 2: Cut on Energy
         if(Energy<min_Energy || Energy>max_Energy){continue;}
@@ -178,7 +177,7 @@ void thrust_distribution(TString filename = "~/Downloads/StudyMult-backup/TwoPar
             //if(isCharged == 1 && pwflag[j]!=0){continue;}
             if(pwflag[j]==0)pwflag0+=1;
             TVector3 v2(px[j],py[j],pz[j]);
-            if(fabs(v1.Dot(v2))>v2.Mag())cout<<"DOT = "<<abs(v1.Dot(v2))<<" V2 Magnitude = "<<v2.Mag()<<endl;
+            if(fabs(v1.Dot(v2))>v2.Mag())std::cout<<"DOT = "<<abs(v1.Dot(v2))<<" V2 Magnitude = "<<v2.Mag()<<std::endl;
             T_sum += fabs(v1.Dot(v2));
             T_mag += v2.Mag();
         }
@@ -239,8 +238,8 @@ void thrust_distribution(TString filename = "~/Downloads/StudyMult-backup/TwoPar
         binHiEdge = binLowEdge + h_thrust->GetBinWidth(i);
         binval = h_thrust->GetBinContent(i);
         sys = quad_errors[i+2]; // +2 since thrust distribution starts at 0.6 while HEP errors start at 0.57
-	//cout<<"binLow = "<<binLowEdge<<endl;
-	//cout<<"quad_errors["<<i<<"] = "<<sys<<endl;
+	//std::cout<<"binLow = "<<binLowEdge<<std::endl;
+	//std::cout<<"quad_errors["<<i<<"] = "<<sys<<std::endl;
         line_thrust->DrawLine(binLowEdge, binval - sys, binHiEdge, binval - sys);
         line_thrust->DrawLine(binLowEdge, binval + sys, binHiEdge, binval + sys);
     }
@@ -259,6 +258,7 @@ void thrust_distribution(TString filename = "~/Downloads/StudyMult-backup/TwoPar
     if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     
     TCanvas *c1 = new TCanvas("1-T","",200,10,500,500);
+    c1->cd();
     gStyle->SetOptStat(0);
     //gPad->SetLogy();
     //gPad->SetLogx();
@@ -281,9 +281,9 @@ void thrust_distribution(TString filename = "~/Downloads/StudyMult-backup/TwoPar
     // ratio of bin value to error
     for (int i = 0;i<h_one_minus_thrust->GetNbinsX();i++)
     {
-      //cout<<"low "<<h_one_minus_thrust->GetBinLowEdge(i+1)<<endl;
-      //cout<<"count "<<h_one_minus_thrust->GetBinContent(i+1)<<endl;
-      //cout<<"width "<<h_one_minus_thrust->GetBinWidth(i+1)<<endl;
+      //std::cout<<"low "<<h_one_minus_thrust->GetBinLowEdge(i+1)<<std::endl;
+      //std::cout<<"count "<<h_one_minus_thrust->GetBinContent(i+1)<<std::endl;
+      //std::cout<<"width "<<h_one_minus_thrust->GetBinWidth(i+1)<<std::endl;
 
         // get low and high bins for 1-T
         binLowEdge_T = h_one_minus_thrust->GetBinLowEdge(i+1);
@@ -295,21 +295,21 @@ void thrust_distribution(TString filename = "~/Downloads/StudyMult-backup/TwoPar
         j = binLowEdge;
         max_error = 0.0;
         error_temp = 0.0;
-	//        cout<<"bin low edge "<<binLowEdge<<endl;
-        //cout<<"bin hi edge "<<binHiEdge<<endl;
+	//        std::cout<<"bin low edge "<<binLowEdge<<std::endl;
+        //std::cout<<"bin hi edge "<<binHiEdge<<std::endl;
         while(j<binHiEdge)
         {
             binx = h_thrust->GetXaxis()->FindBin(j);
-            //cout<<i<<endl;
-	    //  cout<<"binx "<<binx<<endl;
-            //cout<<"quad error "<<quad_errors[binx]<<endl;
-            //cout<<"T"<<h_thrust->GetBinContent(binx)<<endl;
-            //cout<<"1-T"<<h_one_minus_thrust->GetBinContent(i)<<endl;
+            //std::cout<<i<<std::endl;
+	    //  std::cout<<"binx "<<binx<<std::endl;
+            //std::cout<<"quad error "<<quad_errors[binx]<<std::endl;
+            //std::cout<<"T"<<h_thrust->GetBinContent(binx)<<std::endl;
+            //std::cout<<"1-T"<<h_one_minus_thrust->GetBinContent(i)<<std::endl;
             error_temp = quad_errors[binx]/h_thrust->GetBinContent(binx) * h_one_minus_thrust->GetBinContent(i+1);
             if(error_temp>max_error)max_error = error_temp;
             j+=h_thrust->GetBinWidth(binx);
         }
-        //cout<<"MAX ERROR"<<max_error<<endl;
+        //std::cout<<"MAX ERROR"<<max_error<<std::endl;
         // Now we have the maximum error value
         //one_minus_T_errors.push_back(max_error);
         binval = h_one_minus_thrust->GetBinContent(i+1);
@@ -318,7 +318,7 @@ void thrust_distribution(TString filename = "~/Downloads/StudyMult-backup/TwoPar
         if(max_error>0)
         {
 	  h_ratio_one_minus_thrust->SetBinContent(i+1,max_error/h_one_minus_thrust->GetBinContent(i+1)); // switch to i+1, underflow is at i==0
-            //cout<<"central value = "<<h_one_minus_thrust->GetBinContent(i)<<" error = "<<max_error<<endl;
+            //std::cout<<"central value = "<<h_one_minus_thrust->GetBinContent(i)<<" error = "<<max_error<<std::endl;
         }
     }
     
@@ -327,6 +327,7 @@ void thrust_distribution(TString filename = "~/Downloads/StudyMult-backup/TwoPar
     //c2->SaveAs(Form("tDist_%.2f_%.2f_%d.pdf",min_TTheta,max_TTheta,isCharged));
 
     TCanvas *c3 = new TCanvas("ratio of central value and error for 1-T","",200,10,500,500);
+    c3->cd();
     gStyle->SetOptStat(0);
     //    gPad->SetLogx();
     h_ratio_one_minus_thrust->GetYaxis()->SetTitle("Systematic/Central Value");
@@ -384,6 +385,7 @@ void thrust_distribution(TString filename = "~/Downloads/StudyMult-backup/TwoPar
     
     
     TCanvas *c4 = new TCanvas("log(1-T)","",200,10,500,500);
+    c4->cd();
     gStyle->SetOptStat(0);
     gPad->SetLogy();
     gPad->SetLogx();
@@ -431,7 +433,7 @@ void thrust_distribution(TString filename = "~/Downloads/StudyMult-backup/TwoPar
     delete h_one_minus_thrust_log_SysUpGraph;
     delete h_one_minus_thrust_log_SysDownGraph;
     
-    return; //even if void - useful for searching the control path
+    return 0; //even if void - useful for searching the control path
 }
 
 
@@ -458,9 +460,8 @@ std::vector<float> compute_errors()
   TH1F *e2 = (TH1F*)gDirectory->Get("Hist1D_y1_e2");
   TH1F *e3 = (TH1F*)gDirectory->Get("Hist1D_y1_e3");
   
-  int nBins = 0;
-  if(e2->GetNbinsX() == e3->GetNbinsX()){nBins = e2->GetNbinsX(); cout<<"Number of Bins"<<e2->GetNbinsX()<<endl;}
-  else{cout<<"Different number of bins"<<endl;}
+  if(e2->GetNbinsX() == e3->GetNbinsX()) std::cout<<"Number of Bins"<<e2->GetNbinsX()<<std::endl;
+  else std::cout<<"Different number of bins"<<std::endl;
   
   // compute Quadrature of errors of e2,e3
   std::vector<float> quad_errors;
@@ -487,9 +488,9 @@ void relative_error()
     TH1D *h_one_minus_thrust_log;
     TH1D *h_one_minus_thrust_log_SysDown;
     TH1D *h_one_minus_thrust_log_SysUp;
-    h_one_minus_thrust_log = (TH1D*)gDirectory->Get("h_one_minus_thrust_log");
-    h_one_minus_thrust_log_SysDown = (TH1D*)gDirectory->Get("h_one_minus_thrust_log_SysDown");
-    h_one_minus_thrust_log_SysUp = (TH1D*)gDirectory->Get("h_one_minus_thrust_log_SysUp");
+    h_one_minus_thrust_log = (TH1D*)outFile->Get("h_one_minus_thrust_log");
+    h_one_minus_thrust_log_SysDown = (TH1D*)outFile->Get("h_one_minus_thrust_log_SysDown");
+    h_one_minus_thrust_log_SysUp = (TH1D*)outFile->Get("h_one_minus_thrust_log_SysUp");
 
     // Divide
     h_one_minus_thrust_log_SysUp->Divide(h_one_minus_thrust_log);
@@ -519,4 +520,25 @@ void relative_error()
     return;
 }
 
+
+int main(int argc, char* argv[])
+{
+  if(argc < 2 || argc > 11){
+    std::cout << "Usage: ./thrust_distribution.exe <inFileName> <dataName-optional> <cutMissP-optional> <minTTheta-optional> <maxTTheta-optional> <minEnergy-optional> <maxEnergy-optional> <minNParticle-optional> <maxNParticle-optional> <isGen-optional>" << std::endl;
+    return 1;
+  }
+
+  int retVal = 0;
+  if(argc == 2) retVal += thrust_distribution(argv[1]);
+  else if(argc == 3) retVal += thrust_distribution(argv[1], argv[2]);
+  else if(argc == 4) retVal += thrust_distribution(argv[1], argv[2], std::stof(argv[3]));
+  else if(argc == 5) retVal += thrust_distribution(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]));
+  else if(argc == 6) retVal += thrust_distribution(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]));
+  else if(argc == 7) retVal += thrust_distribution(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]));
+  else if(argc == 8) retVal += thrust_distribution(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]));
+  else if(argc == 9) retVal += thrust_distribution(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]));
+  else if(argc == 10) retVal += thrust_distribution(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]));
+  else if(argc == 11) retVal += thrust_distribution(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]));
+  return retVal;
+}
 
