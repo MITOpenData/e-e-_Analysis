@@ -62,7 +62,7 @@ int thrust_distribution(TString filename, //file used
   getLogBins(logLow, logHi, nBins, bins);
   getLogBins(logLow, logHi, nBinsSys, binsSys);
 
-  const std::string sysFileName;
+  std::string sysFileName;
   if(dataname == "LEP1")sysFileName = "inputs/HEPData-ins636645-v1-Table54.root";
   if(dataname == "LEP2")sysFileName = "inputs/HEPData-ins636645-v1-Table61.root";
         
