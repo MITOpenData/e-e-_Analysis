@@ -42,11 +42,11 @@ std::vector<float> compute_errors();
 void relative_error();
 int thrust_distribution(TString filename, //file used
                          std::string dataname = "LEP1",
+                         Float_t min_Energy = 91, // lower cut on Energy   i.e. Energy>91 to take event
+                         Float_t max_Energy = 91.5, // upper cut on Energy    i.e. Energy<91.5 to take event
                          Float_t cut_missP = 0.3,   // upper bound on missP/energy
                          Float_t min_TTheta = 0.0, // lower cut on TTheta
                          Float_t max_TTheta = 3.5, // upper cut on TTheta --> currently full range of TTheta
-                         Float_t min_Energy = 91, // lower cut on Energy   i.e. Energy>91 to take event
-                         Float_t max_Energy = 91.5, // upper cut on Energy    i.e. Energy<91.5 to take event
                          Int_t min_nParticle = 0, // lower cut on multiplicity
                          Int_t max_nParticle = 9999, // upper cut on multiplicity
                          Int_t isGen = 0    // 1 to use gen level
@@ -62,8 +62,10 @@ int thrust_distribution(TString filename, //file used
   getLogBins(logLow, logHi, nBins, bins);
   getLogBins(logLow, logHi, nBinsSys, binsSys);
 
-  const std::string sysFileName = "inputs/HEPData-ins636645-v1-Table54.root";
-
+  const std::string sysFileName;
+  if(dataname == "LEP1")sysFileName = "inputs/HEPData-ins636645-v1-Table54.root";
+  if(dataname == "LEP2")sysFileName = "inputs/HEPData-ins636645-v1-Table61.root";
+        
   TFile* outFile_p = new TFile(Form("outFile_%s_%d_%d.root",dataname.c_str(),min_nParticle,max_nParticle), "RECREATE"); // we will write our th1 to a file for debugging purposes
   TH1D *h_thrust = new TH1D("h_thrust",";Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",43,0.57,1); //moving declarations here for clarity
   h_thrust->Sumw2();
