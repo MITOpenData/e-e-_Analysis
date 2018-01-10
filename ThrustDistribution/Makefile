@@ -13,7 +13,7 @@ EVENTPARTICLEDATA=$(PWD)/../DataProcessing/
 MKDIR_BIN=mkdir -p $(PWD)/bin
 MKDIR_PDFDIR=mkdir -p $(PWD)/pdfDir
 
-all: mkdirBin mkdirPdfdir thrust_distribution multDist
+all: mkdirBin mkdirPdfdir thrust_distribution multDist plotMultDist
 
 mkdirBin:
 	$(MKDIR_BIN)
@@ -26,6 +26,9 @@ thrust_distribution: src/thrust_distribution.c
 
 multDist: src/multDist.C
 	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -o bin/multDist.exe src/multDist.C
+
+plotMultDist: src/plotMultDist.C
+	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -o bin/plotMultDist.exe src/plotMultDist.C
 
 clean:
 	rm *~ || true
