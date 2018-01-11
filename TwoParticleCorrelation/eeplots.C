@@ -99,7 +99,7 @@ int eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPar
     leg->AddEntry(nmult,"Neutral Hadrons + Photons","p");
     leg->Draw();
     xjjroot::drawtex(0.2,0.876,datalabel);
-    allmult->SaveAs(Form("%s_mult.pdf",datalabel.Data()));
+    allmult->SaveAs(Form("qualityCheck/%s_mult.pdf",datalabel.Data()));
     
     // Plot all, neutral, charged pt
     TCanvas *allmom = new TCanvas("allmom","allmom",600,600);
@@ -128,7 +128,7 @@ int eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPar
     pleg->AddEntry(nmom,"Neutral Hadrons + Photons","p");
     pleg->Draw();
     xjjroot::drawtex(0.2,0.876,datalabel);
-    allmom->SaveAs(Form("%s_mom.pdf",datalabel.Data()));
+    allmom->SaveAs(Form("qualityCheck/%s_mom.pdf",datalabel.Data()));
     
     // Plot all, neutral, charged eta
     TCanvas *alleta = new TCanvas("alleta","alleta",600,600);
@@ -157,7 +157,7 @@ int eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPar
     etaleg->AddEntry(neta,"Neutral Hadrons + Photons","p");
     etaleg->Draw();
     xjjroot::drawtex(0.2,0.876,datalabel);
-    alleta->SaveAs(Form("%s_eta.pdf",datalabel.Data()));
+    alleta->SaveAs(Form("qualityCheck/%s_eta.pdf",datalabel.Data()));
     
     
     TFile* outFile_p = new TFile(Form("qualityCheck/outFile_%s.root",datalabel.Data()), "RECREATE");
