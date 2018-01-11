@@ -158,6 +158,19 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
     etaleg->Draw();
     xjjroot::drawtex(0.2,0.876,datalabel);
     alleta->SaveAs(Form("%s_eta.pdf",datalabel.Data()));
+    
+    
+    TFile* outFile_p = new TFile(Form("outFile_%s.root",datalabel.c_str()), "RECREATE");
+    //write all, first arg name ("" == declaration name), second arg overwrites buffer saves in file
+    amult->Write("", TObject::kOverwrite);
+    cmult->Write("", TObject::kOverwrite);
+    nmult->Write("", TObject::kOverwrite);
+    amom->Write("", TObject::kOverwrite);
+    cmom->Write("", TObject::kOverwrite);
+    nmom->Write("", TObject::kOverwrite);
+    aeta->Write("", TObject::kOverwrite);
+    ceta->Write("", TObject::kOverwrite);
+    neta->Write("", TObject::kOverwrite);
     /*
      
     // Plot jet eta
@@ -185,4 +198,6 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
     xjjroot::drawtex(0.2,0.876,datalabel);
      
      */
+    
+    return 0;
 }
