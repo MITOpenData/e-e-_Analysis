@@ -140,12 +140,12 @@ int eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPar
     aeta->Scale(1./aeta->GetEntries());
     xjjroot::setthgrstyle(aeta, kBlack, 20, 1.2, kRed, 1, 1, -1, -1, -1);
     aeta->Draw("pe same");
-    t1->Draw("pt>>ceta","pwflag==0","goff");
+    t1->Draw("eta>>ceta","pwflag==0","goff");
     TH1F* ceta = (TH1F*)gDirectory->Get("ceta");
     ceta->Scale(1./ceta->GetEntries());
     xjjroot::setthgrstyle(ceta, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
     ceta->Draw("pe same");
-    t1->Draw("pt>>neta","pwflag!=0","goff");
+    t1->Draw("eta>>neta","pwflag!=0","goff");
     TH1F* neta = (TH1F*)gDirectory->Get("neta");
     neta->Scale(1./neta->GetEntries());
     xjjroot::setthgrstyle(neta, kBlue, 22, 1.2, kBlue, 1, 1, -1, -1, -1);
@@ -160,7 +160,7 @@ int eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPar
     alleta->SaveAs(Form("%s_eta.pdf",datalabel.Data()));
     
     
-    TFile* outFile_p = new TFile(Form("outFile_%s.root",datalabel.Data()), "RECREATE");
+    TFile* outFile_p = new TFile(Form("qualityCheck/outFile_%s.root",datalabel.Data()), "RECREATE");
     //write all, first arg name ("" == declaration name), second arg overwrites buffer saves in file
     amult->Write("", TObject::kOverwrite);
     cmult->Write("", TObject::kOverwrite);
