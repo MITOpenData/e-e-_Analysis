@@ -160,7 +160,7 @@ int eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPar
     alleta->SaveAs(Form("%s_eta.pdf",datalabel.Data()));
     
     
-    TFile* outFile_p = new TFile(Form("outFile_%s.root",datalabel.c_str()), "RECREATE");
+    TFile* outFile_p = new TFile(Form("outFile_%s.root",datalabel.Data()), "RECREATE");
     //write all, first arg name ("" == declaration name), second arg overwrites buffer saves in file
     amult->Write("", TObject::kOverwrite);
     cmult->Write("", TObject::kOverwrite);
