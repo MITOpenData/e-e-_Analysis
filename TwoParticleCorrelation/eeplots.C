@@ -17,7 +17,7 @@
 #include "TStyle.h"
 #include "xjjrootuti.h"
 
-void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoParticleCorrelation/alephDataPaths_LEP2_1995to2000.root",  // input file
+int eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoParticleCorrelation/alephDataPaths_LEP2_1995to2000.root",  // input file
              TString datalabel = "LEP2 Data"  // Text in upper-left corner
              )
 {
