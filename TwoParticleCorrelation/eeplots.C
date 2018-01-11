@@ -12,11 +12,10 @@
 #include "TLorentzVector.h"
 #include "TCanvas.h"
 #include "xjjrootuti.h"
-void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoParticleCorrelation/alephDataPaths_LEP2_1995to2000.root")
+void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoParticleCorrelation/alephDataPaths_LEP2_1995to2000.root",  // input file
+             TString datalabel = "LEP2 Data"  // Text in upper-left corner
+             )
 {
-    // Text in upper-left corner
-    TString datalabel = "LEP2 Data";
-
     xjjroot::setgstyle();
     TFile *f = new TFile(filename);
     TTree *t1 = (TTree*)f->Get("t");
@@ -117,6 +116,34 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
     pleg->AddEntry(cmom,"Charged Hadrons","p");
     pleg->AddEntry(nmom,"Neutral Hadrons + Photons","p");
     pleg->Draw();
+    xjjroot::drawtex(0.2,0.876,datalabel);
+    
+    // Plot all, neutral, charged eta
+    TCanvas *alleta = new TCanvas("alleta","alleta",600,600);
+    TH2F *hemptyeta = new TH2F("",";eta;Probability",1,0,60,1,0,0.3);
+    xjjroot::sethempty(hemptyeta,0,0.3);
+    hemptyeta->Draw();
+    t1->Draw("eta>>aeta","","goff");
+    TH1F* aeta = (TH1F*)gDirectory->Get("aeta");
+    aeta->Scale(1./aeta->GetEntries());
+    xjjroot::setthgrstyle(aeta, kBlack, 20, 1.2, kRed, 1, 1, -1, -1, -1);
+    aeta->Draw("pe same");
+    t1->Draw("pt>>ceta","pwflag==0","goff");
+    TH1F* ceta = (TH1F*)gDirectory->Get("ceta");
+    ceta->Scale(1./ceta->GetEntries());
+    xjjroot::setthgrstyle(ceta, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
+    ceta->Draw("pe same");
+    t1->Draw("pt>>neta","pwflag!=0","goff");
+    TH1F* neta = (TH1F*)gDirectory->Get("neta");
+    neta->Scale(1./neta->GetEntries());
+    xjjroot::setthgrstyle(neta, kBlue, 22, 1.2, kBlue, 1, 1, -1, -1, -1);
+    neta->Draw("pe same");
+    TLegend* etaleg = new TLegend(0.42,0.7,0.85,0.88);
+    xjjroot::setleg(etaleg);
+    etaleg->AddEntry(aeta,"All","p");
+    etaleg->AddEntry(ceta,"Charged Hadrons","p");
+    etaleg->AddEntry(neta,"Neutral Hadrons + Photons","p");
+    etaleg->Draw();
     xjjroot::drawtex(0.2,0.876,datalabel);
 
     // Plot jet eta
