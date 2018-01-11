@@ -80,7 +80,8 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
     amult->Scale(1./amult->GetEntries());
     xjjroot::setthgrstyle(amult, kBlack, 20, 1.2, kBlack, 1, 1, -1, -1, -1);
     amult->Draw("pe same");
-    t1->Draw("nChargedHadrons>>cmult","","goff");
+    if(datalabel == "PYTHIA8")t1->Draw("nParticleChg>>cmult","","goff");
+    else t1->Draw("nChargedHadrons>>cmult","","goff");
     TH1F* cmult = (TH1F*)gDirectory->Get("cmult");
     cmult->Scale(1./cmult->GetEntries());
     xjjroot::setthgrstyle(cmult, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
