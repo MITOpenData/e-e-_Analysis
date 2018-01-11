@@ -25,8 +25,8 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
     TFile *f = new TFile(filename);
     TTree *t1 = (TTree*)f->Get("t");
     t1->AddFriend("ak4JetTree");
-    TTree *ak4JetTree = (TTree*)f->Get("ak4JetTree");
-    TTree *ak8JetTree = (TTree*)f->Get("ak8JetTree");
+    //TTree *ak4JetTree = (TTree*)f->Get("ak4JetTree");
+    //TTree *ak8JetTree = (TTree*)f->Get("ak8JetTree");
     
     //// main Tree ////
     Int_t nParticle;
@@ -45,6 +45,7 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
     t1->SetBranchAddress("phi",phi);
     t1->SetBranchAddress("pwflag",pwflag);
     
+    /*
     //// ak4JetTree ////
     Int_t nref4;
     Float_t jtpt4[100000];
@@ -66,7 +67,7 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
     ak8JetTree->SetBranchAddress("jtpt",jtpt8);
     ak8JetTree->SetBranchAddress("jteta",jteta8);
     ak8JetTree->SetBranchAddress("jtphi",jtphi8);
-
+     */
     // Plot all, neutral, charged multiplicity
     TCanvas *allmult = new TCanvas ("allmult","allmult",600,600);
 	TH2F *hempty = new TH2F("",";Multiplicity;Probability",1,0,95,1,0,0.15);
