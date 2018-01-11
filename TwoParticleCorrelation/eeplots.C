@@ -39,6 +39,7 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
 
     t1->SetBranchAddress("nParticle",&nParticle);
     t1->SetBranchAddress("nChargedHadrons",&nChargedHadrons);
+    if(datalabel == "PYTHIA8")t1->SetBranchAddress("nParticleChg",&nParticleChg);
     t1->SetBranchAddress("pt",pt);
     t1->SetBranchAddress("eta",eta);
     t1->SetBranchAddress("theta",theta);
@@ -83,7 +84,8 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
     cmult->Scale(1./cmult->GetEntries());
     xjjroot::setthgrstyle(cmult, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
     cmult->Draw("pe same");
-    t1->Draw("(nParticle - nChargedHadrons)>>nmult","","goff");
+    if(datalabel == "PYTHIA8")t1->Draw("(nParticle - nParticleChg)>>nmult","","goff");
+    else t1->Draw("(nParticle - nChargedHadrons)>>nmult","","goff");
     TH1F* nmult = (TH1F*)gDirectory->Get("nmult");
     nmult->Scale(1./nmult->GetEntries());
     xjjroot::setthgrstyle(nmult, kBlue, 22, 1.2, kBlue, 1, 1, -1, -1, -1);
