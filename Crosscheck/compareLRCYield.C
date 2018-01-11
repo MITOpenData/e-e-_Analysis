@@ -12,8 +12,8 @@ void formatTH1D(TH1D * h, float offsetx, float offsety){
    h->SetTitleOffset(offsety,"Y");
    h->GetXaxis()->CenterTitle();
    h->GetYaxis()->CenterTitle();
-   std::cout << h->GetMaximum()*1.2 << " " << h->GetMinimum()*0.8 << std::endl;
-   h->GetYaxis()->SetRangeUser(h->GetMaximum()*1.2,h->GetMinimum()*0.8);
+   std::cout << h->GetBinContent(h->GetMaximumBin()) << " " << h->GetBinContent(h->GetMinimumBin()) << std::endl;
+   h->GetYaxis()->SetRangeUser(h->GetBinContent(h->GetMinimumBin())*0.95,h->GetBinContent(h->GetMaximumBin())*1.05);
    h->SetStats(0);
 }
 
