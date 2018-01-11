@@ -31,6 +31,7 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
     //// main Tree ////
     Int_t nParticle;
     Int_t nChargedHadrons;
+    Int_t nParticleChg;
     Float_t pt[50000];
     Float_t eta[50000];
     Float_t theta[50000];
