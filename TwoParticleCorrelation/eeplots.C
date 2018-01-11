@@ -95,7 +95,8 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
     leg->AddEntry(nmult,"Neutral Hadrons + Photons","p");
     leg->Draw();
     xjjroot::drawtex(0.2,0.876,datalabel);
-
+    allmult->SaveAs(Form("%r_mult.pdf",datalabel));
+    
     // Plot all, neutral, charged pt
     TCanvas *allmom = new TCanvas("allmom","allmom",600,600);
     TH2F *hemptyp = new TH2F("",";pt;Probability",1,0,60,1,0,0.3);
@@ -123,6 +124,7 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
     pleg->AddEntry(nmom,"Neutral Hadrons + Photons","p");
     pleg->Draw();
     xjjroot::drawtex(0.2,0.876,datalabel);
+    allmom->SaveAs(Form("%r_mom.pdf",datalabel));
     
     // Plot all, neutral, charged eta
     TCanvas *alleta = new TCanvas("alleta","alleta",600,600);
@@ -151,7 +153,9 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
     etaleg->AddEntry(neta,"Neutral Hadrons + Photons","p");
     etaleg->Draw();
     xjjroot::drawtex(0.2,0.876,datalabel);
-
+    alleta->SaveAs(Form("%r_eta.pdf",datalabel));
+    /*
+     
     // Plot jet eta
     TCanvas *jeteta = new TCanvas("jeteta","jeteta",600,600);
     TH2F *hemptye = new TH2F("",";Jet #eta;Probability",1,-3,3,1,0,0.05);
@@ -175,4 +179,6 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
     xjjroot::setthgrstyle(jpt, kBlack, 20, 1.2, kBlack, 1, 1, -1, -1, -1);
     jpt->Draw("pe same");
     xjjroot::drawtex(0.2,0.876,datalabel);
+     
+     */
 }
