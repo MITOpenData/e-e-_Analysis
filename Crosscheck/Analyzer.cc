@@ -19,7 +19,7 @@ void Analyzer(){
 
   //set up plots
   Settings s = Settings();
-  TFile * output = TFile::Open("Analyzer_Output.root","recreate");
+  TFile * output = TFile::Open("Analyzer_Output_Rope.root","recreate");
   TH2F * signal2PC[s.nMultBins]; 
   TH2F * bkgrnd2PC[s.nMultBins];
   TH2F * ratio2PC[s.nMultBins]; 

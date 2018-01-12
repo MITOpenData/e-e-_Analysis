@@ -67,7 +67,7 @@ void TPCPlots(){
 
   TFile * f = TFile::Open("Analyzer_Output.root","read");
   for(int i = 0; i<s.nMultBins; i++){
-    //if(i==0) continue;
+    //if(i>1) continue;
     sig[i] = (TH2D*)f->Get(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
     bkg[i] = (TH2D*)f->Get(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
     ratio[i] = (TH2D*)f->Get(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));

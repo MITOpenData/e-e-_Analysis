@@ -17,14 +17,11 @@ class Settings{
     bool isMC = false;
     int MCProcess = 5;
     //ALEPH data
-    //std::string inputFile = "/data/abaty/ALEPHTrees/cleaned_ALEPH_Data2-v3_Aug11_2017.root";
     //std::string inputFile = "/data/abaty/ALEPHTrees/mergedLEP1_20171022.root";
-    //std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/MC/20171022/alephMCRecoAfterCutPaths_1997_KQQAndKWW4F_1of2_20171022.root";
-    //std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_RopeWalk_minNPart60/outFile_PYTHIA8_0p0912_pthat1_Zee_RopeWalk_minNPart60_MERGED.root";
-    //std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_minNPart60/outFile_PYTHIA8_0p0912_pthat1_Zee_minNPart60_MERGED.root";
-    //std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee/outFile_PYTHIA8_0p0912_pthat1_Zee_MERGED.root";
-    //std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_RopeWalk/outFile_PYTHIA8_0p0912_pthat1_Zee_RopeWalk_MERGED.root";
-    std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_RopeWalk/20171208/outFile_MERGED_nEvt2000000_nMinChgPart0_RopeWalk1.root";
+    //std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee/20171208/outFile_MERGED_nEvt2000000_nMinChgPart0_RopeWalk0.root";//regular pythia 8
+    std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_RopeWalk/20171208/outFile_MERGED_nEvt2000000_nMinChgPart0_RopeWalk1.root";//ropewalk pythia 8
+    //std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_minChgNPart30/20171208/outFile_MERGED__nEvt20000_nMinChgPart30_RopeWalk0.root";//high mult regular pythia
+    //std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_RopeWalk_minChgNPart30/20171208/outFile_MERGED_nEvt20000_nMinChgPart30_RopeWalk1.root";//high mult ropewalk
 
 
     //cuts
@@ -41,8 +38,8 @@ class Settings{
     //float etaPlotRange = 1.8;//this gets multiplied by 2
     //float dEtaBins = 36;//keep even
     //float dPhiBins = 36;//keep factor of 4
-    float etaPlotRange = 1.8;//this gets multiplied by 2
-    float dEtaBins = 36;//keep even
+    float etaPlotRange = 3.6;//this gets multiplied by 2
+    float dEtaBins = 72;//keep even
     float dPhiBins = 20;//keep factor of 4
 
     float dEtaRangeToIntegrate[2] = {2.0,3.6};//try to make this correspond with bin edges based on above parameters
@@ -60,7 +57,7 @@ class Settings{
     bool calcKinematicsWrtThrust = false;
 
     //other
-    bool doThrust = false;
+    bool doThrust = true;
     bool doChargedThrust = true;
     float thrustMatchWindow = 99.0;
     bool doMultMatch = true;
@@ -68,9 +65,10 @@ class Settings{
     float MissPCut = 20;
     bool doExcludeNTrigLT2 = true;
     bool doAjCut = false;
+    bool keep3jetEvts = false;
     float AjCut = 0.1;
     float thirdJetCut = 0.03;
-    bool doAllData = false;
+    bool doAllData = true;
     int nEvts = 50000;
 
     Settings();

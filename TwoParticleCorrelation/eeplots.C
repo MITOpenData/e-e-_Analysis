@@ -11,22 +11,27 @@
 #include <TTree.h>
 #include "TLorentzVector.h"
 #include "TCanvas.h"
+#include "TH1F.h"
+#include "TH2F.h"
+#include "TPad.h"
+#include "TStyle.h"
 #include "xjjrootuti.h"
-void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoParticleCorrelation/alephDataPaths_LEP2_1995to2000.root")
-{
-    // Text in upper-left corner
-    TString datalabel = "LEP2 Data";
 
+int eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoParticleCorrelation/alephDataPaths_LEP2_1995to2000.root",  // input file
+             TString datalabel = "LEP2 Data"  // Text in upper-left corner
+             )
+{
     xjjroot::setgstyle();
     TFile *f = new TFile(filename);
     TTree *t1 = (TTree*)f->Get("t");
     t1->AddFriend("ak4JetTree");
-    TTree *ak4JetTree = (TTree*)f->Get("ak4JetTree");
-    TTree *ak8JetTree = (TTree*)f->Get("ak8JetTree");
+    //TTree *ak4JetTree = (TTree*)f->Get("ak4JetTree");
+    //TTree *ak8JetTree = (TTree*)f->Get("ak8JetTree");
     
     //// main Tree ////
     Int_t nParticle;
     Int_t nChargedHadrons;
+    Int_t nParticleChg;
     Float_t pt[50000];
     Float_t eta[50000];
     Float_t theta[50000];
@@ -35,12 +40,14 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
 
     t1->SetBranchAddress("nParticle",&nParticle);
     t1->SetBranchAddress("nChargedHadrons",&nChargedHadrons);
+    if(datalabel == "PYTHIA8")t1->SetBranchAddress("nParticleChg",&nParticleChg);
     t1->SetBranchAddress("pt",pt);
     t1->SetBranchAddress("eta",eta);
     t1->SetBranchAddress("theta",theta);
     t1->SetBranchAddress("phi",phi);
     t1->SetBranchAddress("pwflag",pwflag);
     
+    /*
     //// ak4JetTree ////
     Int_t nref4;
     Float_t jtpt4[100000];
@@ -62,7 +69,7 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
     ak8JetTree->SetBranchAddress("jtpt",jtpt8);
     ak8JetTree->SetBranchAddress("jteta",jteta8);
     ak8JetTree->SetBranchAddress("jtphi",jtphi8);
-
+     */
     // Plot all, neutral, charged multiplicity
     TCanvas *allmult = new TCanvas ("allmult","allmult",600,600);
 	TH2F *hempty = new TH2F("",";Multiplicity;Probability",1,0,95,1,0,0.15);
@@ -73,12 +80,14 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
     amult->Scale(1./amult->GetEntries());
     xjjroot::setthgrstyle(amult, kBlack, 20, 1.2, kBlack, 1, 1, -1, -1, -1);
     amult->Draw("pe same");
-    t1->Draw("nChargedHadrons>>cmult","","goff");
+    if(datalabel == "PYTHIA8")t1->Draw("nParticleChg>>cmult","","goff");
+    else t1->Draw("nChargedHadrons>>cmult","","goff");
     TH1F* cmult = (TH1F*)gDirectory->Get("cmult");
     cmult->Scale(1./cmult->GetEntries());
     xjjroot::setthgrstyle(cmult, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
     cmult->Draw("pe same");
-    t1->Draw("(nParticle - nChargedHadrons)>>nmult","","goff");
+    if(datalabel == "PYTHIA8")t1->Draw("(nParticle - nParticleChg)>>nmult","","goff");
+    else t1->Draw("(nParticle - nChargedHadrons)>>nmult","","goff");
     TH1F* nmult = (TH1F*)gDirectory->Get("nmult");
     nmult->Scale(1./nmult->GetEntries());
     xjjroot::setthgrstyle(nmult, kBlue, 22, 1.2, kBlue, 1, 1, -1, -1, -1);
@@ -90,7 +99,8 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
     leg->AddEntry(nmult,"Neutral Hadrons + Photons","p");
     leg->Draw();
     xjjroot::drawtex(0.2,0.876,datalabel);
-
+    allmult->SaveAs(Form("qualityCheck/%s_mult.pdf",datalabel.Data()));
+    
     // Plot all, neutral, charged pt
     TCanvas *allmom = new TCanvas("allmom","allmom",600,600);
     TH2F *hemptyp = new TH2F("",";pt;Probability",1,0,60,1,0,0.3);
@@ -118,7 +128,51 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
     pleg->AddEntry(nmom,"Neutral Hadrons + Photons","p");
     pleg->Draw();
     xjjroot::drawtex(0.2,0.876,datalabel);
-
+    allmom->SaveAs(Form("qualityCheck/%s_mom.pdf",datalabel.Data()));
+    
+    // Plot all, neutral, charged eta
+    TCanvas *alleta = new TCanvas("alleta","alleta",600,600);
+    TH2F *hemptyeta = new TH2F("",";eta;Probability",1,-5,5,1,0,0.06);
+    xjjroot::sethempty(hemptyeta,0,0.3);
+    hemptyeta->Draw();
+    t1->Draw("eta>>aeta","","goff");
+    TH1F* aeta = (TH1F*)gDirectory->Get("aeta");
+    aeta->Scale(1./aeta->GetEntries());
+    xjjroot::setthgrstyle(aeta, kBlack, 20, 1.2, kRed, 1, 1, -1, -1, -1);
+    aeta->Draw("pe same");
+    t1->Draw("eta>>ceta","pwflag==0","goff");
+    TH1F* ceta = (TH1F*)gDirectory->Get("ceta");
+    ceta->Scale(1./ceta->GetEntries());
+    xjjroot::setthgrstyle(ceta, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
+    ceta->Draw("pe same");
+    t1->Draw("eta>>neta","pwflag!=0","goff");
+    TH1F* neta = (TH1F*)gDirectory->Get("neta");
+    neta->Scale(1./neta->GetEntries());
+    xjjroot::setthgrstyle(neta, kBlue, 22, 1.2, kBlue, 1, 1, -1, -1, -1);
+    neta->Draw("pe same");
+    TLegend* etaleg = new TLegend(0.42,0.7,0.85,0.88);
+    xjjroot::setleg(etaleg);
+    etaleg->AddEntry(aeta,"All","p");
+    etaleg->AddEntry(ceta,"Charged Hadrons","p");
+    etaleg->AddEntry(neta,"Neutral Hadrons + Photons","p");
+    etaleg->Draw();
+    xjjroot::drawtex(0.2,0.876,datalabel);
+    alleta->SaveAs(Form("qualityCheck/%s_eta.pdf",datalabel.Data()));
+    
+    
+    TFile* outFile_p = new TFile(Form("qualityCheck/outFile_%s.root",datalabel.Data()), "RECREATE");
+    //write all, first arg name ("" == declaration name), second arg overwrites buffer saves in file
+    amult->Write("", TObject::kOverwrite);
+    cmult->Write("", TObject::kOverwrite);
+    nmult->Write("", TObject::kOverwrite);
+    amom->Write("", TObject::kOverwrite);
+    cmom->Write("", TObject::kOverwrite);
+    nmom->Write("", TObject::kOverwrite);
+    aeta->Write("", TObject::kOverwrite);
+    ceta->Write("", TObject::kOverwrite);
+    neta->Write("", TObject::kOverwrite);
+    /*
+     
     // Plot jet eta
     TCanvas *jeteta = new TCanvas("jeteta","jeteta",600,600);
     TH2F *hemptye = new TH2F("",";Jet #eta;Probability",1,-3,3,1,0,0.05);
@@ -142,4 +196,8 @@ void eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPa
     xjjroot::setthgrstyle(jpt, kBlack, 20, 1.2, kBlack, 1, 1, -1, -1, -1);
     jpt->Draw("pe same");
     xjjroot::drawtex(0.2,0.876,datalabel);
+     
+     */
+    
+    return 0;
 }
