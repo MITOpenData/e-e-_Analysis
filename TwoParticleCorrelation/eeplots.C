@@ -132,7 +132,7 @@ int eeplots(TString filename = "/home/mjpeters/Downloads/StudyMult-backup/TwoPar
     
     // Plot all, neutral, charged eta
     TCanvas *alleta = new TCanvas("alleta","alleta",600,600);
-    TH2F *hemptyeta = new TH2F("",";eta;Probability",1,0,60,1,0,0.3);
+    TH2F *hemptyeta = new TH2F("",";eta;Probability",1,-5,5,1,0,0.06);
     xjjroot::sethempty(hemptyeta,0,0.3);
     hemptyeta->Draw();
     t1->Draw("eta>>aeta","","goff");
