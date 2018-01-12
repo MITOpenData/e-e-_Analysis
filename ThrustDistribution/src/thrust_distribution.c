@@ -40,10 +40,10 @@
 
 std::vector<float> compute_errors(std::string dataname);
 void relative_error();
-int thrust_distribution(TString filename = "~/Downloads/StudyMult-backup/TwoParticleCorrelation/alephDataPaths_LEP2_1995to2000.root", //file used
+int thrust_distribution(TString filename = "~/lxplus/LEP2MC1996to2000_YDATAEMINI_recons_aftercut-MERGED.root", //file used
                          std::string dataname = "LEP2",
-                         Float_t min_Energy = 205, // lower cut on Energy   i.e. Energy>91 to take event
-                         Float_t max_Energy = 207, // upper cut on Energy    i.e. Energy<91.5 to take event
+                         Float_t min_Energy = 203, // lower cut on Energy   i.e. Energy>91 to take event
+                         Float_t max_Energy = 209, // upper cut on Energy    i.e. Energy<91.5 to take event
                          Float_t cut_missP = 0.3,   // upper bound on missP/energy
                          Float_t min_TTheta = 0.0, // lower cut on TTheta
                          Float_t max_TTheta = 3.5, // upper cut on TTheta --> currently full range of TTheta
@@ -113,7 +113,11 @@ int thrust_distribution(TString filename = "~/Downloads/StudyMult-backup/TwoPart
 
   
   TFile *f = new TFile(filename, "READ"); //specify reading only - dont want to mod input
-  if(f->IsZombie()) std::cout << "BAD FILE" << std::endl;
+  if(f->IsZombie())
+  {
+    std::cout << "BAD FILE" << std::endl;
+    return -1;
+  }
     TTree *t1;
     if(isGen) t1 = (TTree*)f->Get("tgen"); //a little strange to do both Get()'s in event isGen -> here only do one
     else t1 = (TTree*)f->Get("t");
