@@ -497,8 +497,8 @@ std::vector<float> compute_errors(std::string dataname)
 {
   TString hep_file;
   TFile* hdata;
-  TH1F* e2;
-  TH1F* e3;
+  TH1F* e2 = 0;
+  TH1F* e3 = 0;
   if(dataname=="LEP1") 
   {
     hep_file = "../inputs/HEPData-ins636645-v1-Table54.root";
