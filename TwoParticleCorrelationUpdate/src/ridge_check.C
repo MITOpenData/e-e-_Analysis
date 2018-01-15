@@ -52,8 +52,8 @@ int ridge_check
         (
               const std::string inFileName, // input file
               const std::string outFileName,    // output file
+              Int_t isThrust     = 0,         // Leading Jet Axis ridge_check = 2, Thurst Axis ridge_check = 1, Beam Axis ridge_check = 0
               Int_t isBelle      = 0,		// BELLE ridge_check = 1, CMS/ALEPH ridge_check = 0
-              Int_t isThrust     = 0, 		// Leading Jet Axis ridge_check = 2, Thurst Axis ridge_check = 1, Beam Axis ridge_check = 0
               Int_t isTheta      = 0, 		// Use Theta angle = 1, Use Eta = 0
               Int_t isGen       = 0,         // Use isGen = 1 if gen level so no cut on charged particles, 0 if not gen level
               Int_t maxevt       = 1000000,	// Max number of events to be processed, 0 = all events
@@ -387,30 +387,24 @@ int ridge_check
     std::cout<<"FILL COUNT = "<<fill_count<<std::endl;
     std::cout<<"FILL COUNT = "<<fill_count_mix<<std::endl;
     
-    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     background->Close();
     delete background;
-    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     delete f;
     delete c3;
     delete c2;
     delete c1;
     delete c;
     delete c0;
-    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     for(int i = 0;i<7;i++)delete h_deltaphi[i];
-    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     delete h_mult_dist;
     delete h_ratio;
     delete h_2Dmix;
     delete h_2D;
     delete h_phi;
-    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     delete t2_mix;
     delete t1_mix;
     delete t2;
     delete t1;
-    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     return 0;
 }
 
