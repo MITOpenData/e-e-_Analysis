@@ -157,7 +157,7 @@ int plotDataQualityChecks()
     delete eta_LEP2;
     delete hempty_eta2;
     delete leg_eta_LEP2;
-    */
+    
     return 0;
 }
 
