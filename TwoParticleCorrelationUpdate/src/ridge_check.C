@@ -393,7 +393,6 @@ int ridge_check
     std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     delete f;
     delete c3;
-    delete latex;
     delete c2;
     delete c1;
     delete c;
@@ -407,10 +406,8 @@ int ridge_check
     delete h_2D;
     delete h_phi;
     std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-    delete mix;
     delete t2_mix;
     delete t1_mix;
-    delete data;
     delete t2;
     delete t1;
     std::cout << __FILE__ << ", " << __LINE__ << std::endl;
