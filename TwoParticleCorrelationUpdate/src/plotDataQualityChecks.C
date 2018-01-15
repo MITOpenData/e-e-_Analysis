@@ -134,7 +134,7 @@ int plotDataQualityChecks()
     eta_LEP2->SaveAs("pdfDir/eta_LEP2.pdf");
     
     std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-    delete leg_eta_LEP2;
+    //delete leg_eta_LEP2;
     delete hempty_eta2;
     delete eta_LEP2;
     delete leg_eta_LEP1_PYTHIA8;
