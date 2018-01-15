@@ -361,10 +361,10 @@ int ridge_check
 	 h_deltaphi[0]->SetStats(0);
       }
     }
-    c3->SaveAs(Form("../pdfDir/proj_%s_%d_%d_%d.pdf",outFileName.c_str(),mult_low, mult_high,isThrust));
+    c3->SaveAs(Form("pdfDir/proj_%s_%d_%d_%d.pdf",outFileName.c_str(),mult_low, mult_high,isThrust));
              
     // Save the results
-    TFile *background = new TFile(Form("../pdfDir/ridge_%s_%d_%d_%d.root",outFileName.c_str(),mult_low, mult_high,isThrust), "recreate");
+    TFile *background = new TFile(Form("pdfDir/ridge_%s_%d_%d_%d.root",outFileName.c_str(),mult_low, mult_high,isThrust), "recreate");
     h_deltaphi[0]->Write();
     h_deltaphi[2]->Write();
     h_deltaphi[4]->Write();
