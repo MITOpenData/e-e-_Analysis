@@ -205,7 +205,7 @@ int drawEta
     delete aeta;
     delete alleta;
     
-    file->Close()
+    file->Close();
     delete file;
     
     return 0;
