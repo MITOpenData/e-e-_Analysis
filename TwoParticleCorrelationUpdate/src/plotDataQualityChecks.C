@@ -134,7 +134,7 @@ int plotDataQualityChecks()
     eta_LEP2->SaveAs("pdfDir/eta_LEP2.pdf");
     
     std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-    //delete leg_eta_LEP2;
+    delete leg_eta_LEP2;
     delete hempty_eta2;
     delete eta_LEP2;
     delete leg_eta_LEP1_PYTHIA8;
@@ -174,9 +174,6 @@ int drawEta
         )
 {
     TFile *file = new TFile(inFileName.c_str());
-    TH1F *aeta = (TH1F*)gDirectory->Get("aeta");
-    TH1F *neta = (TH1F*)gDirectory->Get("neta");
-    TH1F *ceta = (TH1F*)gDirectory->Get("ceta");
     
     xjjroot::setgstyle();
     // Plot all, neutral, charged eta
@@ -184,10 +181,13 @@ int drawEta
     TH2F *hemptyeta = new TH2F("",";eta;Probability",1,-5,5,1,0,0.06);
     xjjroot::sethempty(hemptyeta,0,0.3);
     hemptyeta->Draw();
+    TH1F *aeta = (TH1F*)gDirectory->Get("aeta");
     xjjroot::setthgrstyle(aeta, kBlack, 20, 1.2, kRed, 1, 1, -1, -1, -1);
     aeta->Draw("pe same");
+    TH1F *ceta = (TH1F*)gDirectory->Get("ceta");
     xjjroot::setthgrstyle(ceta, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
     ceta->Draw("pe same");
+    TH1F *neta = (TH1F*)gDirectory->Get("neta");
     xjjroot::setthgrstyle(neta, kBlue, 22, 1.2, kBlue, 1, 1, -1, -1, -1);
     neta->Draw("pe same");
     TLegend* etaleg = new TLegend(0.67,0.7,1.1,0.88);
@@ -199,13 +199,14 @@ int drawEta
     xjjroot::drawtex(0.2,0.876,datalabel.c_str());
     alleta->SaveAs(Form("../pdfDir/%s_eta.pdf",datalabel.c_str()));
     
-    file->Close();
-    delete aeta;
+    delete etaleg;
     delete neta;
     delete ceta;
+    delete aeta;
     delete alleta;
-    delete hemptyeta;
-    delete etaleg;
+    
+    file->Close()
+    delete file;
     
     return 0;
 }
