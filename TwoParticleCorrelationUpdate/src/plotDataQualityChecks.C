@@ -28,17 +28,17 @@ int plotDataQualityChecks()
     xjjroot::setgstyle();
     
     // load data files
-    TFile *LEP1 = new TFile("../inputs/qualityCheck/outFile_LEP1.root");
+    TFile *LEP1 = new TFile("inputs/qualityCheck/outFile_LEP1.root");
     TH1F *LEP1_cmult = (TH1F*)gDirectory->Get("cmult");
     TH1F *LEP1_cmom = (TH1F*)gDirectory->Get("cmom");
     TH1F *LEP1_ceta = (TH1F*)gDirectory->Get("ceta");
     
-    TFile *LEP2 = new TFile("../inputs/qualityCheck/outFile_LEP2.root");
+    TFile *LEP2 = new TFile("inputs/qualityCheck/outFile_LEP2.root");
     TH1F *LEP2_cmult = (TH1F*)gDirectory->Get("cmult");
     TH1F *LEP2_cmom = (TH1F*)gDirectory->Get("cmom");
     TH1F *LEP2_ceta = (TH1F*)gDirectory->Get("ceta");
     
-    TFile *PYTHIA8 = new TFile("../inputs/qualityCheck/outFile_PYTHIA8.root");
+    TFile *PYTHIA8 = new TFile("inputs/qualityCheck/outFile_PYTHIA8.root");
     TH1F *PYTHIA8_cmult = (TH1F*)gDirectory->Get("cmult");
     TH1F *PYTHIA8_cmom = (TH1F*)gDirectory->Get("cmom");
     TH1F *PYTHIA8_ceta = (TH1F*)gDirectory->Get("ceta");
@@ -58,7 +58,7 @@ int plotDataQualityChecks()
     leg_mult_LEP1_PYTHIA8->AddEntry(PYTHIA8_cmult,"PYTHIA8","p");
     leg_mult_LEP1_PYTHIA8->Draw();
     xjjroot::drawtex(0.2,0.876,"LEP1 vs PYTHIA8");
-    mult_LEP1_PYTHIA8->SaveAs("../pdfDir/mult_LEP1_PYTHIA8.pdf");
+    mult_LEP1_PYTHIA8->SaveAs("pdfDir/mult_LEP1_PYTHIA8.pdf");
     
     TCanvas *mult_LEP2 = new TCanvas("mult","",600,600);
     TH2F *hempty_mult2 = new TH2F("Multiplicity Distribution",";Multiplicity;Probability",1,0,95,1,0,0.15);
@@ -71,7 +71,7 @@ int plotDataQualityChecks()
     leg_mult_LEP2->AddEntry(LEP2_cmult,"LEP2","p");
     leg_mult_LEP2->Draw();
     xjjroot::drawtex(0.2,0.876,"LEP2");
-    mult_LEP2->SaveAs("../pdfDir/mult_LEP2.pdf");
+    mult_LEP2->SaveAs("pdfDir/mult_LEP2.pdf");
     
     // pt spectra
     TCanvas *pt_LEP1_PYTHIA8 = new TCanvas("pt","",600,600);
@@ -88,7 +88,7 @@ int plotDataQualityChecks()
     leg_pt_LEP1_PYTHIA8->AddEntry(PYTHIA8_cmom,"PYTHIA8","p");
     leg_pt_LEP1_PYTHIA8->Draw();
     xjjroot::drawtex(0.2,0.876,"LEP1 vs PYTHIA8");
-    pt_LEP1_PYTHIA8->SaveAs("../pdfDir/pt_LEP1_PYTHIA8.pdf");
+    pt_LEP1_PYTHIA8->SaveAs("pdfDir/pt_LEP1_PYTHIA8.pdf");
     
     TCanvas *pt_LEP2 = new TCanvas("pt","",600,600);
     TH2F *hempty_pt2 = new TH2F("PT Spectra",";PT;Probability",1,0,95,1,0,0.15);
@@ -101,7 +101,7 @@ int plotDataQualityChecks()
     leg_pt_LEP2->AddEntry(LEP2_cmom,"LEP2","p");
     leg_pt_LEP2->Draw();
     xjjroot::drawtex(0.2,0.876,"LEP2");
-    pt_LEP2->SaveAs("../pdfDir/pt_LEP2.pdf");
+    pt_LEP2->SaveAs("pdfDir/pt_LEP2.pdf");
     
     // eta spectra
     TCanvas *eta_LEP1_PYTHIA8 = new TCanvas("eta","",600,600);
@@ -118,7 +118,7 @@ int plotDataQualityChecks()
     leg_eta_LEP1_PYTHIA8->AddEntry(PYTHIA8_ceta,"PYTHIA8","p");
     leg_eta_LEP1_PYTHIA8->Draw();
     xjjroot::drawtex(0.2,0.876,"LEP1 vs PYTHIA8");
-    eta_LEP1_PYTHIA8->SaveAs("../pdfDir/eta_LEP1_PYTHIA8.pdf");
+    eta_LEP1_PYTHIA8->SaveAs("pdfDir/eta_LEP1_PYTHIA8.pdf");
     
     TCanvas *eta_LEP2 = new TCanvas("eta","",600,600);
     TH2F *hempty_eta2 = new TH2F("Eta Spectra",";Eta;Probability",1,-5,5,1,0,0.05);
@@ -131,33 +131,38 @@ int plotDataQualityChecks()
     leg_eta_LEP2->AddEntry(LEP2_ceta,"LEP2","p");
     leg_eta_LEP2->Draw();
     xjjroot::drawtex(0.2,0.876,"LEP2");
-    eta_LEP2->SaveAs("../pdfDir/eta_LEP2.pdf");
+    eta_LEP2->SaveAs("pdfDir/eta_LEP2.pdf");
+    
+    delete leg_eta_LEP2;
+    delete hempty_eta2;
+    delete eta_LEP2;
+    delete leg_eta_LEP1_PYTHIA8;
+    delete hempty_eta1;
+    delete eta_LEP1_PYTHIA8;
+    
+    delete leg_pt_LEP2;
+    delete hempty_pt2;
+    delete pt_LEP2;
+    delete leg_pt_LEP1_PYTHIA8;
+    delete hempty_pt1;
+    delete pt_LEP1_PYTHIA8;
+    
+    delete leg_mult_LEP2;
+    delete hempty_mult2;
+    delete mult_LEP2;
+    delete leg_mult_LEP1_PYTHIA8;
+    delete hempty_mult1;
+    delete mult_LEP1_PYTHIA8;
+    
+    PYTHIA8->Close();
+    delete PYTHIA8;
+    
+    LEP2->Close();
+    delete LEP2;
     
     LEP1->Close();
-    LEP2->Close();
-    PYTHIA8->Close();
-    
-    delete mult_LEP1_PYTHIA8;
-    delete hempty_mult1;
-    delete leg_mult_LEP1_PYTHIA8;
-    delete mult_LEP2;
-    delete hempty_mult2;
-    delete leg_mult_LEP2;
-    
-    delete pt_LEP1_PYTHIA8;
-    delete hempty_pt1;
-    delete leg_pt_LEP1_PYTHIA8;
-    delete pt_LEP2;
-    delete hempty_pt2;
-    delete leg_pt_LEP2;
-    
-    delete eta_LEP1_PYTHIA8;
-    delete hempty_eta1;
-    delete leg_eta_LEP1_PYTHIA8;
-    delete eta_LEP2;
-    delete hempty_eta2;
-    delete leg_eta_LEP2;
-    
+    delete LEP1;
+
     return 0;
 }
 
