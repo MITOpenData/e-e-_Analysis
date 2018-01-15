@@ -30,7 +30,6 @@ int plotDataQualityChecks()
     // load data files
     TFile *LEP1 = new TFile("../inputs/qualityCheck/outFile_LEP1.root");
     TH1F *LEP1_cmult = (TH1F*)gDirectory->Get("cmult");
-    
     TH1F *LEP1_cmom = (TH1F*)gDirectory->Get("cmom");
     TH1F *LEP1_ceta = (TH1F*)gDirectory->Get("ceta");
     
@@ -137,16 +136,50 @@ int plotDataQualityChecks()
     LEP1->Close();
     LEP2->Close();
     PYTHIA8->Close();
+    
+    delete LEP1_ceta;
+    delete LEP1_cmult;
+    delete LEP1_cmom;
+    
+    delete LEP2_ceta;
+    delete LEP2_cmult;
+    delete LEP2_cmom;
+    
+    delete PYTHIA8_ceta;
+    delete PYTHIA8_cmult;
+    delete PYTHIA8_cmom;
+    
+    delete mult_LEP1_PYTHIA8;
+    delete hempty_mult1;
+    delete leg_mult_LEP1_PYTHIA8;
+    delete mult_LEP2;
+    delete hempty_mult2;
+    delete leg_mult_LEP2;
+    
+    delete pt_LEP1_PYTHIA8;
+    delete hempty_pt1;
+    delete leg_pt_LEP1_PYTHIA8;
+    delete pt_LEP2;
+    delete hempty_pt2;
+    delete leg_pt_LEP2;
+    
+    delete eta_LEP1_PYTHIA8;
+    delete hempty_eta1;
+    delete leg_eta_LEP1_PYTHIA8;
+    delete eta_LEP2;
+    delete hempty_eta2;
+    delete leg_eta_LEP2;
+    
     return 0;
 }
 
 int drawEta
         (
-            TString filename = "../inputs/qualityCheck/outFile_LEP1.root",  // input file
-            TString datalabel = "LEP1"  // Text in upper-left corner
+            const std::string inFileName, // input file
+            const std::string datalabel // Text in upper-left corner
         )
 {
-    TFile *file = new TFile(filename.Data());
+    TFile *file = new TFile(inFileName.c_str());
     TH1F *aeta = (TH1F*)gDirectory->Get("aeta");
     TH1F *neta = (TH1F*)gDirectory->Get("neta");
     TH1F *ceta = (TH1F*)gDirectory->Get("ceta");
@@ -169,10 +202,17 @@ int drawEta
     etaleg->AddEntry(ceta,"Charged Hadrons","p");
     etaleg->AddEntry(neta,"Neutral Hadrons + Photons","p");
     etaleg->Draw();
-    xjjroot::drawtex(0.2,0.876,datalabel);
-    alleta->SaveAs(Form("../pdfDir/%s_eta.pdf",datalabel.Data()));
+    xjjroot::drawtex(0.2,0.876,datalabel.c_str());
+    alleta->SaveAs(Form("../pdfDir/%s_eta.pdf",datalabel.c_str()));
     
     file->Close();
+    delete aeta;
+    delete neta;
+    delete ceta;
+    delete alleta;
+    delete hemptyeta;
+    delete etaleg;
+    
     return 0;
 }
 

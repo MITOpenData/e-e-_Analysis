@@ -7,7 +7,7 @@
 //
 // LOG
 //     2017/08/15 Added Thurst Axis based correlation function to the TPCNtupleData
-//                Class (based on Austin's code). Added filename to the class.
+//                Class (based on Austin's code). Added inFileName to the class.
 //     2017/08/16 Cleanup and change the plotting style. Add Fourier Fit.
 //     2017/08/17 Add Thetabased ridge_check.
 //
@@ -48,8 +48,10 @@ using namespace std;
 // Main ridge_check Routine
 /**************************************************************************************/
 
-int ridge_check(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneCUETP8M1_5p02TeV-pythia8-HINppWinter16DR-        NoPU_75X_mcRun2_asymptotic_ppAt5TeV_forest_v2_track.root",
-              TString savename = "TPCNtuple_MinBias_TuneCUETP8M1_5p02TeV-pythia8-HINppWinter16DR-NoPU_75X_mcRun2_asymptotic_ppAt5TeV_forest_v2_track", // used for saving the files
+int ridge_check
+        (
+              const std::string inFileName, // input file
+              const std::string outFileName,    // output file
               Int_t isBelle      = 0,		// BELLE ridge_check = 1, CMS/ALEPH ridge_check = 0
               Int_t isThrust     = 0, 		// Leading Jet Axis ridge_check = 2, Thurst Axis ridge_check = 1, Beam Axis ridge_check = 0
               Int_t isTheta      = 0, 		// Use Theta angle = 1, Use Eta = 0
@@ -73,10 +75,10 @@ int ridge_check(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_Tun
     TH2::SetDefaultSumw2();
 
     TChain *t1 = new TChain("t");
-    t1->Add(filename);
+    t1->Add(inFileName.c_str());
 
     TChain *t2 = new TChain("ak4JetTree");
-    t2->Add(filename);
+    t2->Add(inFileName.c_str());
 
     /* TString friendname =  "qqmc-e07-00_flavor.root"; */
     /* TFile *ff = new TFile(friendname); */
@@ -88,14 +90,14 @@ int ridge_check(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_Tun
     data.setTPCTreeStatus(t1);
     
     // File for event mixing, use the same file for the moment
-    /* TFile *f_mix = new TFile(filename.Data()); */
+    /* TFile *f_mix = new TFile(inFileName.Data()); */
     /* TTree *t1_mix = (TTree*)f_mix->Get("t"); */
     TChain *t1_mix = new TChain("t");
-    t1_mix->Add(filename);
+    t1_mix->Add(inFileName.c_str());
              
     // Not necessary
     TChain *t2_mix = new TChain("ak4JetTree");
-    t2_mix->Add(filename);
+    t2_mix->Add(inFileName.c_str());
     
     TPCNtupleData mix(isBelle, isThrust);
     setupTPCTree(t1_mix,t2_mix,mix);
@@ -231,8 +233,8 @@ int ridge_check(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_Tun
 
           // Use the Thrust axis from the signal event instead of mixed event
           mix.TTheta=data.TTheta;
-	  mix.TPhi=data.TPhi;
-	  mix.update();
+          mix.TPhi=data.TPhi;
+          mix.update();
 	  
           Int_t N2_TP=0;
           
@@ -337,13 +339,9 @@ int ridge_check(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_Tun
     latex.SetTextSize(0.04);
     latex.SetTextAlign(13);  //align at top
 
-    if (filename.Index("charm") >= 0) {
-      latex.DrawLatexNDC(.07, .9, "e^{+}e^{-}#rightarrow c#bar{c} MC");
-    } else if (filename.Index("uds") >= 0) {
-      latex.DrawLatexNDC(.07, .9, "e^{+}e^{-}#rightarrow q#bar{q} (q=u,d,s) MC");
-    } else if (filename.Index("bb") >= 0) {
-      latex.DrawLatexNDC(.07, .9, "#Upsilon {4S}#rightarrow B#bar{B} MC");
-    }
+    if (inFileName.find("charm") != std::string::npos) {latex.DrawLatexNDC(.07, .9, "e^{+}e^{-}#rightarrow c#bar{c} MC");}
+    else if (inFileName.find("uds") != std::string::npos) {latex.DrawLatexNDC(.07, .9, "e^{+}e^{-}#rightarrow q#bar{q} (q=u,d,s) MC");}
+    else if (inFileName.find("bb") != std::string::npos) {latex.DrawLatexNDC(.07, .9, "#Upsilon {4S}#rightarrow B#bar{B} MC");}
 
     char nevt[50];
     sprintf(nevt, "%.2g M events", nevent_process/1000000.);
@@ -363,10 +361,10 @@ int ridge_check(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_Tun
 	 h_deltaphi[0]->SetStats(0);
       }
     }
-    c3->SaveAs(Form("proj_%s_%d_%d_%d.pdf",savename.Data(),mult_low, mult_high,isThrust));
+    c3->SaveAs(Form("proj_%s_%d_%d_%d.pdf",outFileName.c_str(),mult_low, mult_high,isThrust));
              
     // Save the results
-    TFile *background = new TFile(Form("ridge_%s_%d_%d_%d.root",savename.Data(),mult_low, mult_high,isThrust), "recreate");
+    TFile *background = new TFile(Form("ridge_%s_%d_%d_%d.root",outFileName.c_str(),mult_low, mult_high,isThrust), "recreate");
     h_deltaphi[0]->Write();
     h_deltaphi[2]->Write();
     h_deltaphi[4]->Write();
@@ -394,6 +392,22 @@ int ridge_check(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_Tun
     delete c1;
     delete c2;
     
+    delete t1;
+    delete t2;
+    delete t1_mix;
+    delete t2_mix;
+    
+    delete h_phi;
+    delete h_2D;
+    delete h_2Dmix;
+    delete h_ratio;
+    delete h_mult_dist;
+    for(int i = 0;i<7;i++)delete h_deltaphi[i];
+    
+    delete f;
+    
+    background->Close();
+    
     return 0;
     
 }
@@ -403,13 +417,12 @@ int main(int argc, char* argv[])
 {
     if(argc < 3 || argc > 19)
     {
-       std::cout << "Usage: ./ridge_check.exe <inFileName> <saveName> <isThrust-optional> <isBelle-optional> <isTheta-optional> <isGen-optional> <maxevt-optional> <mult_low-optional> <mult_high-optional> <nbin-optional> <verbose-optional> <num_runs-optional> <ptMin-optional> <ptMax-optional> <detaRange-optional> <ptMinForN-optional> <ptMaxForN-optional> <etaCutForN-optional>" <<std::endl;
+       std::cout << "Usage: ./ridge_check.exe <inFileName> <outFileName> <isThrust-optional> <isBelle-optional> <isTheta-optional> <isGen-optional> <maxevt-optional> <mult_low-optional> <mult_high-optional> <nbin-optional> <verbose-optional> <num_runs-optional> <ptMin-optional> <ptMax-optional> <detaRange-optional> <ptMinForN-optional> <ptMaxForN-optional> <etaCutForN-optional>" <<std::endl;
         return 1;
     }
     
     int retVal = 0;
-    if(argc == 2) retVal += ridge_check(argv[1]);
-    else if(argc == 3) retVal += ridge_check(argv[1], argv[2]);
+    if(argc == 3) retVal += ridge_check(argv[1], argv[2]);
     else if(argc == 4) retVal += ridge_check(argv[1], argv[2], std::stof(argv[3]));
     else if(argc == 5) retVal += ridge_check(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]));
     else if(argc == 6) retVal += ridge_check(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]));
