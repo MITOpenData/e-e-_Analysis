@@ -24,12 +24,12 @@
 
 int eeplots
         (
-             const std::string inFileName, // input file
-             const std::string datalabel // Text in upper-left corner
+             const TString inFileName, // input file
+             const TString datalabel // Text in upper-left corner
         )
 {
     xjjroot::setgstyle();
-    TFile *f = new TFile(inFileName.c_str(),"READ");
+    TFile *f = new TFile(inFileName,"READ");
     TTree *t1 = (TTree*)f->Get("t");
     t1->AddFriend("ak4JetTree");
     //TTree *ak4JetTree = (TTree*)f->Get("ak4JetTree");
@@ -105,8 +105,8 @@ int eeplots
     leg->AddEntry(cmult,"Charged Hadrons","p");
     leg->AddEntry(nmult,"Neutral Hadrons + Photons","p");
     leg->Draw();
-    xjjroot::drawtex(0.2,0.876,datalabel.c_str());
-    allmult->SaveAs(Form("../pdfDir/%s_mult.pdf",datalabel.c_str()));
+    xjjroot::drawtex(0.2,0.876,datalabel);
+    allmult->SaveAs(Form("../pdfDir/%s_mult.pdf",datalabel));
     
     // Plot all, neutral, charged pt
     TCanvas *allmom = new TCanvas("allmom","allmom",600,600);
@@ -134,8 +134,8 @@ int eeplots
     pleg->AddEntry(cmom,"Charged Hadrons","p");
     pleg->AddEntry(nmom,"Neutral Hadrons + Photons","p");
     pleg->Draw();
-    xjjroot::drawtex(0.2,0.876,datalabel.c_str());
-    allmom->SaveAs(Form("../pdfDir/%s_mom.pdf",datalabel.c_str()));
+    xjjroot::drawtex(0.2,0.876,datalabel);
+    allmom->SaveAs(Form("../pdfDir/%s_mom.pdf",datalabel));
     
     // Plot all, neutral, charged eta
     TCanvas *alleta = new TCanvas("alleta","alleta",600,600);
@@ -163,11 +163,11 @@ int eeplots
     etaleg->AddEntry(ceta,"Charged Hadrons","p");
     etaleg->AddEntry(neta,"Neutral Hadrons + Photons","p");
     etaleg->Draw();
-    xjjroot::drawtex(0.2,0.876,datalabel.c_str());
-    alleta->SaveAs(Form("../pdfDir/%s_eta.pdf",datalabel.c_str()));
+    xjjroot::drawtex(0.2,0.876,datalabel);
+    alleta->SaveAs(Form("../pdfDir/%s_eta.pdf",datalabel));
     
     
-    TFile* outFile_p = new TFile(Form("outFile_%s.root",datalabel.c_str()), "RECREATE");
+    TFile* outFile_p = new TFile(Form("../inputs/qualityCheck/outFile_%s.root",datalabel.Data()), "RECREATE");
     //write all, first arg name ("" == declaration name), second arg overwrites buffer saves in file
     amult->Write("", TObject::kOverwrite);
     cmult->Write("", TObject::kOverwrite);
