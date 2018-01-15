@@ -382,34 +382,39 @@ int ridge_check
     std::cout <<"ZYAM =  "<< f->Integral(0,f->GetMinimumX())-f->GetMinimumX()*f->GetMinimum() <<" +- "<<f->IntegralError(0,f->GetMinimumX())<<std::endl;
     ntResult->Fill(mult_low,mult_high,f->Integral(0,f->GetMinimumX())-f->GetMinimumX()*f->GetMinimum(),f->IntegralError(0,f->GetMinimumX()));
     ntResult->Write();
-    background->Close();
+    
              
     std::cout<<"FILL COUNT = "<<fill_count<<std::endl;
     std::cout<<"FILL COUNT = "<<fill_count_mix<<std::endl;
     
+    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+    background->Close();
+    delete background;
+    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+    delete f;
+    delete c3;
+    delete latex;
+    delete c2;
+    delete c1;
     delete c;
     delete c0;
-    delete c1;
-    delete c2;
-    
-    delete t1;
-    delete t2;
-    delete t1_mix;
-    delete t2_mix;
-    
-    delete h_phi;
-    delete h_2D;
-    delete h_2Dmix;
-    delete h_ratio;
-    delete h_mult_dist;
+    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     for(int i = 0;i<7;i++)delete h_deltaphi[i];
-    
-    delete f;
-    
-    background->Close();
-    
+    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+    delete h_mult_dist;
+    delete h_ratio;
+    delete h_2Dmix;
+    delete h_2D;
+    delete h_phi;
+    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+    delete mix;
+    delete t2_mix;
+    delete t1_mix;
+    delete data;
+    delete t2;
+    delete t1;
+    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     return 0;
-    
 }
 
 
