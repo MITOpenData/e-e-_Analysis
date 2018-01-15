@@ -133,36 +133,37 @@ int plotDataQualityChecks()
     xjjroot::drawtex(0.2,0.876,"LEP2");
     eta_LEP2->SaveAs("pdfDir/eta_LEP2.pdf");
     
+    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     delete leg_eta_LEP2;
     delete hempty_eta2;
     delete eta_LEP2;
     delete leg_eta_LEP1_PYTHIA8;
     delete hempty_eta1;
     delete eta_LEP1_PYTHIA8;
-    
+    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     delete leg_pt_LEP2;
     delete hempty_pt2;
     delete pt_LEP2;
     delete leg_pt_LEP1_PYTHIA8;
     delete hempty_pt1;
     delete pt_LEP1_PYTHIA8;
-    
+    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     delete leg_mult_LEP2;
     delete hempty_mult2;
     delete mult_LEP2;
     delete leg_mult_LEP1_PYTHIA8;
     delete hempty_mult1;
     delete mult_LEP1_PYTHIA8;
-    
+    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     PYTHIA8->Close();
     delete PYTHIA8;
-    
+    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     LEP2->Close();
     delete LEP2;
-    
+    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     LEP1->Close();
     delete LEP1;
-
+    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     return 0;
 }
 
