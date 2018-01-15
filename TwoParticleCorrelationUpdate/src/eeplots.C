@@ -29,7 +29,7 @@ int eeplots
         )
 {
     xjjroot::setgstyle();
-    TFile *f = new TFile(inFileName.c_str());
+    TFile *f = new TFile(inFileName.c_str(),"READ");
     TTree *t1 = (TTree*)f->Get("t");
     t1->AddFriend("ak4JetTree");
     //TTree *ak4JetTree = (TTree*)f->Get("ak4JetTree");
@@ -167,7 +167,7 @@ int eeplots
     alleta->SaveAs(Form("../pdfDir/%s_eta.pdf",datalabel.c_str()));
     
     
-    TFile* outFile_p = new TFile(Form("../inputs/qualityCheck/outFile_%s.root",datalabel.c_str()), "RECREATE");
+    TFile* outFile_p = new TFile(Form("outFile_%s.root",datalabel.c_str()), "RECREATE");
     //write all, first arg name ("" == declaration name), second arg overwrites buffer saves in file
     amult->Write("", TObject::kOverwrite);
     cmult->Write("", TObject::kOverwrite);
