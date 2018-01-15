@@ -208,29 +208,37 @@ int eeplots
      
      */
     
-   
-    f->Close();
     outFile_p->Close();
+    delete outFile;
     
    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     
-    delete allmult;
-    delete hempty;
-    delete amult;
-    delete cmult;
-    delete nmult;
-   std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-    delete allmom;
-    delete hemptyp;
-    delete amom;
-    delete cmom;
-    delete nmom;
-    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-    delete alleta;
-    delete hemptyeta;
-    delete aeta;
-    delete ceta;
+    delete etaleg;
     delete neta;
+    delete ceta;
+    delete aeta;
+    delete hemptyeta;
+    delete alleta;
+    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+    delete pleg;
+    delete nmom;
+    delete cmom;
+    delete amom;
+    delete hemptyp;
+    delete allmom;
+    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+    delete leg;
+    delete nmult;
+    delete cmult;
+    delete amult;
+    delete hempty;
+    delete allmult;
+    
+    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+    f->Close();
+    delte f;
+    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+    
     
     return 0;
 }
