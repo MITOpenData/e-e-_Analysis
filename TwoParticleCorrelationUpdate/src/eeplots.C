@@ -167,7 +167,6 @@ int eeplots
     xjjroot::drawtex(0.2,0.876,datalabel);
     alleta->SaveAs(Form("pdfDir/%s_eta.pdf",datalabel.Data()));
     
-    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     TFile* outFile_p = new TFile(Form("inputs/qualityCheck/outFile_%s.root",datalabel.Data()), "RECREATE");
     //write all, first arg name ("" == declaration name), second arg overwrites buffer saves in file
     amult->Write("", TObject::kOverwrite);
@@ -179,7 +178,7 @@ int eeplots
     aeta->Write("", TObject::kOverwrite);
     ceta->Write("", TObject::kOverwrite);
     neta->Write("", TObject::kOverwrite);
-    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+    
     /*
      
     // Plot jet eta
@@ -211,22 +210,20 @@ int eeplots
     outFile_p->Close();
     delete outFile_p;
     
-   std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-    
     delete etaleg;
     delete neta;
     delete ceta;
     delete aeta;
     delete hemptyeta;
     delete alleta;
-    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+    
     delete pleg;
     delete nmom;
     delete cmom;
     delete amom;
     delete hemptyp;
     delete allmom;
-    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+    
     delete leg;
     delete nmult;
     delete cmult;
@@ -234,11 +231,8 @@ int eeplots
     delete hempty;
     delete allmult;
     
-    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     f->Close();
     delete f;
-    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-    
     
     return 0;
 }
