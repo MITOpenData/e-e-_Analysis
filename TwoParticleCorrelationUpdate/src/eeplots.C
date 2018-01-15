@@ -209,7 +209,7 @@ int eeplots
      */
     
     outFile_p->Close();
-    delete outFile;
+    delete outFile_p;
     
    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     
@@ -236,7 +236,7 @@ int eeplots
     
     std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     f->Close();
-    delte f;
+    delete f;
     std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     
     
