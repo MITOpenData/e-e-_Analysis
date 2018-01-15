@@ -137,6 +137,7 @@ int plotDataQualityChecks()
     LEP2->Close();
     PYTHIA8->Close();
     
+    /*
     delete LEP1_ceta;
     delete LEP1_cmult;
     delete LEP1_cmom;
@@ -169,7 +170,7 @@ int plotDataQualityChecks()
     delete eta_LEP2;
     delete hempty_eta2;
     delete leg_eta_LEP2;
-    
+    */
     return 0;
 }
 
