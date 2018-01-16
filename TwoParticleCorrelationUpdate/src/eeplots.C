@@ -114,7 +114,7 @@ int eeplots
     TH2F *hemptyp = new TH2F("",";pt;Probability",1,0,60,1,0,0.3);
     xjjroot::sethempty(hemptyp,0,0.3);
     hemptyp->Draw();
-    t1->Draw("pt>>amom","(true)*0.001","goff");
+    t1->Draw("pt>>amom","(1)*0.001","goff");
     TH1F* amom = (TH1F*)gDirectory->Get("amom");
     amom->Scale(1./amom->GetEntries());
     xjjroot::setthgrstyle(amom, kBlack, 20, 1.2, kRed, 1, 1, -1, -1, -1);
