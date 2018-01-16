@@ -49,19 +49,20 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
               Int_t isThrust     = 0, 		// Leading Jet Axis analysis = 2, Thurst Axis analysis = 1, Beam Axis analysis = 0
               Int_t isTheta      = 0, 		// Use Theta angle = 1, Use Eta = 0
               Int_t isGen       = 0,         // Use isGen = 1 if gen level so no cut on charged particles, 0 if not gen level
-	      Int_t maxevt       = 1000000,	// Max number of events to be processed, 0 = all events
-	      Int_t mult_low     = 0,		// Lower cut on the event multiplicity
-	      Int_t mult_high    = 100,		// Upper cut on the event multiplicity
-	      Int_t nbin         = 20,		// Number of bins in the correlation function
-	      bool verbose     = 0,		// Verbose mode
-	      Int_t num_runs     = 5,		// 
+              Int_t maxevt       = 1000000,	// Max number of events to be processed, 0 = all events
+              Int_t mult_low     = 0,		// Lower cut on the event multiplicity
+              Int_t mult_high    = 100,		// Upper cut on the event multiplicity
+              Int_t nbin         = 20,		// Number of bins in the correlation function
+              bool verbose     = 0,		// Verbose mode
+              Int_t num_runs     = 5,		// 
               double ptMin     = 0.4,           // min pT of the particles used for correlation function
               double ptMax     = 100.0,             // max pT of the particles used for correlation function
               double detaRange = 3.2,             // deta window of the correlation function
               Float_t ptMinForN = 0.4,          // pT min for the N_{trk}^{offline} calculation (used for event classification) 
               Float_t ptMaxForN = 100,          // pT max for the N_{trk}^{offline} calculation (used for event classification)
               Float_t etaCutForN = 1.8          // eta window for the N_{trk}^{offline} calculation (used for event classification)
-	     ) {
+	     )
+{
     // ROOT Global setting
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
@@ -379,8 +380,8 @@ void analysis(TString filename = "/data/flowex/CMSsample/TPCNtuple_MinBias_TuneC
     ntResult->Write();
     background->Close();
              
-             cout<<"FILL COUNT = "<<fill_count<<endl;
-             cout<<"FILL COUNT = "<<fill_count_mix<<endl;
+    cout<<"FILL COUNT = "<<fill_count<<endl;
+    cout<<"FILL COUNT = "<<fill_count_mix<<endl;
     
 }
 

@@ -22,10 +22,10 @@
 #include <TLine.h>
 
 //local headers
-#include "include/getLogBins.h"
-#include "include/correction.h"
-#include "include/alephThrustSyst.h"
-#include "include/doGlobalDebug.h"
+#include "../include/getLogBins.h"
+#include "../include/correction.h"
+#include "../include/alephThrustSyst.h"
+#include "../include/doGlobalDebug.h"
 
 ////////////////////////////////////////////////////////////
 //////////////////// Thrust Distribution  //////////////////
@@ -38,12 +38,12 @@
 // 4. missP/Energy<0.3  Done
 ////////////////////////////////////////////////////////////
 
-std::vector<float> compute_errors();
+std::vector<float> compute_errors(std::string dataname);
 void relative_error();
-int thrust_distribution(TString filename, //file used
-                         std::string dataname = "LEP1",
-                         Float_t min_Energy = 91, // lower cut on Energy   i.e. Energy>91 to take event
-                         Float_t max_Energy = 91.5, // upper cut on Energy    i.e. Energy<91.5 to take event
+int thrust_distribution(TString filename = "~/lxplus/LEP2MC1996to2000_YDATAEMINI_recons_aftercut-MERGED.root", //file used
+                         std::string dataname = "LEP2",
+                         Float_t min_Energy = 203, // lower cut on Energy   i.e. Energy>91 to take event
+                         Float_t max_Energy = 209, // upper cut on Energy    i.e. Energy<91.5 to take event
                          Float_t cut_missP = 0.3,   // upper bound on missP/energy
                          Float_t min_TTheta = 0.0, // lower cut on TTheta
                          Float_t max_TTheta = 3.5, // upper cut on TTheta --> currently full range of TTheta
@@ -63,8 +63,8 @@ int thrust_distribution(TString filename, //file used
   getLogBins(logLow, logHi, nBinsSys, binsSys);
 
   std::string sysFileName;
-  if(dataname == "LEP1")sysFileName = "inputs/HEPData-ins636645-v1-Table54.root";
-  if(dataname == "LEP2")sysFileName = "inputs/HEPData-ins636645-v1-Table61.root";
+  if(dataname == "LEP1")sysFileName = "../inputs/HEPData-ins636645-v1-Table54.root";
+  if(dataname == "LEP2")sysFileName = "../inputs/HEPData-ins636645-v1-Table61.root";
         
   TFile* outFile_p = new TFile(Form("outFile_%s_%d_%d.root",dataname.c_str(),min_nParticle,max_nParticle), "RECREATE"); // we will write our th1 to a file for debugging purposes
   TH1D *h_thrust = new TH1D("h_thrust",";Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",43,0.57,1); //moving declarations here for clarity
@@ -113,6 +113,11 @@ int thrust_distribution(TString filename, //file used
 
   
   TFile *f = new TFile(filename, "READ"); //specify reading only - dont want to mod input
+  if(f->IsZombie())
+  {
+    std::cout << "BAD FILE" << std::endl;
+    return -1;
+  }
     TTree *t1;
     if(isGen) t1 = (TTree*)f->Get("tgen"); //a little strange to do both Get()'s in event isGen -> here only do one
     else t1 = (TTree*)f->Get("t");
@@ -188,12 +193,12 @@ int thrust_distribution(TString filename, //file used
         {
             Float_t Thrust = T_sum/T_mag;
             h_thrust->Fill(Thrust, correct_entry(Thrust));
-	    h_one_minus_thrust->Fill(1-Thrust, correct_entry(Thrust)); //You have unbinned data! Fill here
-	    h_one_minus_thrust_log->Fill(1-Thrust, correct_entry(Thrust)); //You have unbinned data! Fill here
+	        h_one_minus_thrust->Fill(1-Thrust, correct_entry(Thrust)); //You have unbinned data! Fill here
+	        h_one_minus_thrust_log->Fill(1-Thrust, correct_entry(Thrust)); //You have unbinned data! Fill here
 
             h_thrustNoCorr->Fill(Thrust);
-	    h_one_minus_thrustNoCorr->Fill(1-Thrust); //You have unbinned data! Fill here
-	    h_one_minus_thrustNoCorr_log->Fill(1-Thrust); //You have unbinned data! Fill here
+	        h_one_minus_thrustNoCorr->Fill(1-Thrust); //You have unbinned data! Fill here
+	        h_one_minus_thrustNoCorr_log->Fill(1-Thrust); //You have unbinned data! Fill here
             //if((1.0-Thrust)<=.05){h_one_minus_thrust->Fill(h_one_minus_thrust->GetBinCenter(1));}
             //else{h_one_minus_thrust->Fill(1-Thrust);}
         }
@@ -218,34 +223,39 @@ int thrust_distribution(TString filename, //file used
     h_thrust->Draw();
 
     if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-    
-    TFile *hdata = new TFile("inputs/HEPData-ins636645-v1-Table54.root");
-    TH1F *hep;
-    hdata->cd("Table 54");
-    hep = (TH1F*)gDirectory->Get("Hist1D_y1");
-    hep->SetMarkerStyle(5);
-    hep->Draw("hist p SAME");
-    
-    // drawing approximate errors from HEP data
-    TLine* line_thrust = new TLine();
+
+    std::vector<float>quad_errors;
     Double_t binLowEdge = 0;
     Double_t binHiEdge = 0;
     Double_t binval = 0;
-    Float_t sys = 0;
-    std::vector<float> quad_errors = compute_errors();
-    for (int i = 1;i<=h_thrust->GetNbinsX();i++)
+    
+    // drawing approximate errors from HEP Table 54 data
+    if(dataname=="LEP1")
     {
-        binLowEdge = h_thrust->GetBinLowEdge(i);
-        binHiEdge = binLowEdge + h_thrust->GetBinWidth(i);
-        binval = h_thrust->GetBinContent(i);
-        sys = quad_errors[i+2]; // +2 since thrust distribution starts at 0.6 while HEP errors start at 0.57
-	//std::cout<<"binLow = "<<binLowEdge<<std::endl;
-	//std::cout<<"quad_errors["<<i<<"] = "<<sys<<std::endl;
-        line_thrust->DrawLine(binLowEdge, binval - sys, binHiEdge, binval - sys);
-        line_thrust->DrawLine(binLowEdge, binval + sys, binHiEdge, binval + sys);
+        TFile *hdata = new TFile("../inputs/HEPData-ins636645-v1-Table54.root");
+        TH1F *hep;
+        hdata->cd("Table 54");
+        hep = (TH1F*)gDirectory->Get("Hist1D_y1");
+        hep->SetMarkerStyle(5);
+        hep->Draw("hist p SAME");
+
+        TLine* line_thrust = new TLine();
+        Float_t sys = 0;
+        quad_errors = compute_errors(dataname);
+        for (int i = 1;i<=h_thrust->GetNbinsX();i++)
+        {
+            binLowEdge = h_thrust->GetBinLowEdge(i);
+            binHiEdge = binLowEdge + h_thrust->GetBinWidth(i);
+            binval = h_thrust->GetBinContent(i);
+            sys = quad_errors[i+2]; // +2 since thrust distribution starts at 0.6 while HEP errors start at 0.57
+	        //std::cout<<"binLow = "<<binLowEdge<<std::endl;
+	        //std::cout<<"quad_errors["<<i<<"] = "<<sys<<std::endl;
+            line_thrust->DrawLine(binLowEdge, binval - sys, binHiEdge, binval - sys);
+            line_thrust->DrawLine(binLowEdge, binval + sys, binHiEdge, binval + sys);
+        }
     }
     
-    c2->SaveAs(Form("mithig_%s_%d_%d.pdf",dataname.c_str(),min_nParticle,max_nParticle));
+    c2->SaveAs(Form("mithig_T_%s_%d_%d.pdf",dataname.c_str(),min_nParticle,max_nParticle));
     
     // Fill the 1-T distribution after the correction to T
     //Deleted version that was just rebin of binned data - when possible rebin starting from unbinned!
@@ -268,8 +278,34 @@ int thrust_distribution(TString filename, //file used
     h_one_minus_thrust->SetMarkerStyle(4);
     h_one_minus_thrust->Draw();
 
-    
-    
+    //Drawing approximate errors from HEP Table 61 data
+    if(dataname=="LEP2")
+    {
+        TFile *hdata = new TFile("../inputs/HEPData-ins636645-v1-Table61.root");
+        TH1F *hep;
+        hdata->cd("Table 61");
+        hep = (TH1F*)gDirectory->Get("Hist1D_y1");
+        hep->SetMarkerStyle(5);
+        hep->Draw("hist p SAME");
+
+        TLine* line_thrust = new TLine();
+        Float_t sys = 0;
+        quad_errors = compute_errors(dataname);
+        for (int i = 1;i<=h_thrust->GetNbinsX();i++)
+        {
+            binLowEdge = h_thrust->GetBinLowEdge(i);
+            binHiEdge = binLowEdge + h_thrust->GetBinWidth(i);
+            binval = h_thrust->GetBinContent(i);
+            sys = quad_errors[i+2]; // +2 since thrust distribution starts at 0.6 while HEP errors start at 0.57
+	        //std::cout<<"binLow = "<<binLowEdge<<std::endl;
+	        //std::cout<<"quad_errors["<<i<<"] = "<<sys<<std::endl;
+            line_thrust->DrawLine(binLowEdge, binval - sys, binHiEdge, binval - sys);
+            line_thrust->DrawLine(binLowEdge, binval + sys, binHiEdge, binval + sys);
+        }
+    }
+
+    c1->SaveAs(Form("mithig_1-T_%s_%d_%d.pdf",dataname.c_str(),min_nParticle,max_nParticle));
+
     TLine* line_one_minus_thrust = new TLine();
     Double_t binLowEdge_T = 0;
     Double_t binHiEdge_T = 0;
@@ -287,6 +323,7 @@ int thrust_distribution(TString filename, //file used
       //std::cout<<"width "<<h_one_minus_thrust->GetBinWidth(i+1)<<std::endl;
 
         // get low and high bins for 1-T
+        std::cout << i << std::endl;
         binLowEdge_T = h_one_minus_thrust->GetBinLowEdge(i+1);
         binHiEdge_T = binLowEdge_T + h_one_minus_thrust->GetBinWidth(i+1);
         
@@ -336,6 +373,7 @@ int thrust_distribution(TString filename, //file used
     h_ratio_one_minus_thrust->GetYaxis()->CenterTitle();
     h_ratio_one_minus_thrust->GetXaxis()->CenterTitle();
     h_ratio_one_minus_thrust->Draw();
+    std::cout << "Draw" << std::endl;
     
 
     if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
@@ -349,6 +387,7 @@ int thrust_distribution(TString filename, //file used
     //*_thrust -> *_thrust_log
      for(int i = 0; i < nBins; ++i)
      {
+       std::cout << i <<std::endl;
        Float_t binWidth = h_one_minus_thrust_log->GetBinWidth(i+1);
        if(i==0)binWidth+=logLow;
        h_one_minus_thrust_log->SetBinContent(i+1, h_one_minus_thrust_log->GetBinContent(i+1)/binWidth);//switch to i+1, underflow bin is at i==0
@@ -361,6 +400,7 @@ int thrust_distribution(TString filename, //file used
     if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
      for(int i = 0; i < nBins; ++i){
+       std::cout << "log" << i << std::endl;
        Double_t sysUp = h_one_minus_thrust_log->GetBinContent(i+1);
        Double_t sysDown = h_one_minus_thrust_log->GetBinContent(i+1);
        Double_t relSystBinCent = relSyst.getRelQuadSystFromThrust(1.-h_one_minus_thrust_log->GetBinCenter(i+1));
@@ -384,7 +424,7 @@ int thrust_distribution(TString filename, //file used
        h_one_minus_thrust_log_SysDownGraph->SetBinError(i+1, 0);
      }
     
-    
+    std::cout << "c4" << std::endl;
     TCanvas *c4 = new TCanvas("log(1-T)","",200,10,500,500);
     c4->cd();
     gStyle->SetOptStat(0);
@@ -402,6 +442,7 @@ int thrust_distribution(TString filename, //file used
     //cd back into outfile for write+clean
     outFile_p->cd();
     //write all, first arg name ("" == declaration name), second arg overwrites buffer saves in file
+    std::cout << "prewrite" << std::endl;
     h_thrust->Write("", TObject::kOverwrite);
     h_one_minus_thrust->Write("", TObject::kOverwrite);
     h_one_minus_thrust_log->Write("", TObject::kOverwrite);
@@ -433,7 +474,7 @@ int thrust_distribution(TString filename, //file used
     delete h_one_minus_thrust_log_SysDown;
     delete h_one_minus_thrust_log_SysUpGraph;
     delete h_one_minus_thrust_log_SysDownGraph;
-    
+
     return 0; //even if void - useful for searching the control path
 }
 
@@ -452,14 +493,30 @@ void run()
 }
 
 
-std::vector<float> compute_errors()
+std::vector<float> compute_errors(std::string dataname)
 {
-  TString hep_file = "inputs/HEPData-ins636645-v1-Table54.root";
-  TFile *hdata = new TFile(hep_file);
-  hdata->cd("Table 54");
+  TString hep_file;
+  TFile* hdata;
+  TH1F* e2 = 0;
+  TH1F* e3 = 0;
+  if(dataname=="LEP1") 
+  {
+    hep_file = "../inputs/HEPData-ins636645-v1-Table54.root";
+    hdata = new TFile(hep_file);
+    hdata->cd("Table 54");
   
-  TH1F *e2 = (TH1F*)gDirectory->Get("Hist1D_y1_e2");
-  TH1F *e3 = (TH1F*)gDirectory->Get("Hist1D_y1_e3");
+    e2 = (TH1F*)gDirectory->Get("Hist1D_y1_e2");
+    e3 = (TH1F*)gDirectory->Get("Hist1D_y1_e3");
+  }
+  if(dataname=="LEP2")
+  {
+    hep_file = "../inputs/HEPData-ins636645-v1-Table61.root";
+    hdata = new TFile(hep_file);
+    hdata->cd("Table 61");
+  
+    e2 = (TH1F*)gDirectory->Get("Hist1D_y1_e1");
+    e3 = (TH1F*)gDirectory->Get("Hist1D_y1_e2");
+  }
   
   if(e2->GetNbinsX() == e3->GetNbinsX()) std::cout<<"Number of Bins"<<e2->GetNbinsX()<<std::endl;
   else std::cout<<"Different number of bins"<<std::endl;
