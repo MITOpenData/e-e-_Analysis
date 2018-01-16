@@ -143,7 +143,7 @@ int eeplots
     TH2F *hemptyeta = new TH2F("",";eta;Probability",1,-5,5,1,0,0.06);
     xjjroot::sethempty(hemptyeta,0,0.3);
     hemptyeta->Draw();
-    t1->Draw("eta>>aeta","(1)*0.001","goff");
+    t1->Draw("eta>>aeta","(1)*0.01","goff");
     TH1F* aeta = (TH1F*)gDirectory->Get("aeta");
     aeta->Scale(1./aeta->GetEntries());
     xjjroot::setthgrstyle(aeta, kBlack, 20, 1.2, kRed, 1, 1, -1, -1, -1);
