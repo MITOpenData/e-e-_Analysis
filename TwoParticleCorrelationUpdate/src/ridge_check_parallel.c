@@ -311,28 +311,28 @@ int main(int argc, char* argv[])
 {
     if(argc < 3 || argc > 19)
     {
-        std::cout << "Usage: ./ridge_check.exe <inFileName> <outFileName> <isThrust-optional> <isBelle-optional> <isTheta-optional> <isGen-optional> <maxevt-optional> <mult_low-optional> <mult_high-optional> <nbin-optional> <verbose-optional> <num_runs-optional> <ptMin-optional> <ptMax-optional> <detaRange-optional> <ptMinForN-optional> <ptMaxForN-optional> <etaCutForN-optional>" <<std::endl;
+        std::cout << "Usage: ./ridge_check_parallel.exe <inFileName> <outFileName> <isThrust-optional> <isBelle-optional> <isTheta-optional> <isGen-optional> <maxevt-optional> <mult_low-optional> <mult_high-optional> <nbin-optional> <verbose-optional> <num_runs-optional> <ptMin-optional> <ptMax-optional> <detaRange-optional> <ptMinForN-optional> <ptMaxForN-optional> <etaCutForN-optional>" <<std::endl;
         return 1;
     }
     
     int retVal = 0;
-    if(argc == 3) retVal += ridge_check(argv[1], argv[2]);
-    else if(argc == 4) retVal += ridge_check(argv[1], argv[2], std::stof(argv[3]));
-    else if(argc == 5) retVal += ridge_check(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]));
-    else if(argc == 6) retVal += ridge_check(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]));
-    else if(argc == 7) retVal += ridge_check(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]));
-    else if(argc == 8) retVal += ridge_check(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]));
-    else if(argc == 9) retVal += ridge_check(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]));
-    else if(argc == 10) retVal += ridge_check(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]));
-    else if(argc == 11) retVal += ridge_check(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]));
-    else if(argc == 12) retVal += ridge_check(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]));
-    else if(argc == 13) retVal += ridge_check(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]),std::stoi(argv[12]));
-    else if(argc == 14) retVal += ridge_check(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]),std::stoi(argv[12]),std::stoi(argv[13]));
-    else if(argc == 15) retVal += ridge_check(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]),std::stoi(argv[12]),std::stoi(argv[13]),std::stoi(argv[14]));
-    else if(argc == 16) retVal += ridge_check(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]),std::stoi(argv[12]),std::stoi(argv[13]),std::stoi(argv[14]),std::stoi(argv[15]));
-    else if(argc == 17) retVal += ridge_check(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]),std::stoi(argv[12]),std::stoi(argv[13]),std::stoi(argv[14]),std::stoi(argv[15]),std::stoi(argv[16]));
-    else if(argc == 18) retVal += ridge_check(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]),std::stoi(argv[12]),std::stoi(argv[13]),std::stoi(argv[14]),std::stoi(argv[15]),std::stoi(argv[16]),std::stoi(argv[17]));
-    else if(argc == 19) retVal += ridge_check(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]),std::stoi(argv[12]),std::stoi(argv[13]),std::stoi(argv[14]),std::stoi(argv[15]),std::stoi(argv[16]),std::stoi(argv[17]),std::stoi(argv[18]));
+    if(argc == 3) retVal += ridge_check_parallel(argv[1], argv[2]);
+    else if(argc == 4) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]));
+    else if(argc == 5) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]));
+    else if(argc == 6) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]));
+    else if(argc == 7) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]));
+    else if(argc == 8) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]));
+    else if(argc == 9) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]));
+    else if(argc == 10) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]));
+    else if(argc == 11) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]));
+    else if(argc == 12) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]));
+    else if(argc == 13) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]),std::stoi(argv[12]));
+    else if(argc == 14) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]),std::stoi(argv[12]),std::stoi(argv[13]));
+    else if(argc == 15) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]),std::stoi(argv[12]),std::stoi(argv[13]),std::stoi(argv[14]));
+    else if(argc == 16) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]),std::stoi(argv[12]),std::stoi(argv[13]),std::stoi(argv[14]),std::stoi(argv[15]));
+    else if(argc == 17) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]),std::stoi(argv[12]),std::stoi(argv[13]),std::stoi(argv[14]),std::stoi(argv[15]),std::stoi(argv[16]));
+    else if(argc == 18) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]),std::stoi(argv[12]),std::stoi(argv[13]),std::stoi(argv[14]),std::stoi(argv[15]),std::stoi(argv[16]),std::stoi(argv[17]));
+    else if(argc == 19) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]),std::stoi(argv[12]),std::stoi(argv[13]),std::stoi(argv[14]),std::stoi(argv[15]),std::stoi(argv[16]),std::stoi(argv[17]),std::stoi(argv[18]));
     
     return retVal;
 }
