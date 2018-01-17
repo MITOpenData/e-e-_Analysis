@@ -140,7 +140,7 @@ int eeplots
     
     // Plot all, neutral, charged eta
     TCanvas *alleta = new TCanvas("alleta","alleta",600,600);
-    TH2F *hemptyeta = new TH2F("",";eta;Probability",1,-5,5,1,0,0.06);
+    TH2F *hemptyeta = new TH2F("",";eta;Probability",1,-5,5,1,0,0.1);
     xjjroot::sethempty(hemptyeta,0,0.3);
     hemptyeta->Draw();
     t1->Draw("eta>>aeta","(1)*.000001","goff");
