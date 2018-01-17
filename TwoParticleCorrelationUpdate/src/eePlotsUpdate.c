@@ -48,25 +48,28 @@ int eeplots
     getLinBins(linLow,linHi,nBinsY,binsYLin);
     
     // declare binning for x-axis
-    int nBinsMult = 60;
-    Double_t binsMult[nBinsMult+1];
-    Double_t multHi = 60;
-    Double_t multLow = 0;
+    int nBinsMult;
+    Double_t multHi;
+    Double_t multLow;
     
     int nBinsPt = 60;
-    Double_t binsPt[nBinsPt+1];
-    Double_t ptHi = 60;
-    Double_t ptLow = 0;
+    Double_t ptHi;
+    Double_t ptLow;
     
     int nBinsEta = 60;
-    Double_t binsEta[nBinsEta+1];
-    Double_t etaHi = 3;
-    Double_t etaLow = -3;
+    Double_t etaHi;
+    Double_t etaLow;
     
     // assign binning ranges for different data sets
-    if(datalabel == "PYTHIA8"){nBinsMult = 100; multHi = 100;etaHi = 3;ptHi = 60;}
-    if(datalabel == "LEP1"){nBinsMult = 80; multHi = 80;etaHi = 2.5;ptHi = 60;}
-    if(datalabel == "LEP2"){nBinsMult = 90; multHi = 90;etaHi = 1.75; etaLow = -etaHi; ptHi = 60;}
+    if(datalabel == "PYTHIA8"){nBinsMult = 100; multHi = 100; etaHi = 3; ptHi = 60;}
+    if(datalabel == "LEP1"){nBinsMult = 80; multHi = 80; etaHi = 2.5; ptHi = 60;}
+    if(datalabel == "LEP2"){nBinsMult = 90; multHi = 90; etaHi = 1.75; ptHi = 60;}
+    
+    // declare bins
+    Double_t binsMult[nBinsMult+1];
+    Double_t binsPt[nBinsPt+1];
+    Double_t binsEta[nBinsEta+1];
+    etaLow = -etaHi;
     
     // generate the binning
     getLinBins(multLow, multHi, nBinsMult, binsMult);
