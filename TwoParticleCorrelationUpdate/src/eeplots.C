@@ -184,7 +184,6 @@ int eeplots
     t1->Draw("eta>>ceta","(pwflag==0)*.000001","goff");
     TH1F* ceta = (TH1F*)gDirectory->Get("ceta");
     ceta->Scale(1./ceta->Integral());
-    std::cout
     xjjroot::setthgrstyle(ceta, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
     ceta->Draw("pe same");
     t1->Draw("eta>>neta","(pwflag!=0)*.000001","goff");
