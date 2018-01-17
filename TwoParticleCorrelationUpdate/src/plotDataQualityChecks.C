@@ -206,8 +206,8 @@ int plotDataQualityChecks()
     
     PYTHIA8->Close();
     delete PYTHIA8;
-    LEP2->Close();
-    delete LEP2;
+    //LEP2->Close();
+    //delete LEP2;
     LEP1->Close();
     delete LEP1;
     
