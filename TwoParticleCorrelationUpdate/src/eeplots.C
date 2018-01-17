@@ -35,21 +35,31 @@ int eeplots
     // declare binning for probability
     const int nBinsY = 80;
     Double_t binsY[nBinsY+1];
-    const Double_t logLow = .00005;
+    const Double_t logLow = .0000005;
     const Double_t logHi = .3;
     getLogBins(logLow, logHi, nBinsY, binsY);
     
     // declare binning for axis
     const int nBinsMult = 60;
     Double_t binsMult[nBinsMult+1];
-    const Double_t multLow = 0;
-    const Double_t multHi = 60;
-    getLinBins(multLow, multHi, nBinsMult, binsMult);
+    Double_t multHi = 60;
+    Double_t multLow = 0;
     
     const int nBinsPt = 60;
     Double_t binsPt[nBinsPt+1];
-    const Double_t ptLow = 0;
-    const Double_t ptHi = 60;
+    Double_t ptHi = 60;
+    Double_t ptLow = 0;
+    
+    const int nBinsEta = 60;
+    Double_t binsEta[nBinsEta+1];
+    Double_t etaHi = 3;
+    Double_t etaLow = -etaHi;
+    
+    if(datalabel == "PYTHIA8"){multHi = 100;etaHi = 3;ptHi = 60;}
+    if(datalabel == "LEP1"){multHi = 80;etaHi = 2.5;ptHi = 60;}
+    if(datalabel == "LEP2"){multHi = 90;etaHi = 1.75;ptHi = 60;}
+    
+    getLinBins(multLow, multHi, nBinsMult, binsMult);
     getLinBins(ptLow, ptHi, nBinsPt, binsPt);
     
     

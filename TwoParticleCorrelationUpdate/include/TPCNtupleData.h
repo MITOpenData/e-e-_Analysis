@@ -5,19 +5,21 @@
 // DataFormat
 class TPCNtupleData{
     public:
-    
+    static const int nMaxPart = 10000;
     Int_t nParticle;
-    Float_t pt[5000];
-    Float_t eta[5000];
-    Float_t theta[5000];
-    Int_t pid[5000];
-    Float_t phi[5000];
-    Float_t mass[5000];
-    Int_t pwflag[5000];
+    Int_t nChargedHadrons;
     
-    Float_t px[5000];
-    Float_t py[5000];
-    Float_t pz[5000];
+    Float_t pt[nMaxPart];
+    Float_t eta[nMaxPart];
+    Float_t theta[nMaxPart];
+    Int_t pid[nMaxPart];
+    Float_t phi[nMaxPart];
+    Float_t mass[nMaxPart];
+    Int_t pwflag[nMaxPart];
+    
+    Float_t px[nMaxPart];
+    Float_t py[nMaxPart];
+    Float_t pz[nMaxPart];
     Float_t TTheta;
     Float_t TPhi;
     
@@ -27,8 +29,8 @@ class TPCNtupleData{
     // Jet Tree
     Int_t nref;
     Float_t jtpt;
-    Float_t jteta[5000];
-    Float_t jtphi[5000];
+    Float_t jteta[nMaxPart];
+    Float_t jtphi[nMaxPart];
     
     
     bool isBelle;
@@ -37,7 +39,8 @@ class TPCNtupleData{
     TVector3 thrust;
     TVector3 p;
     
-    TPCNtupleData(bool ana=0, int thrustAna=0){
+    TPCNtupleData(bool ana=0, int thrustAna=0)
+    {
        isBelle = ana;
        doThrust = thrustAna;
        thrust.SetXYZ(1,0,0);
@@ -117,6 +120,7 @@ class TPCNtupleData{
     void setTPCTreeStatus(TTree *t1){
       t1->SetBranchStatus("*", 0);
       t1->SetBranchStatus("nParticle", 1);
+      t1->SetBranchStatus("nChargedHadrons", 1);
       t1->SetBranchStatus("pt", 1);
       t1->SetBranchStatus("eta", 1);
       t1->SetBranchStatus("theta", 1);
@@ -141,6 +145,7 @@ class TPCNtupleData{
 void setupTPCTree(TTree *t1, TTree *t2, TPCNtupleData &data)
 {
     t1->SetBranchAddress("nParticle",&data.nParticle);
+    t1->SetBranchStatus("nChargedHadrons", &data.nChargedHadrons);
     t1->SetBranchAddress("pt",data.pt);
     t1->SetBranchAddress("eta",data.eta);
     t1->SetBranchAddress("theta",data.theta);

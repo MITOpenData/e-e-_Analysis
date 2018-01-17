@@ -157,21 +157,13 @@ int plotDataQualityChecks()
     delete leg_eta_LEP2;
     delete eta_LEP2;
 
-
-    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     PYTHIA8->Close();
     delete PYTHIA8;
-
-    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     LEP2->Close();
     delete LEP2;
-
-    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-
     LEP1->Close();
     delete LEP1;
-
-    std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+    
     return 0;
 }
 
