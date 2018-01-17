@@ -177,7 +177,7 @@ int eeplots
     leg->AddEntry(nmult,"Neutral Hadrons + Photons","p");
     leg->Draw();
     xjjroot::drawtex(0.2,0.876,datalabel);
-    allmult->SaveAs(Form("pdfDir/%s_mult.pdf",datalabel.Data()));
+    allmult->SaveAs(Form("../pdfDir/%s_mult.pdf",datalabel.Data()));
     
     // Plot all, neutral, charged pt
     TCanvas *allpt = new TCanvas("allpt","allpt",600,600);
@@ -197,7 +197,7 @@ int eeplots
     ptleg->AddEntry(npt,"Neutral Hadrons + Photons","p");
     ptleg->Draw();
     xjjroot::drawtex(0.2,0.876,datalabel);
-    allpt->SaveAs(Form("pdfDir/%s_pt.pdf",datalabel.Data()));
+    allpt->SaveAs(Form("../pdfDir/%s_pt.pdf",datalabel.Data()));
     
     // Plot all, neutral, charged eta
     TCanvas *alleta = new TCanvas("alleta","alleta",600,600);
@@ -216,9 +216,9 @@ int eeplots
     etaleg->AddEntry(neta,"Neutral Hadrons + Photons","p");
     etaleg->Draw();
     xjjroot::drawtex(0.2,0.876,datalabel);
-    alleta->SaveAs(Form("pdfDir/%s_eta.pdf",datalabel.Data()));
+    alleta->SaveAs(Form("../pdfDir/%s_eta.pdf",datalabel.Data()));
     
-    TFile* outFile_p = new TFile(Form("inputs/qualityCheck/outFile_%s.root",datalabel.Data()), "RECREATE");
+    TFile* outFile_p = new TFile(Form("../inputs/qualityCheck/outFile_%s.root",datalabel.Data()), "RECREATE");
     //write all, first arg name ("" == declaration name), second arg overwrites buffer saves in file
     amult->Write("", TObject::kOverwrite);
     cmult->Write("", TObject::kOverwrite);
