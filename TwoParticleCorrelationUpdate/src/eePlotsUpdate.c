@@ -173,7 +173,7 @@ int eeplots
     cmult->Draw("pe same");
     xjjroot::setthgrstyle(nmult, kBlue, 22, 1.2, kBlue, 1, 1, -1, -1, -1);
     nmult->Draw("pe same");
-    TLegend* leg = new TLegend(0.42,0.76,0.85,0.89);
+    TLegend* leg = new TLegend(0.42,0.81,0.85,0.905);
     xjjroot::setleg(leg);
     leg->AddEntry(amult,"All","p");
     leg->AddEntry(cmult,"Charged Hadrons","p");
@@ -199,7 +199,7 @@ int eeplots
     ptleg->AddEntry(cpt,"Charged Hadrons","p");
     ptleg->AddEntry(npt,"Neutral Hadrons + Photons","p");
     ptleg->Draw();
-    xjjroot::drawtex(0.2,0.876,datalabel);
+    xjjroot::drawtex(0.3,0.876,datalabel);
     allpt->SaveAs(Form("../pdfDir/%s_pt.pdf",datalabel.Data()));
     
     // Plot all, neutral, charged eta
