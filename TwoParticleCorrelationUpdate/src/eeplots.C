@@ -48,17 +48,17 @@ int eeplots
     getLinBins(linLow,linHi,nBinsY,binsYLin);
     
     // declare binning for x-axis
-    int nBinsMult;
-    Double_t multHi;
-    Double_t multLow;
+    int nBinsMult = 0;
+    Double_t multHi = 0;
+    Double_t multLow = 0;
     
     int nBinsPt = 60;
-    Double_t ptHi;
-    Double_t ptLow;
+    Double_t ptHi = 0;
+    Double_t ptLow = 0;
     
     int nBinsEta = 60;
-    Double_t etaHi;
-    Double_t etaLow;
+    Double_t etaHi = 0;
+    Double_t etaLow = 0;
     
     // assign binning ranges for different data sets
     if(datalabel == "PYTHIA8"){nBinsMult = 100; multHi = 100; etaHi = 3; ptHi = 60;}
