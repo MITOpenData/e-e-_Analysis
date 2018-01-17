@@ -244,7 +244,7 @@ int drawEta
     etaleg->AddEntry(neta,"Neutral Hadrons + Photons","p");
     etaleg->Draw("SAME");
     xjjroot::drawtex(0.2,0.876,datalabel.c_str());
-    alleta->SaveAs(Form("../pdfDir/%s_eta.pdf",datalabel.c_str()));
+    alleta->SaveAs(Form("pdfDir/%s_eta.pdf",datalabel.c_str()));
     
     delete etaleg;
     delete neta;
