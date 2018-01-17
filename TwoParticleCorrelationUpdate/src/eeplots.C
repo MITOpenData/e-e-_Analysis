@@ -34,8 +34,8 @@ int eeplots
     //declare some binnings first - just get it out of the way
     const int nBinsMult = 80;
     const int nBinsPt = 8000;
-    Double_t binsMult[nBins+1];
-    Double_t binsPt[nBinsSys+1];
+    Double_t binsMult[nBinsMult+1];
+    Double_t binsPt[nBinsPt+1];
     const Double_t logLow = .005;
     const Double_t logHi = .4;
     getLogBins(logLow, logHi, nBinsMult, binsMult);
@@ -92,8 +92,6 @@ int eeplots
     ak8JetTree->SetBranchAddress("jtphi",jtphi8);
      */
     
-    
-    TH1D* h_one_minus_thrust_log_SysUp = new TH1D("h_one_minus_thrust_log_SysUp", "", nBins, bins);
     // Plot all, neutral, charged multiplicity
     TCanvas *allmult = new TCanvas ("allmult","allmult",600,600);
     gPad->SetLogy();
