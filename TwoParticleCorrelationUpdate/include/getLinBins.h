@@ -1,6 +1,7 @@
 #ifndef getLinBins_h
 #define getLinBins_h
 
+#include "TMath.h"
 void getLinBins(const float lower, const float higher, const int nBins, double bins[])
 {
     bins[0] = lower;
@@ -16,3 +17,4 @@ void getLinBins(const float lower, const float higher, const int nBins, double b
 }
 
 
+#endif
