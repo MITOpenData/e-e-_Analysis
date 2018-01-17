@@ -78,9 +78,12 @@ int eeplots
     ak8JetTree->SetBranchAddress("jteta",jteta8);
     ak8JetTree->SetBranchAddress("jtphi",jtphi8);
      */
+    
+    
     // Plot all, neutral, charged multiplicity
     TCanvas *allmult = new TCanvas ("allmult","allmult",600,600);
-	TH2F *hempty = new TH2F("",";Multiplicity;Probability",1,0,95,1,0,0.15);
+    allmult->SetLogy();
+	TH2F *hempty = new TH2F("",";Multiplicity;Probability",1,0,60,1,0,0.15);
     xjjroot::sethempty(hempty,0,0.3);
     hempty->Draw();
     t1->Draw("nParticle>>amult","","goff");
@@ -111,6 +114,7 @@ int eeplots
     
     // Plot all, neutral, charged pt
     TCanvas *allmom = new TCanvas("allmom","allmom",600,600);
+    allmom->SetLogy();
     TH2F *hemptyp = new TH2F("",";pt;Probability",1,0,60,1,0,0.3);
     xjjroot::sethempty(hemptyp,0,0.3);
     hemptyp->Draw();
@@ -140,7 +144,9 @@ int eeplots
     
     // Plot all, neutral, charged eta
     TCanvas *alleta = new TCanvas("alleta","alleta",600,600);
-    TH2F *hemptyeta = new TH2F("",";eta;Probability",1,-5,5,1,0,0.1);
+    TH2F *hemptyeta = 0;
+    if(datalabel == "LEP2") hemptyeta = new TH2F("",";eta;Probability",1,-2.5,2.5,1,0,0.1);
+    else hemptyeta = new TH2F("",";eta;Probability",1,-1.7,1.7,1,0,0.1);
     xjjroot::sethempty(hemptyeta,0,0.3);
     hemptyeta->Draw();
     t1->Draw("eta>>aeta","(1)*.000001","goff");
