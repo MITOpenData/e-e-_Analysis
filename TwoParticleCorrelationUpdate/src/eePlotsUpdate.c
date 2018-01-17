@@ -29,7 +29,7 @@ int eeplots
  const TString datalabel // Text in upper-left corner
 )
 {
-    // setting style
+    // setting ROOT defaults
     xjjroot::setgstyle();
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
@@ -232,6 +232,7 @@ int eeplots
     
     TFile* outFile_p = new TFile(Form("../inputs/qualityCheck/outFile_%s.root",datalabel.Data()), "RECREATE");
     //write all, first arg name ("" == declaration name), second arg overwrites buffer saves in file
+    
     amult->Write("", TObject::kOverwrite);
     cmult->Write("", TObject::kOverwrite);
     nmult->Write("", TObject::kOverwrite);
