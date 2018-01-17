@@ -69,10 +69,12 @@ int plotDataQualityChecks()
     TH1F *LEP1_cmom = (TH1F*)gDirectory->Get("cmom");
     TH1F *LEP1_ceta = (TH1F*)gDirectory->Get("ceta");
     
+    /*
     TFile *LEP2 = new TFile("inputs/qualityCheck/outFile_LEP2.root");
     TH1F *LEP2_cmult = (TH1F*)gDirectory->Get("cmult");
     TH1F *LEP2_cmom = (TH1F*)gDirectory->Get("cmom");
     TH1F *LEP2_ceta = (TH1F*)gDirectory->Get("ceta");
+    */
     
     TFile *PYTHIA8 = new TFile("inputs/qualityCheck/outFile_PYTHIA8.root");
     TH1F *PYTHIA8_cmult = (TH1F*)gDirectory->Get("cmult");
