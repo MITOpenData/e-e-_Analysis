@@ -22,6 +22,7 @@
 //local headers
 #include "../include/xjjrootuti.h"
 #include "../include/getLogBins.h"
+#include "../include/getLinBins.h"
 int eeplots
         (
              const TString inFileName, // input file
@@ -31,16 +32,28 @@ int eeplots
     // setting style
     xjjroot::setgstyle();
     
-    //declare some binnings first - just get it out of the way
-    const int nBinsMult = 80;
-    const int nBinsPt = 8000;
-    Double_t binsMult[nBinsMult+1];
-    Double_t binsPt[nBinsPt+1];
+    // declare binning for probability
+    const int nBinsY = 80;
+    Double_t binsY[nBinsY+1];
     const Double_t logLow = .005;
     const Double_t logHi = .4;
-    getLogBins(logLow, logHi, nBinsMult, binsMult);
-    getLogBins(logLow, logHi, nBinsPt, binsPt);
+    getLogBins(logLow, logHi, nBinsY, binsY);
     
+    // declare binning for axis
+    const int nBinsMult = 60;
+    Double_t binsMult[nBinsMult+1];
+    const Double_t multLow = 0;
+    const Double_t multHi = 60;
+    getLinBins(multLow, multHi, nBinsMult, binsMult);
+    
+    const int nBinsPt = 60;
+    Double_t binsPt[nBinsPt+1];
+    const Double_t ptLow = 0;
+    const Double_t ptHi = 60;
+    getLinBins(ptLow, ptHi, nBinsPt, binsPt);
+    
+    
+    //
     // open the file
     TFile *f = new TFile(inFileName,"READ");
     TTree *t1 = (TTree*)f->Get("t");
@@ -94,9 +107,9 @@ int eeplots
     
     // Plot all, neutral, charged multiplicity
     TCanvas *allmult = new TCanvas ("allmult","allmult",600,600);
-    gPad->SetLogy();
+    //gPad->SetLogy();
 	//TH2F *hempty = new TH2F("",";Multiplicity;Probability",1,0,60,1,0,0.15);
-    TH2F *hempty = new TH2F("",";Multiplicity;Probability",nBinsMult,binsMult);
+    TH2F *hempty = new TH2F("",";Multiplicity;Probability",nBinsMult,binsMult,nBinsY,binsY);
     xjjroot::sethempty(hempty,0,0.3);
     hempty->Draw();
     t1->Draw("nParticle>>amult","","goff");
@@ -127,9 +140,9 @@ int eeplots
     
     // Plot all, neutral, charged pt
     TCanvas *allmom = new TCanvas("allmom","allmom",600,600);
-    gPad->SetLogy();
+    //gPad->SetLogy();
     //TH2F *hemptyp = new TH2F("",";pt;Probability",1,0,60,1,0,0.3);
-    TH2F *hemptyp = new TH2F("",";pt;Probability",nBinsPt,binsPt);
+    TH2F *hemptyp = new TH2F("",";pt;Probability",nBinsPt,binsPt,nBinsY,binsY);
     xjjroot::sethempty(hemptyp,0,0.3);
     hemptyp->Draw();
     t1->Draw("pt>>amom","(1)*.000001","goff");
