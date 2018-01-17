@@ -66,23 +66,24 @@ int plotDataQualityChecks()
     // load data files
     TFile *LEP1 = new TFile("inputs/qualityCheck/outFile_LEP1.root");
     TH1F *LEP1_cmult = (TH1F*)gDirectory->Get("cmult");
-    TH1F *LEP1_cmom = (TH1F*)gDirectory->Get("cmom");
+    TH1F *LEP1_cmom = (TH1F*)gDirectory->Get("cpt");
     TH1F *LEP1_ceta = (TH1F*)gDirectory->Get("ceta");
     
     /*
     TFile *LEP2 = new TFile("inputs/qualityCheck/outFile_LEP2.root");
     TH1F *LEP2_cmult = (TH1F*)gDirectory->Get("cmult");
-    TH1F *LEP2_cmom = (TH1F*)gDirectory->Get("cmom");
+    TH1F *LEP2_cmom = (TH1F*)gDirectory->Get("cpt");
     TH1F *LEP2_ceta = (TH1F*)gDirectory->Get("ceta");
     */
     
     TFile *PYTHIA8 = new TFile("inputs/qualityCheck/outFile_PYTHIA8.root");
     TH1F *PYTHIA8_cmult = (TH1F*)gDirectory->Get("cmult");
-    TH1F *PYTHIA8_cmom = (TH1F*)gDirectory->Get("cmom");
+    TH1F *PYTHIA8_cmom = (TH1F*)gDirectory->Get("cpt");
     TH1F *PYTHIA8_ceta = (TH1F*)gDirectory->Get("ceta");
     
     // multiplicity spectrum
     TCanvas *mult_LEP1_PYTHIA8 = new TCanvas("mult","",600,600);
+    gPad->SetLogy();
     TH2F *hempty_mult1 = new TH2F("Multiplicity Distribution",";Multiplicity;Probability",nBinsMult,binsMult,nBinsY,binsYLog);
     //TH2F *hempty_mult1 = new TH2F("Multiplicity Distribution",";Multiplicity;Probability",1,0,95,1,0,0.15);
     xjjroot::sethempty(hempty_mult1,0,0.3);
@@ -99,8 +100,8 @@ int plotDataQualityChecks()
     xjjroot::drawtex(0.2,0.876,"LEP1 vs PYTHIA8");
     mult_LEP1_PYTHIA8->SaveAs("pdfDir/mult_LEP1_PYTHIA8.pdf");
     
-    delete hempty_mult1;
     delete leg_mult_LEP1_PYTHIA8;
+    delete hempty_mult1;
     delete mult_LEP1_PYTHIA8;
 
     /*
@@ -117,13 +118,14 @@ int plotDataQualityChecks()
     xjjroot::drawtex(0.2,0.876,"LEP2");
     mult_LEP2->SaveAs("pdfDir/mult_LEP2.pdf");
     
-    delete hempty_mult2;
     delete leg_mult_LEP2;
+    delete hempty_mult2;
     delete mult_LEP2;
      */
     
     // pt spectra
     TCanvas *pt_LEP1_PYTHIA8 = new TCanvas("pt","",600,600);
+    gPad->SetLogy();
     TH2F *hempty_pt1 = new TH2F("PT Spectra",";pt;Probability",nBinsPt,binsPt,nBinsY,binsYLog);
     //TH2F *hempty_pt1 = new TH2F("PT Spectra",";PT;Probability",1,0,95,1,0,0.15);
     xjjroot::sethempty(hempty_pt1,0,0.3);
@@ -140,8 +142,8 @@ int plotDataQualityChecks()
     xjjroot::drawtex(0.2,0.876,"LEP1 vs PYTHIA8");
     pt_LEP1_PYTHIA8->SaveAs("pdfDir/pt_LEP1_PYTHIA8.pdf");
     
-    delete hempty_pt1;
     delete leg_pt_LEP1_PYTHIA8;
+    delete hempty_pt1;
     delete pt_LEP1_PYTHIA8;
 
     /*
@@ -181,8 +183,8 @@ int plotDataQualityChecks()
     xjjroot::drawtex(0.2,0.876,"LEP1 vs PYTHIA8");
     eta_LEP1_PYTHIA8->SaveAs("pdfDir/eta_LEP1_PYTHIA8.pdf");
     
-    delete hempty_eta1;
     delete leg_eta_LEP1_PYTHIA8;
+    delete hempty_eta1;
     delete eta_LEP1_PYTHIA8;
 
     /*
