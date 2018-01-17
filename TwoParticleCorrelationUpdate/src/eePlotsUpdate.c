@@ -173,7 +173,7 @@ int eeplots
     cmult->Draw("pe same");
     xjjroot::setthgrstyle(nmult, kBlue, 22, 1.2, kBlue, 1, 1, -1, -1, -1);
     nmult->Draw("pe same");
-    TLegend* leg = new TLegend(0.42,0.805,0.85,0.899);
+    TLegend* leg = new TLegend(0.42,0.80,0.85,0.895);
     xjjroot::setleg(leg);
     leg->AddEntry(amult,"All","p");
     leg->AddEntry(cmult,"Charged Hadrons","p");

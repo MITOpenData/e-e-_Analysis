@@ -51,9 +51,9 @@ int eeplots
     Double_t ptLow = 0;
     
     const int nBinsEta = 60;
-    Double_t binsEta[nBinsEta+1];
+    //Double_t binsEta[nBinsEta+1];
     Double_t etaHi = 3;
-    Double_t etaLow = -etaHi;
+    //Double_t etaLow = -etaHi;
     
     if(datalabel == "PYTHIA8"){multHi = 100;etaHi = 3;ptHi = 60;}
     if(datalabel == "LEP1"){multHi = 80;etaHi = 2.5;ptHi = 60;}
