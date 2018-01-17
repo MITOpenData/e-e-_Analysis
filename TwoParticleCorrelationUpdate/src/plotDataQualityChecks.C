@@ -66,19 +66,19 @@ int plotDataQualityChecks()
     // load data files
     TFile *LEP1 = new TFile("inputs/qualityCheck/outFile_LEP1.root");
     TH1F *LEP1_cmult = (TH1F*)gDirectory->Get("cmult");
-    TH1F *LEP1_cmom = (TH1F*)gDirectory->Get("cpt");
+    TH1F *LEP1_cpt = (TH1F*)gDirectory->Get("cpt");
     TH1F *LEP1_ceta = (TH1F*)gDirectory->Get("ceta");
     
     /*
     TFile *LEP2 = new TFile("inputs/qualityCheck/outFile_LEP2.root");
     TH1F *LEP2_cmult = (TH1F*)gDirectory->Get("cmult");
-    TH1F *LEP2_cmom = (TH1F*)gDirectory->Get("cpt");
+    TH1F *LEP2_cpt = (TH1F*)gDirectory->Get("cpt");
     TH1F *LEP2_ceta = (TH1F*)gDirectory->Get("ceta");
     */
     
     TFile *PYTHIA8 = new TFile("inputs/qualityCheck/outFile_PYTHIA8.root");
     TH1F *PYTHIA8_cmult = (TH1F*)gDirectory->Get("cmult");
-    TH1F *PYTHIA8_cmom = (TH1F*)gDirectory->Get("cpt");
+    TH1F *PYTHIA8_cpt = (TH1F*)gDirectory->Get("cpt");
     TH1F *PYTHIA8_ceta = (TH1F*)gDirectory->Get("ceta");
     
     // multiplicity spectrum
@@ -130,14 +130,14 @@ int plotDataQualityChecks()
     //TH2F *hempty_pt1 = new TH2F("PT Spectra",";PT;Probability",1,0,95,1,0,0.15);
     xjjroot::sethempty(hempty_pt1,0,0.3);
     hempty_pt1->DrawCopy();
-    xjjroot::setthgrstyle(LEP1_cmom, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
-    LEP1_cmom->DrawCopy("pe same");
-    xjjroot::setthgrstyle(PYTHIA8_cmom, kBlue, 21, 1.2, kBlue, 1, 1, -1, -1, -1);
-    PYTHIA8_cmom->DrawCopy("pe same");
+    xjjroot::setthgrstyle(LEP1_cpt, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
+    LEP1_cpt->DrawCopy("pe same");
+    xjjroot::setthgrstyle(PYTHIA8_cpt, kBlue, 21, 1.2, kBlue, 1, 1, -1, -1, -1);
+    PYTHIA8_cpt->DrawCopy("pe same");
     TLegend *leg_pt_LEP1_PYTHIA8 = new TLegend(0.67,0.7,1.1,0.88);
     xjjroot::setleg(leg_pt_LEP1_PYTHIA8);
-    leg_pt_LEP1_PYTHIA8->AddEntry(LEP1_cmom,"LEP1","p");
-    leg_pt_LEP1_PYTHIA8->AddEntry(PYTHIA8_cmom,"PYTHIA8","p");
+    leg_pt_LEP1_PYTHIA8->AddEntry(LEP1_cpt,"LEP1","p");
+    leg_pt_LEP1_PYTHIA8->AddEntry(PYTHIA8_cpt,"PYTHIA8","p");
     leg_pt_LEP1_PYTHIA8->Draw("SAME");
     xjjroot::drawtex(0.2,0.876,"LEP1 vs PYTHIA8");
     pt_LEP1_PYTHIA8->SaveAs("pdfDir/pt_LEP1_PYTHIA8.pdf");
@@ -151,11 +151,11 @@ int plotDataQualityChecks()
     TH2F *hempty_pt2 = new TH2F("PT Spectra",";PT;Probability",1,0,95,1,0,0.15);
     xjjroot::sethempty(hempty_pt2,0,0.3);
     hempty_pt2->DrawCopy();
-    xjjroot::setthgrstyle(LEP2_cmom, kBlack, 21, 1.2, kBlack, 1, 1, -1, -1, -1);
-    LEP2_cmom->DrawCopy("pe same");
+    xjjroot::setthgrstyle(LEP2_cpt, kBlack, 21, 1.2, kBlack, 1, 1, -1, -1, -1);
+    LEP2_cpt->DrawCopy("pe same");
     TLegend *leg_pt_LEP2 = new TLegend(0.67,0.7,1.1,0.88);
     xjjroot::setleg(leg_pt_LEP2);
-    leg_pt_LEP2->AddEntry(LEP2_cmom,"LEP2","p");
+    leg_pt_LEP2->AddEntry(LEP2_cpt,"LEP2","p");
     leg_pt_LEP2->Draw("SAME");
     xjjroot::drawtex(0.2,0.876,"LEP2");
     pt_LEP2->SaveAs("pdfDir/pt_LEP2.pdf");
