@@ -35,8 +35,8 @@ int eeplots
     // declare binning for probability
     const int nBinsY = 80;
     Double_t binsY[nBinsY+1];
-    const Double_t logLow = .005;
-    const Double_t logHi = .4;
+    const Double_t logLow = .00005;
+    const Double_t logHi = .3;
     getLogBins(logLow, logHi, nBinsY, binsY);
     
     // declare binning for axis
@@ -107,7 +107,7 @@ int eeplots
     
     // Plot all, neutral, charged multiplicity
     TCanvas *allmult = new TCanvas ("allmult","allmult",600,600);
-    //gPad->SetLogy();
+    gPad->SetLogy();
 	//TH2F *hempty = new TH2F("",";Multiplicity;Probability",1,0,60,1,0,0.15);
     TH2F *hempty = new TH2F("",";Multiplicity;Probability",nBinsMult,binsMult,nBinsY,binsY);
     xjjroot::sethempty(hempty,0,0.3);
@@ -129,7 +129,7 @@ int eeplots
     nmult->Scale(1./nmult->Integral());
     xjjroot::setthgrstyle(nmult, kBlue, 22, 1.2, kBlue, 1, 1, -1, -1, -1);
     nmult->Draw("pe same");
-    TLegend* leg = new TLegend(0.42,0.7,0.85,0.88);
+    TLegend* leg = new TLegend(0.42,0.76,0.85,0.89);
     xjjroot::setleg(leg);
     leg->AddEntry(amult,"All","p");
     leg->AddEntry(cmult,"Charged Hadrons","p");
@@ -140,22 +140,22 @@ int eeplots
     
     // Plot all, neutral, charged pt
     TCanvas *allmom = new TCanvas("allmom","allmom",600,600);
-    //gPad->SetLogy();
+    gPad->SetLogy();
     //TH2F *hemptyp = new TH2F("",";pt;Probability",1,0,60,1,0,0.3);
     TH2F *hemptyp = new TH2F("",";pt;Probability",nBinsPt,binsPt,nBinsY,binsY);
     xjjroot::sethempty(hemptyp,0,0.3);
     hemptyp->Draw();
-    t1->Draw("pt>>amom","(1)*.000001","goff");
+    t1->Draw(("pt>>amom(" + std::to_string(nBinsPt) + ", " + std::to_string(binsPt[0]) + ", " + std::to_string(binsPt[nBinsPt]) + ")").c_str(),"(1)*.000001","goff");
     TH1F* amom = (TH1F*)gDirectory->Get("amom");
     amom->Scale(1./amom->Integral());
     xjjroot::setthgrstyle(amom, kBlack, 20, 1.2, kRed, 1, 1, -1, -1, -1);
     amom->Draw("pe same");
-    t1->Draw("pt>>cmom","(pwflag==0)*.000001","goff");
+    t1->Draw(("pt>>cmom(" + std::to_string(nBinsPt) + ", " + std::to_string(binsPt[0]) + ", " + std::to_string(binsPt[nBinsPt]) + ")").c_str(),"(pwflag==0)*.000001","goff");
     TH1F* cmom = (TH1F*)gDirectory->Get("cmom");
     cmom->Scale(1./cmom->Integral());
     xjjroot::setthgrstyle(cmom, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
     cmom->Draw("pe same");
-    t1->Draw("pt>>nmom","(pwflag!=0)*.000001","goff");
+    t1->Draw(("pt>>nmom(" + std::to_string(nBinsPt) + ", " + std::to_string(binsPt[0]) + ", " + std::to_string(binsPt[nBinsPt]) + ")").c_str(),"(pwflag!=0)*.000001","goff");
     TH1F* nmom = (TH1F*)gDirectory->Get("nmom");
     nmom->Scale(1./nmom->Integral());
     xjjroot::setthgrstyle(nmom, kBlue, 22, 1.2, kBlue, 1, 1, -1, -1, -1);
@@ -184,6 +184,7 @@ int eeplots
     t1->Draw("eta>>ceta","(pwflag==0)*.000001","goff");
     TH1F* ceta = (TH1F*)gDirectory->Get("ceta");
     ceta->Scale(1./ceta->Integral());
+    std::cout
     xjjroot::setthgrstyle(ceta, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
     ceta->Draw("pe same");
     t1->Draw("eta>>neta","(pwflag!=0)*.000001","goff");
