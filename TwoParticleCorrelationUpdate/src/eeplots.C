@@ -82,7 +82,7 @@ int eeplots
     
     // Plot all, neutral, charged multiplicity
     TCanvas *allmult = new TCanvas ("allmult","allmult",600,600);
-    allmult->SetLogy();
+    gPad->SetLogy();
 	TH2F *hempty = new TH2F("",";Multiplicity;Probability",1,0,60,1,0,0.15);
     xjjroot::sethempty(hempty,0,0.3);
     hempty->Draw();
@@ -114,7 +114,7 @@ int eeplots
     
     // Plot all, neutral, charged pt
     TCanvas *allmom = new TCanvas("allmom","allmom",600,600);
-    allmom->SetLogy();
+    gPad->SetLogy();
     TH2F *hemptyp = new TH2F("",";pt;Probability",1,0,60,1,0,0.3);
     xjjroot::sethempty(hemptyp,0,0.3);
     hemptyp->Draw();
