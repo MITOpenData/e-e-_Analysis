@@ -126,7 +126,7 @@ int eeplots
     Float_t theta[nMaxPart];
     Float_t phi[nMaxPart];
     Int_t pwflag[nMaxPart];
-    Float_t px[nMaxPart]];
+    Float_t px[nMaxPart];
     Float_t py[nMaxPart];
     Float_t pz[nMaxPart];
     
@@ -165,13 +165,13 @@ int eeplots
         v.SetE(Energy);
         for (Int_t j=0;j<nParticle;j++)
         {
-            v.SetPx(px); v.SetPy(py); v.SetPz(pz);
+            v.SetPx(px[j]); v.SetPy(py[j]); v.SetPz(pz[j]);
             // fill all particles
             aeta->Fill(eta[j],weight); apt->Fill(pt[j],weight); ay->Fill(v.Rapidity(),weight);
             // fill charged hadrons
-            if(pwflag[j]==0){ ceta->Fill(eta[j],weight); cpt->Fill(pt[j],weight); cy->Fill(v.Rapidity(),weight)}
+            if(pwflag[j]==0){ ceta->Fill(eta[j],weight); cpt->Fill(pt[j],weight); cy->Fill(v.Rapidity(),weight);}
             // fill the neutral hadrons and photons
-            if(pwflag[j]!=0){ neta->Fill(eta[j],weight); npt->Fill(pt[j],weight); ny->Fill(v.Rapidity(),weight)}
+            if(pwflag[j]!=0){ neta->Fill(eta[j],weight); npt->Fill(pt[j],weight); ny->Fill(v.Rapidity(),weight);}
             // fill the leptons
             //if(pwflag[j] == 1 || pwflag[j] == 2){nLepton++;}
         }
