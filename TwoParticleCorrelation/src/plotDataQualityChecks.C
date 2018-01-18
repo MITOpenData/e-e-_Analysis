@@ -110,7 +110,7 @@ int plotDataQualityChecks()
     hempty_mult2->DrawCopy();
     xjjroot::setthgrstyle(LEP1_cmult, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
     LEP1_cmult->DrawCopy("pe same");
-    xjjroot::setthgrstyle(LEP2_cmult, kBlue, 21, 1.2, kBlue, 1, 1, -1, -1, -1);
+    xjjroot::setthgrstyle(LEP2_cmult, kBlack, 21, 1.2, kBlack, 1, 1, -1, -1, -1);
     LEP2_cmult->DrawCopy("pe same");
     TLegend *leg_mult_LEP1_LEP2 = new TLegend(0.67,0.7,1.1,0.88);
     xjjroot::setleg(leg_mult_LEP1_LEP2);
@@ -163,7 +163,7 @@ int plotDataQualityChecks()
     leg_pt_LEP1_LEP2->AddEntry(LEP1_cpt,"LEP1","p");
     leg_pt_LEP1_LEP2->AddEntry(LEP2_cpt,"LEP2","p");
     leg_pt_LEP1_LEP2->Draw("SAME");
-    xjjroot::drawtex(0.2,0.876,"LEP1 vs LEP2");
+    xjjroot::drawtex(0.25,0.876,"LEP1 vs LEP2");
     pt_LEP1_LEP2->SaveAs("pdfDir/pt_LEP1_LEP2.pdf");
 
     delete hempty_pt2;
