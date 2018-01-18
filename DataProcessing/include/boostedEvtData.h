@@ -7,6 +7,7 @@ class boostedEvtData{
  public:
   static const int nMaxBoostedPart = 10000;
 
+  int nParticle;
   float WTAAxis_Theta;
   float WTAAxis_Phi;
   float pt[nMaxBoostedPart];
@@ -15,8 +16,9 @@ class boostedEvtData{
   float theta[nMaxBoostedPart];
   float phi[nMaxBoostedPart];
 
-  static const int nVar = 7;
-  std::string varStr[nVar] = {"WTAAxis_Theta",
+  static const int nVar = 8;
+  std::string varStr[nVar] = {"nParticle",
+                              "WTAAxis_Theta",
                               "WTAAxis_Phi",
 			      "pt",
 			      "pmag",
@@ -57,13 +59,14 @@ void boostedEvtData::SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::s
     if(varIsGood[i]) inTree_p->SetBranchStatus(varStr[i].c_str(), 1);
   }
 
-  if(varIsGood[0]) inTree_p->SetBranchAddress("WTAAxis_Theta", &WTAAxis_Theta);
-  if(varIsGood[1]) inTree_p->SetBranchAddress("WTAAxis_Phi", &WTAAxis_Phi);
-  if(varIsGood[2]) inTree_p->SetBranchAddress("pt", pt);
-  if(varIsGood[3]) inTree_p->SetBranchAddress("pmag", pmag);
-  if(varIsGood[4]) inTree_p->SetBranchAddress("eta", eta);
-  if(varIsGood[5]) inTree_p->SetBranchAddress("theta", theta);
-  if(varIsGood[6]) inTree_p->SetBranchAddress("phi", phi);
+  if(varIsGood[0]) inTree_p->SetBranchAddress("nParticle", &nParticle);
+  if(varIsGood[1]) inTree_p->SetBranchAddress("WTAAxis_Theta", &WTAAxis_Theta);
+  if(varIsGood[2]) inTree_p->SetBranchAddress("WTAAxis_Phi", &WTAAxis_Phi);
+  if(varIsGood[3]) inTree_p->SetBranchAddress("pt", pt);
+  if(varIsGood[4]) inTree_p->SetBranchAddress("pmag", pmag);
+  if(varIsGood[5]) inTree_p->SetBranchAddress("eta", eta);
+  if(varIsGood[6]) inTree_p->SetBranchAddress("theta", theta);
+  if(varIsGood[7]) inTree_p->SetBranchAddress("phi", phi);
   
   return;
 }

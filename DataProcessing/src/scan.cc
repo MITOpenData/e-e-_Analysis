@@ -236,6 +236,8 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
   const std::string genPartTreeName = "tgen";
   std::string jetTreeName[nJtAlgo];
   std::string genJetTreeName[nJtAlgo];
+  const std::string boostedTreeName = "BoostedWTAEvt";
+  const std::string genboostedTreeName = "genBoostedWTAEvt";
   for(int i = 0; i < nJtAlgo; ++i){
     std::string recombSchemeStr = "EScheme";
     if(recombScheme[i] == fastjet::WTA_modp_scheme) recombSchemeStr = "WTAmodpScheme";
@@ -255,16 +257,20 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 
   TFile *hf = new TFile(outFileName.c_str(), "RECREATE");
   TTree *tout = new TTree(finalPartTreeName.c_str(), finalPartTreeName.c_str());
+  TTree *bout = new TTree(boostedTreeName.c_str(), boostedTreeName.c_str());
   TTree *jout[nJtAlgo];
   for(int i = 0; i < nJtAlgo; ++i){jout[i] = new TTree(finalJetTreeName[i].c_str(), finalJetTreeName[i].c_str());}
+
 
   if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
   TTree *tgout = 0;
+  TTree *bgout = 0;
   TTree *jgout[nJtAlgo] = {0, 0, 0, 0};
 
   if(isRecons && isMC){
     tgout = new TTree(genPartTreeName.c_str(), genPartTreeName.c_str());
+    bgout = new TTree(genboostedTreeName.c_str(), genboostedTreeName.c_str()); 
 
     for(int i = 0; i < nJtAlgo; ++i){jgout[i] = new TTree(genJetTreeName[i].c_str(), genJetTreeName[i].c_str());}
   }
@@ -272,10 +278,12 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
   particleData pData;
   jetData jData[nJtAlgo];
   eventData eData;
+  boostedEvtData bData;
 
   particleData pgData;
   jetData jgData[nJtAlgo];
   eventData egData;
+  boostedEvtData bgData;
 
   tout->Branch("year", &pData.year, "year/I");
   tout->Branch("EventNo", &pData.EventNo,"EventNo/I");
@@ -332,6 +340,15 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
   tout->Branch("nChargedHadrons",&eData.nChargedHadrons,"nChargedHadrons/I");
   tout->Branch("nChargedHadrons_GT0p4",&eData.nChargedHadrons_GT0p4,"nChargedHadrons_GT0p4/I");
   tout->Branch("nChargedHadrons_GT0p4Thrust",&eData.nChargedHadrons_GT0p4Thrust,"nChargedHadrons_GT0p4Thrust/I");
+
+  bout->Branch("nParticle",&bData.nParticle,"nParticle/I");
+  bout->Branch("WTAAxis_Theta",&bData.WTAAxis_Theta,"WTAAxis_Theta/F");
+  bout->Branch("WTAAxis_Phi",&bData.WTAAxis_Phi,"WTAAxis_Phi/F");
+  bout->Branch("pt", bData.pt,"pt[nParticle]/F");
+  bout->Branch("pmag", bData.pmag,"pmag[nParticle]/F");//Added later on
+  bout->Branch("eta", bData.eta,"eta[nParticle]/F");
+  bout->Branch("theta", bData.theta,"theta[nParticle]/F");
+  bout->Branch("phi", bData.phi,"phi[nParticle]/F");
 
   for(int i = 0; i < nJtAlgo; ++i){
     jout[i]->Branch("nref", &jData[i].nref,"nref/I");
@@ -400,6 +417,15 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
     tgout->Branch("nChargedHadrons_GT0p4",&egData.nChargedHadrons_GT0p4,"nChargedHadrons_GT0p4/I");
     tgout->Branch("nChargedHadrons_GT0p4Thrust",&egData.nChargedHadrons_GT0p4Thrust,"nChargedHadrons_GT0p4Thrust/I");
 
+    bgout->Branch("nParticle",&bgData.nParticle,"nParticle/I");
+    bgout->Branch("WTAAxis_Theta",&bgData.WTAAxis_Theta,"WTAAxis_Theta/F");
+    bgout->Branch("WTAAxis_Phi",&bgData.WTAAxis_Phi,"WTAAxis_Phi/F");
+    bgout->Branch("pt", bgData.pt,"pt[nParticle]/F");
+    bgout->Branch("pmag", bgData.pmag,"pmag[nParticle]/F");//Added later on
+    bgout->Branch("eta", bgData.eta,"eta[nParticle]/F");
+    bgout->Branch("theta", bgData.theta,"theta[nParticle]/F");
+    bgout->Branch("phi", bgData.phi,"phi[nParticle]/F");
+    
     for(int i = 0; i < nJtAlgo; ++i){
       jgout[i]->Branch("nref", &jgData[i].nref,"nref/I");
       jgout[i]->Branch("jtpt", jgData[i].jtpt,"jtpt[nref]/F");
@@ -951,6 +977,8 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
   
   tout->Write("", TObject::kOverwrite);
   delete tout;
+  bout->Write("", TObject::kOverwrite);
+  delete bout;
 
   for(int i = 0; i < nJtAlgo; ++i){
     jout[i]->Write("", TObject::kOverwrite);
@@ -960,6 +988,8 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
   if(isMC && isRecons){
     tgout->Write("", TObject::kOverwrite);
     delete tgout;
+    bgout->Write("", TObject::kOverwrite);
+    delete bgout;
 
     for(int jIter = 0; jIter < nJtAlgo; ++jIter){
       jgout[jIter]->Write("", TObject::kOverwrite);
