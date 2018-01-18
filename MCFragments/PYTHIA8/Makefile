@@ -13,7 +13,7 @@ MKDIR_BIN=mkdir -p $(PWD)/bin
 #done for lxplus
 SETPYT=export PYTHIA8DATA=/cvmfs/cms.cern.ch/slc6_amd64_gcc630/external/pythia8/230/share/Pythia8/xmldoc
 #replace with your own pythia8 path, done for lxplus
-PYTPATH=/afs/cern.ch/work/c/cmcginn/private/Generators/PYTHIA8/pythia8230
+PYTPATH=/afs/cern.ch/work/c/cmcginn/public/Packages/PYTHIA8/pythia8230
 
 PROCPATH=../../DataProcessing/
 
