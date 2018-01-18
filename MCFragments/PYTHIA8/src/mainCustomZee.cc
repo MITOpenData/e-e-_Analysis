@@ -133,6 +133,7 @@ int main(int argc, char* argv[])
   TTree* jetTree_p[nJtAlgo];
   for(int i = 0; i < nJtAlgo; ++i){jetTree_p[i] = new TTree(jetTreeName[i].c_str(), jetTreeName[i].c_str());}
 
+  particleData pData;
   jetData jData[nJtAlgo];
 
   Float_t pthat_;
@@ -140,31 +141,8 @@ int main(int argc, char* argv[])
   Int_t scatterMom_;
   std::vector<int> scatterMomDaughter_;
 
-  const int nMaxPart = 10000;
   Int_t nParticleChg_;
   Int_t nParticleChg_Pt0p4_Eta1p8_;
-  Int_t nParticle_;
-  Float_t px_[nMaxPart];
-  Float_t py_[nMaxPart];
-  Float_t pz_[nMaxPart];
-  Float_t mass_[nMaxPart];
-  Float_t pt_[nMaxPart];
-  Float_t phi_[nMaxPart];
-  Float_t eta_[nMaxPart];
-  Float_t theta_[nMaxPart];
-
-  Float_t pt_wrtThr_[nMaxPart];
-  Float_t phi_wrtThr_[nMaxPart];
-  Float_t eta_wrtThr_[nMaxPart];
-  Float_t theta_wrtThr_[nMaxPart];
-
-  Float_t pt_wrtChThr_[nMaxPart];
-  Float_t phi_wrtChThr_[nMaxPart];
-  Float_t eta_wrtChThr_[nMaxPart];
-  Float_t theta_wrtChThr_[nMaxPart];
-
-  Int_t pid_[nMaxPart];
-  Int_t pwflag_[nMaxPart];
 
   Float_t Thrust_;
   Float_t TTheta_;
@@ -182,25 +160,7 @@ int main(int argc, char* argv[])
   genTree_p->Branch("scatterMomDaughter", &scatterMomDaughter_);
   genTree_p->Branch("nParticleChg", &nParticleChg_, "nParticleChg/I");
   genTree_p->Branch("nParticleChg_Pt0p4_Eta1p8", &nParticleChg_Pt0p4_Eta1p8_, "nParticleChg_Pt0p4_Eta1p8/I");
-  genTree_p->Branch("nParticle", &nParticle_, "nParticle/I");
-  genTree_p->Branch("px", px_, "px[nParticle]/F");
-  genTree_p->Branch("py", py_, "py[nParticle]/F");
-  genTree_p->Branch("pz", pz_, "pz[nParticle]/F");
-  genTree_p->Branch("mass", mass_, "mass[nParticle]/F");
-  genTree_p->Branch("theta", theta_, "theta[nParticle]/F");
-  genTree_p->Branch("pt", pt_, "pt[nParticle]/F");
-  genTree_p->Branch("phi", phi_, "phi[nParticle]/F");
-  genTree_p->Branch("eta", eta_, "eta[nParticle]/F");
-  genTree_p->Branch("pt_wrtThr", pt_wrtThr_, "pt_wrtThr[nParticle]/F");
-  genTree_p->Branch("phi_wrtThr", phi_wrtThr_, "phi_wrtThr[nParticle]/F");
-  genTree_p->Branch("eta_wrtThr", eta_wrtThr_, "eta_wrtThr[nParticle]/F");
-  genTree_p->Branch("theta_wrtThr", theta_wrtThr_, "theta_wrtThr[nParticle]/F");
-  genTree_p->Branch("pt_wrtChThr", pt_wrtChThr_, "pt_wrtChThr[nParticle]/F");
-  genTree_p->Branch("phi_wrtChThr", phi_wrtChThr_, "phi_wrtChThr[nParticle]/F");
-  genTree_p->Branch("eta_wrtChThr", eta_wrtChThr_, "eta_wrtChThr[nParticle]/F");
-  genTree_p->Branch("theta_wrtChThr", theta_wrtChThr_, "theta_wrtChThr[nParticle]/F");
-  genTree_p->Branch("pid", pid_, "pid[nParticle]/I");
-  genTree_p->Branch("pwflag", pwflag_, "pwflag[nParticle]/I");
+  pData.SetBranchWrite(genTree_p);
   genTree_p->Branch("Thrust", &Thrust_, "Thrust/F");
   genTree_p->Branch("TTheta", &TTheta_, "TTheta/F");
   genTree_p->Branch("TPhi", &TPhi_, "TPhi/F");
@@ -266,10 +226,10 @@ int main(int argc, char* argv[])
 
     pthat_ = pythia.info.pTHat();
     pthatWeight_ = pythia.info.weight();
-    nParticle_ = 0;
+    pData.nParticle = 0;
     nParticleChg_ = 0;
     nParticleChg_Pt0p4_Eta1p8_ = 0;
-    particleData pData;
+
     particleData pDataCh;
     std::vector<fastjet::PseudoJet> particles;
 
@@ -294,36 +254,32 @@ int main(int argc, char* argv[])
       if(TMath::Abs(temp.Eta()) > 10.) continue;
       if(temp.Pt() < .1) continue;
 
-      px_[nParticle_] = pythia.event[i].px();
-      py_[nParticle_] = pythia.event[i].py();
-      pz_[nParticle_] = pythia.event[i].pz();
-      mass_[nParticle_] = pythia.event[i].m();
-      theta_[nParticle_] = pythia.event[i].theta();
-      pt_[nParticle_] = temp.Pt();
-      phi_[nParticle_] = temp.Phi();
-      eta_[nParticle_] = temp.Eta();
-      pid_[nParticle_] = pythia.event[i].id();
+      pData.px[pData.nParticle] = pythia.event[i].px();
+      pData.py[pData.nParticle] = pythia.event[i].py();
+      pData.pz[pData.nParticle] = pythia.event[i].pz();
+      pData.mass[pData.nParticle] = pythia.event[i].m();
+      pData.theta[pData.nParticle] = pythia.event[i].theta();
+      pData.pt[pData.nParticle] = temp.Pt();
+      pData.phi[pData.nParticle] = temp.Phi();
+      pData.eta[pData.nParticle] = temp.Eta();
+      pData.pid[pData.nParticle] = pythia.event[i].id();
 
       //done based on here: https://github.com/ginnocen/StudyMult/blob/master/DataProcessing/src/createMC.c#L13
-      pwflag_[nParticle_] = -999;
-      if(TMath::Abs(pythia.event[i].id()) == 11) pwflag_[nParticle_] = 1;
-      else if(TMath::Abs(pythia.event[i].id()) == 13) pwflag_[nParticle_] = 2;
-      else if(TMath::Abs(pythia.event[pythia.event[i].mother1()].id()) == 310 && pythia.event[i].mother2() == 0) pwflag_[nParticle_] = 3;
-      else if(TMath::Abs(pythia.event[pythia.event[i].mother1()].id()) == 3122 && pythia.event[i].mother2() == 0) pwflag_[nParticle_] = 3;
-      else if(TMath::Abs(pythia.event[i].id()) == 22) pwflag_[nParticle_] = 4;
-      else if(pythia.event[i].charge() == 0) pwflag_[nParticle_] = 5;
-      else if(pythia.event[i].charge() != 0) pwflag_[nParticle_] = 0;
-
-      pData.px[nParticle_] = pythia.event[i].px();
-      pData.py[nParticle_] = pythia.event[i].py();
-      pData.pz[nParticle_] = pythia.event[i].pz();
+      pData.pwflag[pData.nParticle] = -999;
+      if(TMath::Abs(pythia.event[i].id()) == 11) pData.pwflag[pData.nParticle] = 1;
+      else if(TMath::Abs(pythia.event[i].id()) == 13) pData.pwflag[pData.nParticle] = 2;
+      else if(TMath::Abs(pythia.event[pythia.event[i].mother1()].id()) == 310 && pythia.event[i].mother2() == 0) pData.pwflag[pData.nParticle] = 3;
+      else if(TMath::Abs(pythia.event[pythia.event[i].mother1()].id()) == 3122 && pythia.event[i].mother2() == 0) pData.pwflag[pData.nParticle] = 3;
+      else if(TMath::Abs(pythia.event[i].id()) == 22) pData.pwflag[pData.nParticle] = 4;
+      else if(pythia.event[i].charge() == 0) pData.pwflag[pData.nParticle] = 5;
+      else if(pythia.event[i].charge() != 0) pData.pwflag[pData.nParticle] = 0;
 
       fastjet::PseudoJet particle(pythia.event[i].px(), pythia.event[i].py(), pythia.event[i].pz(), pythia.event[i].e());
       int tempFlag = TMath::Abs(pythia.event[i].charge());
       particle.set_user_index(tempFlag);
       particles.push_back(particle);
 
-      if(pwflag_[nParticle_] == 0){
+      if(pData.pwflag[pData.nParticle] == 0){
 	pDataCh.px[nParticleChg_] = pythia.event[i].px();
         pDataCh.py[nParticleChg_] = pythia.event[i].py();
         pDataCh.pz[nParticleChg_] = pythia.event[i].pz();
@@ -332,71 +288,45 @@ int main(int argc, char* argv[])
 	if(temp.Pt() > 0.40 && TMath::Abs(temp.Eta()) < 1.8) ++nParticleChg_Pt0p4_Eta1p8_;
       }
 
-      
-
-      ++nParticle_;
+      ++pData.nParticle;
     }
 
     if(nParticleChg_Pt0p4_Eta1p8_ < nMinPartChgCut_) continue;
 
-    pData.nParticle = nParticle_;
     pDataCh.nParticle = nParticleChg_;
 
-    if(doGlobalDebug) std::cout << nParticleChg_ << ", " << nParticleChg_Pt0p4_Eta1p8_ << ", " << nParticle_ << ", " << nMinPartChgCut_ << std::endl;
-
-    if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-
-    if(nParticle_ > 0){
+    if(pData.nParticle > 0){
       if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
       TVector3 thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz, THRUST::OPTIMAL);
-      if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
       TVector3 thrustCh = getThrust(pDataCh.nParticle, pDataCh.px, pDataCh.py, pDataCh.pz, THRUST::OPTIMAL);
-      if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
       Thrust_ = thrust.Mag();
       TTheta_ = thrust.Theta();
       TPhi_ = thrust.Phi();
 
-      if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-
       Thrust_charged_ = thrustCh.Mag();
       TTheta_charged_ = thrustCh.Theta();
       TPhi_charged_ = thrustCh.Phi();
       
-      if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+      for(int pI = 0; pI < pData.nParticle; ++pI){
+	pData.pt_wrtThr[pI] = ptFromThrust(thrust, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]));
+	pData.theta_wrtThr[pI] = thetaFromThrust(thrust, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]));
+	pData.eta_wrtThr[pI] = etaFromThrust(thrust, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]));
+	pData.phi_wrtThr[pI] = phiFromThrust(thrust, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]));
 
-      for(int pI = 0; pI < nParticle_; ++pI){
-	pt_wrtThr_[pI] = ptFromThrust(thrust, TVector3(px_[pI], py_[pI], pz_[pI]));
-	theta_wrtThr_[pI] = thetaFromThrust(thrust, TVector3(px_[pI], py_[pI], pz_[pI]));
-	eta_wrtThr_[pI] = etaFromThrust(thrust, TVector3(px_[pI], py_[pI], pz_[pI]));
-	phi_wrtThr_[pI] = phiFromThrust(thrust, TVector3(px_[pI], py_[pI], pz_[pI]));
-
-	pt_wrtChThr_[pI] = ptFromThrust(thrustCh, TVector3(px_[pI], py_[pI], pz_[pI]));
-	theta_wrtChThr_[pI] = thetaFromThrust(thrustCh, TVector3(px_[pI], py_[pI], pz_[pI]));
-	eta_wrtChThr_[pI] = etaFromThrust(thrustCh, TVector3(px_[pI], py_[pI], pz_[pI]));
-	phi_wrtChThr_[pI] = phiFromThrust(thrustCh, TVector3(px_[pI], py_[pI], pz_[pI]));
+	pData.pt_wrtChThr[pI] = ptFromThrust(thrustCh, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]));
+	pData.theta_wrtChThr[pI] = thetaFromThrust(thrustCh, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]));
+	pData.eta_wrtChThr[pI] = etaFromThrust(thrustCh, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]));
+	pData.phi_wrtChThr[pI] = phiFromThrust(thrustCh, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]));
       }
 
-      if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-
-      for(int jIter = 0; jIter < nJtAlgo; ++jIter){
-	processJets(particles, jDef[jIter], jDefReclust[jIter], &(jData[jIter]), jtPtCut);
-      }
-
-      if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+      for(int jIter = 0; jIter < nJtAlgo; ++jIter){processJets(particles, jDef[jIter], jDefReclust[jIter], &(jData[jIter]), jtPtCut);}
 
       genTree_p->Fill();
-
-      for(int jIter = 0; jIter < nJtAlgo; ++jIter){
-	jetTree_p[jIter]->Fill();
-      }
-
-      if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+      for(int jIter = 0; jIter < nJtAlgo; ++jIter){jetTree_p[jIter]->Fill();}
     }
   }
-
-  if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
   outFile_p->cd();
   genTree_p->Write("", TObject::kOverwrite);
