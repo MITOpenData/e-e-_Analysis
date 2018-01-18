@@ -114,7 +114,7 @@ int plotDataQualityChecks()
     LEP2_cmult->DrawCopy("pe same");
     TLegend *leg_mult_LEP1_LEP2 = new TLegend(0.67,0.7,1.1,0.88);
     xjjroot::setleg(leg_mult_LEP1_LEP2);
-    leg_mult_LEP1_PYTHIA8->AddEntry(LEP1_cmult,"LEP1","p");
+    leg_mult_LEP1_LEP2->AddEntry(LEP1_cmult,"LEP1","p");
     leg_mult_LEP1_LEP2->AddEntry(LEP2_cmult,"LEP2","p");
     leg_mult_LEP1_LEP2->Draw("SAME");
     xjjroot::drawtex(0.2,0.876,"LEP1 vs LEP2");
