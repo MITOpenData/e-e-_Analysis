@@ -145,15 +145,21 @@ int eeplots
     
     // all entries and fill the histograms
     Int_t nevent = (Int_t)t1->GetEntries();
+    
+    // basic variable declarations
     Int_t nChg = 0;
     //Int_t nLepton = 0;
     TLorentzVector v(1., 1., 1., 1.);
+    Float_t min_ZPole_Energy = 91.0;
+    Float_t max_ZPole_Energy = 91.5;
     
     // fill the histograms
     for (Int_t i = 0; i<nevent; i++)
     {
         t1->GetEntry(i);
         
+        // for LEP2 Energy (91,91.5) to focus on Z pole
+        if(datalabel == "LEP2"){if(Energy<min_ZPole_Energy || Energy>max_ZPole_Energy){continue;}}
         if(datalabel == "PYTHIA8")nChg = nParticleChg;
         else nChg = nChargedHadrons;
         
