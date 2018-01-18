@@ -87,10 +87,52 @@ class particleData{
   
   particleData();
   void SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::string> inList);
+  void SetBranchWrite(TTree* inTree_p);
 };
 
 particleData::particleData()
 {
+  //init values in event they are written to tree but are meaningless - treat -999 as danger
+  nParticle = -999;
+  EventNo = -999;
+  RunNo = -999;
+  year = -999;
+  process = -999;
+  Energy = -999;
+  bFlag = -999;
+  bx = -999;
+  by = -999;
+  ebx = -999;
+  eby = -999;
+
+  for(Int_t i = 0; i < nMaxPart; ++i){
+    px[i] = -999;
+    py[i] = -999;
+    pz[i] = -999;
+    pt[i] = -999;
+    pmag[i] = -999;
+    rap[i] = -999;
+    eta[i] = -999;
+    theta[i] = -999;
+    phi[i] = -999;
+    mass[i] = -999;
+    charge[i] = -999;
+    pwflag[i] = -999;
+    pid[i] = -999;
+    d0[i] = -999;
+    z0[i] = -999;
+    ntpc[i] = -999;
+    
+    pt_wrtThr[i] = -999;
+    eta_wrtThr[i] = -999;
+    theta_wrtThr[i] = -999;
+    phi_wrtThr[i] = -999;
+    pt_wrtChThr[i] = -999;
+    eta_wrtChThr[i] = -999;
+    theta_wrtChThr[i] = -999;
+    phi_wrtChThr[i] = -999;
+  }
+  
   for(int i = 0; i < nVar; ++i){varIsGood[i] = true;}
   return;
 }
