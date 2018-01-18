@@ -35,17 +35,17 @@ int eeplots
     TH2::SetDefaultSumw2();
     
     // declare log binning for probability of pt/multiplicity
-    const int nBinsY = 80;
-    Double_t binsYLog[nBinsY+1];
+    const int nBinsP = 80;
+    Double_t binsPLog[nBinsP+1];
     const Double_t logLow = .0000005;
     const Double_t logHi = .3;
-    getLogBins(logLow, logHi, nBinsY, binsYLog);
+    getLogBins(logLow, logHi, nBinsP, binsPLog);
     
     // declare linear binning for probability of eta
-    Double_t binsYLin[nBinsY+1];
+    Double_t binsYLin[nBinsP+1];
     const Double_t linLow = 0;
     const Double_t linHi = 0.1;
-    getLinBins(linLow,linHi,nBinsY,binsYLin);
+    getLinBins(linLow,linHi,nBinsP,binsYLin);
     
     // declare binning for x-axis
     int nBinsMult = 0;
@@ -60,38 +60,49 @@ int eeplots
     Double_t etaHi = 0;
     Double_t etaLow = 0;
     
+    int nBinsY = 60;
+    Double_t yHi = 0;
+    Double_t yLow = 8;
+    
     // assign binning ranges for different data sets
     if(datalabel == "PYTHIA8"){nBinsMult = 100; multHi = 100; etaHi = 3; ptHi = 60;}
     if(datalabel == "LEP1"){nBinsMult = 80; multHi = 80; etaHi = 2.5; ptHi = 60;}
     if(datalabel == "LEP2"){nBinsMult = 90; multHi = 90; etaHi = 1.75; ptHi = 60;}
+    etaLow = -etaHi;
     
     // declare bins
     Double_t binsMult[nBinsMult+1];
     Double_t binsPt[nBinsPt+1];
     Double_t binsEta[nBinsEta+1];
-    etaLow = -etaHi;
+    Double_t binsY[nBinsY+1];
     
     // generate the binning
     getLinBins(multLow, multHi, nBinsMult, binsMult);
     getLinBins(ptLow, ptHi, nBinsPt, binsPt);
     getLinBins(etaLow, etaHi, nBinsEta, binsEta);
+    getLinBins(yLow, yHi, nBinsY, binsY);
     
     // Declare Histograms
-    TH2F *hemptymult = new TH2F("",";Multiplicity;Probability",nBinsMult,binsMult,nBinsY,binsYLog);
+    TH2F *hempty_mult = new TH2F("",";Multiplicity;Probability",nBinsMult,binsMult,nBinsP,binsPLog);
     TH1F* amult = new TH1F("amult","",nBinsMult,binsMult);
     TH1F* cmult = new TH1F("cmult","",nBinsMult,binsMult);
     TH1F* nmult = new TH1F("nmult","",nBinsMult,binsMult);
     //TH1F* lmult = new TH1F("lmult","",nBinsMult,binsMult); // leptons
     
-    TH2F *hemptypt = new TH2F("",";pt;Probability",nBinsPt,binsPt,nBinsY,binsYLog);
+    TH2F *hempty_pt = new TH2F("",";pt;Probability",nBinsPt,binsPt,nBinsP,binsPLog);
     TH1F* apt = new TH1F("apt","",nBinsPt,binsPt);
     TH1F* cpt = new TH1F("cpt","",nBinsPt,binsPt);
     TH1F* npt = new TH1F("npt","",nBinsPt,binsPt);
     
-    TH2F *hemptyeta = new TH2F("",";eta;Probability",nBinsEta,binsEta,nBinsEta,binsYLin);
+    TH2F *hempty_eta = new TH2F("",";eta;Probability",nBinsEta,binsEta,nBinsP,binsYLin);
     TH1F* aeta = new TH1F("aeta","",nBinsEta,binsEta);
     TH1F* ceta = new TH1F("ceta","",nBinsEta,binsEta);
     TH1F* neta = new TH1F("neta","",nBinsEta,binsEta);
+    
+    TH2F *hempty_y = new TH2F("",";y;Probability",nBinsY,binsY,nBinsP,binsYLin);
+    TH1F* ay = new TH1F("ay","",nBinsY,binsY);
+    TH1F* cy = new TH1F("cy","",nBinsY,binsY);
+    TH1F* ny = new TH1F("ny","",nBinsY,binsY);
     
     // fill weights
     static const double weight = 0.0000000000001;
@@ -105,28 +116,39 @@ int eeplots
     //TTree *ak8JetTree = (TTree*)f->Get("ak8JetTree");
     
     //// main Tree ////
+    static const int nMaxPart = 10000;
     Int_t nParticle;
     Int_t nChargedHadrons;
     Int_t nParticleChg;
-    Float_t pt[50000];
-    Float_t eta[50000];
-    Float_t theta[50000];
-    Float_t phi[50000];
-    Int_t pwflag[50000];
+    Float_t Energy;
+    Float_t pt[nMaxPart];
+    Float_t eta[nMaxPart];
+    Float_t theta[nMaxPart];
+    Float_t phi[nMaxPart];
+    Int_t pwflag[nMaxPart];
+    Float_t px[nMaxPart]];
+    Float_t py[nMaxPart];
+    Float_t pz[nMaxPart];
     
     t1->SetBranchAddress("nParticle",&nParticle);
     t1->SetBranchAddress("nChargedHadrons",&nChargedHadrons);
     if(datalabel == "PYTHIA8")t1->SetBranchAddress("nParticleChg",&nParticleChg);
+    t1->SetBranchAddress("Energy",&Energy);
     t1->SetBranchAddress("pt",pt);
     t1->SetBranchAddress("eta",eta);
     t1->SetBranchAddress("theta",theta);
     t1->SetBranchAddress("phi",phi);
     t1->SetBranchAddress("pwflag",pwflag);
+    t1->SetBranchAddress("px",px);
+    t1->SetBranchAddress("py",py);
+    t1->SetBranchAddress("pz",pz);
     
     // all entries and fill the histograms
     Int_t nevent = (Int_t)t1->GetEntries();
     Int_t nChg = 0;
     //Int_t nLepton = 0;
+    TLorentzVector v(1., 1., 1., 1.);
+    
     // fill the histograms
     for (Int_t i = 0; i<nevent; i++)
     {
@@ -140,14 +162,16 @@ int eeplots
         cmult->Fill(nChg);
         nmult->Fill(nParticle-nChg);
         
+        v.SetE(Energy);
         for (Int_t j=0;j<nParticle;j++)
         {
+            v.SetPx(px); v.SetPy(py); v.SetPz(pz);
             // fill all particles
-            aeta->Fill(eta[j],weight); apt->Fill(pt[j],weight);
+            aeta->Fill(eta[j],weight); apt->Fill(pt[j],weight); ay->Fill(v.Rapidity(),weight);
             // fill charged hadrons
-            if(pwflag[j]==0){ ceta->Fill(eta[j],weight); cpt->Fill(pt[j],weight);}
+            if(pwflag[j]==0){ ceta->Fill(eta[j],weight); cpt->Fill(pt[j],weight); cy->Fill(v.Rapidity(),weight)}
             // fill the neutral hadrons and photons
-            if(pwflag[j]!=0){ neta->Fill(eta[j],weight); npt->Fill(pt[j],weight);}
+            if(pwflag[j]!=0){ neta->Fill(eta[j],weight); npt->Fill(pt[j],weight); ny->Fill(v.Rapidity(),weight)}
             // fill the leptons
             //if(pwflag[j] == 1 || pwflag[j] == 2){nLepton++;}
         }
@@ -168,11 +192,15 @@ int eeplots
     ceta->Scale(1./ceta->Integral());
     neta->Scale(1./neta->Integral());
     
+    ay->Scale(1./ay->Integral());
+    cy->Scale(1./cy->Integral());
+    ny->Scale(1./ny->Integral());
+    
     // Plot all, neutral, charged multiplicity
     TCanvas *allmult = new TCanvas ("allmult","allmult",600,600);
     gPad->SetLogy();
-    xjjroot::sethempty(hemptymult,0,0.3);
-    hemptymult->Draw();
+    xjjroot::sethempty(hempty_mult,0,0.3);
+    hempty_mult->Draw();
     xjjroot::setthgrstyle(amult, kBlack, 20, 1.2, kBlack, 1, 1, -1, -1, -1);
     amult->Draw("pe same");
     xjjroot::setthgrstyle(cmult, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
@@ -181,21 +209,21 @@ int eeplots
     nmult->Draw("pe same");
     //xjjroot::setthgrstyle(lmult, kGreen, 22, 1.2, kGreen, 1, 1, -1, -1, -1);
     //lmult->Draw("pe same");
-    TLegend* leg = new TLegend(0.42,0.80,0.85,0.895);
-    xjjroot::setleg(leg);
-    leg->AddEntry(amult,"All","p");
-    leg->AddEntry(cmult,"Charged Hadrons","p");
-    leg->AddEntry(nmult,"Neutral Hadrons + Photons","p");
+    TLegend* multleg = new TLegend(0.42,0.80,0.85,0.895);
+    xjjroot::setleg(multleg);
+    multleg->AddEntry(amult,"All","p");
+    multleg->AddEntry(cmult,"Charged Hadrons","p");
+    multleg->AddEntry(nmult,"Neutral Hadrons + Photons","p");
     //leg->AddEntry(lmult,"Leptons","p");
-    leg->Draw();
+    multleg->Draw();
     xjjroot::drawtex(0.2,0.876,datalabel);
     allmult->SaveAs(Form("pdfDir/%s_mult.pdf",datalabel.Data()));
     
     // Plot all, neutral, charged pt
     TCanvas *allpt = new TCanvas("allpt","allpt",600,600);
     gPad->SetLogy();
-    xjjroot::sethempty(hemptypt,0,0.3);
-    hemptypt->Draw();
+    xjjroot::sethempty(hempty_pt,0,0.3);
+    hempty_pt->Draw();
     xjjroot::setthgrstyle(apt, kBlack, 20, 1.2, kRed, 1, 1, -1, -1, -1);
     apt->Draw("pe same");
     xjjroot::setthgrstyle(cpt, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
@@ -213,8 +241,8 @@ int eeplots
     
     // Plot all, neutral, charged eta
     TCanvas *alleta = new TCanvas("alleta","alleta",600,600);
-    xjjroot::sethempty(hemptyeta,0,0.3);
-    hemptyeta->Draw();
+    xjjroot::sethempty(hempty_eta,0,0.3);
+    hempty_eta->Draw();
     xjjroot::setthgrstyle(aeta, kBlack, 20, 1.2, kRed, 1, 1, -1, -1, -1);
     aeta->Draw("pe same");
     xjjroot::setthgrstyle(ceta, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
@@ -230,6 +258,25 @@ int eeplots
     xjjroot::drawtex(0.2,0.876,datalabel);
     alleta->SaveAs(Form("pdfDir/%s_eta.pdf",datalabel.Data()));
     
+    // Plot all, neutral, charged rapidity
+    TCanvas *ally = new TCanvas("ally","ally",600,600);
+    xjjroot::sethempty(hempty_y,0,0.3);
+    hempty_y->Draw();
+    xjjroot::setthgrstyle(ay, kBlack, 20, 1.2, kRed, 1, 1, -1, -1, -1);
+    ay->Draw("pe same");
+    xjjroot::setthgrstyle(cy, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
+    cy->Draw("pe same");
+    xjjroot::setthgrstyle(ny, kBlue, 22, 1.2, kBlue, 1, 1, -1, -1, -1);
+    ny->Draw("pe same");
+    TLegend* yleg = new TLegend(0.42,0.7,0.85,0.88);
+    xjjroot::setleg(yleg);
+    yleg->AddEntry(ay,"All","p");
+    yleg->AddEntry(cy,"Charged Hadrons","p");
+    yleg->AddEntry(ny,"Neutral Hadrons + Photons","p");
+    yleg->Draw();
+    xjjroot::drawtex(0.2,0.876,datalabel);
+    ally->SaveAs(Form("pdfDir/%s_y.pdf",datalabel.Data()));
+    
     TFile* outFile_p = new TFile(Form("inputs/qualityCheck/outFile_%s.root",datalabel.Data()), "RECREATE");
     //write all, first arg name ("" == declaration name), second arg overwrites buffer saves in file
     
@@ -242,29 +289,39 @@ int eeplots
     aeta->Write("", TObject::kOverwrite);
     ceta->Write("", TObject::kOverwrite);
     neta->Write("", TObject::kOverwrite);
+    ay->Write("", TObject::kOverwrite);
+    cy->Write("", TObject::kOverwrite);
+    ny->Write("", TObject::kOverwrite);
     
     outFile_p->Close();
     delete outFile_p;
+    
+    delete yleg;
+    delete ny;
+    delete cy;
+    delete ay;
+    delete hempty_y;
+    delete ally;
     
     delete etaleg;
     delete neta;
     delete ceta;
     delete aeta;
-    delete hemptyeta;
+    delete hempty_eta;
     delete alleta;
     
     delete ptleg;
     delete npt;
     delete cpt;
     delete apt;
-    delete hemptypt;
+    delete hempty_pt;
     delete allpt;
     
-    delete leg;
+    delete multleg;
     delete nmult;
     delete cmult;
     delete amult;
-    delete hemptymult;
+    delete hempty_mult;
     delete allmult;
     
     f->Close();
