@@ -21,7 +21,7 @@ let NUMEVENTS=($fileEvents+$NUMFILES)/$NUMFILES
 START=1
 FINISH=$NUMEVENTS
 # divide up the file
-while [$i -le $NUMFILES]; do
+while [ $i -le $NUMFILES ]; do
 rooteventselector —recreate -f START -l FINISH inFileName:t $i.root
 let i=i+1
 let START=FINISH+1
@@ -32,7 +32,7 @@ done
 cd ..
 # we are now in TwoParticleCorrelation
 for f in tempFiles/*.root; do
-src/ridge_check_parallel.exe "$f" “out_$f” &
+ridge_check_parallel.exe "$f" “out_$f” &
 done
 wait
 
@@ -40,7 +40,7 @@ wait
 rm -r tempFiles
 
 # hadd the files together
-cd pdfDir
+cd ../pdfDir
 hadd -f $outFileName.root out_{1..20}.root
 # delete the smaller files
 rm -r out_*.root
