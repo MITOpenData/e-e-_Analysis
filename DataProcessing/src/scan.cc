@@ -22,7 +22,9 @@
 #include "include/particleData.h"
 #include "include/eventData.h"
 #include "include/jetData.h"
+#include "include/boostedEvtData.h"
 #include "include/thrustTools.h"
+#include "include/boostTools.h"
 
 bool getIsMC(std::string inStr)
 {
