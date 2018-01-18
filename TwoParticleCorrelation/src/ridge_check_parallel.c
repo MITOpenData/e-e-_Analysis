@@ -67,7 +67,7 @@ int ridge_check_parallel
     TChain *t1 = new TChain("t");
     t1->Add(inFileName.c_str());
     
-    TChain *t2 = new TChain("ak4JetTree");
+    TChain *t2 = new TChain("ak4ESchemeJetTree");
     t2->Add(inFileName.c_str());
     
     /* TString friendname =  "qqmc-e07-00_flavor.root"; */
@@ -86,7 +86,7 @@ int ridge_check_parallel
     t1_mix->Add(inFileName.c_str());
     
     // Not necessary
-    TChain *t2_mix = new TChain("ak4JetTree");
+    TChain *t2_mix = new TChain("ak4ESchemeJetTree");
     t2_mix->Add(inFileName.c_str());
     
     TPCNtupleData mix(isBelle, isThrust);
@@ -116,7 +116,7 @@ int ridge_check_parallel
     Int_t nevent = (Int_t)t1->GetEntries();
     
     Int_t nevent_process = nevent;
-    cout<<"maxevt "<<maxevt<<endl;
+    //cout<<"maxevt "<<maxevt<<endl;
     //if( maxevt>0 && maxevt<nevent ) nevent_process = maxevt;
     
     Float_t averageN=0;
