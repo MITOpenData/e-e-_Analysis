@@ -286,34 +286,8 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
   eventData egData;
   boostedEvtData bgData;
 
-  tout->Branch("year", &pData.year, "year/I");
-  tout->Branch("EventNo", &pData.EventNo,"EventNo/I");
-  tout->Branch("RunNo", &pData.RunNo,"RunNo/I");
-  tout->Branch("Energy", &pData.Energy,"Energy/F");
-  tout->Branch("process", &pData.process, "process/I");
-  tout->Branch("bFlag", &pData.bFlag, "bFlag/I");
-  tout->Branch("bx", &pData.bx, "bx/F");
-  tout->Branch("by", &pData.by, "by/F");
-  tout->Branch("ebx", &pData.ebx, "ebx/F");
-  tout->Branch("eby", &pData.eby, "eby/F");
-  tout->Branch("nParticle", &pData.nParticle,"nParticle/I");
-  tout->Branch("px", pData.px,"px[nParticle]/F");
-  tout->Branch("py", pData.py,"py[nParticle]/F");
-  tout->Branch("pz", pData.pz,"pz[nParticle]/F");
-  tout->Branch("pt", pData.pt,"pt[nParticle]/F");
-  tout->Branch("pmag", pData.pmag,"pmag[nParticle]/F");//Added later on
-  tout->Branch("mass", pData.mass,"mass[nParticle]/F");
-  tout->Branch("rap", pData.rap,"rap[nParticle]/F");
-  tout->Branch("eta", pData.eta,"eta[nParticle]/F");
-  tout->Branch("theta", pData.theta,"theta[nParticle]/F");
-  tout->Branch("phi", pData.phi,"phi[nParticle]/F");
-  tout->Branch("charge", pData.charge,"charge[nParticle]/F");
-  tout->Branch("pwflag", pData.pwflag,"pwflag[nParticle]/I");
-  tout->Branch("pid", pData.pid,"pid[nParticle]/I");
-  tout->Branch("d0", pData.d0,"d0[nParticle]/F");
-  tout->Branch("z0", pData.z0,"z0[nParticle]/F");
-  tout->Branch("ntpc", pData.ntpc,"ntpc[nParticle]/I");
- 
+  pData.SetBranchWrite(tout);
+
   //thrust quantities
   tout->Branch("Thrust",&eData.Thrust,"Thrust/F");
   tout->Branch("TTheta",&eData.TTheta,"TTheta/F");
@@ -321,14 +295,6 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
   tout->Branch("Thrust_charged",&eData.Thrust_charged,"Thrust_charged/F");
   tout->Branch("TTheta_charged",&eData.TTheta_charged,"TTheta_charged/F");
   tout->Branch("TPhi_charged",&eData.TPhi_charged,"TPhi_charged/F");
-  tout->Branch("pt_wrtThr", pData.pt_wrtThr,"pt_wrtThr[nParticle]/F");
-  tout->Branch("eta_wrtThr", pData.eta_wrtThr,"eta_wrtThr[nParticle]/F");
-  tout->Branch("theta_wrtThr", pData.theta_wrtThr,"theta_wrtThr[nParticle]/F");
-  tout->Branch("phi_wrtThr", pData.phi_wrtThr,"phi_wrtThr[nParticle]/F");
-  tout->Branch("pt_wrtChThr", pData.pt_wrtChThr,"pt_wrtChThr[nParticle]/F");
-  tout->Branch("eta_wrtChThr", pData.eta_wrtChThr,"eta_wrtChThr[nParticle]/F");
-  tout->Branch("theta_wrtChThr", pData.theta_wrtChThr,"theta_wrtChThr[nParticle]/F");
-  tout->Branch("phi_wrtChThr", pData.phi_wrtChThr,"phi_wrtChThr[nParticle]/F");
 
   //derived quantities
   tout->Branch("missP",&eData.missP,"missP/F");
@@ -363,33 +329,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
   }
 
   if(isRecons && isMC){
-    tgout->Branch("year", &pgData.year, "year/I");
-    tgout->Branch("EventNo", &pgData.EventNo,"EventNo/I");
-    tgout->Branch("RunNo", &pgData.RunNo,"RunNo/I");
-    tgout->Branch("Energy", &pgData.Energy,"Energy/F");
-    tgout->Branch("process", &pgData.process, "process/I");
-    tgout->Branch("bFlag", &pgData.bFlag, "bFlag/I");
-    tgout->Branch("bx", &pgData.bx, "bx/F");
-    tgout->Branch("by", &pgData.by, "by/F");
-    tgout->Branch("ebx", &pgData.ebx, "ebx/F");
-    tgout->Branch("eby", &pgData.eby, "eby/F");
-    tgout->Branch("nParticle", &pgData.nParticle,"nParticle/I");
-    tgout->Branch("px", pgData.px,"px[nParticle]/F");
-    tgout->Branch("py", pgData.py,"py[nParticle]/F");
-    tgout->Branch("pz", pgData.pz,"pz[nParticle]/F");
-    tgout->Branch("pt", pgData.pt,"pt[nParticle]/F");
-    tgout->Branch("pmag", pgData.pmag,"pmag[nParticle]/F");//Added later on
-    tgout->Branch("mass", pgData.mass,"mass[nParticle]/F");
-    tgout->Branch("rap", pgData.rap,"rap[nParticle]/F");
-    tgout->Branch("eta", pgData.eta,"eta[nParticle]/F");
-    tgout->Branch("theta", pgData.theta,"theta[nParticle]/F");
-    tgout->Branch("phi", pgData.phi,"phi[nParticle]/F");
-    tgout->Branch("charge", pgData.charge,"charge[nParticle]/F");
-    tgout->Branch("pwflag", pgData.pwflag,"pwflag[nParticle]/I");
-    tgout->Branch("pid", pgData.pid,"pid[nParticle]/I");
-    tgout->Branch("d0", pgData.d0,"d0[nParticle]/F");
-    tgout->Branch("z0", pgData.z0,"z0[nParticle]/F");
-    tgout->Branch("ntpc", pgData.ntpc,"ntpc[nParticle]/I");
+    pgData.SetBranchWrite(tgout);
 
     //thrust quantities
     tgout->Branch("Thrust",&egData.Thrust,"Thrust/F");
@@ -398,14 +338,6 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
     tgout->Branch("Thrust_charged",&egData.Thrust_charged,"Thrust_charged/F");
     tgout->Branch("TTheta_charged",&egData.TTheta_charged,"TTheta_charged/F");
     tgout->Branch("TPhi_charged",&egData.TPhi_charged,"TPhi_charged/F");
-    tgout->Branch("pt_wrtThr", pgData.pt_wrtThr,"pt_wrtThr[nParticle]/F");
-    tgout->Branch("eta_wrtThr", pgData.eta_wrtThr,"eta_wrtThr[nParticle]/F");
-    tgout->Branch("theta_wrtThr", pgData.theta_wrtThr,"theta_wrtThr[nParticle]/F");
-    tgout->Branch("phi_wrtThr", pgData.phi_wrtThr,"phi_wrtThr[nParticle]/F");
-    tgout->Branch("pt_wrtChThr", pgData.pt_wrtChThr,"pt_wrtChThr[nParticle]/F");
-    tgout->Branch("eta_wrtChThr", pgData.eta_wrtChThr,"eta_wrtChThr[nParticle]/F");
-    tgout->Branch("theta_wrtChThr", pgData.theta_wrtChThr,"theta_wrtChThr[nParticle]/F");
-    tgout->Branch("phi_wrtChThr", pgData.phi_wrtChThr,"phi_wrtChThr[nParticle]/F");
 
     //derived quantities
     tgout->Branch("missP",&egData.missP,"missP/F");
