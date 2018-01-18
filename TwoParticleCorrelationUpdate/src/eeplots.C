@@ -94,7 +94,7 @@ int eeplots
     TH1F* neta = new TH1F("neta","",nBinsEta,binsEta);
     
     // fill weights
-    static const double weight = 0.000000001;
+    static const double weight = 0.0000000000001;
     
     // Load the data
     TFile *f = new TFile(inFileName,"READ");
