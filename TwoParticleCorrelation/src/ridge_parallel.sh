@@ -22,7 +22,7 @@ START=1
 FINISH=$NUMEVENTS
 # divide up the file
 while [ $i -le $NUMFILES ]; do
-rooteventselector —recreate -f $START -l $FINISH inFileName:t $i.root
+rooteventselector --recreate -f $START -l $FINISH inFileName:t $i.root
 let i=i+1
 let START=FINISH+1
 let FINISH=$NUMEVENTS*$i
