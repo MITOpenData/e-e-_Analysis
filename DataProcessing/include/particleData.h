@@ -23,6 +23,7 @@ class particleData{
   float pz[nMaxPart];
   float pt[nMaxPart];
   float pmag[nMaxPart];
+  float rap[nMaxPart];
   float eta[nMaxPart];
   float theta[nMaxPart];
   float phi[nMaxPart];
@@ -45,7 +46,7 @@ class particleData{
   float theta_wrtChThr[nMaxPart];
   float phi_wrtChThr[nMaxPart];
 
-  static const int nVar = 34;
+  static const int nVar = 35;
   std::string varStr[nVar] = {"nParticle",
 			      "EventNo",
 			      "RunNo",
@@ -62,6 +63,7 @@ class particleData{
 			      "pz",
 			      "pt",
 			      "pmag",
+			      "rap",
 			      "eta",
 			      "theta",
 			      "phi",
@@ -129,24 +131,25 @@ void particleData::SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::str
   if(varIsGood[13]) inTree_p->SetBranchAddress("pz", pz);
   if(varIsGood[14]) inTree_p->SetBranchAddress("pt", pt);
   if(varIsGood[15]) inTree_p->SetBranchAddress("pmag", pmag);
-  if(varIsGood[16]) inTree_p->SetBranchAddress("eta", eta);
-  if(varIsGood[17]) inTree_p->SetBranchAddress("theta", theta);
-  if(varIsGood[18]) inTree_p->SetBranchAddress("phi", phi);
-  if(varIsGood[19]) inTree_p->SetBranchAddress("mass", mass);
-  if(varIsGood[20]) inTree_p->SetBranchAddress("charge", charge);
-  if(varIsGood[21]) inTree_p->SetBranchAddress("pwflag", pwflag);
-  if(varIsGood[22]) inTree_p->SetBranchAddress("pid", pid);
-  if(varIsGood[23]) inTree_p->SetBranchAddress("d0", d0);
-  if(varIsGood[24]) inTree_p->SetBranchAddress("z0", z0);
-  if(varIsGood[25]) inTree_p->SetBranchAddress("ntpc", ntpc);
-  if(varIsGood[26]) inTree_p->SetBranchAddress("pt_wrtThr", pt_wrtThr);
-  if(varIsGood[27]) inTree_p->SetBranchAddress("eta_wrtThr", eta_wrtThr);
-  if(varIsGood[28]) inTree_p->SetBranchAddress("theta_wrtThr", theta_wrtThr);
-  if(varIsGood[29]) inTree_p->SetBranchAddress("phi_wrtThr", phi_wrtThr);
-  if(varIsGood[30]) inTree_p->SetBranchAddress("pt_wrtChThr", pt_wrtChThr);
-  if(varIsGood[31]) inTree_p->SetBranchAddress("eta_wrtChThr", eta_wrtChThr);
-  if(varIsGood[32]) inTree_p->SetBranchAddress("theta_wrtChThr", theta_wrtChThr);
-  if(varIsGood[33]) inTree_p->SetBranchAddress("phi_wrtChThr", phi_wrtChThr);
+  if(varIsGood[16]) inTree_p->SetBranchAddress("rap", rap);
+  if(varIsGood[17]) inTree_p->SetBranchAddress("eta", eta);
+  if(varIsGood[18]) inTree_p->SetBranchAddress("theta", theta);
+  if(varIsGood[19]) inTree_p->SetBranchAddress("phi", phi);
+  if(varIsGood[20]) inTree_p->SetBranchAddress("mass", mass);
+  if(varIsGood[21]) inTree_p->SetBranchAddress("charge", charge);
+  if(varIsGood[22]) inTree_p->SetBranchAddress("pwflag", pwflag);
+  if(varIsGood[23]) inTree_p->SetBranchAddress("pid", pid);
+  if(varIsGood[24]) inTree_p->SetBranchAddress("d0", d0);
+  if(varIsGood[25]) inTree_p->SetBranchAddress("z0", z0);
+  if(varIsGood[26]) inTree_p->SetBranchAddress("ntpc", ntpc);
+  if(varIsGood[27]) inTree_p->SetBranchAddress("pt_wrtThr", pt_wrtThr);
+  if(varIsGood[28]) inTree_p->SetBranchAddress("eta_wrtThr", eta_wrtThr);
+  if(varIsGood[29]) inTree_p->SetBranchAddress("theta_wrtThr", theta_wrtThr);
+  if(varIsGood[30]) inTree_p->SetBranchAddress("phi_wrtThr", phi_wrtThr);
+  if(varIsGood[31]) inTree_p->SetBranchAddress("pt_wrtChThr", pt_wrtChThr);
+  if(varIsGood[32]) inTree_p->SetBranchAddress("eta_wrtChThr", eta_wrtChThr);
+  if(varIsGood[33]) inTree_p->SetBranchAddress("theta_wrtChThr", theta_wrtChThr);
+  if(varIsGood[34]) inTree_p->SetBranchAddress("phi_wrtChThr", phi_wrtChThr);
   
   return;
 }

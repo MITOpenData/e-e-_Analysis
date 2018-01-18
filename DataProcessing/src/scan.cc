@@ -303,6 +303,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
   tout->Branch("pt", pData.pt,"pt[nParticle]/F");
   tout->Branch("pmag", pData.pmag,"pmag[nParticle]/F");//Added later on
   tout->Branch("mass", pData.mass,"mass[nParticle]/F");
+  tout->Branch("rap", pData.rap,"rap[nParticle]/F");
   tout->Branch("eta", pData.eta,"eta[nParticle]/F");
   tout->Branch("theta", pData.theta,"theta[nParticle]/F");
   tout->Branch("phi", pData.phi,"phi[nParticle]/F");
@@ -379,6 +380,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
     tgout->Branch("pt", pgData.pt,"pt[nParticle]/F");
     tgout->Branch("pmag", pgData.pmag,"pmag[nParticle]/F");//Added later on
     tgout->Branch("mass", pgData.mass,"mass[nParticle]/F");
+    tgout->Branch("rap", pgData.rap,"rap[nParticle]/F");
     tgout->Branch("eta", pgData.eta,"eta[nParticle]/F");
     tgout->Branch("theta", pgData.theta,"theta[nParticle]/F");
     tgout->Branch("phi", pgData.phi,"phi[nParticle]/F");
@@ -612,6 +614,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
       particles.push_back(particle);
       pData.pt[counterParticles]=v.Pt();
       pData.pmag[counterParticles]=v.Rho(); //Added later on
+      pData.rap[counterParticles]=v.Rapidity();
       pData.eta[counterParticles]=v.PseudoRapidity();
       pData.theta[counterParticles]=v.Theta();
       pData.phi[counterParticles]=v.Phi();
@@ -902,6 +905,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	particles.push_back(particle);
 	pgData.pt[counterParticles]=v.Pt();
 	pgData.pmag[counterParticles]=v.Rho(); //Added later on
+	pgData.rap[counterParticles]=v.Rapidity();
 	pgData.eta[counterParticles]=v.PseudoRapidity();
 	pgData.theta[counterParticles]=v.Theta();
 	pgData.phi[counterParticles]=v.Phi();
