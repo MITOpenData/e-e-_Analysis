@@ -1,6 +1,8 @@
 #ifndef JETDATA_H
 #define JETDATA_H
 
+#include "TLorentzVector.h"
+
 class jetData{
  public:
   static const Int_t nMaxJet = 500;
@@ -13,6 +15,8 @@ class jetData{
   Int_t jtN[nMaxJet];
   Int_t jtNPW[nMaxJet][pwFlag];
   Float_t jtptFracPW[nMaxJet][pwFlag];
+
+  TLorentzVector fourJet[nMaxJet];
 };
 
 #endif
