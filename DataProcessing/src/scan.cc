@@ -123,7 +123,8 @@ void processJets(std::vector<fastjet::PseudoJet> p, fastjet::JetDefinition jDef,
       d->jtpt[d->nref] = jets.at(i).pt();
       d->jtphi[d->nref] = jets.at(i).phi_std();
       d->jteta[d->nref] = jets.at(i).eta();
-      
+      d->fourJet[d->nref] = TLorentzVector(jets.at(i).px(), jets.at(i).py(), jets.at(i).pz(), jets.at(i).E());
+
       std::vector<fastjet::PseudoJet> jetConst = jets.at(i).constituents();
       d->jtN[d->nref] = jetConst.size();
       std::vector< std::vector<fastjet::PseudoJet> > subJets;
