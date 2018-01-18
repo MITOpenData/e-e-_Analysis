@@ -139,7 +139,7 @@ int plotDataQualityChecks()
     leg_pt_LEP1_PYTHIA8->AddEntry(LEP1_cpt,"LEP1","p");
     leg_pt_LEP1_PYTHIA8->AddEntry(PYTHIA8_cpt,"PYTHIA8","p");
     leg_pt_LEP1_PYTHIA8->Draw("SAME");
-    xjjroot::drawtex(0.2,0.876,"LEP1 vs PYTHIA8");
+    xjjroot::drawtex(0.25,0.876,"LEP1 vs PYTHIA8");
     pt_LEP1_PYTHIA8->SaveAs("pdfDir/pt_LEP1_PYTHIA8.pdf");
     
     delete leg_pt_LEP1_PYTHIA8;
