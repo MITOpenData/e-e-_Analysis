@@ -20,9 +20,10 @@ let NUMEVENTS=($fileEvents+$NUMFILES)/$NUMFILES
 
 START=1
 FINISH=$NUMEVENTS
+TREE_NAME="t"
 # divide up the file
 while [ $i -le $NUMFILES ]; do
-rooteventselector --recreate -f $START -l $FINISH $inFileName:t $i.root
+rooteventselector --recreate -f $START -l $FINISH $inFileName:$TREE_NAME $i.root
 let i=i+1
 let START=FINISH+1
 let FINISH=$NUMEVENTS*$i
