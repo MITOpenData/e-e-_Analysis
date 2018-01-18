@@ -154,4 +154,45 @@ void particleData::SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::str
   return;
 }
 
+void particleData::SetBranchWrite(TTree* inTree_p)
+{
+  inTree_p->Branch("EventNo", &EventNo, "EventNo/I");
+  inTree_p->Branch("RunNo", &RunNo, "RunNo/I");
+  inTree_p->Branch("year", &year, "year/I");
+  inTree_p->Branch("process", &process, "process/I");
+  inTree_p->Branch("Energy", &Energy, "Energy/F");
+  inTree_p->Branch("bFlag", &bFlag, "bFlag/I");
+  inTree_p->Branch("bx", &bx, "bx/F");
+  inTree_p->Branch("by", &by, "by/F");
+  inTree_p->Branch("ebx", &ebx, "ebx/F");
+  inTree_p->Branch("eby", &eby, "eby/F");
+  inTree_p->Branch("nParticle", &nParticle, "nParticle/I"); 
+  inTree_p->Branch("px", px, "px[nParticle]/F");
+  inTree_p->Branch("py", py, "py[nParticle]/F");
+  inTree_p->Branch("pz", pz, "pz[nParticle]/F");
+  inTree_p->Branch("pt", pt, "pt[nParticle]/F");
+  inTree_p->Branch("pmag", pmag, "pmag[nParticle]/F");
+  inTree_p->Branch("rap", rap, "rap[nParticle]/F");
+  inTree_p->Branch("eta", eta, "eta[nParticle]/F");
+  inTree_p->Branch("theta", theta, "theta[nParticle]/F");
+  inTree_p->Branch("phi", phi, "phi[nParticle]/F");
+  inTree_p->Branch("mass", mass, "mass[nParticle]/F");
+  inTree_p->Branch("charge", charge, "charge[nParticle]/F");
+  inTree_p->Branch("pwflag", pwflag, "pwflag[nParticle]/I");
+  inTree_p->Branch("pid", pid, "pid[nParticle]/I");
+  inTree_p->Branch("d0", d0, "d0[nParticle]/F");
+  inTree_p->Branch("z0", z0, "z0[nParticle]/F");
+  inTree_p->Branch("ntpc", ntpc, "ntpx[nParticle]/I");
+  inTree_p->Branch("pt_wrtThr", pt_wrtThr, "pt_wrtThr[nParticle]/F");
+  inTree_p->Branch("eta_wrtThr", eta_wrtThr, "eta_wrtThr[nParticle]/F");
+  inTree_p->Branch("theta_wrtThr", theta_wrtThr, "theta_wrtThr[nParticle]/F");
+  inTree_p->Branch("phi_wrtThr", phi_wrtThr, "phi_wrtThr[nParticle]/F");
+  inTree_p->Branch("pt_wrtChThr", pt_wrtChThr, "pt_wrtChThr[nParticle]/F");
+  inTree_p->Branch("eta_wrtChThr", eta_wrtChThr, "eta_wrtChThr[nParticle]/F");
+  inTree_p->Branch("theta_wrtChThr", theta_wrtChThr, "theta_wrtChThr[nParticle]/F");
+  inTree_p->Branch("phi_wrtChThr", phi_wrtChThr, "phi_wrtChThr[nParticle]/F");
+  
+  return;
+}
+
 #endif
