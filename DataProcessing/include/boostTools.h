@@ -10,15 +10,11 @@ TVector3 findBack2BackBoost(TLorentzVector a, TLorentzVector b){
   TVector3 a3 = a.Vect();
   TVector3 b3 = b.Vect();
   float angle = a3.Angle(b3);
-  float phi   = TMath::Pi()*2-angle;
+  float phi   = 2*TMath::Pi()-angle;
 
-  std::cout << a3.Mag() << " " << b3.Mag() << std::endl;
   float theta = TMath::ATan(TMath::Sin(phi)/(a3.Mag()/b3.Mag()+TMath::Cos(phi)));
-  std::cout << a3.Mag() << " " << b3.Mag() << std::endl;
-  std::cout << a3.Phi() << " "<< phi << " "  << theta << std::endl;
   TVector3 axis  = a3.Cross(b3).Unit();
   a3.Rotate(-theta,axis);
-  std::cout << a3.Phi() << std::endl;
   TVector3 boost = a3.Unit();
   //boost magnitude
   float boostMag = (a3.Mag()*TMath::Cos(theta)+b3.Mag()*TMath::Cos(phi-theta))/(a.E()+b.E());
@@ -27,15 +23,16 @@ TVector3 findBack2BackBoost(TLorentzVector a, TLorentzVector b){
   return boost;
 }
 
-void testCaseB2BBoost(){
-  TLorentzVector a = TLorentzVector(2,-1.3,1,5);
-  TLorentzVector b = TLorentzVector(-2,1,0,4);
+void boostTools(){
+  TLorentzVector a = TLorentzVector(4,0,-1,7);
+  TLorentzVector b = TLorentzVector(-1,0.2,1,3);
   TVector3 boost = findBack2BackBoost(a,b);
-  std::cout << boost.Mag() << std::endl;
-  std::cout << boost.Phi() << std::endl;
+  std::cout << "boost magnitude: " << boost.Mag() << std::endl;
+  std::cout << "boost phi: " << boost.Phi()*360.0/2.0/TMath::Pi() << std::endl;
   a.Boost(boost);
   b.Boost(boost);
-  std::cout << boost.Phi()*360./2./TMath::Pi() << " " << a.Vect().Angle(b.Vect()) << std::endl;;
+  std::cout << "post-boost dPhi: " << a.Vect().Angle(b.Vect()) << std::endl;
+  std::cout << "post-boost difference in momentum (want 0): " << a.Vect().Mag() - b.Vect().Mag() << std::endl;
 }
 
 #endif
