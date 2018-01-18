@@ -61,8 +61,8 @@ int eeplots
     Double_t etaLow = 0;
     
     int nBinsY = 60;
-    Double_t yHi = 0;
-    Double_t yLow = 8;
+    Double_t yHi = 8;
+    Double_t yLow = 0;
     
     // assign binning ranges for different data sets
     if(datalabel == "PYTHIA8"){nBinsMult = 100; multHi = 100; etaHi = 3; ptHi = 60;}
