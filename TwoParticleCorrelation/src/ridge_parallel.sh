@@ -22,7 +22,7 @@ START=1
 FINISH=$NUMEVENTS
 # divide up the file
 while [ $i -le $NUMFILES ]; do
-rooteventselector —recreate -f START -l FINISH inFileName:t $i.root
+rooteventselector —recreate -f $START -l $FINISH inFileName:t $i.root
 let i=i+1
 let START=FINISH+1
 let FINISH=$NUMEVENTS*$i
@@ -32,7 +32,8 @@ done
 cd ..
 # we are now in TwoParticleCorrelation
 for f in tempFiles/*.root; do
-ridge_check_parallel.exe "$f" “out_$f” &
+root -b -q ridge_check_parallel.C\(\"$f","out_$f"\) &
+#ridge_check_parallel.exe "$f" “out_$f” &
 done
 wait
 
