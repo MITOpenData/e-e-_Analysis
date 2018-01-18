@@ -474,10 +474,12 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	std::cout << "Number of columns for line \'" << getStr << "\' is invalid, size \'" << num.size() << "\'. return 1" << std::endl;
 	//gotta cleanup before return
 	delete tout;
+	delete bout;
 	for(int jIter = 0; jIter < nJtAlgo; ++jIter){delete jout[jIter];}
 	
 	if(isMC && isRecons){
 	  delete tgout;
+	  delete bgout;
 	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){delete jgout[jIter];}
 	}
 	
@@ -489,6 +491,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 
       if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2))/* not all files do four 999 && check999(num.at(3)*/){
 	pData.nParticle=counterParticles;
+        bData.nParticle=counterParticles;
         thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz, THRUST::OPTIMAL); 
         thrust_charged = getChargedThrust(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag, THRUST::OPTIMAL);
         setThrustVariables(&pData, &eData, thrust, thrust_charged);
@@ -511,7 +514,8 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	    jout[jIter]->Fill();
 	  }
-	}
+          bout->Fill();
+	}        
 
 	//clear particles for next iteration clustering
 	particles.clear();
@@ -572,10 +576,12 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	std::cout << "Number of columns for line \'" << getStr << "\' is invalid, size \'" << num.size() << "\'. return 1" << std::endl;
 	//gotta cleanup before return
 	delete tout;
+	delete bout;
 	for(int jIter = 0; jIter < nJtAlgo; ++jIter){delete jout[jIter];}
 
 	if(isMC && isRecons){
 	  delete tgout;
+	  delete bgout;
 	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){delete jgout[jIter];}
 	}
 	
@@ -679,6 +685,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
       for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	jout[jIter]->Fill();
       }
+      bout->Fill();
     }
     file.close();
   
@@ -710,12 +717,14 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	  std::cout << "Number of columns for line \'" << getStr << "\' is invalid, size \'" << num.size() << "\'. return 1" << std::endl;
 	  //gotta cleanup before return
 	  delete tout;
+          delete bout;
 	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	    delete jout[jIter];
 	  }
 
 	  if(isMC && isRecons){
 	    delete tgout;
+	    delete bgout;
 	    for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	      delete jgout[jIter];
 	    }
@@ -729,6 +738,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 
 	if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2)) /* && check999(num.at(3))*/){ 
 	  pgData.nParticle=counterParticles;
+	  bgData.nParticle=counterParticles;
           
           thrust = getThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, THRUST::OPTIMAL); 
           thrust_charged = getChargedThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag, THRUST::OPTIMAL);
@@ -750,6 +760,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	    if(counterEntries>0){
 	      jgout[jIter]->Fill();
 	    }
+            bgout->Fill();
 	  }
 	  //clear particles for next iteration clustering
 	  particles.clear();
@@ -793,6 +804,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	    std::cout << "Gen entries dont match reco for file \'" << genFileStr << "\'. return 1" << std::endl;
 	    //gotta cleanup before return
 	    delete tout;
+	    delete bout;
 
 	    for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	      delete jout[jIter];
@@ -802,6 +814,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 
 	    if(isMC && isRecons){
 	      delete tgout;
+	      delete bgout;
 	      for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 		delete jgout[jIter];
 	      }
@@ -845,12 +858,14 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	  std::cout << "Number of columns for line \'" << getStr << "\' is invalid, size \'" << num.size() << "\'. return 1" << std::endl;
 	  //gotta cleanup before return
 	  delete tout;
+	  delete bout;
 	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	    delete jout[jIter];
 	  }
 
 	  if(isMC && isRecons){
 	    delete tgout;
+	    delete bgout;
 	    for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	      delete jgout[jIter];
 	    }
@@ -958,6 +973,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	if(counterEntries>0){
 	  jgout[jIter]->Fill();
 	}
+        bgout->Fill();
       }
       
       if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
