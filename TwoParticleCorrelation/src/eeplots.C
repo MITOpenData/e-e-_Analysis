@@ -111,7 +111,7 @@ int eeplots
     TFile *f = new TFile(inFileName,"READ");
     TTree *t1 = (TTree*)f->Get("t");
     TTree *ak4ESchemeJetTree = (TTree*)f->Get("ak4ESchemeJetTree");
-    t1->AddFriend(ak4JetTree);
+    t1->AddFriend(ak4ESchemeJetTree);
     //TTree *ak4JetTree = (TTree*)f->Get("ak4JetTree");
     //TTree *ak8JetTree = (TTree*)f->Get("ak8JetTree");
     
