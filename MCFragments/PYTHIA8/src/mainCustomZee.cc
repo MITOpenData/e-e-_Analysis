@@ -260,9 +260,12 @@ int main(int argc, char* argv[])
       pData.mass[pData.nParticle] = pythia.event[i].m();
       pData.theta[pData.nParticle] = pythia.event[i].theta();
       pData.pt[pData.nParticle] = temp.Pt();
+      pData.pmag[pData.nParticle] = temp.P();
       pData.phi[pData.nParticle] = temp.Phi();
       pData.eta[pData.nParticle] = temp.Eta();
+      pData.rap[pData.nParticle] = temp.Rapidity();
       pData.pid[pData.nParticle] = pythia.event[i].id();
+      pData.charge[pData.nParticle] = pythia.event[i].charge();
 
       //done based on here: https://github.com/ginnocen/StudyMult/blob/master/DataProcessing/src/createMC.c#L13
       pData.pwflag[pData.nParticle] = -999;
