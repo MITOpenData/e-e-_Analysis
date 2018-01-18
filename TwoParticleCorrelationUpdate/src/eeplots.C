@@ -81,7 +81,7 @@ int eeplots
     TH1F* amult = new TH1F("amult","",nBinsMult,binsMult);
     TH1F* cmult = new TH1F("cmult","",nBinsMult,binsMult);
     TH1F* nmult = new TH1F("nmult","",nBinsMult,binsMult);
-    TH1F* lmult = new TH1F("lmult","",nBinsMult,binsMult); // leptons
+    //TH1F* lmult = new TH1F("lmult","",nBinsMult,binsMult); // leptons
     
     TH2F *hemptypt = new TH2F("",";pt;Probability",nBinsPt,binsPt,nBinsY,binsYLog);
     TH1F* apt = new TH1F("apt","",nBinsPt,binsPt);
@@ -126,7 +126,7 @@ int eeplots
     // all entries and fill the histograms
     Int_t nevent = (Int_t)t1->GetEntries();
     Int_t nChg = 0;
-    Int_t nLepton = 0;
+    //Int_t nLepton = 0;
     // fill the histograms
     for (Int_t i = 0; i<nevent; i++)
     {
@@ -149,16 +149,16 @@ int eeplots
             // fill the neutral hadrons and photons
             if(pwflag[j]!=0){ neta->Fill(eta[j],weight); npt->Fill(pt[j],weight);}
             // fill the leptons
-            if(pwflag[j] == 1 || pwflag[j] == 2){nLepton++;}
+            //if(pwflag[j] == 1 || pwflag[j] == 2){nLepton++;}
         }
-        lmult->Fill(nLepton);
+        //lmult->Fill(nLepton);
     }
     
     // Normalize all to unity
     amult->Scale(1./amult->Integral());
     cmult->Scale(1./cmult->Integral());
     nmult->Scale(1./nmult->Integral());
-    lmult->Scale(1./lmult->Integral());
+    //lmult->Scale(1./lmult->Integral());
     
     apt->Scale(1./apt->Integral());
     cpt->Scale(1./cpt->Integral());
@@ -179,14 +179,14 @@ int eeplots
     cmult->Draw("pe same");
     xjjroot::setthgrstyle(nmult, kBlue, 22, 1.2, kBlue, 1, 1, -1, -1, -1);
     nmult->Draw("pe same");
-    xjjroot::setthgrstyle(lmult, kGreen, 22, 1.2, kGreen, 1, 1, -1, -1, -1);
-    lmult->Draw("pe same");
+    //xjjroot::setthgrstyle(lmult, kGreen, 22, 1.2, kGreen, 1, 1, -1, -1, -1);
+    //lmult->Draw("pe same");
     TLegend* leg = new TLegend(0.42,0.80,0.85,0.895);
     xjjroot::setleg(leg);
     leg->AddEntry(amult,"All","p");
     leg->AddEntry(cmult,"Charged Hadrons","p");
     leg->AddEntry(nmult,"Neutral Hadrons + Photons","p");
-    leg->AddEntry(lmult,"Leptons","p");
+    //leg->AddEntry(lmult,"Leptons","p");
     leg->Draw();
     xjjroot::drawtex(0.2,0.876,datalabel);
     allmult->SaveAs(Form("pdfDir/%s_mult.pdf",datalabel.Data()));
