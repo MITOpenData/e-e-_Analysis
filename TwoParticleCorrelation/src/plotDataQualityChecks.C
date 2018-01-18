@@ -104,7 +104,8 @@ int plotDataQualityChecks()
 
     
     TCanvas *mult_LEP1_LEP2 = new TCanvas("mult_LEP1_LEP2","",600,600);
-    TH2F *hempty_mult2 = new TH2F("Multiplicity Distribution",";Multiplicity;Probability",1,0,95,1,0,0.15);
+    gPad->SetLogy();
+    TH2F *hempty_mult2 = new TH2F("Multiplicity Distribution",";Multiplicity;Probability",nBinsMult,binsMult,nBinsY,binsYLog);
     xjjroot::sethempty(hempty_mult2,0,0.3);
     hempty_mult2->DrawCopy();
     xjjroot::setthgrstyle(LEP1_cmult, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
@@ -117,7 +118,7 @@ int plotDataQualityChecks()
     leg_mult_LEP1_LEP2->AddEntry(LEP2_cmult,"LEP2","p");
     leg_mult_LEP1_LEP2->Draw("SAME");
     xjjroot::drawtex(0.2,0.876,"LEP1 vs LEP2");
-    mult_LEP1_LEP2->SaveAs("pdfDir/mult_LEP2.pdf");
+    mult_LEP1_LEP2->SaveAs("pdfDir/mult_LEP1_LEP2.pdf");
     
     delete leg_mult_LEP1_LEP2;
     delete hempty_mult2;
@@ -149,7 +150,8 @@ int plotDataQualityChecks()
 
     
     TCanvas *pt_LEP1_LEP2 = new TCanvas("pt","",600,600);
-    TH2F *hempty_pt2 = new TH2F("PT Spectra",";PT;Probability",1,0,95,1,0,0.15);
+    gPad->SetLogy();
+    TH2F *hempty_pt2 = new TH2F("PT Spectra",";PT;Probability",nBinsPt,binsPt,nBinsY,binsYLog);
     xjjroot::sethempty(hempty_pt2,0,0.3);
     hempty_pt2->DrawCopy();
     xjjroot::setthgrstyle(LEP1_cpt, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
@@ -193,7 +195,7 @@ int plotDataQualityChecks()
 
     
     TCanvas *eta_LEP1_LEP2 = new TCanvas("eta","",600,600);
-    TH2F *hempty_eta2 = new TH2F("Eta Spectra",";Eta;Probability",1,-5,5,1,0,0.05);
+    TH2F *hempty_eta2 = new TH2F("Eta Spectra",";Eta;Probability",nBinsEta,binsEta,nBinsEta,binsYLin);
     xjjroot::sethempty(hempty_eta2,0,0.3);
     hempty_eta2->DrawCopy();
     xjjroot::setthgrstyle(LEP1_ceta, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
