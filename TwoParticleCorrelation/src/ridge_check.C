@@ -126,7 +126,7 @@ int ridge_check
     Int_t nevent = (Int_t)t1->GetEntries();
     
     Int_t nevent_process = nevent;
-    //cout<<"maxevt "<<maxevt<<endl;
+    cout<<"maxevt "<<maxevt<<endl;
     //if( maxevt>0 && maxevt<nevent ) nevent_process = maxevt;
     
     Float_t averageN=0;
