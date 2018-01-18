@@ -12,17 +12,20 @@ TVector3 findBack2BackBoost(TLorentzVector a, TLorentzVector b){
   float angle = a3.Angle(b3);
   float phi   = 2*TMath::Pi()-angle;
 
+  //calculate angle from 1st vector that the boost vector is in the plane of a and b
   float theta = TMath::ATan(TMath::Sin(phi)/(a3.Mag()/b3.Mag()+TMath::Cos(phi)));
   TVector3 axis  = a3.Cross(b3).Unit();
   a3.Rotate(-theta,axis);
   TVector3 boost = a3.Unit();
-  //boost magnitude
+
+  //boost magnitude in order to get the momenta to balanced out each other
   float boostMag = (a3.Mag()*TMath::Cos(theta)+b3.Mag()*TMath::Cos(phi-theta))/(a.E()+b.E());
   boost.SetMag(-boostMag); 
 
   return boost;
 }
 
+//used for testing
 void boostTools(){
   TLorentzVector a = TLorentzVector(4,0,-1,7);
   TLorentzVector b = TLorentzVector(-1,0.2,1,3);
