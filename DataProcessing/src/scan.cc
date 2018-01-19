@@ -289,7 +289,6 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
   pData.SetBranchWrite(tout);
   eData.SetBranchWrite(tout);
   //thrust quantities
-
   bout->Branch("nParticle",&bData.nParticle,"nParticle/I");
   bout->Branch("WTAAxis_Theta",&bData.WTAAxis_Theta,"WTAAxis_Theta/F");
   bout->Branch("WTAAxis_Phi",&bData.WTAAxis_Phi,"WTAAxis_Phi/F");
@@ -299,15 +298,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
   bout->Branch("theta", bData.theta,"theta[nParticle]/F");
   bout->Branch("phi", bData.phi,"phi[nParticle]/F");
 
-  for(int i = 0; i < nJtAlgo; ++i){
-    jout[i]->Branch("nref", &jData[i].nref,"nref/I");
-    jout[i]->Branch("jtpt", jData[i].jtpt,"jtpt[nref]/F");
-    jout[i]->Branch("jteta", jData[i].jteta,"jteta[nref]/F");
-    jout[i]->Branch("jtphi", jData[i].jtphi,"jtphi[nref]/F");
-    jout[i]->Branch("jtN", jData[i].jtN, "jtN[nref]/I");
-    jout[i]->Branch("jtNPW", jData[i].jtNPW, "jtNPW[nref][6]/I");
-    jout[i]->Branch("jtptFracPW", jData[i].jtptFracPW, "jtptFracPW[nref][6]/F");
-  }
+  for(int i = 0; i < nJtAlgo; ++i){jData[i].SetBranchWrite(jout[i]);}
 
   if(isRecons && isMC){
     pgData.SetBranchWrite(tgout);
@@ -322,15 +313,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
     bgout->Branch("theta", bgData.theta,"theta[nParticle]/F");
     bgout->Branch("phi", bgData.phi,"phi[nParticle]/F");
     
-    for(int i = 0; i < nJtAlgo; ++i){
-      jgout[i]->Branch("nref", &jgData[i].nref,"nref/I");
-      jgout[i]->Branch("jtpt", jgData[i].jtpt,"jtpt[nref]/F");
-      jgout[i]->Branch("jteta", jgData[i].jteta,"jteta[nref]/F");
-      jgout[i]->Branch("jtphi", jgData[i].jtphi,"jtphi[nref]/F");
-      jgout[i]->Branch("jtN", jgData[i].jtN,"jtN[nref]/I");
-      jgout[i]->Branch("jtNPW", jgData[i].jtNPW,"jtNPW[nref][6]/I");
-      jgout[i]->Branch("jtptFracPW", jgData[i].jtptFracPW,"jtptFracPW[nref][6]/F");
-    }
+    for(int i = 0; i < nJtAlgo; ++i){jgData[i].SetBranchWrite(jgout[i]);}
   }
 
   if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
