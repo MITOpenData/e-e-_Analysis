@@ -30,7 +30,7 @@ TREE_NAME=t
 for i in `seq 1 $NUMFILES`; do
 rooteventselector --recreate -f $START -l $FINISH $inFileName:$TREE_NAME $i.root
 let START=FINISH+1
-let FINISH=$NUMEVENTS*($i+1)
+let FINISH=$NUMEVENTS*\($i+1\)
 done
 wait
 
