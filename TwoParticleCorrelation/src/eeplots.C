@@ -89,8 +89,6 @@ int eeplots
     getLinBins(yLow, yHi, nBinsY, binsY);
     getLinBins(phiLow, phiHi, nBinsPhi, binsPhi);
     
-    
-    
     // Declare Histograms
     TH2F *hempty_mult = new TH2F("",";Multiplicity;Probability",nBinsMult,binsMult,nBinsP,binsPLog);
     TH1F* amult = new TH1F("amult","",nBinsMult,binsMult);
@@ -285,6 +283,7 @@ int eeplots
     
     // Plot all, neutral, charged rapidity
     TCanvas *ally = new TCanvas("ally","ally",600,600);
+    gPad->SetLogy();
     xjjroot::sethempty(hempty_y,0,0.3);
     hempty_y->Draw();
     xjjroot::setthgrstyle(ay, kBlack, 20, 1.2, kRed, 1, 1, -1, -1, -1);
