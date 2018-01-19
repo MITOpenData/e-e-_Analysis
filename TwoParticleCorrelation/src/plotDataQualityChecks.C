@@ -47,6 +47,13 @@ int plotDataQualityChecks()
     const Double_t linHi = 0.1;
     getLinBins(linLow,linHi,nBinsY,binsYLin);
     
+    // declare binning for ratio plots
+    const int nBinsR = 80;
+    Double_t binsRLin[nBinsR+1];
+    const Double_t rLow = .7;
+    const Double_t rHi = 1.3;
+    getLinBins(rLow, rHi, nBinsR, binsRLin);
+    
     // declare binning for x-axis
     int nBinsMult = 100;
     Double_t binsMult[nBinsMult+1];
@@ -109,7 +116,7 @@ int plotDataQualityChecks()
     
     // plot multiplicity ratio
     TCanvas *rmult_LEP1_LEP2 = new TCanvas("rmult_LEP1_LEP2","",600,600);
-    TH2F *hempty_rmult_LEP1_LEP2 = new TH2F("Multiplicity Distribution",";Multiplicity;Probability",nBinsMult,binsMult,nBinsY,binsYLog);
+    TH2F *hempty_rmult_LEP1_LEP2 = new TH2F("Multiplicity Distribution",";Multiplicity;Probability",nBinsMult,binsMult,nBinsR,binsRLin);
     xjjroot::sethempty(hempty_rmult_LEP1_LEP2,0,0.3);
     hempty_rmult_LEP1_LEP2->DrawCopy();
     xjjroot::setthgrstyle(LEP1_LEP2_rmult, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
@@ -126,7 +133,7 @@ int plotDataQualityChecks()
     
     // plot pt ratio
     TCanvas *rpt_LEP1_LEP2 = new TCanvas("rpt_LEP1_LEP2","",600,600);
-    TH2F *hempty_rpt_LEP1_LEP2 = new TH2F("PT Spectra",";pt;Probability",nBinsPt,binsPt,nBinsY,binsYLog);
+    TH2F *hempty_rpt_LEP1_LEP2 = new TH2F("PT Spectra",";pt;Probability",nBinsPt,binsPt,nBinsR,binsRLin);
     xjjroot::sethempty(hempty_rpt_LEP1_LEP2,0,0.3);
     hempty_rpt_LEP1_LEP2->DrawCopy();
     xjjroot::setthgrstyle(LEP1_LEP2_rpt, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
@@ -143,7 +150,7 @@ int plotDataQualityChecks()
     
     // plot eta ratio
     TCanvas *reta_LEP1_LEP2 = new TCanvas("reta_LEP1_LEP2","",600,600);
-    TH2F *hempty_reta_LEP1_LEP2 = new TH2F("Eta Spectra",";eta;Probability",nBinsEta,binsEta,nBinsEta,binsYLin);
+    TH2F *hempty_reta_LEP1_LEP2 = new TH2F("Eta Spectra",";eta;Probability",nBinsEta,binsEta,nBinsR,binsRLin);
     xjjroot::sethempty(hempty_reta_LEP1_LEP2,0,0.3);
     hempty_reta_LEP1_LEP2->DrawCopy();
     xjjroot::setthgrstyle(LEP1_LEP2_reta, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
