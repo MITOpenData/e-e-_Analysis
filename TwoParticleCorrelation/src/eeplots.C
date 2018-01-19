@@ -112,11 +112,10 @@ int eeplots
     TH1F* cy = new TH1F("cy","",nBinsY,binsY);
     TH1F* ny = new TH1F("ny","",nBinsY,binsY);
     
-    // xjj plotting macro only works for TH1
-    TH2F *hempty_eta_phi = new TH2F("","#eta-#phi;#eta;#phi",nBinsPhi,binsPhi,nBinsP,binsYLin);
+    // don't plot in this file just fill
     TH2F *aetaphi = new TH2F("aetaphi","#eta-#phi;#eta;#phi",nBinsEta,binsEta,nBinsPhi,binsPhi);
-    TH2F *cetaphi = new TH2F("cetaphi","",nBinsEta,binsEta,nBinsPhi,binsPhi);
-    TH2F *netaphi = new TH2F("netaphi","",nBinsEta,binsEta,nBinsPhi,binsPhi);
+    TH2F *cetaphi = new TH2F("cetaphi","#eta-#phi;#eta;#phi",nBinsEta,binsEta,nBinsPhi,binsPhi);
+    TH2F *netaphi = new TH2F("netaphi","#eta-#phi;#eta;#phi",nBinsEta,binsEta,nBinsPhi,binsPhi);
     
     // fill weights
     static const double weight = 0.0000000000001;
@@ -301,25 +300,6 @@ int eeplots
     xjjroot::drawtex(0.2,0.876,datalabel);
     ally->SaveAs(Form("pdfDir/%s_y.pdf",datalabel.Data()));
     
-    // Plot all, neutral, charged eta-phi
-    TCanvas *alletaphi = new TCanvas("alletaphi","alletaphi",600,600);
-    xjjroot::sethempty(hempty_eta_phi,0,0.3);
-    hempty_eta_phi->Draw();
-    xjjroot::setthgrstyle(aetaphi, kBlack, 20, 1.2, kRed, 1, 1, -1, -1, -1);
-    aetaphi->Draw("colz same");
-    xjjroot::setthgrstyle(cetaphi, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
-    cetaphi->Draw("colz same");
-    xjjroot::setthgrstyle(netaphi, kBlue, 22, 1.2, kBlue, 1, 1, -1, -1, -1);
-    netaphi->Draw("colz same");
-    TLegend* etaphileg = new TLegend(0.42,0.7,0.85,0.88);
-    xjjroot::setleg(etaphileg);
-    etaphileg->AddEntry(aetaphi,"All","p");
-    etaphileg->AddEntry(cetaphi,"Charged Hadrons","p");
-    etaphileg->AddEntry(netaphi,"Neutral Hadrons + Photons","p");
-    etaphileg->Draw();
-    xjjroot::drawtex(0.2,0.876,datalabel);
-    alletaphi->SaveAs(Form("pdfDir/%s_etaphi.pdf",datalabel.Data()));
-    
     TFile* outFile_p = new TFile(Form("inputs/qualityCheck/outFile_%s.root",datalabel.Data()), "RECREATE");
     //write all, first arg name ("" == declaration name), second arg overwrites buffer saves in file
     
@@ -342,7 +322,6 @@ int eeplots
     outFile_p->Close();
     delete outFile_p;
     
-    delete etaphileg;
     delete netaphi;
     delete cetaphi;
     delete aetaphi;
