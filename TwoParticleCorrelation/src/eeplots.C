@@ -115,10 +115,13 @@ int eeplots
     // don't plot in this file just fill
     //TH2F *hempty_aetaphi = new TH2F("","All Particles;#eta;#phi",nBinsEta,binsEta,nBinsPhi,binsPhi);
     TH2F *aetaphi = new TH2F("aetaphi","#eta-#phi of all particles;#eta;#phi;",nBinsEta,binsEta,nBinsPhi,binsPhi);
+    aetaphi->SetTitle("#eta-#phi of all particles");
     //TH2F *hempty_cetaphi = new TH2F("","Charged Hadrons;#eta;#phi",nBinsEta,binsEta,nBinsPhi,binsPhi);
     TH2F *cetaphi = new TH2F("cetaphi","#eta-#phi of charged hadrons;#eta;#phi;",nBinsEta,binsEta,nBinsPhi,binsPhi);
+    cetaphi->SetTitle("#eta-#phi of charged hadrons");
     //TH2F *hempty_netaphi = new TH2F("","Neutral Hadrons and Photons;#eta;#phi",nBinsEta,binsEta,nBinsPhi,binsPhi);
     TH2F *netaphi = new TH2F("netaphi","#eta-#phi of neutral hadrons and photons;#eta;#phi;",nBinsEta,binsEta,nBinsPhi,binsPhi);
+    netaphi->SetTitle("#eta-#phi of neutral hadrons and photons");
     
     // fill weights
     static const double weight = 0.0000000000001;
