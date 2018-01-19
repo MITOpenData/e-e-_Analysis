@@ -112,9 +112,9 @@ int eeplots
     TH1F* ny = new TH1F("ny","",nBinsY,binsY);
     
     TH2F *hempty_eta_phi = new TH2F("","#eta-#phi;#eta;#phi",nBinsPhi,binsPhi,nBinsP,binsYLin);
-    TH1F* aphi = new TH1F("ay","",nBinsY,binsY);
-    TH1F* cphi = new TH1F("cy","",nBinsY,binsY);
-    TH1F* nphi = new TH1F("ny","",nBinsY,binsY);
+    TH2F *aetaphi = new TH2F("aetaphi","",nBinsEta,binsEta,nBinsPhi,binsPhi);
+    TH2F *cetaphi = new TH2F("cetaphi","",nBinsEta,binsEta,nBinsPhi,binsPhi);
+    TH2F *netaphi = new TH2F("netaphi","",nBinsEta,binsEta,nBinsPhi,binsPhi);
     
     // fill weights
     static const double weight = 0.0000000000001;
@@ -185,11 +185,11 @@ int eeplots
         {
             v.SetPx(px[j]); v.SetPy(py[j]); v.SetPz(pz[j]);
             // fill all particles
-            aeta->Fill(eta[j],weight); apt->Fill(pt[j],weight); ay->Fill(v.Rapidity(),weight);
+            aeta->Fill(eta[j],weight); apt->Fill(pt[j],weight); ay->Fill(v.Rapidity(),weight); aetaphi->Fill(eta[j],phi[j],weight);
             // fill charged hadrons
-            if(pwflag[j]==0){ ceta->Fill(eta[j],weight); cpt->Fill(pt[j],weight); cy->Fill(v.Rapidity(),weight);}
+            if(pwflag[j]==0){ ceta->Fill(eta[j],weight); cpt->Fill(pt[j],weight); cy->Fill(v.Rapidity(),weight); cetaphi->Fill(eta[j],phi[j],weight);}
             // fill the neutral hadrons and photons
-            if(pwflag[j]!=0){ neta->Fill(eta[j],weight); npt->Fill(pt[j],weight); ny->Fill(v.Rapidity(),weight);}
+            if(pwflag[j]!=0){ neta->Fill(eta[j],weight); npt->Fill(pt[j],weight); ny->Fill(v.Rapidity(),weight); netaphi->Fill(eta[j],phi[j],weight);}
             // fill the leptons
             //if(pwflag[j] == 1 || pwflag[j] == 2){nLepton++;}
         }
@@ -213,6 +213,10 @@ int eeplots
     ay->Scale(1./ay->Integral());
     cy->Scale(1./cy->Integral());
     ny->Scale(1./ny->Integral());
+    
+    aetaphi->Scale(1./aetaphi->Integral());
+    cetaphi->Scale(1./cetaphi->Integral());
+    netaphi->Scale(1./netaphi->Integral());
     
     // Plot all, neutral, charged multiplicity
     TCanvas *allmult = new TCanvas ("allmult","allmult",600,600);
@@ -294,6 +298,11 @@ int eeplots
     yleg->Draw();
     xjjroot::drawtex(0.2,0.876,datalabel);
     ally->SaveAs(Form("pdfDir/%s_y.pdf",datalabel.Data()));
+    
+    // Plot all, neutral, charged eta-phi
+    TCanvas *alletaphi = new TCanvas("alletaphi","alletaphi",600,600);
+    xjjroot::sethempty(hempty_eta_phi,0,0.3);
+    
     
     TFile* outFile_p = new TFile(Form("inputs/qualityCheck/outFile_%s.root",datalabel.Data()), "RECREATE");
     //write all, first arg name ("" == declaration name), second arg overwrites buffer saves in file
