@@ -87,19 +87,25 @@ int plotDataQualityChecks()
     
     // create the multiplicity, eta, and pt ratio plots
     TH1F *LEP1_LEP2_rmult = (TH1F*)LEP1_cmult->Clone("LEP1_LEP2_rmult");
+    LEP1_LEP2_rmult->SetMinimum(0.7);
+    LEP1_LEP2_rmult->SetMaximum(1.3);
     LEP1_LEP2_rmult->Sumw2();
+    LEP1_LEP2_rmult->SetStats(0);
     LEP1_LEP2_rmult->Divide(LEP2_cmult);
-    LEP1_LEP2_rmult->GetYaxis()->SetRangeUser(0.7, 1.3);
     
     TH1F *LEP1_LEP2_rpt = (TH1F*)LEP1_cpt->Clone("LEP1_LEP2_rpt");
+    LEP1_LEP2_rpt->SetMinimum(0.7);
+    LEP1_LEP2_rpt->SetMaximum(1.3);
     LEP1_LEP2_rpt->Sumw2();
+    LEP1_LEP2_rpt->SetStats(0);
     LEP1_LEP2_rpt->Divide(LEP2_cpt);
-    LEP1_LEP2_rpt->GetYaxis()->SetRangeUser(0.7, 1.3);
     
     TH1F *LEP1_LEP2_reta = (TH1F*)LEP1_ceta->Clone("LEP1_LEP2_reta");
+    LEP1_LEP2_reta->SetMinimum(0.7);
+    LEP1_LEP2_reta->SetMaximum(1.3);
     LEP1_LEP2_reta->Sumw2();
+    LEP1_LEP2_reta->SetStats(0);
     LEP1_LEP2_reta->Divide(LEP2_ceta);
-    LEP1_LEP2_reta->GetYaxis()->SetRangeUser(0.7, 1.3);
     
     // plot multiplicity ratio
     TCanvas *rmult_LEP1_LEP2 = new TCanvas("rmult_LEP1_LEP2","",600,600);
