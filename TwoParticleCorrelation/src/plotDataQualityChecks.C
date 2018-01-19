@@ -50,8 +50,8 @@ int plotDataQualityChecks()
     // declare binning for ratio plots
     const int nBinsR = 80;
     Double_t binsRLin[nBinsR+1];
-    const Double_t rLow = .7;
-    const Double_t rHi = 1.3;
+    const Double_t rLow = 0;
+    const Double_t rHi = 2.0;
     getLinBins(rLow, rHi, nBinsR, binsRLin);
     
     // declare binning for x-axis
@@ -116,52 +116,40 @@ int plotDataQualityChecks()
     
     // plot multiplicity ratio
     TCanvas *rmult_LEP1_LEP2 = new TCanvas("rmult_LEP1_LEP2","",600,600);
-    TH2F *hempty_rmult_LEP1_LEP2 = new TH2F("Multiplicity Distribution",";Multiplicity;Probability",nBinsMult,binsMult,nBinsR,binsRLin);
+    TH2F *hempty_rmult_LEP1_LEP2 = new TH2F("Multiplicity Distribution",";Multiplicity;Ratio",nBinsMult,binsMult,nBinsR,binsRLin);
     xjjroot::sethempty(hempty_rmult_LEP1_LEP2,0,0.3);
     hempty_rmult_LEP1_LEP2->DrawCopy();
     xjjroot::setthgrstyle(LEP1_LEP2_rmult, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
     LEP1_LEP2_rmult->DrawCopy("pe same");
-    TLegend *leg_rmult_LEP1_LEP2 = new TLegend(0.67,0.7,1.1,0.88);
-    xjjroot::setleg(leg_rmult_LEP1_LEP2);
-    leg_rmult_LEP1_LEP2->AddEntry(LEP1_LEP2_rmult,"LEP1/LEP2","p");
     xjjroot::drawtex(0.2,0.876,"LEP1 vs LEP2 Ratio");
     rmult_LEP1_LEP2->SaveAs("pdfDir/rmult_LEP1_LEP2.pdf");
     
-    delete leg_rmult_LEP1_LEP2;
     delete hempty_rmult_LEP1_LEP2;
     delete rmult_LEP1_LEP2;
     
     // plot pt ratio
     TCanvas *rpt_LEP1_LEP2 = new TCanvas("rpt_LEP1_LEP2","",600,600);
-    TH2F *hempty_rpt_LEP1_LEP2 = new TH2F("PT Spectra",";pt;Probability",nBinsPt,binsPt,nBinsR,binsRLin);
+    TH2F *hempty_rpt_LEP1_LEP2 = new TH2F("p_{t} Spectra",";p_{t};Ratio",nBinsPt,binsPt,nBinsR,binsRLin);
     xjjroot::sethempty(hempty_rpt_LEP1_LEP2,0,0.3);
     hempty_rpt_LEP1_LEP2->DrawCopy();
     xjjroot::setthgrstyle(LEP1_LEP2_rpt, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
     LEP1_LEP2_rpt->DrawCopy("pe same");
-    TLegend *leg_rpt_LEP1_LEP2 = new TLegend(0.67,0.7,1.1,0.88);
-    xjjroot::setleg(leg_rpt_LEP1_LEP2);
-    leg_rpt_LEP1_LEP2->AddEntry(LEP1_LEP2_rpt,"LEP1/LEP2","p");
     xjjroot::drawtex(0.2,0.876,"LEP1 vs LEP2 Ratio");
     rpt_LEP1_LEP2->SaveAs("pdfDir/rpt_LEP1_LEP2.pdf");
     
-    delete leg_rpt_LEP1_LEP2;
     delete hempty_rpt_LEP1_LEP2;
     delete rpt_LEP1_LEP2;
     
     // plot eta ratio
     TCanvas *reta_LEP1_LEP2 = new TCanvas("reta_LEP1_LEP2","",600,600);
-    TH2F *hempty_reta_LEP1_LEP2 = new TH2F("Eta Spectra",";eta;Probability",nBinsEta,binsEta,nBinsR,binsRLin);
+    TH2F *hempty_reta_LEP1_LEP2 = new TH2F("Eta Spectra",";#eta;Ratio",nBinsEta,binsEta,nBinsR,binsRLin);
     xjjroot::sethempty(hempty_reta_LEP1_LEP2,0,0.3);
     hempty_reta_LEP1_LEP2->DrawCopy();
     xjjroot::setthgrstyle(LEP1_LEP2_reta, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
     LEP1_LEP2_reta->DrawCopy("pe same");
-    TLegend *leg_reta_LEP1_LEP2 = new TLegend(0.67,0.7,1.1,0.88);
-    xjjroot::setleg(leg_reta_LEP1_LEP2);
-    leg_reta_LEP1_LEP2->AddEntry(LEP1_LEP2_reta,"LEP1/LEP2","p");
     xjjroot::drawtex(0.2,0.876,"LEP1 vs LEP2 Ratio");
     reta_LEP1_LEP2->SaveAs("pdfDir/reta_LEP1_LEP2.pdf");
     
-    delete leg_reta_LEP1_LEP2;
     delete hempty_reta_LEP1_LEP2;
     delete reta_LEP1_LEP2;
     
@@ -213,7 +201,7 @@ int plotDataQualityChecks()
     // pt spectra
     TCanvas *pt_LEP1_PYTHIA8 = new TCanvas("pt","",600,600);
     gPad->SetLogy();
-    TH2F *hempty_pt1 = new TH2F("PT Spectra",";pt;Probability",nBinsPt,binsPt,nBinsY,binsYLog);
+    TH2F *hempty_pt1 = new TH2F("PT Spectra",";p_{t};Probability",nBinsPt,binsPt,nBinsY,binsYLog);
     xjjroot::sethempty(hempty_pt1,0,0.3);
     hempty_pt1->DrawCopy();
     xjjroot::setthgrstyle(LEP1_cpt, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
@@ -235,7 +223,7 @@ int plotDataQualityChecks()
     
     TCanvas *pt_LEP1_LEP2 = new TCanvas("pt","",600,600);
     gPad->SetLogy();
-    TH2F *hempty_pt2 = new TH2F("PT Spectra",";PT;Probability",nBinsPt,binsPt,nBinsY,binsYLog);
+    TH2F *hempty_pt2 = new TH2F("PT Spectra",";p_{t};Probability",nBinsPt,binsPt,nBinsY,binsYLog);
     xjjroot::sethempty(hempty_pt2,0,0.3);
     hempty_pt2->DrawCopy();
     xjjroot::setthgrstyle(LEP1_cpt, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
