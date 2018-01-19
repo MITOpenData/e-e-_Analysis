@@ -75,8 +75,6 @@ int eeplots
     if(datalabel == "LEP2"){nBinsMult = 90; multHi = 90; etaHi = 1.75; ptHi = 60;}
     etaLow = -etaHi;
     
-    std::cout<< __FILE__<<","<< __LINE__ <<std::endl;
-    
     // declare bins
     Double_t binsMult[nBinsMult+1];
     Double_t binsPt[nBinsPt+1];
@@ -91,7 +89,7 @@ int eeplots
     getLinBins(yLow, yHi, nBinsY, binsY);
     getLinBins(phiLow, phiHi, nBinsPhi, binsPhi);
     
-    std::cout<< __FILE__<<","<< __LINE__ <<std::endl;
+    
     
     // Declare Histograms
     TH2F *hempty_mult = new TH2F("",";Multiplicity;Probability",nBinsMult,binsMult,nBinsP,binsPLog);
@@ -99,17 +97,17 @@ int eeplots
     TH1F* cmult = new TH1F("cmult","",nBinsMult,binsMult);
     TH1F* nmult = new TH1F("nmult","",nBinsMult,binsMult);
     //TH1F* lmult = new TH1F("lmult","",nBinsMult,binsMult); // leptons
-    
+    std::cout<< __FILE__<<","<< __LINE__ <<std::endl;
     TH2F *hempty_pt = new TH2F("",";pt;Probability",nBinsPt,binsPt,nBinsP,binsPLog);
     TH1F* apt = new TH1F("apt","",nBinsPt,binsPt);
     TH1F* cpt = new TH1F("cpt","",nBinsPt,binsPt);
     TH1F* npt = new TH1F("npt","",nBinsPt,binsPt);
-    
+    std::cout<< __FILE__<<","<< __LINE__ <<std::endl;
     TH2F *hempty_eta = new TH2F("",";eta;Probability",nBinsEta,binsEta,nBinsP,binsYLin);
     TH1F* aeta = new TH1F("aeta","",nBinsEta,binsEta);
     TH1F* ceta = new TH1F("ceta","",nBinsEta,binsEta);
     TH1F* neta = new TH1F("neta","",nBinsEta,binsEta);
-    
+    std::cout<< __FILE__<<","<< __LINE__ <<std::endl;
     TH2F *hempty_y = new TH2F("",";y;Probability",nBinsY,binsY,nBinsP,binsYLin);
     TH1F* ay = new TH1F("ay","",nBinsY,binsY);
     TH1F* cy = new TH1F("cy","",nBinsY,binsY);
