@@ -90,8 +90,8 @@ void jetData::SetBranchWrite(TTree* inTree_p)
   inTree_p->Branch("jtpt", jtpt, "jtpt[nref]/F");
   inTree_p->Branch("jteta", jteta, "jteta[nref]/F");
   inTree_p->Branch("jtphi", jtphi, "jtphi[nref]/F");
-  inTree_p->Branch("jtN", jtN, "jtN[nref]/F");
-  inTree_p->Branch("jtNPW", jtNPW, ("jtNPW[nref][" + std::to_string(pwFlag) + "]/F").c_str());
+  inTree_p->Branch("jtN", jtN, "jtN[nref]/I");
+  inTree_p->Branch("jtNPW", jtNPW, ("jtNPW[nref][" + std::to_string(pwFlag) + "]/I").c_str());
   inTree_p->Branch("jtptFracPW", jtptFracPW, ("jtptFracPW[nref][" + std::to_string(pwFlag) + "]/F").c_str());
 
   return;
