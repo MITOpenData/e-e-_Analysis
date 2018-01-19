@@ -390,6 +390,9 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
         bData.nParticle=counterParticles;
         thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz, THRUST::OPTIMAL); 
         thrust_charged = getChargedThrust(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag, THRUST::OPTIMAL);
+	eData.nChargedHadrons = nTrk;
+	eData.nChargedHadrons_GT0p4 = nTrk_GT0p4; 
+	eData.nChargedHadrons_GT0p4Thrust = nTrk_GT0p4Thrust; 
         setThrustVariables(&pData, &eData, thrust, thrust_charged);
         eData.Thrust = thrust.Mag();
         eData.TTheta = thrust.Theta();
@@ -405,9 +408,6 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	eData.missChargedPt = netP_charged.Perp();
 	eData.missChargedTheta = netP_charged.Theta();
 	eData.missChargedPhi = netP_charged.Phi();
-	eData.nChargedHadrons = nTrk;
-	eData.nChargedHadrons_GT0p4 = nTrk_GT0p4; 
-	eData.nChargedHadrons_GT0p4Thrust = nTrk_GT0p4Thrust; 
 
 	if(counterEntries>0) tout->Fill(); 
 	
@@ -562,8 +562,11 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
     pData.nParticle=counterParticles;
     thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz, THRUST::OPTIMAL); 
     thrust_charged = getChargedThrust(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag, THRUST::OPTIMAL);
-    setThrustVariables(&pData, &eData, thrust, thrust_charged);
 
+    eData.nChargedHadrons = nTrk;
+    eData.nChargedHadrons_GT0p4 = nTrk_GT0p4; 
+    eData.nChargedHadrons_GT0p4Thrust = nTrk_GT0p4Thrust; 
+    setThrustVariables(&pData, &eData, thrust, thrust_charged);
     eData.Thrust = thrust.Mag();
     eData.TTheta = thrust.Theta();
     eData.TPhi = thrust.Phi();
@@ -578,9 +581,6 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
     eData.missChargedPt = netP_charged.Perp();
     eData.missChargedTheta = netP_charged.Theta();
     eData.missChargedPhi = netP_charged.Phi();
-    eData.nChargedHadrons = nTrk;
-    eData.nChargedHadrons_GT0p4 = nTrk_GT0p4; 
-    eData.nChargedHadrons_GT0p4Thrust = nTrk_GT0p4Thrust; 
 	
     if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     
@@ -649,6 +649,9 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
           
           thrust = getThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, THRUST::OPTIMAL); 
           thrust_charged = getChargedThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag, THRUST::OPTIMAL);
+	  egData.nChargedHadrons = nTrk;
+	  egData.nChargedHadrons_GT0p4 = nTrk_GT0p4; 
+	  egData.nChargedHadrons_GT0p4Thrust = nTrk_GT0p4Thrust; 
           setThrustVariables(&pgData, &egData, thrust, thrust_charged);
           egData.Thrust = thrust.Mag();
           egData.TTheta = thrust.Theta();
@@ -664,9 +667,6 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	  egData.missChargedPt = netP_charged.Perp();
 	  egData.missChargedTheta = netP_charged.Theta();
 	  egData.missChargedPhi = netP_charged.Phi();
-	  egData.nChargedHadrons = nTrk;
-	  egData.nChargedHadrons_GT0p4 = nTrk_GT0p4; 
-	  egData.nChargedHadrons_GT0p4Thrust = nTrk_GT0p4Thrust; 
 
 	  if(counterEntries>0) tgout->Fill(); 
 
@@ -867,6 +867,9 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
       pgData.nParticle=counterParticles;
       thrust = getThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, THRUST::OPTIMAL); 
       thrust_charged = getChargedThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag, THRUST::OPTIMAL );
+      egData.nChargedHadrons = nTrk;
+      egData.nChargedHadrons_GT0p4 = nTrk_GT0p4; 
+      egData.nChargedHadrons_GT0p4Thrust = nTrk_GT0p4Thrust; 
       setThrustVariables(&pgData, &egData, thrust, thrust_charged);
       egData.Thrust = thrust.Mag();
       egData.TTheta = thrust.Theta();
@@ -882,9 +885,6 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
       egData.missChargedPt = netP_charged.Perp();
       egData.missChargedTheta = netP_charged.Theta();
       egData.missChargedPhi = netP_charged.Phi();
-      egData.nChargedHadrons = nTrk;
-      egData.nChargedHadrons_GT0p4 = nTrk_GT0p4; 
-      egData.nChargedHadrons_GT0p4Thrust = nTrk_GT0p4Thrust; 
 
       if(counterEntries>0) tgout->Fill(); 
       for(int jIter = 0; jIter < nJtAlgo; ++jIter){
