@@ -297,6 +297,10 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
   bout->Branch("eta", bData.eta,"eta[nParticle]/F");
   bout->Branch("theta", bData.theta,"theta[nParticle]/F");
   bout->Branch("phi", bData.phi,"phi[nParticle]/F");
+  bout->Branch("boostx", &bData.boostx,"boostx/F");
+  bout->Branch("boosty", &bData.boosty,"boosty/F");
+  bout->Branch("boostz", &bData.boostz,"boostz/F");
+  bout->Branch("boost", &bData.boost,"boost/F");
 
   for(int i = 0; i < nJtAlgo; ++i){jData[i].SetBranchWrite(jout[i]);}
 
@@ -312,6 +316,10 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
     bgout->Branch("eta", bgData.eta,"eta[nParticle]/F");
     bgout->Branch("theta", bgData.theta,"theta[nParticle]/F");
     bgout->Branch("phi", bgData.phi,"phi[nParticle]/F");
+    bgout->Branch("boostx", &bgData.boostx,"boostx/F");
+    bgout->Branch("boosty", &bgData.boosty,"boosty/F");
+    bgout->Branch("boostz", &bgData.boostz,"boostz/F");
+    bgout->Branch("boost", &bgData.boost,"boost/F");
     
     for(int i = 0; i < nJtAlgo; ++i){jgData[i].SetBranchWrite(jgout[i]);}
   }
@@ -402,8 +410,18 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	if(counterEntries>0){
 	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	    jout[jIter]->Fill();
+            if(rParam[jIter]==0.8 && recombScheme[jIter]==fastjet::WTA_modp_scheme){
+              if(jData[jIter].nref<2){
+                setBoostedVariables(false, &pData, &bData);
+              }
+              else{
+                TVector3 wtaBoost = findBack2BackBoost(jData[jIter].fourJet[0],jData[jIter].fourJet[1]);
+                setBoostedVariables(true, &pData, &bData, jData[jIter].fourJet[0], wtaBoost);
+              }
+              bout->Fill();
+            }
 	  }
-          bout->Fill();
+
 	}        
 
 	//clear particles for next iteration clustering
@@ -574,8 +592,17 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
     if(counterEntries>0){
       for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	jout[jIter]->Fill();
+        if(rParam[jIter]==0.8 && recombScheme[jIter]==fastjet::WTA_modp_scheme){
+          if(jData[jIter].nref<2){
+            setBoostedVariables(false, &pData, &bData);
+          }
+          else{
+            TVector3 wtaBoost = findBack2BackBoost(jData[jIter].fourJet[0],jData[jIter].fourJet[1]);
+            setBoostedVariables(true, &pData, &bData, jData[jIter].fourJet[0], wtaBoost);
+          }
+          bout->Fill();
+        }
       }
-      bout->Fill();
     }
     file.close();
   
@@ -660,8 +687,17 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	    processJets(particles, jDef[jIter], jDefReclust[jIter], &(jgData[jIter]), jtPtCut);
 	    if(counterEntries>0){
 	      jgout[jIter]->Fill();
+              if(rParam[jIter]==0.8 && recombScheme[jIter]==fastjet::WTA_modp_scheme){
+                if(jgData[jIter].nref<2){
+                  setBoostedVariables(false, &pgData, &bgData);
+                }
+                else{
+                  TVector3 wtaBoost = findBack2BackBoost(jgData[jIter].fourJet[0],jgData[jIter].fourJet[1]);
+                  setBoostedVariables(true, &pgData, &bgData, jgData[jIter].fourJet[0], wtaBoost);
+                }
+                bgout->Fill();
+              }
 	    }
-            bgout->Fill();
 	  }
 	  //clear particles for next iteration clustering
 	  particles.clear();
@@ -874,8 +910,17 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	processJets(particles, jDef[jIter], jDefReclust[jIter], &(jgData[jIter]), jtPtCut);
 	if(counterEntries>0){
 	  jgout[jIter]->Fill();
+          if(rParam[jIter]==0.8 && recombScheme[jIter]==fastjet::WTA_modp_scheme){
+            if(jgData[jIter].nref<2){
+              setBoostedVariables(false, &pgData, &bgData);
+            }
+            else{
+              TVector3 wtaBoost = findBack2BackBoost(jgData[jIter].fourJet[0],jgData[jIter].fourJet[1]);
+              setBoostedVariables(true, &pgData, &bgData, jgData[jIter].fourJet[0], wtaBoost);
+            }
+            bgout->Fill();
+          }
 	}
-        bgout->Fill();
       }
       fileGen.close();
     }

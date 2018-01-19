@@ -7,6 +7,10 @@
 #  
 #how to run ./ridge.sh inFileName outFileName fileEvents
 #!/bin/bash
+
+inFileName=$1
+outFileName=$2
+fileEvents=$3
 NUMFILES=2
 mkdir -p tempFiles
 cd tempFiles
@@ -22,18 +26,28 @@ START=1
 FINISH=$NUMEVENTS
 TREE_NAME=t
 # divide up the file
-while [ $i -le $NUMFILES ]; do
+
+for i in `seq 1 $NUMFILES`; do
 rooteventselector --recreate -f $START -l $FINISH $inFileName:$TREE_NAME $i.root
-let i=i+1
 let START=FINISH+1
-let FINISH=$NUMEVENTS*$i
-done 
+let FINISH=$NUMEVENTS*\($i+1\)
+done
+wait
+
+#while [ $i -le $NUMFILES ]; do
+#rooteventselector --recreate -f $START -l $FINISH $inFileName:$TREE_NAME $i.root
+#let i=i+1
+#let START=FINISH+1
+#let FINISH=$NUMEVENTS*$i
+#done
+
 # Divide the file into 20 subfiles we can now run ridge check on them
 
 cd ..
+mkdir -p out_tempFiles
 # we are now in TwoParticleCorrelation
 for f in tempFiles/*.root; do
-root -b -q ridge_check_parallel.C\(\"$f","out_$f"\) &
+root -b -q ridge_check_parallel.c\(\"$f\",\"out_$f\"\) &
 #ridge_check_parallel.exe "$f" "out_$f" &
 done
 wait
@@ -42,7 +56,6 @@ wait
 rm -r tempFiles
 
 # hadd the files together
-cd ../pdfDir
-hadd -f $outFileName.root out_{1..20}.root
+hadd -f ../pdfDir/$outFileName.root ./out_tempFiles/*.root
 # delete the smaller files
-rm -r out_*.root
+rm -r out_tempFiles

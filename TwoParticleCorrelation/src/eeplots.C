@@ -12,6 +12,7 @@
 //root dependencies
 #include <TFile.h>
 #include <TTree.h>
+#include <TMath.h>
 #include "TLorentzVector.h"
 #include "TCanvas.h"
 #include "TH1F.h"
@@ -63,6 +64,10 @@ int eeplots
     int nBinsY = 60;
     Double_t yHi = 8;
     Double_t yLow = 0;
+
+    int nBinsPhi = 60;
+    Double_t phiHi = TMath::Pi()*1.5;
+    Double_t phiLow = -TMath::Pi()/2.;
     
     // assign binning ranges for different data sets
     if(datalabel == "PYTHIA8"){nBinsMult = 100; multHi = 100; etaHi = 3; ptHi = 60;}
@@ -75,12 +80,15 @@ int eeplots
     Double_t binsPt[nBinsPt+1];
     Double_t binsEta[nBinsEta+1];
     Double_t binsY[nBinsY+1];
+    Double_t binsPhi[nBinsPhi+1];
     
     // generate the binning
     getLinBins(multLow, multHi, nBinsMult, binsMult);
     getLinBins(ptLow, ptHi, nBinsPt, binsPt);
     getLinBins(etaLow, etaHi, nBinsEta, binsEta);
     getLinBins(yLow, yHi, nBinsY, binsY);
+    getLinBins(phiLow, phiHi, nBinsPhi, binsPhi);
+    
     
     // Declare Histograms
     TH2F *hempty_mult = new TH2F("",";Multiplicity;Probability",nBinsMult,binsMult,nBinsP,binsPLog);
@@ -103,6 +111,11 @@ int eeplots
     TH1F* ay = new TH1F("ay","",nBinsY,binsY);
     TH1F* cy = new TH1F("cy","",nBinsY,binsY);
     TH1F* ny = new TH1F("ny","",nBinsY,binsY);
+    
+    // don't plot in this file just fill
+    TH2F *aetaphi = new TH2F("aetaphi","#eta-#phi;#eta;#phi",nBinsEta,binsEta,nBinsPhi,binsPhi);
+    TH2F *cetaphi = new TH2F("cetaphi","#eta-#phi;#eta;#phi",nBinsEta,binsEta,nBinsPhi,binsPhi);
+    TH2F *netaphi = new TH2F("netaphi","#eta-#phi;#eta;#phi",nBinsEta,binsEta,nBinsPhi,binsPhi);
     
     // fill weights
     static const double weight = 0.0000000000001;
@@ -173,11 +186,11 @@ int eeplots
         {
             v.SetPx(px[j]); v.SetPy(py[j]); v.SetPz(pz[j]);
             // fill all particles
-            aeta->Fill(eta[j],weight); apt->Fill(pt[j],weight); ay->Fill(v.Rapidity(),weight);
+            aeta->Fill(eta[j],weight); apt->Fill(pt[j],weight); ay->Fill(v.Rapidity(),weight); aetaphi->Fill(eta[j],phi[j],weight);
             // fill charged hadrons
-            if(pwflag[j]==0){ ceta->Fill(eta[j],weight); cpt->Fill(pt[j],weight); cy->Fill(v.Rapidity(),weight);}
+            if(pwflag[j]==0){ ceta->Fill(eta[j],weight); cpt->Fill(pt[j],weight); cy->Fill(v.Rapidity(),weight); cetaphi->Fill(eta[j],phi[j],weight);}
             // fill the neutral hadrons and photons
-            if(pwflag[j]!=0){ neta->Fill(eta[j],weight); npt->Fill(pt[j],weight); ny->Fill(v.Rapidity(),weight);}
+            if(pwflag[j]!=0){ neta->Fill(eta[j],weight); npt->Fill(pt[j],weight); ny->Fill(v.Rapidity(),weight); netaphi->Fill(eta[j],phi[j],weight);}
             // fill the leptons
             //if(pwflag[j] == 1 || pwflag[j] == 2){nLepton++;}
         }
@@ -201,6 +214,10 @@ int eeplots
     ay->Scale(1./ay->Integral());
     cy->Scale(1./cy->Integral());
     ny->Scale(1./ny->Integral());
+    
+    aetaphi->Scale(1./aetaphi->Integral());
+    cetaphi->Scale(1./cetaphi->Integral());
+    netaphi->Scale(1./netaphi->Integral());
     
     // Plot all, neutral, charged multiplicity
     TCanvas *allmult = new TCanvas ("allmult","allmult",600,600);
@@ -298,9 +315,18 @@ int eeplots
     ay->Write("", TObject::kOverwrite);
     cy->Write("", TObject::kOverwrite);
     ny->Write("", TObject::kOverwrite);
+    aetaphi->Write("", TObject::kOverwrite);
+    cetaphi->Write("", TObject::kOverwrite);
+    netaphi->Write("", TObject::kOverwrite);
     
     outFile_p->Close();
     delete outFile_p;
+    
+    delete netaphi;
+    delete cetaphi;
+    delete aetaphi;
+    delete hempty_eta_phi;
+    delete alletaphi;
     
     delete yleg;
     delete ny;

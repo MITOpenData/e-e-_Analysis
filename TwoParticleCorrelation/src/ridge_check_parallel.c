@@ -1,3 +1,10 @@
+//c and c++ dependencies
+#include <sstream>
+#include <string>
+#include <iostream>
+#include <stdlib.h>
+
+//root dependencies
 #include <TFile.h>
 #include <TTree.h>
 #include <TChain.h>
@@ -9,18 +16,15 @@
 #include <TROOT.h>
 #include <TStyle.h>
 #include <TLatex.h>
-#include <iostream>
-#include <stdlib.h>
 #include <TMath.h>
 #include <TLorentzVector.h>
 #include <TVector3.h>
 #include <TFormula.h>
-#include <sstream>
-#include <string>
 #include <TNtuple.h>
 
-#include "fourier.h"
-#include "TPCNtupleData.h"
+//local headers
+#include "../include/fourier.h"
+#include "../include/TPCNtupleData.h"
 
 /********************************************************************************************************************/
 // Two particle correlation analysis
@@ -283,7 +287,7 @@ int ridge_check_parallel
     calculateRatio(h_2D,h_2Dmix,h_ratio);
     
     // Save the results
-    TFile *background = new TFile(Form("../pdfDir/%s.root",outFileName.c_str()), "recreate");
+    TFile *background = new TFile(Form("%s",outFileName.c_str()), "recreate");
     h_ratio->Write();
     h_2D->Write();
     h_2Dmix->Write();
