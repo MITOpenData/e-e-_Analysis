@@ -287,7 +287,7 @@ int ridge_check_parallel
     calculateRatio(h_2D,h_2Dmix,h_ratio);
     
     // Save the results
-    TFile *background = new TFile(Form("../pdfDir/%s.root",outFileName.c_str()), "recreate");
+    TFile *background = new TFile(Form("../pdfDir/%s",outFileName.c_str()), "recreate");
     h_ratio->Write();
     h_2D->Write();
     h_2Dmix->Write();
