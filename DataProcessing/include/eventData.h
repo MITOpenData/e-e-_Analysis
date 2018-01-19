@@ -48,10 +48,29 @@ class eventData{
 
   eventData();
   void SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::string> inList);
+  void SetBranchWrite(TTree* inTree_p);
 };
 
 eventData::eventData()
 {
+  missP = -999;
+  missPt = -999;
+  missTheta = -999;
+  missPhi = -999;
+  missChargedP = -999;
+  missChargedPt = -999;
+  missChargedTheta = -999;
+  missChargedPhi = -999;
+  nChargedHadrons = -999;
+  nChargedHadrons_GT0p4 = -999;
+  nChargedHadrons_GT0p4Thrust = -999;
+  Thrust = -999;
+  TTheta = -999;
+  TPhi = -999;
+  Thrust_charged = -999;
+  TTheta_charged = -999;
+  TPhi_charged = -999;
+
   for(int i = 0; i < nVar; ++i){varIsGood[i] = true;}
   return;
 }
@@ -96,5 +115,29 @@ void eventData::SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::string
 
   return;
 }
+
+void eventData::SetBranchWrite(TTree* inTree_p)
+{
+  inTree_p->Branch("missP", &missP, "missP/F");
+  inTree_p->Branch("missPt", &missPt, "missPt/F");
+  inTree_p->Branch("missTheta", &missTheta, "missTheta/F");
+  inTree_p->Branch("missPhi", &missPhi, "missPhi/F");
+  inTree_p->Branch("missChargedP", &missChargedP, "missChargedP/F");
+  inTree_p->Branch("missChargedPt", &missChargedPt, "missChargedPt/F");
+  inTree_p->Branch("missChargedTheta", &missChargedTheta, "missChargedTheta/F");
+  inTree_p->Branch("missChargedPhi", &missChargedPhi, "missChargedPhi/F");
+  inTree_p->Branch("nChargedHadrons", &nChargedHadrons, "nChargedHadrons/I");
+  inTree_p->Branch("nChargedHadrons_GT0p4", &nChargedHadrons_GT0p4, "nChargedHadrons_GT0p4/I");
+  inTree_p->Branch("nChargedHadrons_GT0p4Thrust", &nChargedHadrons_GT0p4Thrust, "nChargedHadrons_GT0p4Thrust/I");
+  inTree_p->Branch("Thrust", &Thrust, "Thrust/F");
+  inTree_p->Branch("TTheta", &TTheta, "TTheta/F");
+  inTree_p->Branch("TPhi", &TPhi, "TPhi/F");
+  inTree_p->Branch("Thrust_charged", &Thrust_charged, "Thrust_charged/F");
+  inTree_p->Branch("TTheta_charged", &TTheta_charged, "TTheta_charged/F");
+  inTree_p->Branch("TPhi_charged", &TPhi_charged, "TPhi_charged/F");
+  
+  return;
+}
+
 
 #endif

@@ -287,27 +287,8 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
   boostedEvtData bgData;
 
   pData.SetBranchWrite(tout);
-
+  eData.SetBranchWrite(tout);
   //thrust quantities
-  tout->Branch("Thrust",&eData.Thrust,"Thrust/F");
-  tout->Branch("TTheta",&eData.TTheta,"TTheta/F");
-  tout->Branch("TPhi",&eData.TPhi,"TPhi/F");
-  tout->Branch("Thrust_charged",&eData.Thrust_charged,"Thrust_charged/F");
-  tout->Branch("TTheta_charged",&eData.TTheta_charged,"TTheta_charged/F");
-  tout->Branch("TPhi_charged",&eData.TPhi_charged,"TPhi_charged/F");
-
-  //derived quantities
-  tout->Branch("missP",&eData.missP,"missP/F");
-  tout->Branch("missPt",&eData.missPt,"missPt/F");
-  tout->Branch("missTheta",&eData.missTheta,"missTheta/F");
-  tout->Branch("missPhi",&eData.missPhi,"missPhi/F");
-  tout->Branch("missChargedP",&eData.missChargedP,"missP/F");
-  tout->Branch("missChargedPt",&eData.missChargedPt,"missChargedPt/F");
-  tout->Branch("missChargedTheta",&eData.missChargedTheta,"missChargedTheta/F");
-  tout->Branch("missChargedPhi",&eData.missChargedPhi,"missChargedPhi/F");
-  tout->Branch("nChargedHadrons",&eData.nChargedHadrons,"nChargedHadrons/I");
-  tout->Branch("nChargedHadrons_GT0p4",&eData.nChargedHadrons_GT0p4,"nChargedHadrons_GT0p4/I");
-  tout->Branch("nChargedHadrons_GT0p4Thrust",&eData.nChargedHadrons_GT0p4Thrust,"nChargedHadrons_GT0p4Thrust/I");
 
   bout->Branch("nParticle",&bData.nParticle,"nParticle/I");
   bout->Branch("WTAAxis_Theta",&bData.WTAAxis_Theta,"WTAAxis_Theta/F");
@@ -330,27 +311,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 
   if(isRecons && isMC){
     pgData.SetBranchWrite(tgout);
-
-    //thrust quantities
-    tgout->Branch("Thrust",&egData.Thrust,"Thrust/F");
-    tgout->Branch("TTheta",&egData.TTheta,"TTheta/F");
-    tgout->Branch("TPhi",&egData.TPhi,"TPhi/F");
-    tgout->Branch("Thrust_charged",&egData.Thrust_charged,"Thrust_charged/F");
-    tgout->Branch("TTheta_charged",&egData.TTheta_charged,"TTheta_charged/F");
-    tgout->Branch("TPhi_charged",&egData.TPhi_charged,"TPhi_charged/F");
-
-    //derived quantities
-    tgout->Branch("missP",&egData.missP,"missP/F");
-    tgout->Branch("missPt",&egData.missPt,"missPt/F");
-    tgout->Branch("missTheta",&egData.missTheta,"missTheta/F");
-    tgout->Branch("missPhi",&egData.missPhi,"missPhi/F");
-    tgout->Branch("missChargedP",&egData.missChargedP,"missP/F");
-    tgout->Branch("missChargedPt",&egData.missChargedPt,"missChargedPt/F");
-    tgout->Branch("missChargedTheta",&egData.missChargedTheta,"missChargedTheta/F");
-    tgout->Branch("missChargedPhi",&egData.missChargedPhi,"missChargedPhi/F");
-    tgout->Branch("nChargedHadrons",&egData.nChargedHadrons,"nChargedHadrons/I");
-    tgout->Branch("nChargedHadrons_GT0p4",&egData.nChargedHadrons_GT0p4,"nChargedHadrons_GT0p4/I");
-    tgout->Branch("nChargedHadrons_GT0p4Thrust",&egData.nChargedHadrons_GT0p4Thrust,"nChargedHadrons_GT0p4Thrust/I");
+    egData.SetBranchWrite(tgout);
 
     bgout->Branch("nParticle",&bgData.nParticle,"nParticle/I");
     bgout->Branch("WTAAxis_Theta",&bgData.WTAAxis_Theta,"WTAAxis_Theta/F");
