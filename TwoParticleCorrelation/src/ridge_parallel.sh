@@ -47,6 +47,6 @@ wait
 rm -r tempFiles
 
 # hadd the files together
-hadd -f ../pdfDir/$outFileName.root ./out_tempFiles/{1..20}.root
+hadd -f ../pdfDir/$outFileName.root ./out_tempFiles/{1..$NUMFILES}.root
 # delete the smaller files
 rm -r out_tempFiles
