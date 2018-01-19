@@ -3,6 +3,9 @@
 #include "TLorentzVector.h"
 #include "TVector3.h"
 #include "TMath.h"
+#include "particleData.h"
+#include "thrustTools.h"
+#include "boostedEvtData.h"
 #include <iostream>
 
 TVector3 findBack2BackBoost(TLorentzVector a, TLorentzVector b){
@@ -24,6 +27,47 @@ TVector3 findBack2BackBoost(TLorentzVector a, TLorentzVector b){
 
   return boost;
 }
+
+
+void setBoostedVariables(bool doBoost, particleData *p, boostedEvtData *b, TLorentzVector mainAxis = TLorentzVector(0,0,0,0), TVector3 boost = TVector3(0,0,0)){
+  if(doBoost==0){
+    b->WTAAxis_Theta = -999;
+    b->WTAAxis_Phi = -999;
+    b->boostx = 0; 
+    b->boosty = 0; 
+    b->boostz = 0; 
+    b->boost = 0; 
+ 
+    for(int i = 0; i< p->nParticle; i++){
+      p->pt[i] = -999;
+      p->pmag[i] = -999;
+      p->eta[i] = -999;
+      p->phi[i] = -999;
+      p->theta[i] = -999;
+    } 
+  }
+  else{
+    mainAxis.Boost(boost);
+    b->WTAAxis_Theta = mainAxis.Vect().Theta();
+    b->WTAAxis_Phi = mainAxis.Vect().Phi();
+    b->boostx = boost.X(); 
+    b->boosty = boost.Y(); 
+    b->boostz = boost.Z(); 
+    b->boost = boost.Mag(); 
+    for(int i = 0; i< p->nParticle; i++){
+      TLorentzVector part;
+      part.SetXYZM(p->px[i], p->py[i], p->pz[i], p->mass[i]);
+      part.Boost(boost);
+
+      b->pt[i] = ptFromThrust(mainAxis.Vect().Unit(), part.Vect());
+      b->pmag[i] = part.Vect().Mag();
+      b->eta[i] = -TMath::Log(TMath::Tan(thetaFromThrust(mainAxis.Vect().Unit(), part.Vect())/2.0));//true defition of eta
+      b->theta[i] = thetaFromThrust(mainAxis.Vect().Unit(), part.Vect());
+      b->phi[i] = phiFromThrust(mainAxis.Vect().Unit(), part.Vect());
+    }
+  }
+}
+
 
 //used for testing
 void boostTools(){

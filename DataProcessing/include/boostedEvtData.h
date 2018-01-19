@@ -15,8 +15,12 @@ class boostedEvtData{
   float eta[nMaxBoostedPart];
   float theta[nMaxBoostedPart];
   float phi[nMaxBoostedPart];
+  float boostx;
+  float boosty;
+  float boostz;
+  float boost;
 
-  static const int nVar = 8;
+  static const int nVar = 12;
   std::string varStr[nVar] = {"nParticle",
                               "WTAAxis_Theta",
                               "WTAAxis_Phi",
@@ -25,6 +29,10 @@ class boostedEvtData{
 			      "eta",
 			      "theta",
 			      "phi",
+                              "boostx",
+                              "boosty",
+                              "boostz",
+                              "boost"
 			     };
 
   bool varIsGood[nVar];
@@ -67,6 +75,10 @@ void boostedEvtData::SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::s
   if(varIsGood[5]) inTree_p->SetBranchAddress("eta", eta);
   if(varIsGood[6]) inTree_p->SetBranchAddress("theta", theta);
   if(varIsGood[7]) inTree_p->SetBranchAddress("phi", phi);
+  if(varIsGood[8]) inTree_p->SetBranchAddress("boostx", &boostx);
+  if(varIsGood[9]) inTree_p->SetBranchAddress("boosty", &boosty);
+  if(varIsGood[10]) inTree_p->SetBranchAddress("boostz", &boostz);
+  if(varIsGood[11]) inTree_p->SetBranchAddress("boost", &boost);
   
   return;
 }
