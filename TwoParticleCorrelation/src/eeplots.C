@@ -304,25 +304,25 @@ int eeplots
     ally->SaveAs(Form("pdfDir/%s_y.pdf",datalabel.Data()));
     
     TCanvas *alletaphi = new TCanvas("alletaphi","alletaphi",600,600);
-    xjjroot::sethempty(aetaphi,0,0.3);
+    xjjroot::sethempty(aetaphi,0,0);
     aetaphi->Draw("colz");
     xjjroot::drawtex(0.2,0.876,datalabel);
-    alletaphi->SaveAs(Form("pdfDir/%s_aetaphi.pdf",datalabel.Data()));
     alletaphi->SetRightMargin(0.13);
+    alletaphi->SaveAs(Form("pdfDir/%s_aetaphi.pdf",datalabel.Data()));
     
     TCanvas *charetaphi = new TCanvas("charetaphi","charetaphi",600,600);
-    xjjroot::sethempty(cetaphi,0,0.3);
+    xjjroot::sethempty(cetaphi,0,0);
     cetaphi->Draw("colz same");
     xjjroot::drawtex(0.2,0.876,datalabel);
-    charetaphi->SaveAs(Form("pdfDir/%s_cetaphi.pdf",datalabel.Data()));
     charetaphi->SetRightMargin(0.13);
+    charetaphi->SaveAs(Form("pdfDir/%s_cetaphi.pdf",datalabel.Data()));
     
     TCanvas *neutetaphi = new TCanvas("neutetaphi","neutetaphi",600,600);
-    xjjroot::sethempty(netaphi,0,0.3);
+    xjjroot::sethempty(netaphi,0,0);
     netaphi->Draw("colz");
     xjjroot::drawtex(0.2,0.876,datalabel);
-    neutetaphi->SaveAs(Form("pdfDir/%s_netaphi.pdf",datalabel.Data()));
     neutetaphi->SetRightMargin(0.13);
+    neutetaphi->SaveAs(Form("pdfDir/%s_netaphi.pdf",datalabel.Data()));
     
     TFile* outFile_p = new TFile(Form("inputs/qualityCheck/outFile_%s.root",datalabel.Data()), "RECREATE");
     //write all, first arg name ("" == declaration name), second arg overwrites buffer saves in file
