@@ -167,7 +167,6 @@ int eeplots
     Int_t nevent = (Int_t)t1->GetEntries();
     
     // basic variable declarations
-    Int_t nChg = 0;
     //Int_t nLepton = 0;
     Float_t min_ZPole_Energy = 91.0;
     Float_t max_ZPole_Energy = 91.5;
