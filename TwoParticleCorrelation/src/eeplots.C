@@ -113,11 +113,11 @@ int eeplots
     TH1F* ny = new TH1F("ny","",nBinsY,binsY);
     
     // don't plot in this file just fill
-    TH2F *hempty_aetaphi = new TH2F("","All Particles;#eta;#phi",nBinsEta,binsEta,nBinsPhi,binsPhi);
+    //TH2F *hempty_aetaphi = new TH2F("","All Particles;#eta;#phi",nBinsEta,binsEta,nBinsPhi,binsPhi);
     TH2F *aetaphi = new TH2F("aetaphi","All Particles #eta-#phi ;#eta;#phi",nBinsEta,binsEta,nBinsPhi,binsPhi);
-    TH2F *hempty_cetaphi = new TH2F("","Charged Hadrons;#eta;#phi",nBinsEta,binsEta,nBinsPhi,binsPhi);
+    //TH2F *hempty_cetaphi = new TH2F("","Charged Hadrons;#eta;#phi",nBinsEta,binsEta,nBinsPhi,binsPhi);
     TH2F *cetaphi = new TH2F("cetaphi","Charged Hadrons #eta-#phi;#eta;#phi",nBinsEta,binsEta,nBinsPhi,binsPhi);
-    TH2F *hempty_netaphi = new TH2F("","Neutral Hadrons and Photons;#eta;#phi",nBinsEta,binsEta,nBinsPhi,binsPhi);
+    //TH2F *hempty_netaphi = new TH2F("","Neutral Hadrons and Photons;#eta;#phi",nBinsEta,binsEta,nBinsPhi,binsPhi);
     TH2F *netaphi = new TH2F("netaphi","Neutral Hadrons and Photons #eta-#phi;#eta;#phi",nBinsEta,binsEta,nBinsPhi,binsPhi);
     
     // fill weights
@@ -304,23 +304,20 @@ int eeplots
     ally->SaveAs(Form("pdfDir/%s_y.pdf",datalabel.Data()));
     
     TCanvas *alletaphi = new TCanvas("alletaphi","alletaphi",600,600);
-    xjjroot::sethempty(hempty_aetaphi,0,0.3);
-    hempty_aetaphi->Draw("colz");
-    aetaphi->Draw("colz same");
+    xjjroot::sethempty(aetaphi,0,0.3);
+    aetaphi->Draw("colz");
     xjjroot::drawtex(0.2,0.876,datalabel);
     alletaphi->SaveAs(Form("pdfDir/%s_aetaphi.pdf",datalabel.Data()));
     
     TCanvas *charetaphi = new TCanvas("charetaphi","charetaphi",600,600);
-    xjjroot::sethempty(hempty_cetaphi,0,0.3);
-    hempty_cetaphi->Draw("colz");
+    xjjroot::sethempty(cetaphi,0,0.3);
     cetaphi->Draw("colz same");
     xjjroot::drawtex(0.2,0.876,datalabel);
     charetaphi->SaveAs(Form("pdfDir/%s_cetaphi.pdf",datalabel.Data()));
     
     TCanvas *neutetaphi = new TCanvas("neutetaphi","neutetaphi",600,600);
-    xjjroot::sethempty(hempty_netaphi,0,0.3);
-    hempty_netaphi->Draw("colz");
-    netaphi->Draw("colz same");
+    xjjroot::sethempty(netaphi,0,0.3);
+    netaphi->Draw("colz");
     xjjroot::drawtex(0.2,0.876,datalabel);
     neutetaphi->SaveAs(Form("pdfDir/%s_netaphi.pdf",datalabel.Data()));
     
