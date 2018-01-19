@@ -138,7 +138,6 @@ int eeplots
     static const int nMaxPart = 10000;
     Int_t nParticle;
     Int_t nChargedHadrons;
-    Int_t nParticleChg;
     Float_t Energy;
     Float_t pt[nMaxPart];
     Float_t eta[nMaxPart];
@@ -148,10 +147,11 @@ int eeplots
     Float_t px[nMaxPart];
     Float_t py[nMaxPart];
     Float_t pz[nMaxPart];
+    Float_t rap[nMaxPart];
+    
     
     t1->SetBranchAddress("nParticle",&nParticle);
     t1->SetBranchAddress("nChargedHadrons",&nChargedHadrons);
-    if(datalabel == "PYTHIA8")t1->SetBranchAddress("nParticleChg",&nParticleChg);
     t1->SetBranchAddress("Energy",&Energy);
     t1->SetBranchAddress("pt",pt);
     t1->SetBranchAddress("eta",eta);
@@ -161,6 +161,7 @@ int eeplots
     t1->SetBranchAddress("px",px);
     t1->SetBranchAddress("py",py);
     t1->SetBranchAddress("pz",pz);
+    t1->SetBranchAddress("rap",rap);
     
     // all entries and fill the histograms
     Int_t nevent = (Int_t)t1->GetEntries();
@@ -168,7 +169,6 @@ int eeplots
     // basic variable declarations
     Int_t nChg = 0;
     //Int_t nLepton = 0;
-    TLorentzVector v(1., 1., 1., 1.);
     Float_t min_ZPole_Energy = 91.0;
     Float_t max_ZPole_Energy = 91.5;
     
@@ -179,24 +179,20 @@ int eeplots
         
         // for LEP2 Energy (91,91.5) to focus on Z pole
         if(datalabel == "LEP2"){if(Energy<min_ZPole_Energy || Energy>max_ZPole_Energy){continue;}}
-        if(datalabel == "PYTHIA8")nChg = nParticleChg;
-        else nChg = nChargedHadrons;
-        
+ 
         // fill the multiplicity
         amult->Fill(nParticle);
-        cmult->Fill(nChg);
-        nmult->Fill(nParticle-nChg);
+        cmult->Fill(nChargedHadrons);
+        nmult->Fill(nParticle-nChargedHadrons);
         
-        v.SetE(Energy);
         for (Int_t j=0;j<nParticle;j++)
         {
-            v.SetPx(px[j]); v.SetPy(py[j]); v.SetPz(pz[j]);
             // fill all particles
-            aeta->Fill(eta[j],weight); apt->Fill(pt[j],weight); ay->Fill(v.Rapidity(),weight); aetaphi->Fill(eta[j],phi[j],weight);
+            aeta->Fill(eta[j],weight); apt->Fill(pt[j],weight); ay->Fill(rap[j],weight); aetaphi->Fill(eta[j],phi[j],weight);
             // fill charged hadrons
-            if(pwflag[j]==0){ ceta->Fill(eta[j],weight); cpt->Fill(pt[j],weight); cy->Fill(v.Rapidity(),weight); cetaphi->Fill(eta[j],phi[j],weight);}
+            if(pwflag[j]==0){ ceta->Fill(eta[j],weight); cpt->Fill(pt[j],weight); cy->Fill(rap[j],weight); cetaphi->Fill(eta[j],phi[j],weight);}
             // fill the neutral hadrons and photons
-            if(pwflag[j]!=0){ neta->Fill(eta[j],weight); npt->Fill(pt[j],weight); ny->Fill(v.Rapidity(),weight); netaphi->Fill(eta[j],phi[j],weight);}
+            if(pwflag[j]!=0){ neta->Fill(eta[j],weight); npt->Fill(pt[j],weight); ny->Fill(rap[j],weight); netaphi->Fill(eta[j],phi[j],weight);}
             // fill the leptons
             //if(pwflag[j] == 1 || pwflag[j] == 2){nLepton++;}
         }
