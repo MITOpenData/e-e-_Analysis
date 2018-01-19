@@ -71,19 +71,19 @@ int plotDataQualityChecks()
     TH1F *LEP1_cmult = (TH1F*)gDirectory->Get("cmult");
     TH1F *LEP1_cpt = (TH1F*)gDirectory->Get("cpt");
     TH1F *LEP1_ceta = (TH1F*)gDirectory->Get("ceta");
-    plotAllTH2F("inputs/qualityCheck/outFile_LEP1.root");
+    //plotAllTH2F("inputs/qualityCheck/outFile_LEP1.root");
     
     TFile *LEP2 = new TFile("inputs/qualityCheck/outFile_LEP2.root");
     TH1F *LEP2_cmult = (TH1F*)gDirectory->Get("cmult");
     TH1F *LEP2_cpt = (TH1F*)gDirectory->Get("cpt");
     TH1F *LEP2_ceta = (TH1F*)gDirectory->Get("ceta");
-    plotAllTH2F("inputs/qualityCheck/outFile_LEP2.root");
+    //plotAllTH2F("inputs/qualityCheck/outFile_LEP2.root");
     
     TFile *PYTHIA8 = new TFile("inputs/qualityCheck/outFile_PYTHIA8.root");
     TH1F *PYTHIA8_cmult = (TH1F*)gDirectory->Get("cmult");
     TH1F *PYTHIA8_cpt = (TH1F*)gDirectory->Get("cpt");
     TH1F *PYTHIA8_ceta = (TH1F*)gDirectory->Get("ceta");
-    plotAllTH2F("inputs/qualityCheck/outFile_PYTHIA8.root");
+    //plotAllTH2F("inputs/qualityCheck/outFile_PYTHIA8.root");
     
     // create the multiplicity, eta, and pt ratio plots
     TH1F *LEP1_LEP2_rmult = (TH1F*)LEP1_cmult->Clone("LEP1_LEP2_rmult");
