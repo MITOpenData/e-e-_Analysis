@@ -35,6 +35,7 @@ done
 # Divide the file into 20 subfiles we can now run ridge check on them
 
 cd ..
+mkdir -p out_tempFiles
 # we are now in TwoParticleCorrelation
 for f in tempFiles/*.root; do
 root -b -q ridge_check_parallel.c\(\"$f\",\"out_$f\"\) &
