@@ -150,15 +150,7 @@ int main(int argc, char* argv[])
   pData.SetBranchWrite(genTree_p);
   eData.SetBranchWrite(genTree_p);
 
-  for(int i = 0; i < nJtAlgo; ++i){
-    jetTree_p[i]->Branch("nref", &jData[i].nref,"nref/I");
-    jetTree_p[i]->Branch("jtpt", jData[i].jtpt,"jtpt[nref]/F");
-    jetTree_p[i]->Branch("jteta", jData[i].jteta,"jteta[nref]/F");
-    jetTree_p[i]->Branch("jtphi", jData[i].jtphi,"jtphi[nref]/F");
-    jetTree_p[i]->Branch("jtN", jData[i].jtN, "jtN[nref]/I");
-    jetTree_p[i]->Branch("jtNPW", jData[i].jtNPW, "jtNPW[nref][6]/I");
-    jetTree_p[i]->Branch("jtptFracPW", jData[i].jtptFracPW, "jtptFracPW[nref][6]/F");
-  }
+  for(int i = 0; i < nJtAlgo; ++i){jData[i].SetBranchWrite(jetTree_p[i]);}
 
   Pythia8::Pythia pythia;
   double mZ = pythia.particleData.m0(23);
