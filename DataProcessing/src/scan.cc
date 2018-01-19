@@ -122,6 +122,7 @@ void processJets(std::vector<fastjet::PseudoJet> p, fastjet::JetDefinition jDef,
       if(jets.at(i).pt() < ptCut) break; //Arbitrarily low cut on jets, removes spike at phi zero when things become ill defined
       d->jtpt[d->nref] = jets.at(i).pt();
       d->jtphi[d->nref] = jets.at(i).phi_std();
+      d->jtm[d->nref] = jets.at(i).m();
       d->jteta[d->nref] = jets.at(i).eta();
       d->fourJet[d->nref] = TLorentzVector(jets.at(i).px(), jets.at(i).py(), jets.at(i).pz(), jets.at(i).E());
 

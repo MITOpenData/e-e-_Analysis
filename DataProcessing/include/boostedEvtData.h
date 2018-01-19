@@ -39,10 +39,27 @@ class boostedEvtData{
   
   boostedEvtData();
   void SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::string> inList);
+  void SetBranchWrite(TTree* inTree_p);
 };
 
 boostedEvtData::boostedEvtData()
 {
+  nParticle = -999;
+  WTAAxis_Theta = -999;
+  WTAAxis_Phi = -999;
+  boostx = -999;
+  boosty = -999;
+  boostz = -999;
+  boost = -999;
+
+  for(Int_t pI = 0; pI < nMaxBoostedPart; ++pI){
+    pt[pI] = -999;
+    pmag[pI] = -999;
+    eta[pI] = -999;
+    theta[pI] = -999;
+    phi[pI] = -999;
+  }
+
   for(int i = 0; i < nVar; ++i){varIsGood[i] = true;}
   return;
 }
@@ -85,18 +102,18 @@ void boostedEvtData::SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::s
 
 void boostedEvtData::SetBranchWrite(TTree* inTree_p)
 {
-  inTree_p->Branch("nParticle", &nParticle, "nParticle/I")
-  inTree_p->Branch("WTAAxis_Theta", &WTAAxis_Theta, "WTAAxis_Theta/F")
-  inTree_p->Branch("WTAAxis_Phi", &WTAAxis_Phi, "WTAAxis_Phi/F")
-  inTree_p->Branch("pt", pt, "pt[nParticle]/F")
-  inTree_p->Branch("pmag", pmag, "pmag[nParticle]/F")
-  inTree_p->Branch("eta", eta, "eta[nParticle]/F")
-  inTree_p->Branch("theta", theta, "theta[nParticle]/F")
-  inTree_p->Branch("phi", phi, "phi[nParticle]/F")
-  inTree_p->Branch("boostx", &boostx, "boostx/F")
-  inTree_p->Branch("boosty", &boosty, "boosty/F")
-  inTree_p->Branch("boostz", &boostz, "boostz/F")
-  inTree_p->Branch("boost", &boost, "boost/F")
+  inTree_p->Branch("nParticle", &nParticle, "nParticle/I");
+  inTree_p->Branch("WTAAxis_Theta", &WTAAxis_Theta, "WTAAxis_Theta/F");
+  inTree_p->Branch("WTAAxis_Phi", &WTAAxis_Phi, "WTAAxis_Phi/F");
+  inTree_p->Branch("pt", pt, "pt[nParticle]/F");
+  inTree_p->Branch("pmag", pmag, "pmag[nParticle]/F");
+  inTree_p->Branch("eta", eta, "eta[nParticle]/F");
+  inTree_p->Branch("theta", theta, "theta[nParticle]/F");
+  inTree_p->Branch("phi", phi, "phi[nParticle]/F");
+  inTree_p->Branch("boostx", &boostx, "boostx/F");
+  inTree_p->Branch("boosty", &boosty, "boosty/F");
+  inTree_p->Branch("boostz", &boostz, "boostz/F");
+  inTree_p->Branch("boost", &boost, "boost/F");
 
   return;
 }

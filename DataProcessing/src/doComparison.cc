@@ -403,6 +403,7 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
 	else if(tempS.find("jtpt") != std::string::npos && tempS.size() == std::string("jtpt").size()) doFillArr(hist1_Jet_p.at(jI).at(bI), hist2_Jet_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Jet_p.at(jI).at(bI), jData1[jI].nref, jData2[jI].nref, jData1[jI].jtpt, jData2[jI].jtpt);
 	else if(tempS.find("jteta") != std::string::npos && tempS.size() == std::string("jteta").size()) doFillArr(hist1_Jet_p.at(jI).at(bI), hist2_Jet_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Jet_p.at(jI).at(bI), jData1[jI].nref, jData2[jI].nref, jData1[jI].jteta, jData2[jI].jteta);
 	else if(tempS.find("jtphi") != std::string::npos && tempS.size() == std::string("jtphi").size()) doFillArr(hist1_Jet_p.at(jI).at(bI), hist2_Jet_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Jet_p.at(jI).at(bI), jData1[jI].nref, jData2[jI].nref, jData1[jI].jtphi, jData2[jI].jtphi);
+	else if(tempS.find("jtm") != std::string::npos && tempS.size() == std::string("jtm").size()) doFillArr(hist1_Jet_p.at(jI).at(bI), hist2_Jet_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Jet_p.at(jI).at(bI), jData1[jI].nref, jData2[jI].nref, jData1[jI].jtm, jData2[jI].jtm);
 	else if(tempS.find("jtN") != std::string::npos && tempS.size() == std::string("jtN").size()) doFillArr(hist1_Jet_p.at(jI).at(bI), hist2_Jet_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Jet_p.at(jI).at(bI), jData1[jI].nref, jData2[jI].nref, jData1[jI].jtN, jData2[jI].jtN);
 	//Note cant handle 2d arrays proper will add later
       }
