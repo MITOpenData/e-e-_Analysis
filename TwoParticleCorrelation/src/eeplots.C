@@ -75,6 +75,8 @@ int eeplots
     if(datalabel == "LEP2"){nBinsMult = 90; multHi = 90; etaHi = 1.75; ptHi = 60;}
     etaLow = -etaHi;
     
+    std::cout<< __FILE__<<","<< __LINE__ <<std::endl;
+    
     // declare bins
     Double_t binsMult[nBinsMult+1];
     Double_t binsPt[nBinsPt+1];
@@ -89,6 +91,7 @@ int eeplots
     getLinBins(yLow, yHi, nBinsY, binsY);
     getLinBins(phiLow, phiHi, nBinsPhi, binsPhi);
     
+    std::cout<< __FILE__<<","<< __LINE__ <<std::endl;
     
     // Declare Histograms
     TH2F *hempty_mult = new TH2F("",";Multiplicity;Probability",nBinsMult,binsMult,nBinsP,binsPLog);
@@ -111,6 +114,8 @@ int eeplots
     TH1F* ay = new TH1F("ay","",nBinsY,binsY);
     TH1F* cy = new TH1F("cy","",nBinsY,binsY);
     TH1F* ny = new TH1F("ny","",nBinsY,binsY);
+    
+    std::cout<< __FILE__<<","<< __LINE__ <<std::endl;
     
     // don't plot in this file just fill
     //TH2F *hempty_aetaphi = new TH2F("","All Particles;#eta;#phi",nBinsEta,binsEta,nBinsPhi,binsPhi);
