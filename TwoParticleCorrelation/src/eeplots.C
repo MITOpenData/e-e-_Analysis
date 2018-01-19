@@ -111,8 +111,9 @@ int eeplots
     TH1F* cy = new TH1F("cy","",nBinsY,binsY);
     TH1F* ny = new TH1F("ny","",nBinsY,binsY);
     
-    TH2F *hempty_eta_phi = new TH2F("","#eta-#phi;#eta;#phi",nBinsPhi,binsPhi,nBinsP,binsYLin);
-    TH2F *aetaphi = new TH2F("aetaphi","",nBinsEta,binsEta,nBinsPhi,binsPhi);
+    // xjj plotting macro only works for TH1
+    //TH2F *hempty_eta_phi = new TH2F("","#eta-#phi;#eta;#phi",nBinsPhi,binsPhi,nBinsP,binsYLin);
+    TH2F *aetaphi = new TH2F("aetaphi","#eta-#phi;#eta;#phi",nBinsEta,binsEta,nBinsPhi,binsPhi);
     TH2F *cetaphi = new TH2F("cetaphi","",nBinsEta,binsEta,nBinsPhi,binsPhi);
     TH2F *netaphi = new TH2F("netaphi","",nBinsEta,binsEta,nBinsPhi,binsPhi);
     
@@ -302,7 +303,21 @@ int eeplots
     // Plot all, neutral, charged eta-phi
     TCanvas *alletaphi = new TCanvas("alletaphi","alletaphi",600,600);
     xjjroot::sethempty(hempty_eta_phi,0,0.3);
-    
+    hempty_eta_phi->Draw();
+    xjjroot::setthgrstyle(aetaphi, kBlack, 20, 1.2, kRed, 1, 1, -1, -1, -1);
+    aetaphi->Draw("pe same");
+    xjjroot::setthgrstyle(cetaphi, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
+    cetaphi->Draw("pe same");
+    xjjroot::setthgrstyle(netaphi, kBlue, 22, 1.2, kBlue, 1, 1, -1, -1, -1);
+    netaphi->Draw("pe same");
+    TLegend* etaphileg = new TLegend(0.42,0.7,0.85,0.88);
+    xjjroot::setleg(etaphileg);
+    etaphileg->AddEntry(aetaphi,"All","p");
+    etaphileg->AddEntry(cetaphi,"Charged Hadrons","p");
+    etaphileg->AddEntry(netaphi,"Neutral Hadrons + Photons","p");
+    etaphileg->Draw();
+    xjjroot::drawtex(0.2,0.876,datalabel);
+    alletaphi->SaveAs(Form("pdfDir/%s_etaphi.pdf",datalabel.Data()));
     
     TFile* outFile_p = new TFile(Form("inputs/qualityCheck/outFile_%s.root",datalabel.Data()), "RECREATE");
     //write all, first arg name ("" == declaration name), second arg overwrites buffer saves in file

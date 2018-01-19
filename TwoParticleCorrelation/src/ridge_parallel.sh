@@ -8,9 +8,9 @@
 #how to run ./ridge.sh inFileName outFileName fileEvents
 #!/bin/bash
 
-inFileName = $1
-outFileName = $2
-fileEvents = $3
+inFileName=$1
+outFileName=$2
+fileEvents=$3
 NUMFILES=2
 mkdir -p tempFiles
 cd tempFiles
