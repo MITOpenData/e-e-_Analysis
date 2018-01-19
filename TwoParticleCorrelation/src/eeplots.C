@@ -66,8 +66,8 @@ int eeplots
     Double_t yLow = 0;
 
     int nBinsPhi = 60;
-    Double_t phiHi = PI*1.5;
-    Double_t phiLow = -PI/2.;
+    Double_t phiHi = TMath::Pi()*1.5;
+    Double_t phiLow = -TMath::Pi()/2.;
     
     // assign binning ranges for different data sets
     if(datalabel == "PYTHIA8"){nBinsMult = 100; multHi = 100; etaHi = 3; ptHi = 60;}

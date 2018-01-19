@@ -26,12 +26,21 @@ START=1
 FINISH=$NUMEVENTS
 TREE_NAME=t
 # divide up the file
-while [ $i -le $NUMFILES ]; do
+
+for i in `seq 1 $NUMFILES`; do
 rooteventselector --recreate -f $START -l $FINISH $inFileName:$TREE_NAME $i.root
-let i=i+1
 let START=FINISH+1
-let FINISH=$NUMEVENTS*$i
-done 
+let FINISH=$NUMEVENTS*($i+1)
+done
+wait
+
+#while [ $i -le $NUMFILES ]; do
+#rooteventselector --recreate -f $START -l $FINISH $inFileName:$TREE_NAME $i.root
+#let i=i+1
+#let START=FINISH+1
+#let FINISH=$NUMEVENTS*$i
+#done
+
 # Divide the file into 20 subfiles we can now run ridge check on them
 
 cd ..
