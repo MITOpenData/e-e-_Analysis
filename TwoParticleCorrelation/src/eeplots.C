@@ -49,7 +49,7 @@ int eeplots
     getLinBins(linLow,linHi,nBinsP,binsYLin);
     
     // declare binning for x-axis
-    int nBinsMult = 0;
+    int nBinsMult = 60;
     Double_t multHi = 0;
     Double_t multLow = 0;
     
@@ -97,23 +97,21 @@ int eeplots
     TH1F* cmult = new TH1F("cmult","",nBinsMult,binsMult);
     TH1F* nmult = new TH1F("nmult","",nBinsMult,binsMult);
     //TH1F* lmult = new TH1F("lmult","",nBinsMult,binsMult); // leptons
-    std::cout<< __FILE__<<","<< __LINE__ <<std::endl;
+
     TH2F *hempty_pt = new TH2F("",";pt;Probability",nBinsPt,binsPt,nBinsP,binsPLog);
     TH1F* apt = new TH1F("apt","",nBinsPt,binsPt);
     TH1F* cpt = new TH1F("cpt","",nBinsPt,binsPt);
     TH1F* npt = new TH1F("npt","",nBinsPt,binsPt);
-    std::cout<< __FILE__<<","<< __LINE__ <<std::endl;
+    
     TH2F *hempty_eta = new TH2F("",";eta;Probability",nBinsEta,binsEta,nBinsP,binsYLin);
     TH1F* aeta = new TH1F("aeta","",nBinsEta,binsEta);
     TH1F* ceta = new TH1F("ceta","",nBinsEta,binsEta);
     TH1F* neta = new TH1F("neta","",nBinsEta,binsEta);
-    std::cout<< __FILE__<<","<< __LINE__ <<std::endl;
+    
     TH2F *hempty_y = new TH2F("",";y;Probability",nBinsY,binsY,nBinsP,binsYLin);
     TH1F* ay = new TH1F("ay","",nBinsY,binsY);
     TH1F* cy = new TH1F("cy","",nBinsY,binsY);
     TH1F* ny = new TH1F("ny","",nBinsY,binsY);
-    
-    std::cout<< __FILE__<<","<< __LINE__ <<std::endl;
     
     // don't plot in this file just fill
     //TH2F *hempty_aetaphi = new TH2F("","All Particles;#eta;#phi",nBinsEta,binsEta,nBinsPhi,binsPhi);
