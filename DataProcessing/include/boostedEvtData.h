@@ -83,4 +83,22 @@ void boostedEvtData::SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::s
   return;
 }
 
+void boostedEvtData::SetBranchWrite(TTree* inTree_p)
+{
+  inTree_p->Branch("nParticle", &nParticle, "nParticle/I")
+  inTree_p->Branch("WTAAxis_Theta", &WTAAxis_Theta, "WTAAxis_Theta/F")
+  inTree_p->Branch("WTAAxis_Phi", &WTAAxis_Phi, "WTAAxis_Phi/F")
+  inTree_p->Branch("pt", pt, "pt[nParticle]/F")
+  inTree_p->Branch("pmag", pmag, "pmag[nParticle]/F")
+  inTree_p->Branch("eta", eta, "eta[nParticle]/F")
+  inTree_p->Branch("theta", theta, "theta[nParticle]/F")
+  inTree_p->Branch("phi", phi, "phi[nParticle]/F")
+  inTree_p->Branch("boostx", &boostx, "boostx/F")
+  inTree_p->Branch("boosty", &boosty, "boosty/F")
+  inTree_p->Branch("boostz", &boostz, "boostz/F")
+  inTree_p->Branch("boost", &boost, "boost/F")
+
+  return;
+}
+
 #endif

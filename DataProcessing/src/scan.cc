@@ -237,8 +237,8 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
   const std::string genPartTreeName = "tgen";
   std::string jetTreeName[nJtAlgo];
   std::string genJetTreeName[nJtAlgo];
-  const std::string boostedTreeName = "BoostedWTAEvt";
-  const std::string genboostedTreeName = "genBoostedWTAEvt";
+  const std::string boostedTreeName = "BoostedWTAR8Evt";
+  const std::string genboostedTreeName = "genBoostedWTAR8Evt";
   for(int i = 0; i < nJtAlgo; ++i){
     std::string recombSchemeStr = "EScheme";
     if(recombScheme[i] == fastjet::WTA_modp_scheme) recombSchemeStr = "WTAmodpScheme";
@@ -289,38 +289,15 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
   pData.SetBranchWrite(tout);
   eData.SetBranchWrite(tout);
   //thrust quantities
-  bout->Branch("nParticle",&bData.nParticle,"nParticle/I");
-  bout->Branch("WTAAxis_Theta",&bData.WTAAxis_Theta,"WTAAxis_Theta/F");
-  bout->Branch("WTAAxis_Phi",&bData.WTAAxis_Phi,"WTAAxis_Phi/F");
-  bout->Branch("pt", bData.pt,"pt[nParticle]/F");
-  bout->Branch("pmag", bData.pmag,"pmag[nParticle]/F");//Added later on
-  bout->Branch("eta", bData.eta,"eta[nParticle]/F");
-  bout->Branch("theta", bData.theta,"theta[nParticle]/F");
-  bout->Branch("phi", bData.phi,"phi[nParticle]/F");
-  bout->Branch("boostx", &bData.boostx,"boostx/F");
-  bout->Branch("boosty", &bData.boosty,"boosty/F");
-  bout->Branch("boostz", &bData.boostz,"boostz/F");
-  bout->Branch("boost", &bData.boost,"boost/F");
+  bData.SetBranchWrite(bout);
 
   for(int i = 0; i < nJtAlgo; ++i){jData[i].SetBranchWrite(jout[i]);}
 
   if(isRecons && isMC){
     pgData.SetBranchWrite(tgout);
     egData.SetBranchWrite(tgout);
+    bgData.SetBranchWrite(bgout);
 
-    bgout->Branch("nParticle",&bgData.nParticle,"nParticle/I");
-    bgout->Branch("WTAAxis_Theta",&bgData.WTAAxis_Theta,"WTAAxis_Theta/F");
-    bgout->Branch("WTAAxis_Phi",&bgData.WTAAxis_Phi,"WTAAxis_Phi/F");
-    bgout->Branch("pt", bgData.pt,"pt[nParticle]/F");
-    bgout->Branch("pmag", bgData.pmag,"pmag[nParticle]/F");//Added later on
-    bgout->Branch("eta", bgData.eta,"eta[nParticle]/F");
-    bgout->Branch("theta", bgData.theta,"theta[nParticle]/F");
-    bgout->Branch("phi", bgData.phi,"phi[nParticle]/F");
-    bgout->Branch("boostx", &bgData.boostx,"boostx/F");
-    bgout->Branch("boosty", &bgData.boosty,"boosty/F");
-    bgout->Branch("boostz", &bgData.boostz,"boostz/F");
-    bgout->Branch("boost", &bgData.boost,"boost/F");
-    
     for(int i = 0; i < nJtAlgo; ++i){jgData[i].SetBranchWrite(jgout[i]);}
   }
 
@@ -421,8 +398,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
               bout->Fill();
             }
 	  }
-
-	}        
+	}      
 
 	//clear particles for next iteration clustering
 	particles.clear();
