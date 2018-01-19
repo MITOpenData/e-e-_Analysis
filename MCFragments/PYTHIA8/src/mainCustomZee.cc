@@ -213,6 +213,8 @@ int main(int argc, char* argv[])
     eData.nChargedHadrons_GT0p4 = 0;
     eData.nChargedHadrons_GT0p4Thrust = 0;
 
+    TVector3 netP(0, 0, 0);
+    TVector3 netP_charged(0, 0, 0);
     particleData pDataCh;
     pDataCh.nParticle = 0;
     std::vector<fastjet::PseudoJet> particles;
@@ -237,6 +239,8 @@ int main(int argc, char* argv[])
       if(TMath::Abs(pythia.event[i].id()) == 16) continue;
       if(TMath::Abs(temp.Eta()) > 10.) continue;
       if(temp.Pt() < .1) continue;
+
+      netP -= TVector3(pythia.event[i].px(), pythia.event[i].py(), pythia.event[i].pz());
 
       pData.px[pData.nParticle] = pythia.event[i].px();
       pData.py[pData.nParticle] = pythia.event[i].py();
@@ -267,6 +271,8 @@ int main(int argc, char* argv[])
       particles.push_back(particle);
 
       if(pData.pwflag[pData.nParticle] == 0){
+	netP_charged -= TVector3(pythia.event[i].px(), pythia.event[i].py(), pythia.event[i].pz());
+
 	pDataCh.px[eData.nChargedHadrons] = pythia.event[i].px();
         pDataCh.py[eData.nChargedHadrons] = pythia.event[i].py();
         pDataCh.pz[eData.nChargedHadrons] = pythia.event[i].pz();
@@ -291,11 +297,19 @@ int main(int argc, char* argv[])
       eData.Thrust = thrust.Mag();
       eData.TTheta = thrust.Theta();
       eData.TPhi = thrust.Phi();
-
       eData.Thrust_charged = thrustCh.Mag();
       eData.TTheta_charged = thrustCh.Theta();
       eData.TPhi_charged = thrustCh.Phi();
-      
+      eData.missP = netP.Mag();
+      eData.missPt = netP.Perp();
+      eData.missTheta = netP.Theta();
+      eData.missPhi = netP.Phi();
+      eData.missChargedP = netP_charged.Mag();
+      eData.missChargedPt = netP_charged.Perp();
+      eData.missChargedTheta = netP_charged.Theta();
+      eData.missChargedPhi = netP_charged.Phi();
+
+
       for(int pI = 0; pI < pData.nParticle; ++pI){
 	pData.pt_wrtThr[pI] = ptFromThrust(thrust, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]));
 	pData.theta_wrtThr[pI] = thetaFromThrust(thrust, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]));
