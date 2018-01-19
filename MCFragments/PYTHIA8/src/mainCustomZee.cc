@@ -19,6 +19,7 @@
 //local dependencies
 #include "include/jetData.h"
 #include "include/particleData.h"
+#include "include/eventData.h"
 #include "include/thrustTools.h"
 #include "include/doGlobalDebug.h"
 
@@ -135,38 +136,19 @@ int main(int argc, char* argv[])
 
   particleData pData;
   jetData jData[nJtAlgo];
+  eventData eData;
 
   Float_t pthat_;
   Float_t pthatWeight_;
   Int_t scatterMom_;
   std::vector<int> scatterMomDaughter_;
 
-  Int_t nParticleChg_;
-  Int_t nParticleChg_Pt0p4_Eta1p8_;
-
-  Float_t Thrust_;
-  Float_t TTheta_;
-  Float_t TPhi_;
-
-  Float_t Thrust_charged_;
-  Float_t TTheta_charged_;
-  Float_t TPhi_charged_;
-
-  if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-
   genTree_p->Branch("pthat", &pthat_, "pthat/F");
   genTree_p->Branch("pthatWeight", &pthatWeight_, "pthatWeight/F");
   genTree_p->Branch("scatterMom", &scatterMom_, "scatterMom/I");
   genTree_p->Branch("scatterMomDaughter", &scatterMomDaughter_);
-  genTree_p->Branch("nParticleChg", &nParticleChg_, "nParticleChg/I");
-  genTree_p->Branch("nParticleChg_Pt0p4_Eta1p8", &nParticleChg_Pt0p4_Eta1p8_, "nParticleChg_Pt0p4_Eta1p8/I");
   pData.SetBranchWrite(genTree_p);
-  genTree_p->Branch("Thrust", &Thrust_, "Thrust/F");
-  genTree_p->Branch("TTheta", &TTheta_, "TTheta/F");
-  genTree_p->Branch("TPhi", &TPhi_, "TPhi/F");
-  genTree_p->Branch("Thrust_charged", &Thrust_charged_, "Thrust_charged/F");
-  genTree_p->Branch("TTheta_charged", &TTheta_charged_, "TTheta_charged/F");
-  genTree_p->Branch("TPhi_charged", &TPhi_charged_, "TPhi_charged/F");
+  eData.SetBranchWrite(genTree_p);
 
   for(int i = 0; i < nJtAlgo; ++i){
     jetTree_p[i]->Branch("nref", &jData[i].nref,"nref/I");
@@ -227,10 +209,12 @@ int main(int argc, char* argv[])
     pthat_ = pythia.info.pTHat();
     pthatWeight_ = pythia.info.weight();
     pData.nParticle = 0;
-    nParticleChg_ = 0;
-    nParticleChg_Pt0p4_Eta1p8_ = 0;
+    eData.nChargedHadrons = 0;
+    eData.nChargedHadrons_GT0p4 = 0;
+    eData.nChargedHadrons_GT0p4Thrust = 0;
 
     particleData pDataCh;
+    pDataCh.nParticle = 0;
     std::vector<fastjet::PseudoJet> particles;
 
     scatterMom_ = -999;
@@ -283,20 +267,20 @@ int main(int argc, char* argv[])
       particles.push_back(particle);
 
       if(pData.pwflag[pData.nParticle] == 0){
-	pDataCh.px[nParticleChg_] = pythia.event[i].px();
-        pDataCh.py[nParticleChg_] = pythia.event[i].py();
-        pDataCh.pz[nParticleChg_] = pythia.event[i].pz();
+	pDataCh.px[eData.nChargedHadrons] = pythia.event[i].px();
+        pDataCh.py[eData.nChargedHadrons] = pythia.event[i].py();
+        pDataCh.pz[eData.nChargedHadrons] = pythia.event[i].pz();
 
-	++nParticleChg_;
-	if(temp.Pt() > 0.40 && TMath::Abs(temp.Eta()) < 1.8) ++nParticleChg_Pt0p4_Eta1p8_;
+	++(pDataCh.nParticle);
+	++(eData.nChargedHadrons);
+	if(temp.Pt() > 0.40) ++eData.nChargedHadrons_GT0p4;
+	if(temp.Pt() > 0.40) ++eData.nChargedHadrons_GT0p4Thrust;
       }
 
-      ++pData.nParticle;
+      ++(pData.nParticle);
     }
 
-    if(nParticleChg_Pt0p4_Eta1p8_ < nMinPartChgCut_) continue;
-
-    pDataCh.nParticle = nParticleChg_;
+    if(eData.nChargedHadrons_GT0p4 < nMinPartChgCut_) continue;
 
     if(pData.nParticle > 0){
       if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
@@ -304,13 +288,13 @@ int main(int argc, char* argv[])
       TVector3 thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz, THRUST::OPTIMAL);
       TVector3 thrustCh = getThrust(pDataCh.nParticle, pDataCh.px, pDataCh.py, pDataCh.pz, THRUST::OPTIMAL);
 
-      Thrust_ = thrust.Mag();
-      TTheta_ = thrust.Theta();
-      TPhi_ = thrust.Phi();
+      eData.Thrust = thrust.Mag();
+      eData.TTheta = thrust.Theta();
+      eData.TPhi = thrust.Phi();
 
-      Thrust_charged_ = thrustCh.Mag();
-      TTheta_charged_ = thrustCh.Theta();
-      TPhi_charged_ = thrustCh.Phi();
+      eData.Thrust_charged = thrustCh.Mag();
+      eData.TTheta_charged = thrustCh.Theta();
+      eData.TPhi_charged = thrustCh.Phi();
       
       for(int pI = 0; pI < pData.nParticle; ++pI){
 	pData.pt_wrtThr[pI] = ptFromThrust(thrust, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]));
