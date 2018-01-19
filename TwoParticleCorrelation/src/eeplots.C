@@ -112,7 +112,7 @@ int eeplots
     TH1F* ny = new TH1F("ny","",nBinsY,binsY);
     
     // xjj plotting macro only works for TH1
-    //TH2F *hempty_eta_phi = new TH2F("","#eta-#phi;#eta;#phi",nBinsPhi,binsPhi,nBinsP,binsYLin);
+    TH2F *hempty_eta_phi = new TH2F("","#eta-#phi;#eta;#phi",nBinsPhi,binsPhi,nBinsP,binsYLin);
     TH2F *aetaphi = new TH2F("aetaphi","#eta-#phi;#eta;#phi",nBinsEta,binsEta,nBinsPhi,binsPhi);
     TH2F *cetaphi = new TH2F("cetaphi","",nBinsEta,binsEta,nBinsPhi,binsPhi);
     TH2F *netaphi = new TH2F("netaphi","",nBinsEta,binsEta,nBinsPhi,binsPhi);
@@ -334,9 +334,19 @@ int eeplots
     ay->Write("", TObject::kOverwrite);
     cy->Write("", TObject::kOverwrite);
     ny->Write("", TObject::kOverwrite);
+    aetaphi->Write("", TObject::kOverwrite);
+    cetaphi->Write("", TObject::kOverwrite);
+    netaphi->Write("", TObject::kOverwrite);
     
     outFile_p->Close();
     delete outFile_p;
+    
+    delete etaphileg;
+    delete netaphi;
+    delete cetaphi;
+    delete aetaphi;
+    delete hempty_eta_phi;
+    delete alletaphi;
     
     delete yleg;
     delete ny;
