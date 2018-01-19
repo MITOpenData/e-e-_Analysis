@@ -325,8 +325,6 @@ int eeplots
     delete netaphi;
     delete cetaphi;
     delete aetaphi;
-    delete hempty_eta_phi;
-    delete alletaphi;
     
     delete yleg;
     delete ny;
