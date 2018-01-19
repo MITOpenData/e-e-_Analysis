@@ -33,7 +33,7 @@ done
 cd ..
 # we are now in TwoParticleCorrelation
 for f in tempFiles/*.root; do
-root -b -q ridge_check_parallel.C\(\"$f","out_$f"\) &
+root -b -q ridge_check_parallel.C\("$f","out_$f"\) &
 #ridge_check_parallel.exe "$f" "out_$f" &
 done
 wait

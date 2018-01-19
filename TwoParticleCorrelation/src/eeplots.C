@@ -63,6 +63,10 @@ int eeplots
     int nBinsY = 60;
     Double_t yHi = 8;
     Double_t yLow = 0;
+
+    int nBinsPhi = 60;
+    Double_t phiHi = PI*1.5;
+    Double_t phiLow = -PI/2.;
     
     // assign binning ranges for different data sets
     if(datalabel == "PYTHIA8"){nBinsMult = 100; multHi = 100; etaHi = 3; ptHi = 60;}
@@ -75,12 +79,15 @@ int eeplots
     Double_t binsPt[nBinsPt+1];
     Double_t binsEta[nBinsEta+1];
     Double_t binsY[nBinsY+1];
+    Double_t binsPhi[nBinsPhi+1];
     
     // generate the binning
     getLinBins(multLow, multHi, nBinsMult, binsMult);
     getLinBins(ptLow, ptHi, nBinsPt, binsPt);
     getLinBins(etaLow, etaHi, nBinsEta, binsEta);
     getLinBins(yLow, yHi, nBinsY, binsY);
+    getLinBins(phiLow, phiHi, nBinsPhi, binsPhi);
+    
     
     // Declare Histograms
     TH2F *hempty_mult = new TH2F("",";Multiplicity;Probability",nBinsMult,binsMult,nBinsP,binsPLog);
@@ -103,6 +110,11 @@ int eeplots
     TH1F* ay = new TH1F("ay","",nBinsY,binsY);
     TH1F* cy = new TH1F("cy","",nBinsY,binsY);
     TH1F* ny = new TH1F("ny","",nBinsY,binsY);
+    
+    TH2F *hempty_eta_phi = new TH2F("","#eta-#phi;#eta;#phi",nBinsPhi,binsPhi,nBinsP,binsYLin);
+    TH1F* aphi = new TH1F("ay","",nBinsY,binsY);
+    TH1F* cphi = new TH1F("cy","",nBinsY,binsY);
+    TH1F* nphi = new TH1F("ny","",nBinsY,binsY);
     
     // fill weights
     static const double weight = 0.0000000000001;
