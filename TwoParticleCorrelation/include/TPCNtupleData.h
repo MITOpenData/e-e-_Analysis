@@ -7,7 +7,6 @@ class TPCNtupleData{
     public:
     static const int nMaxPart = 10000;
     Int_t nParticle;
-    Int_t nChargedHadrons;
     
     Float_t pt[nMaxPart];
     Float_t eta[nMaxPart];
@@ -148,7 +147,6 @@ class TPCNtupleData{
     {
       t1->SetBranchStatus("*", 0);
       t1->SetBranchStatus("nParticle", 1);
-      t1->SetBranchStatus("nChargedHadrons", 1);
       t1->SetBranchStatus("pt", 1);
       t1->SetBranchStatus("eta", 1);
       t1->SetBranchStatus("theta", 1);
@@ -177,7 +175,6 @@ class TPCNtupleData{
 void setupTPCTree(TTree *t1, TTree *t2, TPCNtupleData &data)
 {
     t1->SetBranchAddress("nParticle",&data.nParticle);
-    t1->SetBranchStatus("nChargedHadrons", &data.nChargedHadrons);
     t1->SetBranchAddress("pt",data.pt);
     t1->SetBranchAddress("eta",data.eta);
     t1->SetBranchAddress("theta",data.theta);
