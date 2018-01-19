@@ -306,11 +306,11 @@ int eeplots
     xjjroot::sethempty(hempty_eta_phi,0,0.3);
     hempty_eta_phi->Draw();
     xjjroot::setthgrstyle(aetaphi, kBlack, 20, 1.2, kRed, 1, 1, -1, -1, -1);
-    aetaphi->Draw("pe same");
+    aetaphi->Draw("colz same");
     xjjroot::setthgrstyle(cetaphi, kRed, 21, 1.2, kRed, 1, 1, -1, -1, -1);
-    cetaphi->Draw("pe same");
+    cetaphi->Draw("colz same");
     xjjroot::setthgrstyle(netaphi, kBlue, 22, 1.2, kBlue, 1, 1, -1, -1, -1);
-    netaphi->Draw("pe same");
+    netaphi->Draw("colz same");
     TLegend* etaphileg = new TLegend(0.42,0.7,0.85,0.88);
     xjjroot::setleg(etaphileg);
     etaphileg->AddEntry(aetaphi,"All","p");
