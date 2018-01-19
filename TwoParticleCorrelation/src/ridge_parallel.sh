@@ -11,7 +11,7 @@
 inFileName=$1
 outFileName=$2
 fileEvents=$3
-NUMFILES=2
+NUMFILES=20
 mkdir -p tempFiles
 cd tempFiles
 i=1
