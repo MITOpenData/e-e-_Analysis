@@ -20,7 +20,9 @@
 #include "include/jetData.h"
 #include "include/particleData.h"
 #include "include/eventData.h"
+#include "include/boostedEvtData.h"
 #include "include/thrustTools.h"
+#include "include/boostTools.h"
 #include "include/doGlobalDebug.h"
 
 void processJets(std::vector<fastjet::PseudoJet> p, fastjet::JetDefinition jDef, fastjet::JetDefinition jDefReclust, jetData *d, const double ptCut = 0.1)
@@ -33,7 +35,9 @@ void processJets(std::vector<fastjet::PseudoJet> p, fastjet::JetDefinition jDef,
       if(jets.at(i).pt() < ptCut) break; //Arbitrarily low cut on jets, removes spike at phi zero when things become ill defined         
       d->jtpt[d->nref] = jets.at(i).pt();
       d->jtphi[d->nref] = jets.at(i).phi_std();
+      d->jtm[d->nref] = jets.at(i).m();
       d->jteta[d->nref] = jets.at(i).eta();
+      d->fourJet[d->nref] = TLorentzVector(jets.at(i).px(), jets.at(i).py(), jets.at(i).pz(), jets.at(i).E());
 
       std::vector<fastjet::PseudoJet> jetConst = jets.at(i).constituents();
       d->jtN[d->nref] = jetConst.size();
@@ -131,12 +135,14 @@ int main(int argc, char* argv[])
 
   TFile* outFile_p = new TFile(outFileName.c_str(), "RECREATE");
   TTree* genTree_p = new TTree("t", "t");
+  TTree* boostedGenTree_p = new TTree("BoostedWTAR8Evt", "BoostedWTAR8Evt");
   TTree* jetTree_p[nJtAlgo];
   for(int i = 0; i < nJtAlgo; ++i){jetTree_p[i] = new TTree(jetTreeName[i].c_str(), jetTreeName[i].c_str());}
 
   particleData pData;
   jetData jData[nJtAlgo];
   eventData eData;
+  boostedEvtData bData;
 
   Float_t pthat_;
   Float_t pthatWeight_;
@@ -149,6 +155,7 @@ int main(int argc, char* argv[])
   genTree_p->Branch("scatterMomDaughter", &scatterMomDaughter_);
   pData.SetBranchWrite(genTree_p);
   eData.SetBranchWrite(genTree_p);
+  bData.SetBranchWrite(boostedGenTree_p);
 
   for(int i = 0; i < nJtAlgo; ++i){jData[i].SetBranchWrite(jetTree_p[i]);}
 
@@ -317,7 +324,17 @@ int main(int argc, char* argv[])
       for(int jIter = 0; jIter < nJtAlgo; ++jIter){processJets(particles, jDef[jIter], jDefReclust[jIter], &(jData[jIter]), jtPtCut);}
 
       genTree_p->Fill();
-      for(int jIter = 0; jIter < nJtAlgo; ++jIter){jetTree_p[jIter]->Fill();}
+      for(int jIter = 0; jIter < nJtAlgo; ++jIter){
+	jetTree_p[jIter]->Fill();
+	if(rParam[jIter]==0.8 && recombScheme[jIter]==fastjet::WTA_modp_scheme){
+	  if(jData[jIter].nref<2){setBoostedVariables(false, &pData, &bData);}
+	  else{
+	    TVector3 wtaBoost = findBack2BackBoost(jData[jIter].fourJet[0],jData[jIter].fourJet[1]);
+	    setBoostedVariables(true, &pData, &bData, jData[jIter].fourJet[0], wtaBoost);
+	  }
+	  boostedGenTree_p->Fill();
+	}
+      }
     }
   }
 
@@ -329,6 +346,9 @@ int main(int argc, char* argv[])
     jetTree_p[jIter]->Write("", TObject::kOverwrite);
     delete jetTree_p[jIter];
   }
+
+  boostedGenTree_p->Write("", TObject::kOverwrite);
+  delete boostedGenTree_p;
 
   outFile_p->Close();
   delete outFile_p;
