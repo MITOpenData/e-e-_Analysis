@@ -224,7 +224,7 @@ void particleData::SetBranchWrite(TTree* inTree_p)
   inTree_p->Branch("pid", pid, "pid[nParticle]/I");
   inTree_p->Branch("d0", d0, "d0[nParticle]/F");
   inTree_p->Branch("z0", z0, "z0[nParticle]/F");
-  inTree_p->Branch("ntpc", ntpc, "ntpx[nParticle]/I");
+  inTree_p->Branch("ntpc", ntpc, "ntpc[nParticle]/I");
   inTree_p->Branch("pt_wrtThr", pt_wrtThr, "pt_wrtThr[nParticle]/F");
   inTree_p->Branch("eta_wrtThr", eta_wrtThr, "eta_wrtThr[nParticle]/F");
   inTree_p->Branch("theta_wrtThr", theta_wrtThr, "theta_wrtThr[nParticle]/F");
