@@ -20,6 +20,7 @@
 #include "include/doLocalDebug.h"
 #include "include/checkMakeDir.h"
 #include "include/particleData.h"
+#include "include/eventSelection.h"
 #include "include/eventData.h"
 #include "include/jetData.h"
 #include "include/boostedEvtData.h"
@@ -277,10 +278,14 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
     for(int i = 0; i < nJtAlgo; ++i){jgout[i] = new TTree(genJetTreeName[i].c_str(), genJetTreeName[i].c_str());}
   }
 
+  eventSelection eSelection;
+
   particleData pData;
   jetData jData[nJtAlgo];
   eventData eData;
   boostedEvtData bData;
+
+  eventSelection egSelection;
 
   particleData pgData;
   jetData jgData[nJtAlgo];
@@ -377,6 +382,9 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	eData.missChargedPt = netP_charged.Perp();
 	eData.missChargedTheta = netP_charged.Theta();
 	eData.missChargedPhi = netP_charged.Phi();
+
+	eSelection.setEventSelection(pData);
+	eData.passesWW = eSelection.getPassesWW();
 
 	if(counterEntries>0) tout->Fill(); 
 	
@@ -560,6 +568,9 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
     eData.missChargedTheta = netP_charged.Theta();
     eData.missChargedPhi = netP_charged.Phi();
 	
+    eSelection.setEventSelection(pData);
+    eData.passesWW = eSelection.getPassesWW();
+
     if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     
     if(counterEntries>0) tout->Fill(); 
@@ -654,6 +665,9 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	  egData.missChargedPt = netP_charged.Perp();
 	  egData.missChargedTheta = netP_charged.Theta();
 	  egData.missChargedPhi = netP_charged.Phi();
+
+	  egSelection.setEventSelection(pgData);
+	  egData.passesWW = egSelection.getPassesWW();
 
 	  if(counterEntries>0) tgout->Fill(); 
 
@@ -881,6 +895,9 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
       egData.missChargedPt = netP_charged.Perp();
       egData.missChargedTheta = netP_charged.Theta();
       egData.missChargedPhi = netP_charged.Phi();
+
+      egSelection.setEventSelection(pgData);
+      egData.passesWW = egSelection.getPassesWW();
 
       if(counterEntries>0) tgout->Fill(); 
       for(int jIter = 0; jIter < nJtAlgo; ++jIter){

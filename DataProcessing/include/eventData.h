@@ -5,6 +5,7 @@
 
 class eventData{
  public:
+  Bool_t passesWW;
   Float_t missP;
   Float_t missPt;
   Float_t missTheta;
@@ -25,8 +26,9 @@ class eventData{
   Float_t TTheta_charged;
   Float_t TPhi_charged;
 
-  static const int nVar = 17;
-  std::string varStr[nVar] = {"missP",
+  static const int nVar = 18;
+  std::string varStr[nVar] = {"passesWW",
+			      "missP",
 			      "missPt",
 			      "missTheta",
 			      "missPhi",
@@ -53,6 +55,7 @@ class eventData{
 
 eventData::eventData()
 {
+  passesWW = false;
   missP = -999;
   missPt = -999;
   missTheta = -999;
@@ -95,29 +98,31 @@ void eventData::SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::string
     if(varIsGood[i]) inTree_p->SetBranchStatus(varStr[i].c_str(), 1);
   }
 
-  if(varIsGood[0]) inTree_p->SetBranchAddress("missP", &missP);
-  if(varIsGood[1]) inTree_p->SetBranchAddress("missPt", &missPt);
-  if(varIsGood[2]) inTree_p->SetBranchAddress("missTheta", &missTheta);
-  if(varIsGood[3]) inTree_p->SetBranchAddress("missPhi", &missPhi);
-  if(varIsGood[4]) inTree_p->SetBranchAddress("missChargedP", &missChargedP);
-  if(varIsGood[5]) inTree_p->SetBranchAddress("missChargedPt", &missChargedPt);
-  if(varIsGood[6]) inTree_p->SetBranchAddress("missChargedTheta", &missChargedTheta);
-  if(varIsGood[7]) inTree_p->SetBranchAddress("missChargedPhi", &missChargedPhi);
-  if(varIsGood[8]) inTree_p->SetBranchAddress("nChargedHadrons", &nChargedHadrons);
-  if(varIsGood[9]) inTree_p->SetBranchAddress("nChargedHadrons_GT0p4", &nChargedHadrons_GT0p4);
-  if(varIsGood[10]) inTree_p->SetBranchAddress("nChargedHadrons_GT0p4Thrust", &nChargedHadrons_GT0p4Thrust);
-  if(varIsGood[11]) inTree_p->SetBranchAddress("Thrust", &Thrust);
-  if(varIsGood[12]) inTree_p->SetBranchAddress("TTheta", &TTheta);
-  if(varIsGood[13]) inTree_p->SetBranchAddress("TPhi", &TPhi);
-  if(varIsGood[14]) inTree_p->SetBranchAddress("Thrust_charged", &Thrust_charged);
-  if(varIsGood[15]) inTree_p->SetBranchAddress("TTheta_charged", &TTheta_charged);
-  if(varIsGood[16]) inTree_p->SetBranchAddress("TPhi_charged", &TPhi_charged);
+  if(varIsGood[0]) inTree_p->SetBranchAddress("passesWW", &passesWW);
+  if(varIsGood[1]) inTree_p->SetBranchAddress("missP", &missP);
+  if(varIsGood[2]) inTree_p->SetBranchAddress("missPt", &missPt);
+  if(varIsGood[3]) inTree_p->SetBranchAddress("missTheta", &missTheta);
+  if(varIsGood[4]) inTree_p->SetBranchAddress("missPhi", &missPhi);
+  if(varIsGood[5]) inTree_p->SetBranchAddress("missChargedP", &missChargedP);
+  if(varIsGood[6]) inTree_p->SetBranchAddress("missChargedPt", &missChargedPt);
+  if(varIsGood[7]) inTree_p->SetBranchAddress("missChargedTheta", &missChargedTheta);
+  if(varIsGood[8]) inTree_p->SetBranchAddress("missChargedPhi", &missChargedPhi);
+  if(varIsGood[9]) inTree_p->SetBranchAddress("nChargedHadrons", &nChargedHadrons);
+  if(varIsGood[10]) inTree_p->SetBranchAddress("nChargedHadrons_GT0p4", &nChargedHadrons_GT0p4);
+  if(varIsGood[11]) inTree_p->SetBranchAddress("nChargedHadrons_GT0p4Thrust", &nChargedHadrons_GT0p4Thrust);
+  if(varIsGood[12]) inTree_p->SetBranchAddress("Thrust", &Thrust);
+  if(varIsGood[13]) inTree_p->SetBranchAddress("TTheta", &TTheta);
+  if(varIsGood[14]) inTree_p->SetBranchAddress("TPhi", &TPhi);
+  if(varIsGood[15]) inTree_p->SetBranchAddress("Thrust_charged", &Thrust_charged);
+  if(varIsGood[16]) inTree_p->SetBranchAddress("TTheta_charged", &TTheta_charged);
+  if(varIsGood[17]) inTree_p->SetBranchAddress("TPhi_charged", &TPhi_charged);
 
   return;
 }
 
 void eventData::SetBranchWrite(TTree* inTree_p)
 {
+  inTree_p->Branch("passesWW", &passesWW, "passesWW/F");
   inTree_p->Branch("missP", &missP, "missP/F");
   inTree_p->Branch("missPt", &missPt, "missPt/F");
   inTree_p->Branch("missTheta", &missTheta, "missTheta/F");
