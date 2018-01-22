@@ -45,7 +45,7 @@ int eeplots
     // declare linear binning for probability of eta
     Double_t binsYLin[nBinsP+1];
     const Double_t linLow = 0;
-    const Double_t linHi = 0.1;
+    const Double_t linHi = 0.15;
     getLinBins(linLow,linHi,nBinsP,binsYLin);
     
     // declare binning for x-axis
