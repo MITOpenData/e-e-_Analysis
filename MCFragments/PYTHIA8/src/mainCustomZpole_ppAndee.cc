@@ -91,21 +91,25 @@ void processJets(std::vector<fastjet::PseudoJet> p, fastjet::JetDefinition jDef,
 
 int main(int argc, char* argv[])
 {
-  if(argc != 2 && argc != 3 && argc != 4 && argc != 5){
-    std::cout << "Usage: ./mainCustom.exe <outFileName> <maxEvt> <nMinPartChgCut> <doRopeWalk>" << std::endl;
+  if(argc != 3 && argc != 4 && argc != 5 && argc != 6){
+    std::cout << "Usage: ./mainCustom.exe <outFileName> <isSysPP> <maxEvt> <nMinPartChgCut> <doRopeWalk>" << std::endl;
     return 1;
   }
 
-  int tempPartChg_ = 0;
-  if(argc >= 4) tempPartChg_ = std::stoi(argv[3]);
-  const int nMinPartChgCut_ = tempPartChg_;
+  bool isSysPP = bool(std::stoi(argv[2]));
+  std::string isSysPPStr = "pp";
+  if(!isSysPP) isSysPPStr = "ee";
 
   int tempMaxEvent = 1000;
-  if(argc >= 3) tempMaxEvent = std::stoi(argv[2]);
+  if(argc >= 4) tempMaxEvent = std::stoi(argv[3]);
   const int maxEvent = tempMaxEvent;
+
+  int tempPartChg_ = 0;
+  if(argc >= 5) tempPartChg_ = std::stoi(argv[4]);
+  const int nMinPartChgCut_ = tempPartChg_;
   
   bool tempRopeWalk = false;
-  if(argc >= 5) tempRopeWalk = std::stoi(argv[4]);
+  if(argc >= 6) tempRopeWalk = std::stoi(argv[5]);
   const bool doRopeWalk = tempRopeWalk;
 
   const double jtPtCut = .01;
@@ -123,13 +127,19 @@ int main(int argc, char* argv[])
   }
 
   for(int i = 0; i < nJtAlgo; ++i){
-    jDef[i] = fastjet::JetDefinition(fastjet::ee_genkt_algorithm, rParam[i], -1, fastjet::RecombinationScheme(recombScheme[i]));
-    jDefReclust[i] = fastjet::JetDefinition(fastjet::ee_genkt_algorithm, 5, -1, fastjet::RecombinationScheme(recombScheme[i]));
+    if(isSysPP){
+      jDef[i] = fastjet::JetDefinition(fastjet::antikt_algorithm, rParam[i], fastjet::RecombinationScheme(recombScheme[i]));
+      jDefReclust[i] = fastjet::JetDefinition(fastjet::antikt_algorithm, 5, fastjet::RecombinationScheme(recombScheme[i]));
+    }
+    else{
+      jDef[i] = fastjet::JetDefinition(fastjet::ee_genkt_algorithm, rParam[i], -1, fastjet::RecombinationScheme(recombScheme[i]));
+      jDefReclust[i] = fastjet::JetDefinition(fastjet::ee_genkt_algorithm, 5, -1, fastjet::RecombinationScheme(recombScheme[i]));
+    }
   }
   
   std::string outFileName = argv[1];
   if(outFileName.find(".root") != std::string::npos) outFileName.replace(outFileName.find(".root"), 5, "");
-  outFileName = outFileName + "_nEvt" + std::to_string(maxEvent) + "_nMinChgPart" + std::to_string(nMinPartChgCut_) + "_RopeWalk" + std::to_string(doRopeWalk) + ".root";
+  outFileName = outFileName + "_" + isSysPPStr + "_nEvt" + std::to_string(maxEvent) + "_nMinChgPart" + std::to_string(nMinPartChgCut_) + "_RopeWalk" + std::to_string(doRopeWalk) + ".root";
   
   if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
@@ -162,11 +172,21 @@ int main(int argc, char* argv[])
   Pythia8::Pythia pythia;
   double mZ = pythia.particleData.m0(23);
   pythia.settings.parm("Beams:eCM", mZ);
-  pythia.readString("Beams:idA = 11");
-  pythia.readString("Beams:idB = -11");
-  pythia.readString("PDF:lepton = off");
-  pythia.readString("WeakSingleBoson:ffbar2gmZ = on");
-  pythia.readString("PhaseSpace:pTHatMin = 0.0");
+  if(isSysPP){
+    pythia.readString("Beams:idA = 2212");
+    pythia.readString("Beams:idB = 2212");
+    pythia.readString("HardQCD:all = on");
+    pythia.readString("PhaseSpace:pTHatMin = 1.0");
+    pythia.readString("PhaseSpace:pTHatMax = -1");
+  }
+  else{
+    pythia.readString("Beams:idA = 11");
+    pythia.readString("Beams:idB = -11");
+    pythia.readString("PDF:lepton = off");
+    pythia.readString("WeakSingleBoson:ffbar2gmZ = on");
+    pythia.readString("PhaseSpace:pTHatMin = 0.0");
+    pythia.readString("PhaseSpace:pTHatMax = -1");
+  }
   pythia.readString("Random:setSeed = on");
   pythia.readString("Random:seed = 0");
 
