@@ -122,7 +122,7 @@ void eventData::SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::string
 
 void eventData::SetBranchWrite(TTree* inTree_p)
 {
-  inTree_p->Branch("passesWW", &passesWW, "passesWW/F");
+  inTree_p->Branch("passesWW", &passesWW, "passesWW/O");
   inTree_p->Branch("missP", &missP, "missP/F");
   inTree_p->Branch("missPt", &missPt, "missPt/F");
   inTree_p->Branch("missTheta", &missTheta, "missTheta/F");

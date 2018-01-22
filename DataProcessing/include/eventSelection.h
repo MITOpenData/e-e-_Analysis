@@ -33,21 +33,21 @@ class eventSelection{
   Bool_t passesWW = false;
 
   eventSelection(){jDefWW = fastjet::JetDefinition(fastjet::ee_kt_algorithm);}
-  eventSelection(particleData inPart){jDefWW = fastjet::JetDefinition(fastjet::ee_kt_algorithm); setEventSelection(inPart);}
-  void setEventSelection(particleData inPart);
+  eventSelection(particleData* inPart){jDefWW = fastjet::JetDefinition(fastjet::ee_kt_algorithm); setEventSelection(inPart);}
+  void setEventSelection(particleData* inPart);
   Bool_t getPassesWW(){return passesWW;}
 };
 
-void eventSelection::setEventSelection(particleData inPart)
+void eventSelection::setEventSelection(particleData* inPart)
 {
   particles.clear();
   passesWW = false;
 
-  if(inPart.nParticle < 4) return;
+  if(inPart->nParticle < 4) return;
 
-  for(Int_t pI = 0; pI < inPart.nParticle; ++pI){
-    Double_t e = TMath::Sqrt(inPart.pmag[pI]*inPart.pmag[pI] + inPart.mass[pI]*inPart.mass[pI]);
-    particles.push_back(fastjet::PseudoJet(inPart.px[pI], inPart.py[pI], inPart.pz[pI], e));
+  for(Int_t pI = 0; pI < inPart->nParticle; ++pI){
+    Double_t e = TMath::Sqrt(inPart->pmag[pI]*inPart->pmag[pI] + inPart->mass[pI]*inPart->mass[pI]);
+    particles.push_back(fastjet::PseudoJet(inPart->px[pI], inPart->py[pI], inPart->pz[pI], e));
   }
 
   fastjet::ClusterSequence cs(particles, jDefWW);
@@ -59,6 +59,15 @@ void eventSelection::setEventSelection(particleData inPart)
     fourJets.push_back(temp);
   }
 
+  pxSumInit_ = 0;
+  pySumInit_ = 0;
+  pzSumInit_ = 0;
+  eSumInit_ = 0;
+  pxSumFinal_ = 0;
+  pySumFinal_ = 0;
+  pzSumFinal_ = 0;
+  eSumFinal_ = 0;
+  
   for(unsigned int i = 0; i < fourJets.size(); ++i){
     pxSumInit_ += fourJets.at(i).Px();
     pySumInit_ += fourJets.at(i).Py();
@@ -66,7 +75,7 @@ void eventSelection::setEventSelection(particleData inPart)
     eSumInit_ += fourJets.at(i).E();
   }
 
-  masslessRescale_ = inPart.Energy/eSumInit_;
+  masslessRescale_ = inPart->Energy/eSumInit_;
 
   for(unsigned int i = 0; i < fourJets.size(); ++i){fourJets.at(i) *= masslessRescale_;}
 
@@ -98,12 +107,12 @@ void eventSelection::setEventSelection(particleData inPart)
 	twoJetMasses.push_back(temp.M());
       }
     }
-    
+
     for(unsigned int i = 0; i < twoJetMasses.size()-1; ++i){
       for(unsigned int j = i+1; j < twoJetMasses.size(); ++j){
 	Double_t d2Temp = (twoJetMasses.at(i) - 80.4)*(twoJetMasses.at(i) - 80.4);
 	d2Temp += (twoJetMasses.at(j) - 80.4)*(twoJetMasses.at(j) - 80.4);
-	d2Temp /= 80.4;
+	d2Temp /= 80.4*80.4;
       
 	if(d2Temp < d2) d2 = d2Temp;
       }

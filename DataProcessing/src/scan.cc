@@ -383,7 +383,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	eData.missChargedTheta = netP_charged.Theta();
 	eData.missChargedPhi = netP_charged.Phi();
 
-	eSelection.setEventSelection(pData);
+	eSelection.setEventSelection(&pData);
 	eData.passesWW = eSelection.getPassesWW();
 
 	if(counterEntries>0) tout->Fill(); 
@@ -568,7 +568,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
     eData.missChargedTheta = netP_charged.Theta();
     eData.missChargedPhi = netP_charged.Phi();
 	
-    eSelection.setEventSelection(pData);
+    eSelection.setEventSelection(&pData);
     eData.passesWW = eSelection.getPassesWW();
 
     if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
@@ -666,7 +666,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	  egData.missChargedTheta = netP_charged.Theta();
 	  egData.missChargedPhi = netP_charged.Phi();
 
-	  egSelection.setEventSelection(pgData);
+	  egSelection.setEventSelection(&pgData);
 	  egData.passesWW = egSelection.getPassesWW();
 
 	  if(counterEntries>0) tgout->Fill(); 
@@ -896,7 +896,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
       egData.missChargedTheta = netP_charged.Theta();
       egData.missChargedPhi = netP_charged.Phi();
 
-      egSelection.setEventSelection(pgData);
+      egSelection.setEventSelection(&pgData);
       egData.passesWW = egSelection.getPassesWW();
 
       if(counterEntries>0) tgout->Fill(); 
