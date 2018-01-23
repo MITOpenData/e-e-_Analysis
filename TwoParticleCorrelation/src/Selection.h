@@ -141,6 +141,8 @@ int Selection::ridge_eventSelection
         N += ridge_trackSelection(pt[j],eta[j],nTPC[j],pwflag[j]);
     }
     if (N <= 1) return -1;
+    // this is to ensure that we are able to find a mixed event
+    if( N > 1000) return -1;
     
     return N;
 }

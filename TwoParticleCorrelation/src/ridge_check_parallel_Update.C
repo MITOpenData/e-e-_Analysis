@@ -104,8 +104,6 @@ int ridge_check_parallel
         // event cut
         Int_t N = s.ridge_eventSelection(data.passesWW, data.nParticle, data.missP, data.pt, data.eta, data.nTPC, data.pwflag, data.nref, data.jtpt, data.jteta);
         if( N < 0) continue;
-        // this is to ensure that we are able to find a mixed event
-        if( N > 1000) continue;
         Int_t histNum = s.histNum(N);
         
         h_eff[histNum]->Fill((float)N/data.nParticle);
@@ -232,6 +230,7 @@ int ridge_check_parallel
     // cleanup
     output->Close();
     std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
+    delete output;
     std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete h_Aj;
     std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
