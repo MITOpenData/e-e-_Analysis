@@ -233,12 +233,19 @@ int ridge_check_parallel
     output->Close();
     std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete output;
+    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete h_Aj;
+    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete h_Tphi;
+    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete h_Ttheta;
+    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete h_pt;
+    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete h_theta;
+    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete h_eta;
+    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete h_phi;
     std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     for(int i = 0; i<s.nMultBins; i++)
