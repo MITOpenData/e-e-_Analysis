@@ -11,6 +11,7 @@
 #include "TTree.h"
 #include "TLorentzVector.h"
 #include "TVector3.h"
+#include "TNamed.h"
 
 //fastjet dependencies
 #include "fastjet/ClusterSequence.hh"
@@ -24,75 +25,12 @@
 #include "include/thrustTools.h"
 #include "include/boostTools.h"
 #include "include/doGlobalDebug.h"
-
-void processJets(std::vector<fastjet::PseudoJet> p, fastjet::JetDefinition jDef, fastjet::JetDefinition jDefReclust, jetData *d, const double ptCut = 0.1)
-{
-  d->nref = 0;
-  if(p.size() > 0){
-    fastjet::ClusterSequence cs(p, jDef);
-    std::vector<fastjet::PseudoJet> jets = fastjet::sorted_by_pt(cs.inclusive_jets());
-    for(unsigned int i = 0; i < jets.size(); ++i){
-      if(jets.at(i).pt() < ptCut) break; //Arbitrarily low cut on jets, removes spike at phi zero when things become ill defined         
-      d->jtpt[d->nref] = jets.at(i).pt();
-      d->jtphi[d->nref] = jets.at(i).phi_std();
-      d->jtm[d->nref] = jets.at(i).m();
-      d->jteta[d->nref] = jets.at(i).eta();
-      d->fourJet[d->nref] = TLorentzVector(jets.at(i).px(), jets.at(i).py(), jets.at(i).pz(), jets.at(i).E());
-
-      std::vector<fastjet::PseudoJet> jetConst = jets.at(i).constituents();
-      d->jtN[d->nref] = jetConst.size();
-      std::vector< std::vector<fastjet::PseudoJet> > subJets;
-
-      for(int j = 0; j < 6; ++j){
-        d->jtNPW[d->nref][j] = 0;
-        d->jtptFracPW[d->nref][j] = 0;
-
-	std::vector<fastjet::PseudoJet> tempSubJets;
-        subJets.push_back(tempSubJets);
-      }
-
-      for(unsigned int k = 0; k < jetConst.size(); ++k){
-        if(jetConst.at(k).user_index() < 0 || jetConst.at(k).user_index() > 5) continue;
-        subJets.at(jetConst.at(k).user_index()).push_back(jetConst.at(k));
-        d->jtNPW[d->nref][jetConst.at(k).user_index()]++;
-      }
-
-      for(int j = 0; j < 6; ++j){
-	fastjet::ClusterSequence csSub(subJets.at(j), jDefReclust);
-
-	std::vector<fastjet::PseudoJet> constTot = fastjet::sorted_by_pt(csSub.inclusive_jets());
-        if(constTot.size() > 1){
-	  std::cout << "WARNING - RECLUSTER OF CONSTITUENTS YIELDS GREATER THAN 1 JET" << std::endl;
-	  std::cout << "Top jet: " << jets.at(i).pt() << ", " << jets.at(i).phi() << ", " << jets.at(i).eta() << std::endl;
-	  std::cout << "Const: " << std::endl;
-          for(unsigned int k = 0; k < subJets.at(j).size(); ++k){
-	    std::cout << " " << k << "/" << subJets.at(j).size() << ": " << subJets.at(j).at(k).pt() << ", " << subJets.at(j).at(k).phi() << ", " << subJets.at(j).at(k).eta() << std::endl;
-          }
-
-	  std::cout << "Reclust: " << std::endl;
-          for(unsigned int k = 0; k < constTot.size(); ++k){
-	    std::cout << " " << k << "/" << constTot.size() << ": " << constTot.at(k).pt() << ", " << constTot.at(k).phi() << ", " << constTot.at(k).eta() << std::endl;
-          }
-
-        }
-        else if(constTot.size() == 1) d->jtptFracPW[d->nref][j] = constTot.at(0).pt()/jets.at(i).pt();
-        else d->jtptFracPW[d->nref][j] = 0.;
-      }
-
-      ++d->nref;
-    }
-    jets.clear();
-    std::vector<fastjet::PseudoJet>().swap(jets);
-  }
-
-  return;
-}
-
+#include "include/processJets.h"
 
 int main(int argc, char* argv[])
 {
-  if(argc != 3 && argc != 4 && argc != 5 && argc != 6){
-    std::cout << "Usage: ./mainCustom.exe <outFileName> <isSysPP> <maxEvt> <nMinPartChgCut> <doRopeWalk>" << std::endl;
+  if(argc != 4 && argc != 5 && argc != 6 && argc != 7){
+    std::cout << "Usage: ./mainCustom.exe <outFileName> <isSysPP> <jobNum> <maxEvt> <nMinPartChgCut> <doRopeWalk>" << std::endl;
     return 1;
   }
 
@@ -101,15 +39,15 @@ int main(int argc, char* argv[])
   if(!isSysPP) isSysPPStr = "ee";
 
   int tempMaxEvent = 1000;
-  if(argc >= 4) tempMaxEvent = std::stoi(argv[3]);
+  if(argc >= 5) tempMaxEvent = std::stoi(argv[4]);
   const int maxEvent = tempMaxEvent;
 
   int tempPartChg_ = 0;
-  if(argc >= 5) tempPartChg_ = std::stoi(argv[4]);
+  if(argc >= 6) tempPartChg_ = std::stoi(argv[5]);
   const int nMinPartChgCut_ = tempPartChg_;
   
   bool tempRopeWalk = false;
-  if(argc >= 6) tempRopeWalk = std::stoi(argv[5]);
+  if(argc >= 7) tempRopeWalk = std::stoi(argv[6]);
   const bool doRopeWalk = tempRopeWalk;
 
   const double jtPtCut = .01;
@@ -139,7 +77,7 @@ int main(int argc, char* argv[])
   
   std::string outFileName = argv[1];
   if(outFileName.find(".root") != std::string::npos) outFileName.replace(outFileName.find(".root"), 5, "");
-  outFileName = outFileName + "_" + isSysPPStr + "_nEvt" + std::to_string(maxEvent) + "_nMinChgPart" + std::to_string(nMinPartChgCut_) + "_RopeWalk" + std::to_string(doRopeWalk) + ".root";
+  outFileName = outFileName + "_" + isSysPPStr + "_JobNum" + argv[3] + "_nEvt" + std::to_string(maxEvent) + "_nMinChgPart" + std::to_string(nMinPartChgCut_) + "_RopeWalk" + std::to_string(doRopeWalk) + ".root";
   
   if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
@@ -154,11 +92,13 @@ int main(int argc, char* argv[])
   eventData eData;
   boostedEvtData bData;
 
+  Int_t seed_;
   Float_t pthat_;
   Float_t pthatWeight_;
   Int_t scatterMom_;
   std::vector<int> scatterMomDaughter_;
 
+  genTree_p->Branch("seed", &seed_, "seed/I");
   genTree_p->Branch("pthat", &pthat_, "pthat/F");
   genTree_p->Branch("pthatWeight", &pthatWeight_, "pthatWeight/F");
   genTree_p->Branch("scatterMom", &scatterMom_, "scatterMom/I");
@@ -187,8 +127,11 @@ int main(int argc, char* argv[])
     pythia.readString("PhaseSpace:pTHatMin = 0.0");
     pythia.readString("PhaseSpace:pTHatMax = -1");
   }
+
+  const Int_t seedStart = 55217;//Chosen by drawing cards from a deck, will be used to do versioning validation from now on
+  const Int_t totalSeed = seedStart + std::stoi(argv[3]);
   pythia.readString("Random:setSeed = on");
-  pythia.readString("Random:seed = 0");
+  pythia.readString(("Random:seed = " + std::to_string(totalSeed)).c_str()); 
 
   if(doRopeWalk){
     pythia.readString("Ropewalk:RopeHadronization = on");
@@ -225,6 +168,7 @@ int main(int argc, char* argv[])
       currTreeFills = genTree_p->GetEntries();
     }
 
+    seed_ = totalSeed;
     pthat_ = pythia.info.pTHat();
     pthatWeight_ = pythia.info.weight();
     pData.nParticle = 0;
@@ -369,6 +313,12 @@ int main(int argc, char* argv[])
 
   boostedGenTree_p->Write("", TObject::kOverwrite);
   delete boostedGenTree_p;
+
+  outFile_p->mkdir("infoDir");
+  outFile_p->cd("infoDir");
+
+  TNamed jobNum(("jobNum" + std::string(argv[3]) + "_Seed").c_str(), (std::to_string(totalSeed)).c_str());
+  jobNum.Write("", TObject::kOverwrite);
 
   outFile_p->Close();
   delete outFile_p;
