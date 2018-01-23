@@ -6,7 +6,10 @@
 class TPCNtupleData{
     public:
     static const int nMaxPart = 10000;
+    
     Int_t nParticle;
+    bool passesWW;
+    Float_t missP;
     
     Float_t pt[nMaxPart];
     Float_t eta[nMaxPart];
@@ -15,6 +18,7 @@ class TPCNtupleData{
     Float_t phi[nMaxPart];
     Float_t mass[nMaxPart];
     Int_t pwflag[nMaxPart];
+    Int_t nTPC[nMaxPart];
     
     Float_t px[nMaxPart];
     Float_t py[nMaxPart];
@@ -27,7 +31,7 @@ class TPCNtupleData{
     
     // Jet Tree
     Int_t nref;
-    Float_t jtpt;
+    Float_t jtpt[nMaxPart];
     Float_t jteta[nMaxPart];
     Float_t jtphi[nMaxPart];
     
@@ -157,7 +161,10 @@ class TPCNtupleData{
       t1->SetBranchStatus("eta_wrtThr",1);
       t1->SetBranchStatus("theta_wrtThr",1);
       t1->SetBranchStatus("phi_wrtThr",1);
-
+      t1->SetBranchStatus("ntpx",1);
+      t1->SetBranchStatus("passesWW",1);
+      t1->SetBranchStatus("missP",1);
+        
       if (!isBelle)
       {
         t1->SetBranchStatus("pwflag", 1);
@@ -175,6 +182,8 @@ class TPCNtupleData{
 void setupTPCTree(TTree *t1, TTree *t2, TPCNtupleData &data)
 {
     t1->SetBranchAddress("nParticle",&data.nParticle);
+    t1->SetBranchAddress("passesWW",&data.passesWW);
+    t1->SetBranchAddress("missP",&data.missP);
     t1->SetBranchAddress("pt",data.pt);
     t1->SetBranchAddress("eta",data.eta);
     t1->SetBranchAddress("theta",data.theta);
@@ -185,11 +194,12 @@ void setupTPCTree(TTree *t1, TTree *t2, TPCNtupleData &data)
     t1->SetBranchAddress("eta_wrtThr",data.eta_wrtThr);
     t1->SetBranchAddress("theta_wrtThr",data.theta_wrtThr);
     t1->SetBranchAddress("phi_wrtThr",data.phi_wrtThr);
+    t1->SetBranchAddress("ntpc",data.nTPC);
     
+    t2->SetBranchAddress("jtpt",data.jtpt);
     t2->SetBranchAddress("jteta",data.jteta);
     t2->SetBranchAddress("jtphi",data.jtphi);
     t2->SetBranchAddress("nref",&data.nref);
-    
 
     if (!data.isBelle)
     {
