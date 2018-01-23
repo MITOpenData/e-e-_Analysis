@@ -23,8 +23,6 @@ class TPCNtupleData{
     Float_t px[nMaxPart];
     Float_t py[nMaxPart];
     Float_t pz[nMaxPart];
-    Float_t TTheta;
-    Float_t TPhi;
     
     Float_t N;
     Float_t N_TP;
@@ -40,6 +38,8 @@ class TPCNtupleData{
     float eta_wrtThr[nMaxPart];
     float theta_wrtThr[nMaxPart];
     float phi_wrtThr[nMaxPart];
+    Float_t TTheta;
+    Float_t TPhi;
     
     bool isBelle;
     int doThrust;

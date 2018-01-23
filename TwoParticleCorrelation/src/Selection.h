@@ -123,6 +123,7 @@ int Selection::ridge_eventSelection
     ///////// Missing Momentum /////////
     if (missP > missPCut) return -1;
     
+    /*
     ///////// 3-Jet /////////
     Float_t j12 = jtp(jtpt[0],jteta[0]) + jtp(jtpt[1],jteta[1]);
     if (nref>=2)
@@ -133,7 +134,7 @@ int Selection::ridge_eventSelection
         // require 3rd jet has low momentum relative to first two jets (take average momentum of jet 1 and 2)
         if( nref > 2 && (jtp(jtpt[2],jteta[2]) / (j12/2)) > thirdJetCut ) return -1;
     }
-    
+    */
     ///////// CHARGED PARTICLES /////////
     Int_t N = 0;
     for (Int_t j=0;j<nParticle;j++)

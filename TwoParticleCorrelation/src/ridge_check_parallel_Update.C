@@ -73,9 +73,9 @@ int ridge_check_parallel
     
     for(int i = 0; i<s.nMultBins; i++)
     {
-        signal2PC[i] = new TH2F(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
-        bkgrnd2PC[i] = new TH2F(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
-        ratio2PC[i] = new TH2F(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+        signal2PC[i] = new TH2F(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-s.etaPlotRange,s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+        bkgrnd2PC[i] = new TH2F(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-s.etaPlotRange,s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+        ratio2PC[i] = new TH2F(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-s.etaPlotRange,s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
         h_eff[i] = new TH1D(Form("h_eff_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),"Selection Efficiency",100,0.0,1.0);
     }
     TH1F * multiplicity = new TH1F("multiplicity",";nTrk;nEvents",200,0,200);
@@ -217,6 +217,7 @@ int ridge_check_parallel
         signal2PC[i]->Write();
         bkgrnd2PC[i]->Write();
         ratio2PC[i]->Write();
+        h_eff[i]->Write();
     }
     
     h_Aj->Write();
@@ -226,6 +227,7 @@ int ridge_check_parallel
     h_theta->Write();
     h_eta->Write();
     h_phi->Write();
+    multiplicity->Write();
     
     // cleanup
     std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
@@ -243,6 +245,7 @@ int ridge_check_parallel
     std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete h_phi;
     std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
+    delete multiplicity;
     for(int i = 0; i<s.nMultBins; i++)
     {
         delete h_eff[i];
