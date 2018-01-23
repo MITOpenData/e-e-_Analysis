@@ -34,7 +34,7 @@ void formatHelix(THelix * h, float pz, float pt, int color = 0){
 }
 
 
-void EventDisplay(std::string inputFile = "/data/abaty/ALEPHTrees/mergedLEP1_20171022.root" ,int eventIndx = 101137, float ptCut = 0){
+void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180119/LEP1Data1995_recons_aftercut-MERGED.root" ,int eventIndx = 0, float ptCut = 0, bool doWTA = false){
 
   currentFile=inputFile;
   currentEvtIndx=eventIndx;
@@ -42,6 +42,10 @@ void EventDisplay(std::string inputFile = "/data/abaty/ALEPHTrees/mergedLEP1_201
 
   TFile * f = TFile::Open(inputFile.c_str(),"read");
   TTree * t = (TTree*)f->Get("t");
+  TTree * WTA_t;
+  if(doWTA){
+    WTA_t = (TTree*)f->Get("BoostedWTAR8Evt");
+  }
   TTree * jt = (TTree*)f->Get("ak8ESchemeJetTree"); 
   TTree * wta = (TTree*)f->Get("ak8WTAmodpSchemeJetTree");
 
@@ -70,12 +74,22 @@ void EventDisplay(std::string inputFile = "/data/abaty/ALEPHTrees/mergedLEP1_201
   t->SetBranchAddress("TTheta_charged",&TTheta);
   t->SetBranchAddress("TPhi_charged",&TPhi);    
   t->SetBranchAddress("nParticle",&nParticle);
-  t->SetBranchAddress("pt",&pt);
-  t->SetBranchAddress("phi",&phi);
-  t->SetBranchAddress("eta",&eta);
-  t->SetBranchAddress("px",&px);              
-  t->SetBranchAddress("py",&py);              
-  t->SetBranchAddress("pz",&pz);              
+  if(!doWTA){
+    t->SetBranchAddress("pt",&pt);
+    t->SetBranchAddress("phi",&phi);
+    t->SetBranchAddress("eta",&eta);
+    t->SetBranchAddress("px",&px);              
+    t->SetBranchAddress("py",&py);              
+    t->SetBranchAddress("pz",&pz);     
+  } else {
+    WTA_t->SetBranchAddress("pt",&pt);
+    WTA_t->SetBranchAddress("phi",&phi);
+    WTA_t->SetBranchAddress("eta",&eta);
+    WTA_t->SetBranchAddress("px",&px);              
+    WTA_t->SetBranchAddress("py",&py);              
+    WTA_t->SetBranchAddress("pz",&pz);     
+
+  }        
   t->SetBranchAddress("pwflag",&pwflag);     
   t->SetBranchAddress("charge",&charge); 
   jt->SetBranchAddress("nref",&nref);
@@ -87,6 +101,7 @@ void EventDisplay(std::string inputFile = "/data/abaty/ALEPHTrees/mergedLEP1_201
   wta->SetBranchAddress("jteta",&wtajteta);
   wta->SetBranchAddress("jtphi",&wtajtphi);
   t->GetEntry(eventIndx);
+  if(doWTA) WTA_t->GetEntry(eventIndx);
   jt->GetEntry(eventIndx);
   wta->GetEntry(eventIndx);
 
@@ -118,40 +133,42 @@ void EventDisplay(std::string inputFile = "/data/abaty/ALEPHTrees/mergedLEP1_201
   view3->ZoomView(c3,10);
 
   THelix * helix[1000];
-  helix[999] = new THelix(0,0,0,thrust.Px(),thrust.Py(),thrust.Pz(),0.000001);
-  helix[999]->SetRange(-1,1);
-  helix[999]->SetLineColor(8);
-  helix[999]->SetLineWidth(3);
-  c1->cd();
-  helix[999]->Draw();
-  c2->cd();
-  helix[999]->Draw();
-  c3->cd();
-  helix[999]->Draw();
-  
-  helix[998] = new THelix(0,0,0,wta1.Px(),wta1.Py(),wta1.Pz(),0.000001);
-  if(wta1.Pz()<0) helix[998]->SetRange(-1,0);
-  if(wta1.Pz()>=0) helix[998]->SetRange(0,1);
-  helix[998]->SetLineColor(38);
-  helix[998]->SetLineWidth(3);
-  c1->cd();
-  helix[998]->Draw();
-  c2->cd();
-  helix[998]->Draw();
-  c3->cd();
-  helix[998]->Draw();
-  
-  helix[997] = new THelix(0,0,0,wta2.Px(),wta2.Py(),wta2.Pz(),0.000001);
-  if(wta2.Pz()<0) helix[997]->SetRange(-1,0);
-  if(wta2.Pz()>=0) helix[997]->SetRange(0,1);
-  helix[997]->SetLineColor(38);
-  helix[997]->SetLineWidth(3);
-  c1->cd();
-  helix[997]->Draw();
-  c2->cd();
-  helix[997]->Draw();
-  c3->cd();
-  helix[997]->Draw();
+  if(!doWTA){
+    helix[999] = new THelix(0,0,0,thrust.Px(),thrust.Py(),thrust.Pz(),0.000001);
+    helix[999]->SetRange(-1,1);
+    helix[999]->SetLineColor(8);
+    helix[999]->SetLineWidth(3);
+    c1->cd();
+    helix[999]->Draw();
+    c2->cd();
+    helix[999]->Draw();
+    c3->cd();
+    helix[999]->Draw();
+    
+    helix[998] = new THelix(0,0,0,wta1.Px(),wta1.Py(),wta1.Pz(),0.000001);
+    if(wta1.Pz()<0) helix[998]->SetRange(-1,0);
+    if(wta1.Pz()>=0) helix[998]->SetRange(0,1);
+    helix[998]->SetLineColor(38);
+    helix[998]->SetLineWidth(3);
+    c1->cd();
+    helix[998]->Draw();
+    c2->cd();
+    helix[998]->Draw();
+    c3->cd();
+    helix[998]->Draw();
+    
+    helix[997] = new THelix(0,0,0,wta2.Px(),wta2.Py(),wta2.Pz(),0.000001);
+    if(wta2.Pz()<0) helix[997]->SetRange(-1,0);
+    if(wta2.Pz()>=0) helix[997]->SetRange(0,1);
+    helix[997]->SetLineColor(38);
+    helix[997]->SetLineWidth(3);
+    c1->cd();
+    helix[997]->Draw();
+    c2->cd();
+    helix[997]->Draw();
+    c3->cd();
+    helix[997]->Draw();
+  }
 
   int nHelix = 0;
   for(int i = 0; i<nParticle; i++){
@@ -163,7 +180,7 @@ void EventDisplay(std::string inputFile = "/data/abaty/ALEPHTrees/mergedLEP1_201
     if(jtpt[1]*TMath::CosH(jteta[1])>5 && dR(jteta[1],jtphi[1],eta[i],phi[i])<0.8) trackColor = 2;
     if(jtpt[2]*TMath::CosH(jteta[2])>5 && dR(jteta[2],jtphi[2],eta[i],phi[i])<0.8) trackColor = 3;
     if(jtpt[3]*TMath::CosH(jteta[3])>5 && dR(jteta[3],jtphi[3],eta[i],phi[i])<0.8) trackColor = 4;
-
+    if(doWTA) trackColor = 1;
     //std::cout <<  jteta[0] << " " << jtphi[0] <<" " <<  eta[i] << " " << phi[i] << std::endl;
     //std::cout <<  dR(jteta[0],jtphi[0],eta[i],phi[i]) << std::endl;
 
