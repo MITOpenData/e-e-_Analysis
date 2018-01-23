@@ -216,12 +216,15 @@ int ridge_check_parallel
         std::cout << "nBkgrndEvts "<< s.multBinsLow[i]<<" "<<s.multBinsHigh[i]<<" : "<<nBkgrndEvts[i] <<" " << std::endl;
         signal2PC[i]->Scale(1./ (float)nSignalEvts[i]);
         bkgrnd2PC[i]->Scale(1./(float)nBkgrndEvts[i]);
+        std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
         calculateRatio(signal2PC[i],bkgrnd2PC[i],ratio2PC[i]);
+        std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     }
     
+    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     output->Write();
     output->Close();
-
+std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete h_Aj;
     delete h_Tphi;
     delete h_Ttheta;
@@ -229,6 +232,7 @@ int ridge_check_parallel
     delete h_theta;
     delete h_eta;
     delete h_phi;
+    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     for(int i = 0; i<s.nMultBins; i++)
     {
         delete h_eff[i];
@@ -236,12 +240,12 @@ int ridge_check_parallel
         delete bkgrnd2PC[i];
         delete signal2PC[i];
     }
-    
+    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete jt_mix;
     delete t_mix;
     delete jt;
     delete t;
-
+std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     return 0;
 }
 
