@@ -161,7 +161,7 @@ class TPCNtupleData{
       t1->SetBranchStatus("eta_wrtThr",1);
       t1->SetBranchStatus("theta_wrtThr",1);
       t1->SetBranchStatus("phi_wrtThr",1);
-      t1->SetBranchStatus("ntpx",1);
+      t1->SetBranchStatus("ntpc",1);
       t1->SetBranchStatus("passesWW",1);
       t1->SetBranchStatus("missP",1);
         

@@ -34,8 +34,8 @@ class Selection
         Float_t ptMin = 0.4;
         Float_t ptMax = 100.0;
         Float_t etaCut = 1.8;
-        Int_t nTPCMin = 0 ; //TO DO
-        Int_t nTPCMax = 100 ; //TO DO
+        Int_t nTPCMin = 3; // completely inclusive, maybe tighten this
+        Int_t nTPCMax = 23 ; 
     
         // jet cuts
         Float_t AjCut = 0.1;

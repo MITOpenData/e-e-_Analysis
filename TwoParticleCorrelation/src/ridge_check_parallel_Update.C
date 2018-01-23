@@ -106,6 +106,9 @@ int ridge_check_parallel
         // this is to ensure that we are able to find a mixed event
         if( N > 1000) continue;
         Int_t histNum = s.histNum(N);
+        std::cout<<"N : histNum =   "<<N<<" : "<<histNum<<std::endl;
+        
+        std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
         
         h_eff[histNum]->Fill((float)N/data.nParticle);
         h_Aj->Fill(s.fillAj);
@@ -178,7 +181,7 @@ int ridge_check_parallel
                 std::cout <<"Error in Mixing!"<<std::endl;
                 continue;
             }
-            
+            std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
             nBkgrndEvts[histNum] += 1;
             for ( Int_t j=0;j<data.nParticle;j++ )
             {
