@@ -26,6 +26,7 @@ class Selection
     
         // event cuts
         Float_t missPCut = 20;
+        bool domissPCut = false;
         static const Int_t nMultBins = 3;
         Int_t multBinsLow[nMultBins]  = {0 , 20, 30};
         Int_t multBinsHigh[nMultBins] = {20, 30, 999};
@@ -40,6 +41,8 @@ class Selection
         // jet cuts
         Float_t AjCut = 0.1;
         Float_t thirdJetCut = 0.03;
+        bool doAjCut = false;
+        bool do3jetEvtCut = false;
     
         // plotting
         Float_t etaPlotRange = 3.6;//this gets multiplied by 2
@@ -121,17 +124,18 @@ int Selection::ridge_eventSelection
     if (!passesWW) return -1;
     
     ///////// Missing Momentum /////////
-    if (missP > missPCut) return -1;
+    if ( domissPCut && missP > missPCut) return -1;
     
     ///////// 3-Jet /////////
     Float_t j12 = jtp(jtpt[0],jteta[0])+jtp(jtpt[1],jteta[1]);
+    fillAj = TMath::Abs(jtp(jtpt[0],jteta[0])-jtp(jtpt[1],jteta[1])) / j12;
     if (nref>=2)
     {
-        fillAj = TMath::Abs(jtp(jtpt[0],jteta[0])-jtp(jtpt[1],jteta[1])) / j12;
+        
         // require 2 jets to be pretty equally balanced in momentum
-        if(fillAj > AjCut) return -1;
+        if(doAjCut && fillAj > AjCut) return -1;
         // require 3rd jet has low momentum relative to first two jets (take average momentum of jet 1 and 2)
-        if( nref > 2 && (2*jtp(jtpt[2],jteta[2]) / j12) > thirdJetCut ) return -1;
+        if(do3jetEvtCut && nref > 2 && (2*jtp(jtpt[2],jteta[2]) / j12) > thirdJetCut ) return -1;
     }
     
     ///////// CHARGED PARTICLES /////////
