@@ -207,6 +207,7 @@ int ridge_check_parallel
         } // end of nMix loop
     } // end of loop over events
     
+    // write the histograms
     output->cd();
     for(int i = 0; i<s.nMultBins; i++)
     {
@@ -214,15 +215,24 @@ int ridge_check_parallel
         std::cout << "nBkgrndEvts "<< s.multBinsLow[i]<<" "<<s.multBinsHigh[i]<<" : "<<nBkgrndEvts[i] <<" " << std::endl;
         signal2PC[i]->Scale(1./ (float)nSignalEvts[i]);
         bkgrnd2PC[i]->Scale(1./(float)nBkgrndEvts[i]);
-        std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
         calculateRatio(signal2PC[i],bkgrnd2PC[i],ratio2PC[i]);
-        std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
+        signal2PC[i]->Write();
+        bkgrnd2PC[i]->Write();
+        ratio2PC[i]->Write();
     }
     
-    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
-    output->Write();
+    h_Aj->Write();
+    h_Tphi->Write();
+    h_Ttheta->Write();
+    h_pt->Write();
+    h_theta->Write();
+    h_eta->Write();
+    h_phi->Write();
+    
+    // cleanup
     output->Close();
-std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
+    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
+    delete output;
     delete h_Aj;
     delete h_Tphi;
     delete h_Ttheta;

@@ -99,46 +99,36 @@ enum SIMPLEPWFLAG {ALEPH_CHARGED_TRACK, ALEPH_CHARGED_LEPTONS1, ALEPH_CHARGED_LE
 /**************************************************************************************/
 int calculateRatio(TH2F *h_2D, TH2F *h_2Dmix, TH2F *h_ratio)
 {
-    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
+    
     double normalization = h_2D->GetXaxis()->GetBinWidth(1)*h_2D->GetYaxis()->GetBinWidth(1);
     double ratio = 0;
     double errrel_ratio = 0;
     double errrel_num = 0;
     double errrel_den = 0;
-    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
+
     double b00_x=h_2Dmix->GetXaxis()->FindBin(0.);
     double b00_y=h_2Dmix->GetYaxis()->FindBin(0.);
     double B00=h_2Dmix->GetBinContent(b00_x,b00_y);
     //double errrel_B00=h_2Dmix->GetBinError(b00_x,b00_y)/B00;
     
     std::cout<<"value of B(0,0)="<<B00<<std::endl;
-    
     std::cout<<"x axis "<<h_2Dmix->GetXaxis()->GetBinCenter(b00_x)<<std::endl;
     std::cout<<"y axis "<<h_2Dmix->GetYaxis()->GetBinCenter(b00_y)<<std::endl;
-            std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
+    
     for (Int_t x=0;x<=h_2D->GetNbinsX();x++){        
         for (Int_t y=0;y<=h_2D->GetNbinsY();y++){
             if(h_2Dmix->GetBinContent(x,y)>0){
-                std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
+                
                 ratio=B00*(h_2D->GetBinContent(x,y)/h_2Dmix->GetBinContent(x,y));
-                std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
                 errrel_num=h_2D->GetBinError(x,y)/h_2D->GetBinContent(x,y);
-                std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
                 errrel_den=h_2Dmix->GetBinError(x,y)/h_2Dmix->GetBinContent(x,y);
-                std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
                 // Yen-Jie: Take out the error of B00 for the moment since this is a global uncertainty
-		errrel_ratio=TMath::Sqrt(errrel_num*errrel_num+errrel_den*errrel_den);   // +errrel_B00*errrel_B00
-                std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
+                errrel_ratio=TMath::Sqrt(errrel_num*errrel_num+errrel_den*errrel_den);   // +errrel_B00*errrel_B00
                 h_ratio->SetBinContent(x,y,ratio/normalization);
-                std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
                 h_ratio->SetBinError(x,y,errrel_ratio*ratio/normalization);
-                std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
             } else {
-                std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
 	      h_ratio->SetBinContent(x,y,0);
-                std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
 	      h_ratio->SetBinError(x,y,0);
-                std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
 	    }
         }
     }
