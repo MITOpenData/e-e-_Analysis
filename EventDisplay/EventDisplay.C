@@ -19,22 +19,25 @@ float dR(float eta1, float phi1, float eta2, float phi2){
   return TMath::Power(TMath::Power(TMath::ACos(TMath::Cos(phi1-phi2)),2)+TMath::Power(eta1-eta2,2),0.5);
 }
 
-void formatHelix(THelix * h, float pz, float pt, int color = 0){
+void formatHelix(THelix * h, float pz, float pt, int color = 0, bool doWTA = false){
   if(color==0) h->SetLineColor(kBlue);
   if(color==1) h->SetLineColor(kWhite);
   if(color==2) h->SetLineColor(kRed);
   if(color==3) h->SetLineColor(6);
   if(color==4) h->SetLineColor(7);
+  if(color==5) h->SetLineColor(kGreen);
   h->SetLineWidth(1);
   
   float rangeBound = 1;
-  if(pt<2.5 && TMath::Abs(pz)<0.5) rangeBound = TMath::Abs(pz);
+  if(!doWTA){
+    if(pt<2.5 && TMath::Abs(pz)<0.5) rangeBound = TMath::Abs(pz);
+  }
   h->SetRange(0,rangeBound);
   if(pz<0) h->SetRange(-rangeBound,0);
 }
 
 
-void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180119/LEP1Data1995_recons_aftercut-MERGED.root" ,int eventIndx = 0, float ptCut = 0, bool doWTA = false){
+void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180119/LEP1Data1995_recons_aftercut-MERGED.root" ,int eventIndx = 574, float ptCut = 0, bool doWTA = false){
 
   currentFile=inputFile;
   currentEvtIndx=eventIndx;
@@ -59,6 +62,11 @@ void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/
   float charge[500];
   int pwflag[500], pwflagMix[500];
 
+
+  float wtapt[500];
+  float wtaeta[500];
+  float wtaphi[500];
+
   int nref;
   float jtpt[50];
   float jteta[50];
@@ -74,21 +82,16 @@ void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/
   t->SetBranchAddress("TTheta_charged",&TTheta);
   t->SetBranchAddress("TPhi_charged",&TPhi);    
   t->SetBranchAddress("nParticle",&nParticle);
-  if(!doWTA){
-    t->SetBranchAddress("pt",&pt);
-    t->SetBranchAddress("phi",&phi);
-    t->SetBranchAddress("eta",&eta);
-    t->SetBranchAddress("px",&px);              
-    t->SetBranchAddress("py",&py);              
-    t->SetBranchAddress("pz",&pz);     
-  } else {
-    WTA_t->SetBranchAddress("pt",&pt);
-    WTA_t->SetBranchAddress("phi",&phi);
-    WTA_t->SetBranchAddress("eta",&eta);
-    WTA_t->SetBranchAddress("px",&px);              
-    WTA_t->SetBranchAddress("py",&py);              
-    WTA_t->SetBranchAddress("pz",&pz);     
-
+  t->SetBranchAddress("pt",&pt);
+  t->SetBranchAddress("phi",&phi);
+  t->SetBranchAddress("eta",&eta);
+  t->SetBranchAddress("px",&px);              
+  t->SetBranchAddress("py",&py);              
+  t->SetBranchAddress("pz",&pz);     
+  if(doWTA){
+    WTA_t->SetBranchAddress("pt",&wtapt);
+    WTA_t->SetBranchAddress("phi",&wtaphi);
+    WTA_t->SetBranchAddress("eta",&wtaeta);
   }        
   t->SetBranchAddress("pwflag",&pwflag);     
   t->SetBranchAddress("charge",&charge); 
@@ -180,13 +183,21 @@ void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/
     if(jtpt[1]*TMath::CosH(jteta[1])>5 && dR(jteta[1],jtphi[1],eta[i],phi[i])<0.8) trackColor = 2;
     if(jtpt[2]*TMath::CosH(jteta[2])>5 && dR(jteta[2],jtphi[2],eta[i],phi[i])<0.8) trackColor = 3;
     if(jtpt[3]*TMath::CosH(jteta[3])>5 && dR(jteta[3],jtphi[3],eta[i],phi[i])<0.8) trackColor = 4;
-    if(doWTA) trackColor = 1;
+    if(doWTA && wtapt[i]<0.01) trackColor = 5;
     //std::cout <<  jteta[0] << " " << jtphi[0] <<" " <<  eta[i] << " " << phi[i] << std::endl;
     //std::cout <<  dR(jteta[0],jtphi[0],eta[i],phi[i]) << std::endl;
 
     //std::cout << i<<" "  << px[i]<<" "  << py[i]<<" " << pz[i]<<" " << charge[i] << " " << trackColor <<  std::endl; 
+    if(doWTA){
+      trk3 = TVector3(0,0,0);
+      trk3.SetPtEtaPhi(wtapt[i],wtaeta[i],wtaphi[i]);
+      px[i] = trk3.x();
+      py[i] = trk3.y();
+      pz[i] = trk3.z();
+    }
+
     helix[nHelix] = new THelix(0,0,0,px[i],py[i],pz[i],charge[i]*1.5);
-    formatHelix(helix[nHelix],pz[i],pt[i],trackColor);
+    formatHelix(helix[nHelix],pz[i],pt[i],trackColor,doWTA);
     c1->cd();
     helix[nHelix]->Draw("same");
     c2->cd();
