@@ -228,9 +228,6 @@ int ridge_check_parallel
     h_phi->Write();
     
     // cleanup
-    output->Close();
-    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
-    delete output;
     std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete h_Aj;
     std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
@@ -259,8 +256,10 @@ int ridge_check_parallel
     delete jt;
     delete t;
     
+     std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
+    output->Close();
+    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete output;
-std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     return 0;
 }
 
