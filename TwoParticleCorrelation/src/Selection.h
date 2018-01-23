@@ -45,9 +45,10 @@ class Selection
         bool do3jetEvtCut = false;
     
         // plotting
-        Float_t etaPlotRange = 3.6;//this gets multiplied by 2
-        Float_t dEtaBins = 72;//keep even
+        Float_t etaPlotRange = 1.6;//this gets multiplied by 2
+        Float_t dEtaBins = 20;//keep even
         Float_t dPhiBins = 20;//keep factor of 4
+        Float_t differential = (etaPlotRange/(float)dEtaBins)/(2*TMath::Pi()/(float)dPhiBins);
         Float_t fillAj = 0.0; // used for plotting h_Aj
     
         // other
@@ -58,6 +59,7 @@ class Selection
         Int_t nbin = 20;
         Int_t num_runs = 5; // decide if we should actually be using this
     
+                                                                
         // BELLE Particle Definition
         enum SIMPLEPID {BELLE_PHOTON, BELLE_ELECTRON, BELLE_PION, BELLE_MUON, BELLE_KAON, BELLE_PROTON};
         // ALEPH Particle Flow Classification

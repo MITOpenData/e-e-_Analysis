@@ -73,9 +73,9 @@ int ridge_check_parallel
     
     for(int i = 0; i<s.nMultBins; i++)
     {
-        signal2PC[i] = new TH2F(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-s.etaPlotRange,s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
-        bkgrnd2PC[i] = new TH2F(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-s.etaPlotRange,s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
-        ratio2PC[i] = new TH2F(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-s.etaPlotRange,s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+        signal2PC[i] = new TH2F(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+        bkgrnd2PC[i] = new TH2F(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+        ratio2PC[i] = new TH2F(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
         h_eff[i] = new TH1D(Form("h_eff_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),"Selection Efficiency",100,0.0,1.0);
     }
     TH1F * multiplicity = new TH1F("multiplicity",";nTrk;nEvents",200,0,200);
@@ -138,10 +138,10 @@ int ridge_check_parallel
                 if (s.doTheta) angle2 = data.getTheta(k); else angle2 = data.getEta(k);
                 Float_t phi2 = data.getPhi(k);
                 
-                signal2PC[histNum]->Fill(angle1-angle2,dphi(phi1,phi2),1./N);
-                signal2PC[histNum]->Fill(angle1-angle2,dphi(phi2,phi1),1./N);
-                signal2PC[histNum]->Fill(angle2-angle1,dphi(phi1,phi2),1./N);
-                signal2PC[histNum]->Fill(angle2-angle1,dphi(phi2,phi1),1./N);
+                signal2PC[histNum]->Fill(angle1-angle2,dphi(phi1,phi2),1./(4*s.differential)/N);
+                signal2PC[histNum]->Fill(angle1-angle2,dphi(phi2,phi1),1./(4*s.differential)/N);
+                signal2PC[histNum]->Fill(angle2-angle1,dphi(phi1,phi2),1./(4*s.differential)/N);
+                signal2PC[histNum]->Fill(angle2-angle1,dphi(phi2,phi1),1./(4*s.differential)/N);
             }
         }
         
@@ -196,10 +196,10 @@ int ridge_check_parallel
                     if (s.doTheta) angle_mix = data.getTheta(j); else angle_mix = mix.getEta(k);
                     Float_t phi_mix = mix.getPhi(j);
                     
-                    bkgrnd2PC[histNum]->Fill(angle-angle_mix,dphi(phi,phi_mix),1./N);
-                    bkgrnd2PC[histNum]->Fill(angle-angle_mix,dphi(phi_mix,phi),1./N);
-                    bkgrnd2PC[histNum]->Fill(angle_mix-angle,dphi(phi,phi_mix),1./N);
-                    bkgrnd2PC[histNum]->Fill(angle_mix-angle,dphi(phi_mix,phi),1./N);
+                    bkgrnd2PC[histNum]->Fill(angle-angle_mix,dphi(phi,phi_mix),1./(4*s.differential)/N);
+                    bkgrnd2PC[histNum]->Fill(angle-angle_mix,dphi(phi_mix,phi),1./(4*s.differential)/N);
+                    bkgrnd2PC[histNum]->Fill(angle_mix-angle,dphi(phi,phi_mix),1./(4*s.differential)/N);
+                    bkgrnd2PC[histNum]->Fill(angle_mix-angle,dphi(phi_mix,phi),1./(4*s.differential)/N);
                 } //end of mixed event loop
             } // end of working event loop
         } // end of nMix loop
@@ -230,21 +230,13 @@ int ridge_check_parallel
     multiplicity->Write();
     
     // cleanup
-    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete h_Aj;
-    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete h_Tphi;
-    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete h_Ttheta;
-    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete h_pt;
-    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete h_theta;
-    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete h_eta;
-    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete h_phi;
-    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete multiplicity;
     for(int i = 0; i<s.nMultBins; i++)
     {
@@ -253,16 +245,14 @@ int ridge_check_parallel
         delete bkgrnd2PC[i];
         delete signal2PC[i];
     }
-    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete jt_mix;
     delete t_mix;
     delete jt;
     delete t;
     
-     std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     output->Close();
-    std::cout<< __FILE__ << " "<< __LINE__ <<std::endl;
     delete output;
+    
     return 0;
 }
 
@@ -270,7 +260,7 @@ int main(int argc, char* argv[])
 {
     if(argc < 3 || argc > 19)
     {
-        std::cout << "Usage: ./ridge_check_parallel.exe <inFileName> <outFileName> <isThrust-optional> <isBelle-optional> <isTheta-optional> <isGen-optional> <maxevt-optional> <mult_low-optional> <mult_high-optional> <nbin-optional> <verbose-optional> <num_runs-optional> <ptMin-optional> <ptMax-optional> <detaRange-optional> <ptMinForN-optional> <ptMaxForN-optional> <etaCutForN-optional>" <<std::endl;
+        std::cout << "Usage: ./ridge_check_parallel.exe <inFileName> <outFileName>" <<std::endl;
         return 1;
     }
     
