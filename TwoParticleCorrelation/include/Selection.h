@@ -174,4 +174,4 @@ int Selection::histNum(Int_t N)
     
     return -1;
 }
-#endif /* ridge_eventSelection_h */
+#endif /* Selection.h */

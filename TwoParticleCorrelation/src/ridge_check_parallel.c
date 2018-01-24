@@ -25,13 +25,14 @@
 //local headers
 #include "../include/fourier.h"
 #include "../include/TPCNtupleData.h"
+#include "../include/Selection.h"
 
 /********************************************************************************************************************/
 // Two particle correlation analysis
 //
 // ridge_check_parallel.c
 //
-// Yen-Jie Lee, Gian Michele Innocenti, Anthony Badea, Austin Baty, Chris McGinn, Michael Peters, Tzu-An Sheng
+// Yen-Jie Lee, Gian Michele Innocenti, Anthony Badea
 //
 //
 /********************************************************************************************************************/
@@ -45,184 +46,125 @@ using namespace std;
 int ridge_check_parallel
     (
      const std::string inFileName, // input file
-     const std::string outFileName,    // output file
-     Int_t isThrust     = 0,         // Leading Jet Axis ridge_check = 2, Thurst Axis ridge_check = 1, Beam Axis ridge_check = 0
-     Int_t isBelle      = 0,        // BELLE ridge_check = 1, CMS/ALEPH ridge_check = 0
-     Int_t isTheta      = 0,         // Use Theta angle = 1, Use Eta = 0
-     Int_t isGen       = 0,         // Use isGen = 1 if gen level so no cut on charged particles, 0 if not gen level
-     Int_t maxevt       = 1000000,    // Max number of events to be processed, 0 = all events
-     Int_t mult_low     = 0,        // Lower cut on the event multiplicity
-     Int_t mult_high    = 100,        // Upper cut on the event multiplicity
-     Int_t nbin         = 20,        // Number of bins in the correlation function
-     bool verbose     = 0,        // Verbose mode
-     Int_t num_runs     = 5,        //
-     double ptMin     = 0.4,           // min pT of the particles used for correlation function
-     double ptMax     = 100.0,             // max pT of the particles used for correlation function
-     double detaRange = 3.2,             // deta window of the correlation function
-     Float_t ptMinForN = 0.4,          // pT min for the N_{trk}^{offline} calculation (used for event classification)
-     Float_t ptMaxForN = 100,          // pT max for the N_{trk}^{offline} calculation (used for event classification)
-     Float_t etaCutForN = 1.8          // eta window for the N_{trk}^{offline} calculation (used for event classification)
+     const std::string outFileName    // output file
     )
 {
     // ROOT Global setting
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
     
-    TChain *t1 = new TChain("t");
-    t1->Add(inFileName.c_str());
+    // set up plots
+    Selection s = Selection();
+    TFile * output = TFile::Open("RidgeCheck_Output_Rope.root","recreate");
+    TH2F * signal2PC[s.nMultBins];
+    TH2F * bkgrnd2PC[s.nMultBins];
+    TH2F * ratio2PC[s.nMultBins];
+    float nSignalEvts[s.nMultBins] = {0};
+    float nBkgrndEvts[s.nMultBins] = {0};
     
-    TChain *t2 = new TChain("ak4ESchemeJetTree");
-    t2->Add(inFileName.c_str());
+    TH1D * h_eff[s.nMultBins];
+    TH1D * h_phi = new TH1D("phi","phi",100,-TMath::Pi(),TMath::Pi());
+    TH1D * h_eta = new TH1D("eta","eta",100,-5,5);
+    TH1D * h_theta = new TH1D("theta","theta",100,0,TMath::Pi());
+    TH1D * h_pt = new TH1D("pt","pt",100,0,10);
+    TH1D * h_Ttheta = new TH1D("T_theta","T_theta",100,0,TMath::Pi());
+    TH1D * h_Tphi = new TH1D("T_phi","T_phi",100,-TMath::Pi(),TMath::Pi());
+    TH1D * h_Aj = new TH1D("h_Aj","h_Aj",50,0,0.5);
     
-    /* TString friendname =  "qqmc-e07-00_flavor.root"; */
-    /* TFile *ff = new TFile(friendname); */
-    /* TTree *tf = (TTree*)ff->Get("t"); */
-    /* t1->AddFriend(tf); */
-    
-    TPCNtupleData data(isBelle, isThrust);
-    setupTPCTree(t1,t2,data);
-    data.setTPCTreeStatus(t1);
-    
-    // File for event mixing, use the same file for the moment
-    /* TFile *f_mix = new TFile(inFileName.Data()); */
-    /* TTree *t1_mix = (TTree*)f_mix->Get("t"); */
-    TChain *t1_mix = new TChain("t");
-    t1_mix->Add(inFileName.c_str());
-    
-    // Not necessary
-    TChain *t2_mix = new TChain("ak4ESchemeJetTree");
-    t2_mix->Add(inFileName.c_str());
-    
-    TPCNtupleData mix(isBelle, isThrust);
-    setupTPCTree(t1_mix,t2_mix,mix);
-    mix.setTPCTreeStatus(t1_mix);
-    
-    //TNtuple *nt = new TNtuple("nt","","pEta:pTheta:pPhi:theta:phi:TTheta:TPhi");
-    
-    // Define 2D histograms
-    //Float_t dthetaRange = PI;
-    //Float_t normalization = detaRange*2/nbin*2*3.14159/nbin;
-    TH2F *h_2D, *h_2Dmix, *h_ratio;
-    
-    if (isTheta){
-        h_2D    = CFTH2F ( "h_2D",    "#theta-#phi of all particles;#Delta#theta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#thetad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -PI/2., PI*1.5);
-        h_2Dmix = CFTH2F ( "h_2Dmix", "#theta-#phi of all particles;#Delta#theta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#thetad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -PI/2., PI*1.5);
-        h_ratio = CFTH2F ( "h_ratio", "#theta-#phi of all particles;#Delta#theta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#thetad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -PI/2., PI*1.5);
-    } else {
-        h_2D    = CFTH2F ( "h_2D",    "#eta-#phi of all particles;#Delta#eta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -PI/2., PI*1.5);
-        h_2Dmix = CFTH2F ( "h_2Dmix", "#eta-#phi of all particles;#Delta#eta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -PI/2., PI*1.5);
-        h_ratio = CFTH2F ( "h_ratio", "#eta-#phi of all particles;#Delta#eta;#Delta#phi;#frac{1}{N_{trig}}#frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi} ",nbin, -detaRange, detaRange,nbin, -PI/2., PI*1.5);
+    for(int i = 0; i<s.nMultBins; i++)
+    {
+        signal2PC[i] = new TH2F(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+        bkgrnd2PC[i] = new TH2F(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+        ratio2PC[i] = new TH2F(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+        h_eff[i] = new TH1D(Form("h_eff_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),"Selection Efficiency",100,0.0,1.0);
     }
-    TH1D *h_mult_dist = new TH1D("h_multi","multiplicity distribution of charged particles;N_{trk}^{offline};Count",60,0,60);
-    TH1D *h_phi = new TH1D("h_phi","Phi distribution",60,-PI,PI);
+    TH1F * multiplicity = new TH1F("multiplicity",";nTrk;nEvents",200,0,200);
     
-    // all entries and fill the histograms
-    Int_t nevent = (Int_t)t1->GetEntries();
+    // files and variables for input
+    TChain * t = new TChain("t");       t->Add(inFileName.c_str());
+    TChain * jt = new TChain("ak4ESchemeJetTree");       jt->Add(inFileName.c_str());
+    TPCNtupleData data(s.doBelle, s.doThrust);      setupTPCTree(t,jt,data);       data.setTPCTreeStatus(t);
     
-    Int_t nevent_process = nevent;
-    //cout<<"maxevt "<<maxevt<<endl;
-    //if( maxevt>0 && maxevt<nevent ) nevent_process = maxevt;
+    TChain * t_mix = new TChain("t");       t_mix->Add(inFileName.c_str());
+    TChain * jt_mix = new TChain("ak4ESchemeJetTree");       jt_mix->Add(inFileName.c_str());
+    TPCNtupleData mix(s.doBelle, s.doThrust);       setupTPCTree(t_mix,jt_mix,mix);        mix.setTPCTreeStatus(t_mix);
     
-    Float_t averageN=0;
-    Int_t nEventProcessed=0;
-    Int_t nEventInMultBin=0;
+    // analysis
+    Int_t nevent = (Int_t)t->GetEntries();
     
-    /* Int_t flavor; */
-    /* t1->SetBranchAddress("flavor", &flavor); */
-    
-    // check number of fills
-    Int_t fill_count=0;
-    Int_t fill_count_mix=0;
     /****************************************/
     // Main Event Loop
     /****************************************/
-    for (Int_t i=0;i<nevent_process;i++) {
-        t1->GetEntry(i);
-        t2->GetEntry(i);
+    for (Int_t i=0;i<nevent;i++) {
+        t->GetEntry(i);
+        jt->GetEntry(i);
         data.update();
-        if (i%10000==0) std::cout <<i<<"/"<<nevent_process<<std::endl;
-        if (verbose) std::cout<<"nparticles="<<data.nParticle<<std::endl;
+        if (i%10000==0) std::cout <<i<<"/"<<nevent<<std::endl;
         
-        //if (isThrust==1&&fabs(data.TTheta-3.14159/2.)>0.8) continue;
-        //if (isThrust==2&&acos(cos(data.jtphi[0]-data.jtphi[1]))<3.14159*2/3.) continue;
+        // event cut
+        Int_t N = s.ridge_eventSelection(data.passesWW, data.nParticle, data.missP, data.pt, data.eta, data.nTPC, data.pwflag, data.nref, data.jtpt, data.jteta);
+        if( N < 0) continue;
+        Int_t histNum = s.histNum(N);
         
-        /* if (flavor == 0) {break;} */
-        /* if (flavor == 1) {continue;} */
+        h_eff[histNum]->Fill((float)N/data.nParticle);
+        h_Aj->Fill(s.fillAj);
+        multiplicity->Fill(N);
+        nSignalEvts[histNum] += 1;
         
-        Int_t selected=i+1;  //questo diventa il numero di evento estratto nel file +1
-        Int_t flag=0;      //definisco una flag a zero
-        
-        // Yen-Jie: we would like to use a definition similar to CMS publication
-        // all particles with pT > 0.4 GeV/c for the calculation of event multiplicity N
-        
-        Int_t N=0;    // N_{trk}^{offline}
-        Int_t N_TP=0;    // Number of particles used in the two particle correlation function calculation, can be different from N for event classification
-        
-        // calculate the number of tracks in the passing selection
-        for ( Int_t j=0;j<data.nParticle;j++ ) {
-            Float_t pt1 = data.getPt(j);
-            // if isGen = 0 then we want to cut on charged particles so !0->1 then isCharged matter
-            if (!isGen&&!data.isChargedHadron(j)) continue;
-            if (fabs(data.getEta(j))>=etaCutForN) continue;
-            if (pt1>ptMinForN&&pt1<ptMaxForN) N++;
-            if (pt1>ptMin&&pt1<ptMax) N_TP++;
-            h_phi->Fill(data.getPhi(j));
-            //nt->Fill(data.eta[j],data.theta[j],data.phi[j],data.getTheta(j),data.getPhi(j),data.TTheta,data.TPhi);
-        }
-        h_mult_dist->Fill(N);
-        averageN+=N;
-        nEventProcessed++;
-        
-        if (N<mult_low||N>=mult_high||N_TP<1) continue;
-        nEventInMultBin++;
-        
+        h_Ttheta->Fill(data.TTheta);
+        h_Tphi->Fill(data.TPhi);
         /****************************************/
         // S calculation using multiplicity cut //
         /****************************************/
-        for ( Int_t j=0;j<data.nParticle;j++ ) {
+        for ( Int_t j=0;j<data.nParticle;j++ )
+        {
+            if(!s.ridge_trackSelection(data.getPt(j),data.getEta(j),data.nTPC[j],data.pwflag[j])) continue;
+            
+            h_phi->Fill(data.getPhi(j));
+            h_eta->Fill(data.getEta(j));
+            h_theta->Fill(data.getTheta(j));
+            h_pt->Fill(data.getPt(j));
+            
             Float_t angle1;
-            if (isTheta) angle1 = data.getTheta(j); else angle1 = data.getEta(j);
+            if (s.doTheta) angle1 = data.getTheta(j); else angle1 = data.getEta(j);
             Float_t phi1 = data.getPhi(j);
-            Float_t pt1 = data.getPt(j);
-            if (!isGen&&!data.isChargedHadron(j)) continue;
-            if (pt1<=ptMin||pt1>=ptMax) continue;
             
             // Signal loop, calculate S correlation function
-            for ( Int_t k=j+1;k<data.nParticle;k++ ) {
+            for ( Int_t k=j+1;k<data.nParticle;k++ )
+            {
+                if(!s.ridge_trackSelection(data.getPt(k),data.getEta(k),data.nTPC[k],data.pwflag[k])) continue;
+                
                 Float_t angle2;
-                if (isTheta) angle2 = data.getTheta(k); else angle2 = data.getEta(k);
+                if (s.doTheta) angle2 = data.getTheta(k); else angle2 = data.getEta(k);
                 Float_t phi2 = data.getPhi(k);
-                Float_t pt2 = data.getPt(k);
-                if (!isGen&&!data.isChargedHadron(k)) continue;
-                if (pt2<=ptMin||pt2>=ptMax) continue;
-                if (N!=0) {
-                    h_2D->Fill(angle1-angle2,dphi(phi1,phi2),1./N_TP);
-                    h_2D->Fill(angle1-angle2,dphi(phi2,phi1),1./N_TP);
-                    h_2D->Fill(angle2-angle1,dphi(phi1,phi2),1./N_TP);
-                    h_2D->Fill(angle2-angle1,dphi(phi2,phi1),1./N_TP);
-                    fill_count+=4;
-                }
+                
+                signal2PC[histNum]->Fill(angle1-angle2,dphi(phi1,phi2),1./(4*s.differential)/N);
+                signal2PC[histNum]->Fill(angle1-angle2,dphi(phi2,phi1),1./(4*s.differential)/N);
+                signal2PC[histNum]->Fill(angle2-angle1,dphi(phi1,phi2),1./(4*s.differential)/N);
+                signal2PC[histNum]->Fill(angle2-angle1,dphi(phi2,phi1),1./(4*s.differential)/N);
             }
         }
         
         /****************************************/
         // B calculation using multiplicity cut //
         /****************************************/
-        for (Int_t nMix = 0; nMix<num_runs; nMix++) {
-            t1_mix->GetEntry ( selected );
-            t2_mix->GetEntry ( selected );
+        for (Int_t nMix = 0; nMix<s.num_runs; nMix++)
+        {
+            Int_t selected=i+1;
+            t_mix->GetEntry(selected);
+            jt_mix->GetEntry(selected);
             
-            // Select a matched event
-            // Currently we are matching the total multiplicity in th event
+            Int_t N_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt, mix.eta, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
             
-            flag=0;
-            while ((fabs(mix.nParticle-data.nParticle)>4&&data.nParticle<1000&&fabs(mix.jteta[0]-data.jteta[0])>0.2)||i==selected){
+            // Select a mixed event
+            Int_t flag=0;
+            while (N_mix < 0 && !s.mixedEvent(N, N_mix, data.jteta[0], mix.jteta[0]))
+            {
                 selected++;
-                if (selected>nevent_process&&flag==2) break;
-                if (selected>nevent_process) flag++;
-                selected = selected % nevent_process;
-                t1_mix->GetEntry ( selected );
-                t2_mix->GetEntry ( selected );
+                if (selected > nevent) break;
+                t_mix->GetEntry(selected);
+                jt_mix->GetEntry(selected);
+                N_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt, mix.eta, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
             }
             
             // Use the Thrust axis from the signal event instead of mixed event
@@ -230,84 +172,87 @@ int ridge_check_parallel
             mix.TPhi=data.TPhi;
             mix.update();
             
-            Int_t N2_TP=0;
-            
-            // calculate the number of tracks in the mixed event passing selection
-            for ( Int_t j=0;j<data.nParticle;j++ ) {
-                Float_t pt1 = mix.getPt(j);
-                if (!isGen&&!mix.isChargedHadron(j)) continue;
-                if (pt1>ptMin&&pt1<ptMax) N2_TP++;
-            }
-            if (N2_TP==0) continue;
-            
-            if (i==selected) {
+            if (i==selected)
+            {
                 std::cout <<"Error in Mixing!"<<std::endl;
                 continue;
             }
             
-            for ( Int_t j=0;j<data.nParticle;j++ ) {
-                Float_t angle1;
-                if (isTheta) angle1 = data.getTheta(j); else angle1 = data.getEta(j);
-                Float_t phi1 = data.getPhi(j);
-                Float_t pt1 = data.getPt(j);
-                if (!isGen&&!data.isChargedHadron(j)) continue;
-                if(pt1<=ptMin||pt1>=ptMax) continue;
+            nBkgrndEvts[histNum] += 1;
+            for ( Int_t j=0;j<data.nParticle;j++ )
+            {
+                if(!s.ridge_trackSelection(data.getPt(j),data.getEta(j),data.nTPC[j],data.pwflag[j])) continue;
+                
+                Float_t angle;
+                if (s.doTheta) angle = data.getTheta(j); else angle = data.getEta(j);
+                Float_t phi = data.getPhi(j);
                 
                 // Background loop, calculate B correlation function from mixed event
-                for ( Int_t k=0;k<mix.nParticle;k++ ) {
-                    Float_t anglemix;
-                    if (isTheta) anglemix = mix.getTheta(k); else anglemix = mix.getEta(k);
-                    Float_t phimix = mix.getPhi(k);
-                    Float_t ptmix = mix.getPt(k);
-                    if (!!isGen&&!mix.isChargedHadron(k)) continue;
-                    if(ptmix<=ptMin||ptmix>=ptMax) continue;
+                for ( Int_t k=0;k<mix.nParticle;k++ )
+                {
+                    if(!s.ridge_trackSelection(mix.getPt(k),mix.getEta(k),mix.nTPC[k],mix.pwflag[k])) continue;
                     
-                    if (N!=0) {
-                        h_2Dmix->Fill(angle1-anglemix,dphi(phi1,phimix),1./N_TP);
-                        h_2Dmix->Fill(angle1-anglemix,dphi(phimix,phi1),1./N_TP);
-                        h_2Dmix->Fill(anglemix-angle1,dphi(phi1,phimix),1./N_TP);
-                        h_2Dmix->Fill(anglemix-angle1,dphi(phimix,phi1),1./N_TP);
-                        fill_count_mix+=4;
-                    }
+                    Float_t angle_mix;
+                    if (s.doTheta) angle_mix = data.getTheta(j); else angle_mix = mix.getEta(k);
+                    Float_t phi_mix = mix.getPhi(j);
+                    
+                    bkgrnd2PC[histNum]->Fill(angle-angle_mix,dphi(phi,phi_mix),1./(4*s.differential)/N);
+                    bkgrnd2PC[histNum]->Fill(angle-angle_mix,dphi(phi_mix,phi),1./(4*s.differential)/N);
+                    bkgrnd2PC[histNum]->Fill(angle_mix-angle,dphi(phi,phi_mix),1./(4*s.differential)/N);
+                    bkgrnd2PC[histNum]->Fill(angle_mix-angle,dphi(phi_mix,phi),1./(4*s.differential)/N);
                 } //end of mixed event loop
             } // end of working event loop
         } // end of nMix loop
     } // end of loop over events
     
-    std::cout<<"nEventInMultBin "<<nEventInMultBin<<std::endl;
+    // write the histograms
+    output->cd();
+    for(int i = 0; i<s.nMultBins; i++)
+    {
+        std::cout << "nSignalEvts "<< s.multBinsLow[i]<<" "<<s.multBinsHigh[i]<<" : "<<nSignalEvts[i] <<" " << std::endl;
+        std::cout << "nBkgrndEvts "<< s.multBinsLow[i]<<" "<<s.multBinsHigh[i]<<" : "<<nBkgrndEvts[i] <<" " << std::endl;
+        signal2PC[i]->Scale(1./ (float)nSignalEvts[i]);
+        bkgrnd2PC[i]->Scale(1./(float)nBkgrndEvts[i]);
+        calculateRatio(signal2PC[i],bkgrnd2PC[i],ratio2PC[i]);
+        signal2PC[i]->Write();
+        bkgrnd2PC[i]->Write();
+        ratio2PC[i]->Write();
+        h_eff[i]->Write();
+    }
     
-    h_2Dmix->Scale(1./nEventInMultBin);
-    h_2D->Scale(1./nEventInMultBin);
-    
-    averageN=averageN/nEventProcessed;
-    std::cout <<"Average N = "<<averageN<<std::endl;
-    
-    // calculate the  correlation function
-    
-    calculateRatio(h_2D,h_2Dmix,h_ratio);
-    
-    // Save the results
-    TFile *background = new TFile(Form("%s",outFileName.c_str()), "recreate");
-    h_ratio->Write();
-    h_2D->Write();
-    h_2Dmix->Write();
+    h_Aj->Write();
+    h_Tphi->Write();
+    h_Ttheta->Write();
+    h_pt->Write();
+    h_theta->Write();
+    h_eta->Write();
     h_phi->Write();
-    h_mult_dist->Write();
+    multiplicity->Write();
     
-    std::cout<<"FILL COUNT = "<<fill_count<<std::endl;
-    std::cout<<"FILL COUNT = "<<fill_count_mix<<std::endl;
-    
-    background->Close();
-    delete background;
-    delete h_mult_dist;
-    delete h_ratio;
-    delete h_2Dmix;
-    delete h_2D;
+    // cleanup
+    delete h_Aj;
+    delete h_Tphi;
+    delete h_Ttheta;
+    delete h_pt;
+    delete h_theta;
+    delete h_eta;
     delete h_phi;
-    delete t2_mix;
-    delete t1_mix;
-    delete t2;
-    delete t1;
+    delete multiplicity;
+    for(int i = 0; i<s.nMultBins; i++)
+    {
+        delete h_eff[i];
+        delete ratio2PC[i];
+        delete bkgrnd2PC[i];
+        delete signal2PC[i];
+    }
+    delete jt_mix;
+    delete t_mix;
+    delete jt;
+    delete t;
+    
+    output->Close();
+    delete output;
+    
     return 0;
 }
 
@@ -315,28 +260,11 @@ int main(int argc, char* argv[])
 {
     if(argc < 3 || argc > 19)
     {
-        std::cout << "Usage: ./ridge_check_parallel.exe <inFileName> <outFileName> <isThrust-optional> <isBelle-optional> <isTheta-optional> <isGen-optional> <maxevt-optional> <mult_low-optional> <mult_high-optional> <nbin-optional> <verbose-optional> <num_runs-optional> <ptMin-optional> <ptMax-optional> <detaRange-optional> <ptMinForN-optional> <ptMaxForN-optional> <etaCutForN-optional>" <<std::endl;
+        std::cout << "Usage: ./ridge_check_parallel.exe <inFileName> <outFileName>" <<std::endl;
         return 1;
     }
     
     int retVal = 0;
     if(argc == 3) retVal += ridge_check_parallel(argv[1], argv[2]);
-    else if(argc == 4) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]));
-    else if(argc == 5) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]));
-    else if(argc == 6) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]));
-    else if(argc == 7) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]));
-    else if(argc == 8) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]));
-    else if(argc == 9) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]));
-    else if(argc == 10) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]));
-    else if(argc == 11) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]));
-    else if(argc == 12) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]));
-    else if(argc == 13) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]),std::stoi(argv[12]));
-    else if(argc == 14) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]),std::stoi(argv[12]),std::stoi(argv[13]));
-    else if(argc == 15) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]),std::stoi(argv[12]),std::stoi(argv[13]),std::stoi(argv[14]));
-    else if(argc == 16) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]),std::stoi(argv[12]),std::stoi(argv[13]),std::stoi(argv[14]),std::stoi(argv[15]));
-    else if(argc == 17) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]),std::stoi(argv[12]),std::stoi(argv[13]),std::stoi(argv[14]),std::stoi(argv[15]),std::stoi(argv[16]));
-    else if(argc == 18) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]),std::stoi(argv[12]),std::stoi(argv[13]),std::stoi(argv[14]),std::stoi(argv[15]),std::stoi(argv[16]),std::stoi(argv[17]));
-    else if(argc == 19) retVal += ridge_check_parallel(argv[1], argv[2], std::stof(argv[3]), std::stof(argv[4]), std::stof(argv[5]), std::stof(argv[6]), std::stof(argv[7]), std::stoi(argv[8]), std::stoi(argv[9]), std::stoi(argv[10]),std::stoi(argv[11]),std::stoi(argv[12]),std::stoi(argv[13]),std::stoi(argv[14]),std::stoi(argv[15]),std::stoi(argv[16]),std::stoi(argv[17]),std::stoi(argv[18]));
-    
     return retVal;
 }
