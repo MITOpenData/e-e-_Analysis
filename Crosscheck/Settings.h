@@ -69,7 +69,7 @@ class Settings{
     float AjCut = 0.1;
     float thirdJetCut = 0.03;
     bool doAllData = true;
-    int nEvts = 10;
+    int nEvts = 1;
 
     Settings();
     bool isInMultBin(int n, int bin);

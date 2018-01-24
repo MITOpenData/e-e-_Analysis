@@ -8,7 +8,7 @@
 #include "TH2D.h"
 
 inline float dPhi(float phi1, float phi2){
-  return TMath::ACos(TMath::Cos(phi1-phi2));
+  return TMath::Abs(TMath::ACos(TMath::Cos(phi1-phi2)));
 }
 
 inline float dEta(float eta1, float eta2){
@@ -17,7 +17,8 @@ inline float dEta(float eta1, float eta2){
 
 void fillAllQuadrants(TH2F * h, float deta, float dphi, float weight){
   h->Fill(deta,dphi,weight); 
-  h->Fill(-deta,dphi,weight); 
+  h->Fill(-deta,dphi,weight);
+  if(-dphi<-TMath::Pi()/2.0) dphi -=TMath::Pi()*2; 
   h->Fill(deta,-dphi,weight); 
   h->Fill(-deta,-dphi,weight); 
 }

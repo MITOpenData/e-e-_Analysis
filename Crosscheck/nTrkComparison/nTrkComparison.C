@@ -24,6 +24,8 @@ void nTrkComparison(int nTrkLow = 0, int nTrkHigh = 999){
   TTree * TalephMCGen = (TTree*)  alephMC->Get("tgen");
   TTree * TcmsMCGen = (TTree*) cmsMC->Get("HiGenParticleAna/hi");
 
+  TFile * out = TFile::Open("output.root","recreate");
+
   TH1D * Ntrk_AlephOffline = new TH1D("Ntrk_AlephOffline","Ntrk_AlephOffline",300,0,300);
   Taleph->Draw(Form("Sum$(%s)>>Ntrk_AlephOffline",alephCut.c_str()),Form("Sum$(%s)>%d && Sum$(%s)<%d",alephCut.c_str(),nTrkLow,alephCut.c_str(),nTrkHigh));
   std::cout << "<n_Trk^Offline> for bin from " << nTrkLow << " to " << nTrkHigh << ":    " << Ntrk_AlephOffline->GetMean() << std::endl; 
@@ -115,6 +117,8 @@ void nTrkComparison(int nTrkLow = 0, int nTrkHigh = 999){
     }
   }
   conversion->Print("All");
+
+  out->Write();
 
   TCanvas * c1 = new TCanvas("c1","c1",800,600);
   Ntrk_AlephOffline->GetXaxis()->SetRangeUser(0,100); 
