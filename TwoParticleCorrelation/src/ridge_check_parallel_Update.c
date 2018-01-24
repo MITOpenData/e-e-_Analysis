@@ -90,7 +90,7 @@ int ridge_check_parallel
     
     // analysis
     Int_t nevent = (Int_t)t->GetEntries();
-    
+    nevent = 1;
     /****************************************/
     // Main Event Loop
     /****************************************/
@@ -101,7 +101,11 @@ int ridge_check_parallel
         if (i%10000==0) std::cout <<i<<"/"<<nevent<<std::endl;
         
         // event cut
-        Int_t N = s.ridge_eventSelection(data.passesWW, data.nParticle, data.missP, data.pt, data.eta, data.nTPC, data.pwflag, data.nref, data.jtpt, data.jteta);
+        Int_t N = 0;
+        if(!s.doThrust) N = s.ridge_eventSelection(data.passesWW, data.nParticle, data.missP, data.pt, data.eta, data.nTPC, data.pwflag, data.nref, data.jtpt, data.jteta);
+        
+        if(s.doThrust) N = s.ridge_eventSelection(data.passesWW, data.nParticle, data.missP, data.pt_wrtThr, data.eta_wrtThr, data.nTPC, data.pwflag, data.nref, data.jtpt, data.jteta);
+        
         if( N < 0) continue;
         Int_t histNum = s.histNum(N);
         
@@ -118,7 +122,7 @@ int ridge_check_parallel
         for ( Int_t j=0;j<data.nParticle;j++ )
         {
             if(!s.ridge_trackSelection(data.getPt(j),data.getEta(j),data.nTPC[j],data.pwflag[j])) continue;
-            
+            std::cout<<__FILE__<<" "<<__LINE__<<std::endl;
             h_phi->Fill(data.getPhi(j));
             h_eta->Fill(data.getEta(j));
             h_theta->Fill(data.getTheta(j));
