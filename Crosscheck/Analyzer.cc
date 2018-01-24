@@ -223,18 +223,20 @@ void Analyzer(){
         //signal histogram
         if(nMixed == 0){
           for(int j2 = 0; j2<j1; j2++){
+            std::cout << j1 << " " << j2 << std::endl;
             if(TMath::Abs(eta[j2]) > s.etaCut) continue;
-            if(s.doThrust && (pt[j2]<s.assocPt[0] || pt[j2]>s.assocPt[1])) continue;
-            if(!s.doThrust && (pt_wrtThr[j2]<s.assocPt[0] || pt_wrtThr[j2]>s.assocPt[1])) continue;
+            if(!s.doThrust && (pt[j2]<s.assocPt[0] || pt[j2]>s.assocPt[1])) continue;
+            if(s.doThrust && (pt_wrtThr[j2]<s.assocPt[0] || pt_wrtThr[j2]>s.assocPt[1])) continue;
             if(!(pwflag[j2]==0 || (s.doUseLeptons && (pwflag[j2]==1 || pwflag[j2]==2)))) continue;
             float corr2 = 1.0/getEff(s,pt[j2],eta[j2]);
+            std::cout << j1 << " " << j2 << std::endl;
             //correct for both particles and also divide by hte bin widths
             for(int k = 0; k<s.nMultBins; k++){
               if(s.isInMultBin(nTrk,k)){
-                if(!s.doThrust) signal2PC[k]->Fill( dEta(eta[j1],eta[j2]), dPhi(phi[j1],phi[j2]), corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
-                if(s.doThrust) signal2PC[k]->Fill( dEta(eta_wrtThr[j1],eta_wrtThr[j2]), dPhi(phi_wrtThr[j1],phi_wrtThr[j2]), corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
-                if(!s.doThrust) signal2PC_ptweighted[k]->Fill( dEta(eta[j1],eta[j2]), dPhi(phi[j1],phi[j2]), pt[j1]*pt[j2]*corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
-                if(s.doThrust) signal2PC_ptweighted[k]->Fill( dEta(eta_wrtThr[j1],eta_wrtThr[j2]), dPhi(phi_wrtThr[j1],phi_wrtThr[j2]), pt_wrtThr[j1]*pt_wrtThr[j2]*corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+                if(!s.doThrust) fillAllQuadrants( signal2PC[k], dEta(eta[j1],eta[j2]), dPhi(phi[j1],phi[j2]), corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+                if(s.doThrust) fillAllQuadrants( signal2PC[k], dEta(eta_wrtThr[j1],eta_wrtThr[j2]), dPhi(phi_wrtThr[j1],phi_wrtThr[j2]), corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+                if(!s.doThrust) fillAllQuadrants(signal2PC_ptweighted[k], dEta(eta[j1],eta[j2]), dPhi(phi[j1],phi[j2]), pt[j1]*pt[j2]*corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+                if(s.doThrust) fillAllQuadrants(signal2PC_ptweighted[k], dEta(eta_wrtThr[j1],eta_wrtThr[j2]), dPhi(phi_wrtThr[j1],phi_wrtThr[j2]), pt_wrtThr[j1]*pt_wrtThr[j2]*corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
               }
             }//end mult bin loop
           }//end 2nd particle loop
@@ -250,10 +252,10 @@ void Analyzer(){
           //correct for both particles and also divide by hte bin widths
           for(int k = 0; k<s.nMultBins; k++){
             if(s.isInMultBin(nTrk,k)){
-              if(!s.doThrust) bkgrnd2PC[k]->Fill( dEta(eta[j1],etaMix[j2]), dPhi(phi[j1],phiMix[j2]), corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
-              if(s.doThrust) bkgrnd2PC[k]->Fill( dEta(eta_wrtThr[j1],etaMix_wrtThr[j2]), dPhi(phi_wrtThr[j1],phiMix_wrtThr[j2]), corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
-              if(!s.doThrust) bkgrnd2PC_ptweighted[k]->Fill( dEta(eta[j1],etaMix[j2]), dPhi(phi[j1],phiMix[j2]), pt[j1]*ptMix[j2]*corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
-              if(s.doThrust) bkgrnd2PC_ptweighted[k]->Fill( dEta(eta_wrtThr[j1],etaMix_wrtThr[j2]), dPhi(phi_wrtThr[j1],phiMix_wrtThr[j2]), pt_wrtThr[j1]*ptMix_wrtThr[j2]*corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+              if(!s.doThrust) fillAllQuadrants( bkgrnd2PC[k], dEta(eta[j1],etaMix[j2]), dPhi(phi[j1],phiMix[j2]), corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+              if(s.doThrust) fillAllQuadrants( bkgrnd2PC[k], dEta(eta_wrtThr[j1],etaMix_wrtThr[j2]), dPhi(phi_wrtThr[j1],phiMix_wrtThr[j2]), corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+              if(!s.doThrust) fillAllQuadrants( bkgrnd2PC_ptweighted[k], dEta(eta[j1],etaMix[j2]), dPhi(phi[j1],phiMix[j2]), pt[j1]*ptMix[j2]*corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+              if(s.doThrust) fillAllQuadrants( bkgrnd2PC_ptweighted[k], dEta(eta_wrtThr[j1],etaMix_wrtThr[j2]), dPhi(phi_wrtThr[j1],phiMix_wrtThr[j2]), pt_wrtThr[j1]*ptMix_wrtThr[j2]*corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
             }
           }//end mult bin loop
         }//end mixed particle loop
@@ -266,9 +268,7 @@ void Analyzer(){
   for(int k = 0; k<s.nMultBins; k++){
     std::cout << nSignalEvts[k] <<" " << std::endl;
     signal2PC[k]->Scale(1.0/(float)nSignalEvts[k]);
-    symmetrizeDetaDphi(signal2PC[k],s.dEtaBins,s.dPhiBins);
     bkgrnd2PC[k]->Scale(1.0/(float)nBkgrndEvts[k]);
-    symmetrizeDetaDphi(bkgrnd2PC[k],s.dEtaBins,s.dPhiBins);
     ratio2PC[k] = (TH2F*)signal2PC[k]->Clone(Form("ratio2PC_%d_%d",s.multBinsLow[k],s.multBinsHigh[k]));
     ratio2PC[k]->Divide(bkgrnd2PC[k]);
     ratio2PC[k]->Scale(bkgrnd2PC[k]->GetBinContent(bkgrnd2PC[k]->FindBin(0,0))/4.0);
