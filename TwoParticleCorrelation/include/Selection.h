@@ -94,7 +94,7 @@ int Selection::ridge_trackSelection
  )
 {
     if (pwflag != ALEPH_CHARGED_TRACK) return 0;
-    if (pt <= ptMin || pt >= ptMax) return 0;
+    if (pt < ptMin || pt > ptMax) return 0;
     if (nTPC <= nTPCMin || nTPC >= nTPCMax) return 0;
     if (TMath::Abs(eta) >= etaCut) return 0;
     
