@@ -39,14 +39,16 @@ class particleData{
   //thrust axis variables
   float pt_wrtThr[nMaxPart];
   float eta_wrtThr[nMaxPart];
+  float rap_wrtThr[nMaxPart];
   float theta_wrtThr[nMaxPart];
   float phi_wrtThr[nMaxPart];
   float pt_wrtChThr[nMaxPart];
   float eta_wrtChThr[nMaxPart];
+  float rap_wrtChThr[nMaxPart];
   float theta_wrtChThr[nMaxPart];
   float phi_wrtChThr[nMaxPart];
 
-  static const int nVar = 35;
+  static const int nVar = 37;
   std::string varStr[nVar] = {"nParticle",
 			      "EventNo",
 			      "RunNo",
@@ -76,10 +78,12 @@ class particleData{
 			      "ntpc",
 			      "pt_wrtThr",
 			      "eta_wrtThr",
+			      "rap_wrtThr",
 			      "theta_wrtThr",
 			      "phi_wrtThr",
 			      "pt_wrtChThr",
 			      "eta_wrtChThr",
+			      "rap_wrtChThr",
 			      "theta_wrtChThr",
 			      "phi_wrtChThr"};
 
@@ -125,10 +129,12 @@ particleData::particleData()
     
     pt_wrtThr[i] = -999;
     eta_wrtThr[i] = -999;
+    rap_wrtThr[i] = -999;
     theta_wrtThr[i] = -999;
     phi_wrtThr[i] = -999;
     pt_wrtChThr[i] = -999;
     eta_wrtChThr[i] = -999;
+    rap_wrtChThr[i] = -999;
     theta_wrtChThr[i] = -999;
     phi_wrtChThr[i] = -999;
   }
@@ -186,12 +192,14 @@ void particleData::SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::str
   if(varIsGood[26]) inTree_p->SetBranchAddress("ntpc", ntpc);
   if(varIsGood[27]) inTree_p->SetBranchAddress("pt_wrtThr", pt_wrtThr);
   if(varIsGood[28]) inTree_p->SetBranchAddress("eta_wrtThr", eta_wrtThr);
-  if(varIsGood[29]) inTree_p->SetBranchAddress("theta_wrtThr", theta_wrtThr);
-  if(varIsGood[30]) inTree_p->SetBranchAddress("phi_wrtThr", phi_wrtThr);
-  if(varIsGood[31]) inTree_p->SetBranchAddress("pt_wrtChThr", pt_wrtChThr);
-  if(varIsGood[32]) inTree_p->SetBranchAddress("eta_wrtChThr", eta_wrtChThr);
-  if(varIsGood[33]) inTree_p->SetBranchAddress("theta_wrtChThr", theta_wrtChThr);
-  if(varIsGood[34]) inTree_p->SetBranchAddress("phi_wrtChThr", phi_wrtChThr);
+  if(varIsGood[29]) inTree_p->SetBranchAddress("rap_wrtThr", rap_wrtThr);
+  if(varIsGood[30]) inTree_p->SetBranchAddress("theta_wrtThr", theta_wrtThr);
+  if(varIsGood[31]) inTree_p->SetBranchAddress("phi_wrtThr", phi_wrtThr);
+  if(varIsGood[32]) inTree_p->SetBranchAddress("pt_wrtChThr", pt_wrtChThr);
+  if(varIsGood[33]) inTree_p->SetBranchAddress("eta_wrtChThr", eta_wrtChThr);
+  if(varIsGood[34]) inTree_p->SetBranchAddress("rap_wrtChThr", rap_wrtChThr);
+  if(varIsGood[35]) inTree_p->SetBranchAddress("theta_wrtChThr", theta_wrtChThr);
+  if(varIsGood[36]) inTree_p->SetBranchAddress("phi_wrtChThr", phi_wrtChThr);
   
   return;
 }
@@ -227,10 +235,12 @@ void particleData::SetBranchWrite(TTree* inTree_p)
   inTree_p->Branch("ntpc", ntpc, "ntpc[nParticle]/I");
   inTree_p->Branch("pt_wrtThr", pt_wrtThr, "pt_wrtThr[nParticle]/F");
   inTree_p->Branch("eta_wrtThr", eta_wrtThr, "eta_wrtThr[nParticle]/F");
+  inTree_p->Branch("rap_wrtThr", rap_wrtThr, "rap_wrtThr[nParticle]/F");
   inTree_p->Branch("theta_wrtThr", theta_wrtThr, "theta_wrtThr[nParticle]/F");
   inTree_p->Branch("phi_wrtThr", phi_wrtThr, "phi_wrtThr[nParticle]/F");
   inTree_p->Branch("pt_wrtChThr", pt_wrtChThr, "pt_wrtChThr[nParticle]/F");
   inTree_p->Branch("eta_wrtChThr", eta_wrtChThr, "eta_wrtChThr[nParticle]/F");
+  inTree_p->Branch("rap_wrtChThr", rap_wrtChThr, "rap_wrtChThr[nParticle]/F");
   inTree_p->Branch("theta_wrtChThr", theta_wrtChThr, "theta_wrtChThr[nParticle]/F");
   inTree_p->Branch("phi_wrtChThr", phi_wrtChThr, "phi_wrtChThr[nParticle]/F");
   

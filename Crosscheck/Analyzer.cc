@@ -135,15 +135,14 @@ void Analyzer(){
       if(pwflag[t]==0 || (s.doUseLeptons && (pwflag[t]==1 || pwflag[t]==2))){
         if(TMath::Abs(eta[t]) >= s.etaCut) continue;
         if(pt[t]>s.nTrkPt[0] && pt[t]<s.nTrkPt[1])  nTrk++;//nTrk calculation
-
-        if(s.doThrust && (pt[t]<=s.trigPt[0] || pt[t]>=s.trigPt[1])) continue;//nTrig calculation
-        if(!s.doThrust && (pt_wrtThr[t]<=s.trigPt[0] || pt_wrtThr[t]>=s.trigPt[1])) continue;//nTrig calculation
+        if(!s.doThrust && (pt[t]<=s.trigPt[0] || pt[t]>=s.trigPt[1])) continue;//nTrig calculation
+        if(s.doThrust && (pt_wrtThr[t]<=s.trigPt[0] || pt_wrtThr[t]>=s.trigPt[1])) continue;//nTrig calculation
         float corr = 1.0/getEff(s,pt[t],eta[t]);
         nTrig += corr;
       }
     }
     multiplicity->Fill(nTrk);
-    if(nTrig<1 && s.doExcludeNTrigLT2) continue;
+    if(nTrig<=1 && s.doExcludeNTrigLT2) continue;
     h_Ttheta->Fill(TTheta);
     h_Tphi->Fill(TPhi);
 

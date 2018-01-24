@@ -53,6 +53,7 @@ void setThrustVariables(particleData *p, eventData *e, TVector3 thrust, TVector3
     TVector3 part = TVector3(p->px[i], p->py[i], p->pz[i]);
     p->pt_wrtThr[i] = ptFromThrust(thrust, part);
     p->eta_wrtThr[i] = etaFromThrust(thrust, part);
+    p->rap_wrtThr[i] = rapFromThrust(thrust, part, p->mass[i]);
     p->theta_wrtThr[i] = thetaFromThrust(thrust, part);
     p->phi_wrtThr[i] = phiFromThrust(thrust, part);
     
