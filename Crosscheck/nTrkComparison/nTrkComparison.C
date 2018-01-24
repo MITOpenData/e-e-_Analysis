@@ -7,6 +7,7 @@
 #include <vector>
 #include <iostream>
 #include "TProfile.h"
+#include "TGraphErrors.h"
 
 void nTrkComparison(int nTrkLow = 0, int nTrkHigh = 999){
 
@@ -178,5 +179,20 @@ void nTrkComparison(int nTrkLow = 0, int nTrkHigh = 999){
   c1->SaveAs("img/conversion_weighted.png");
   c1->SaveAs("img/conversion_weighted.pdf");
   c1->SaveAs("img/conversion_weighted.C");
-  
+
+  c1->Clear();
+  TGraphErrors * g = new TGraphErrors(60);    
+  for(int i = 1; i<61; i++){
+    g->SetPoint(i,i*conversion->GetBinContent(i),Ntrk_AlephOffline->GetBinContent(i));
+    g->SetPointError(i,0,Ntrk_AlephOffline->GetBinError(i));
+  } 
+  g->GetXaxis()->SetTitle("nTrk^{ALEPH to CMS}_{Offline}");
+  g->GetYaxis()->SetTitle("nEvts");
+  g->SetTitle("");
+  g->Draw("AP");
+  c1->SaveAs("img/new_nTrk_ALEPHConverted.png");
+  c1->SaveAs("img/new_nTrk_ALEPHConverted.pdf");
+  c1->SaveAs("img/conversion_ALEPHConverted.C");
+
+
 }
