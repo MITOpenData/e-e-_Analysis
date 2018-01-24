@@ -223,7 +223,6 @@ void Analyzer(){
         //signal histogram
         if(nMixed == 0){
           for(int j2 = 0; j2<j1; j2++){
-            std::cout << j1 << " " << j2 << std::endl;
             if(TMath::Abs(eta[j2]) > s.etaCut) continue;
             if(!s.doThrust && (pt[j2]<s.assocPt[0] || pt[j2]>s.assocPt[1])) continue;
             if(s.doThrust && (pt_wrtThr[j2]<s.assocPt[0] || pt_wrtThr[j2]>s.assocPt[1])) continue;
