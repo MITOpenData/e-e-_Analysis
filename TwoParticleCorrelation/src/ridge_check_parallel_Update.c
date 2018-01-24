@@ -62,7 +62,7 @@ int ridge_check_parallel
     float nSignalEvts[s.nMultBins] = {0};
     float nBkgrndEvts[s.nMultBins] = {0};
     
-    TH1D * h_eff[s.nMultBins];
+    TH1D * h_eff = new TH1D("h_eff","Selection Efficiency",100,0.0,1.0);;
     TH1D * h_phi = new TH1D("phi","phi",100,-TMath::Pi(),TMath::Pi());
     TH1D * h_eta = new TH1D("eta","eta",100,-5,5);
     TH1D * h_theta = new TH1D("theta","theta",100,0,TMath::Pi());
@@ -76,7 +76,6 @@ int ridge_check_parallel
         signal2PC[i] = new TH2F(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
         bkgrnd2PC[i] = new TH2F(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
         ratio2PC[i] = new TH2F(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
-        h_eff[i] = new TH1D(Form("h_eff_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),"Selection Efficiency",100,0.0,1.0);
     }
     TH1F * multiplicity = new TH1F("multiplicity",";nTrk;nEvents",200,0,200);
     
@@ -106,7 +105,7 @@ int ridge_check_parallel
         if( N < 0) continue;
         Int_t histNum = s.histNum(N);
         
-        h_eff[histNum]->Fill((float)N/data.nParticle);
+        h_eff->Fill(N/data.nParticle);
         h_Aj->Fill(s.fillAj);
         multiplicity->Fill(N);
         nSignalEvts[histNum] += 1;
@@ -217,9 +216,9 @@ int ridge_check_parallel
         signal2PC[i]->Write();
         bkgrnd2PC[i]->Write();
         ratio2PC[i]->Write();
-        h_eff[i]->Write();
     }
     
+    h_eff->Write();
     h_Aj->Write();
     h_Tphi->Write();
     h_Ttheta->Write();
@@ -237,10 +236,10 @@ int ridge_check_parallel
     delete h_theta;
     delete h_eta;
     delete h_phi;
+    delete h_eff;
     delete multiplicity;
     for(int i = 0; i<s.nMultBins; i++)
     {
-        delete h_eff[i];
         delete ratio2PC[i];
         delete bkgrnd2PC[i];
         delete signal2PC[i];
