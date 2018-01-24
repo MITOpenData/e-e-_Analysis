@@ -26,10 +26,14 @@ inline double thetaFromThrust(TVector3 thrust, TVector3 p){
 }
 
 //this is actually rapidity w/ pion mass assumption
-inline double etaFromThrust(TVector3 thrust, TVector3 p){
-  float pl = p*thrust.Unit();//logitudinal momentum component
-  float E = TMath::Power(p.Mag2()+0.13957*0.13957,0.5);//energy w/ mass assumption
+inline double rapFromThrust(TVector3 thrust, TVector3 p, float mass){
+  float pl = p*(thrust.Unit());//logitudinal momentum component
+  float E = TMath::Power(p.Mag2()+mass*mass,0.5);//energy
   return 0.5*TMath::Log((E+pl)/(E-pl));//rapidity
+}
+
+inline double etaFromThrust(TVector3 thrust, TVector3 p){
+  return -TMath::Log( TMath::Tan( thetaFromThrust(thrust,p)/2.0));
 }
 
 inline double phiFromThrust(TVector3 thrust, TVector3 p){
