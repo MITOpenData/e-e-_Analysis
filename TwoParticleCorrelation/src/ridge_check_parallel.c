@@ -55,7 +55,7 @@ int ridge_check_parallel
     
     // set up plots
     Selection s = Selection();
-    TFile * output = TFile::Open("RidgeCheck_Output_Rope.root","recreate");
+    TFile * output = TFile::Open("RidgeCheck_Output.root","recreate");
     TH2F * signal2PC[s.nMultBins];
     TH2F * bkgrnd2PC[s.nMultBins];
     TH2F * ratio2PC[s.nMultBins];
