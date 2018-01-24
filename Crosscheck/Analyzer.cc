@@ -229,7 +229,7 @@ void Analyzer(){
             if(s.doThrust && (pt_wrtThr[j2]<s.assocPt[0] || pt_wrtThr[j2]>s.assocPt[1])) continue;
             if(!(pwflag[j2]==0 || (s.doUseLeptons && (pwflag[j2]==1 || pwflag[j2]==2)))) continue;
             float corr2 = 1.0/getEff(s,pt[j2],eta[j2]);
-            std::cout << j1 << " " << j2 << std::endl;
+            
             //correct for both particles and also divide by hte bin widths
             for(int k = 0; k<s.nMultBins; k++){
               if(s.isInMultBin(nTrk,k)){
@@ -275,9 +275,7 @@ void Analyzer(){
     getLongRangeYield(s,ratio2PC[k],longRangeYield[k]);
     
     signal2PC_ptweighted[k]->Scale(1.0/(float)nSignalEvts[k]);
-    symmetrizeDetaDphi(signal2PC_ptweighted[k],s.dEtaBins,s.dPhiBins);
     bkgrnd2PC_ptweighted[k]->Scale(1.0/(float)nBkgrndEvts[k]);
-    symmetrizeDetaDphi(bkgrnd2PC_ptweighted[k],s.dEtaBins,s.dPhiBins);
     ratio2PC_ptweighted[k] = (TH2F*)signal2PC_ptweighted[k]->Clone(Form("ratio2PC_ptweighted_%d_%d",s.multBinsLow[k],s.multBinsHigh[k]));
     ratio2PC_ptweighted[k]->Divide(bkgrnd2PC_ptweighted[k]);
     ratio2PC_ptweighted[k]->Scale(bkgrnd2PC_ptweighted[k]->GetBinContent(bkgrnd2PC_ptweighted[k]->FindBin(0,0))/4.0);

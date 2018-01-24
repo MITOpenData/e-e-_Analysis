@@ -15,7 +15,7 @@ inline float dEta(float eta1, float eta2){
   return TMath::Abs(eta1-eta2);
 }
 
-void fillAllQuadrants(TH2D * h, float deta, float dphi, float weight){
+void fillAllQuadrants(TH2F * h, float deta, float dphi, float weight){
   h->Fill(deta,dphi,weight); 
   h->Fill(-deta,dphi,weight); 
   h->Fill(deta,-dphi,weight); 
