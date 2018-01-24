@@ -26,7 +26,8 @@ class Selection
     
         // event cuts
         Float_t missPCut = 20;
-        bool domissPCut = false;
+        bool domissPCut = true;
+        bool doWW = false;
         static const Int_t nMultBins = 3;
         Int_t multBinsLow[nMultBins]  = {0 , 20, 30};
         Int_t multBinsHigh[nMultBins] = {20, 30, 999};
@@ -124,7 +125,7 @@ int Selection::ridge_eventSelection
 {
     
     ///////// QCD Paper Selection /////////
-    if (!passesWW) return -1;
+    if (doWW && !passesWW) return -1;
     
     ///////// Missing Momentum /////////
     if ( domissPCut && missP > missPCut) return -1;
