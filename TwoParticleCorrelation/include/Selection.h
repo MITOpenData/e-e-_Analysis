@@ -43,12 +43,13 @@ class Selection
         Float_t thirdJetCut = 0.03;
         bool doAjCut = false;
         bool do3jetEvtCut = false;
+        bool doMixedJetCut = false;
     
         // plotting
         Float_t etaPlotRange = 1.6;//this gets multiplied by 2
         Float_t dEtaBins = 20;//keep even
         Float_t dPhiBins = 20;//keep factor of 4
-        Float_t differential = (etaPlotRange/(float)dEtaBins)/(2*TMath::Pi()/(float)dPhiBins);
+        Float_t differential = (etaPlotRange/(float)dEtaBins)*(2*TMath::Pi()/(float)dPhiBins);
         Float_t fillAj = 0.0; // used for plotting h_Aj
     
         // other
@@ -57,7 +58,7 @@ class Selection
         bool doTheta = false;
         //Int_t maxevt = ;
         Int_t nbin = 20;
-        Int_t num_runs = 5; // decide if we should actually be using this
+        Int_t bkgrd_runs = 1; // decide if we should actually be using this
     
                                                                 
         // BELLE Particle Definition
@@ -160,7 +161,7 @@ bool Selection::mixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta, 
     // Original matched event criteria
     // (fabs(mix.nParticle-data.nParticle)>4&&data.nParticle<1000&&fabs(mix.jteta[0]-data.jteta[0])>0.2)
     if (TMath::Abs(nParticle - nParticle_mix) <= 4) return false;
-    if (TMath::Abs(jteta - jteta_mix) <= 0.2) return false;
+    if (doMixedJetCut && TMath::Abs(jteta - jteta_mix) <= 0.2) return false;
     
     return true;
 }
