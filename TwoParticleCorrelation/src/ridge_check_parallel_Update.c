@@ -207,8 +207,8 @@ int ridge_check_parallel
                     if(!s.ridge_trackSelection(mix.getPt(k),mix.getEta(k),mix.nTPC[k],mix.pwflag[k])) continue;
                     
                     Float_t angle_mix;
-                    if (s.doTheta) angle_mix = data.getTheta(j); else angle_mix = mix.getEta(k);
-                    Float_t phi_mix = mix.getPhi(j);
+                    if (s.doTheta) angle_mix = mix.getTheta(k); else angle_mix = mix.getEta(k);
+                    Float_t phi_mix = mix.getPhi(k);
                     
                     bkgrnd2PC[histNum]->Fill(angle-angle_mix,dphi(phi,phi_mix),1./(s.differential)/N);
                     bkgrnd2PC[histNum]->Fill(angle-angle_mix,dphi(phi_mix,phi),1./(s.differential)/N);
