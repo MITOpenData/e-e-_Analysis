@@ -51,7 +51,7 @@ class Selection
         Float_t etaPlotRange = 1.6;//this gets multiplied by 2
         Float_t dEtaBins = 20;//keep even
         Float_t dPhiBins = 20;//keep factor of 4
-        Float_t differential = (etaPlotRange/(float)dEtaBins)*(2*TMath::Pi()/(float)dPhiBins);
+        Float_t differential = (2*etaPlotRange/(float)dEtaBins)*(2*TMath::Pi()/(float)dPhiBins);
         Float_t fillAj = 0.0; // used for plotting h_Aj
     
         // other
