@@ -47,7 +47,7 @@ void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/
 
   TFile * f = TFile::Open(inputFile.c_str(),"read");
   TTree * t = (TTree*)f->Get("t");
-  TTree * WTA_t;
+  TTree * WTA_t=0;
   if(doWTA){
     WTA_t = (TTree*)f->Get("BoostedWTAR8Evt");
   }
@@ -191,7 +191,7 @@ void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/
 
     //std::cout << i<<" "  << px[i]<<" "  << py[i]<<" " << pz[i]<<" " << charge[i] << " " << trackColor <<  std::endl; 
     if(doWTA){
-      trk3 = TVector3(0,0,0);
+      TVector3 trk3(0,0,0);
       trk3.SetPtEtaPhi(wtapt[i],wtaeta[i],wtaphi[i]);
       px[i] = trk3.x();
       py[i] = trk3.y();
