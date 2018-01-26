@@ -38,8 +38,8 @@ std::string smartJetName(const std::string inTreeGuess, std::vector<std::string>
 
   if(outStr.size() == 0){
     std::map<std::string, std::vector<std::string>> guessToAvailable;
-    guessToAvailable["ak4JetTree"] = {"ak4ESchemeJetTree", "akR4ESchemeJetTree"}
-    guessToAvailable["ak8JetTree"] = {"ak8ESchemeJetTree", "akR8ESchemeJetTree"}
+    guessToAvailable["ak4JetTree"] = {"ak4ESchemeJetTree", "akR4ESchemeJetTree"};
+    guessToAvailable["ak8JetTree"] = {"ak8ESchemeJetTree", "akR8ESchemeJetTree"};
     guessToAvailable["ak4ESchemeJetTree"] = {"akR4ESchemeJetTree", "ak4JetTree"};
     guessToAvailable["ak4WTAmodpSchemeJetTree"] = {"akR4WTAmodpSchemeJetTree"};
     guessToAvailable["ak8ESchemeJetTree"] = {"akR8ESchemeJetTree", "ak8JetTree"};
