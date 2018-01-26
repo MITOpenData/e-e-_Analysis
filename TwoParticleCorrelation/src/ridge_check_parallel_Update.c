@@ -90,6 +90,7 @@ int ridge_check_parallel
     
     // analysis
     Int_t nevent = (Int_t)t->GetEntries();
+    nevent = 1;
     /****************************************/
     // Main Event Loop
     /****************************************/
@@ -155,18 +156,29 @@ int ridge_check_parallel
             Int_t selected=i+1;
             t_mix->GetEntry(selected);
             jt_mix->GetEntry(selected);
+        
+            Int_t N_mix;
+            if(!s.doThrust) N_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt, mix.eta, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
+            if(s.doThrust) N_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt_wrtThr, mix.eta_wrtThr, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
             
-            Int_t N_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt, mix.eta, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
+            if( N_mix < 0) continue;
+            Int_t histNum_mix = s.histNum(N_mix);
             
             // Select a mixed event
             Int_t flag=0;
-            while (N_mix < 0 && !s.mixedEvent(N, N_mix, data.jteta[0], mix.jteta[0]))
+            while (histNum_mix != histNum && !s.mixedEvent(N, N_mix, data.jteta[0], mix.jteta[0]))
             {
                 selected++;
                 if (selected > nevent) break;
                 t_mix->GetEntry(selected);
                 jt_mix->GetEntry(selected);
-                N_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt, mix.eta, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
+                
+                if(!s.doThrust) N_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt, mix.eta, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
+                
+                if(s.doThrust) N_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt_wrtThr, mix.eta_wrtThr, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
+                
+                if( N_mix < 0) continue;
+                histNum_mix = s.histNum(N_mix);
             }
             
             // Use the Thrust axis from the signal event instead of mixed event
@@ -195,8 +207,8 @@ int ridge_check_parallel
                     if(!s.ridge_trackSelection(mix.getPt(k),mix.getEta(k),mix.nTPC[k],mix.pwflag[k])) continue;
                     
                     Float_t angle_mix;
-                    if (s.doTheta) angle_mix = data.getTheta(j); else angle_mix = mix.getEta(k);
-                    Float_t phi_mix = mix.getPhi(j);
+                    if (s.doTheta) angle_mix = mix.getTheta(k); else angle_mix = mix.getEta(k);
+                    Float_t phi_mix = mix.getPhi(k);
                     
                     bkgrnd2PC[histNum]->Fill(angle-angle_mix,dphi(phi,phi_mix),1./(s.differential)/N);
                     bkgrnd2PC[histNum]->Fill(angle-angle_mix,dphi(phi_mix,phi),1./(s.differential)/N);
