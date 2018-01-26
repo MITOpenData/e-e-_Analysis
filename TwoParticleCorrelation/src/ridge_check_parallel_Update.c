@@ -155,9 +155,11 @@ int ridge_check_parallel
             Int_t selected=i+1;
             t_mix->GetEntry(selected);
             jt_mix->GetEntry(selected);
-            
-            Int_t N_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt, mix.eta, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
-            
+        
+            Int_t N_mix;
+            if(!s.doThrust) N_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt, mix.eta, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
+            if(s.doThrust) N_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt_wrtThr, mix.eta_wrtThr, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
+        
             // Select a mixed event
             Int_t flag=0;
             while (N_mix < 0 && !s.mixedEvent(N, N_mix, data.jteta[0], mix.jteta[0]))
@@ -166,7 +168,10 @@ int ridge_check_parallel
                 if (selected > nevent) break;
                 t_mix->GetEntry(selected);
                 jt_mix->GetEntry(selected);
-                N_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt, mix.eta, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
+                
+                if(!s.doThrust) N_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt, mix.eta, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
+                
+                if(s.doThrust) N_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt_wrtThr, mix.eta_wrtThr, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
             }
             
             // Use the Thrust axis from the signal event instead of mixed event
