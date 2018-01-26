@@ -272,14 +272,14 @@ void Analyzer(){
     bkgrnd2PC[k]->Scale(1.0/(float)nBkgrndEvts[k]);
     ratio2PC[k] = (TH2F*)signal2PC[k]->Clone(Form("ratio2PC_%d_%d",s.multBinsLow[k],s.multBinsHigh[k]));
     ratio2PC[k]->Divide(bkgrnd2PC[k]);
-    ratio2PC[k]->Scale(bkgrnd2PC[k]->GetBinContent(bkgrnd2PC[k]->FindBin(0,0))/4.0);
+    ratio2PC[k]->Scale(bkgrnd2PC[k]->GetBinContent(bkgrnd2PC[k]->FindBin(0,0))/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins));
     getLongRangeYield(s,ratio2PC[k],longRangeYield[k]);
     
     signal2PC_ptweighted[k]->Scale(1.0/(float)nSignalEvts[k]);
     bkgrnd2PC_ptweighted[k]->Scale(1.0/(float)nBkgrndEvts[k]);
     ratio2PC_ptweighted[k] = (TH2F*)signal2PC_ptweighted[k]->Clone(Form("ratio2PC_ptweighted_%d_%d",s.multBinsLow[k],s.multBinsHigh[k]));
     ratio2PC_ptweighted[k]->Divide(bkgrnd2PC_ptweighted[k]);
-    ratio2PC_ptweighted[k]->Scale(bkgrnd2PC_ptweighted[k]->GetBinContent(bkgrnd2PC_ptweighted[k]->FindBin(0,0))/4.0);
+    ratio2PC_ptweighted[k]->Scale(bkgrnd2PC_ptweighted[k]->GetBinContent(bkgrnd2PC_ptweighted[k]->FindBin(0,0))/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins));
     getLongRangeYield(s,ratio2PC_ptweighted[k],longRangeYield_ptweighted[k]);
   }
 

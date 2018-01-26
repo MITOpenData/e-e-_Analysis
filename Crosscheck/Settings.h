@@ -46,7 +46,7 @@ class Settings{
 
     //mixing
     int nMixedEvents = 1;
-    int maxSkipSize  = 3;
+    int maxSkipSize  = 1;
 
 
     //plots
@@ -68,7 +68,7 @@ class Settings{
     bool keep3jetEvts = false;
     float AjCut = 0.1;
     float thirdJetCut = 0.03;
-    bool doAllData = true;
+    bool doAllData = false;
     int nEvts = 1;
 
     Settings();
