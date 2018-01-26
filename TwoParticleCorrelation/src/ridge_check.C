@@ -39,8 +39,9 @@
 #include <TNtuple.h>
 
 //local headers
-#include "../include/fourier.h"
-#include "../include/TPCNtupleData.h"
+#include "include/fourier.h"
+#include "include/TPCNtupleData.h"
+#include "include/smartJetName.h"
 
 using namespace std;
 
@@ -77,7 +78,16 @@ int ridge_check
     TChain *t1 = new TChain("t");
     t1->Add(inFileName.c_str());
 
-    TChain *t2 = new TChain("ak4ESchemeJetTree");
+    //attempt some protection against jet tree renames
+    std::string ak4JetName = "ak4ESchemeJetTree";
+    if(inFileName.find(".root") != std::string::npos){
+      TFile* temp_p = new TFile(inFileName.c_str(), "READ");
+      ak4JetName = smartJetName(ak4JetName, temp_p);
+      temp_p->Close();
+      delete temp_p;
+    }
+
+    TChain *t2 = new TChain(ak4JetName.c_str());
     t2->Add(inFileName.c_str());
 
     /* TString friendname =  "qqmc-e07-00_flavor.root"; */
@@ -96,7 +106,7 @@ int ridge_check
     t1_mix->Add(inFileName.c_str());
              
     // Not necessary
-    TChain *t2_mix = new TChain("ak4ESchemeJetTree");
+    TChain *t2_mix = new TChain(ak4JetName.c_str());
     t2_mix->Add(inFileName.c_str());
     
     TPCNtupleData mix(isBelle, isThrust);
