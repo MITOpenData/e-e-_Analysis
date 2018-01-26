@@ -68,7 +68,7 @@ class Settings{
     bool keep3jetEvts = false;
     float AjCut = 0.1;
     float thirdJetCut = 0.03;
-    bool doAllData = false;
+    bool doAllData = true;
     int nEvts = 1;
 
     Settings();
