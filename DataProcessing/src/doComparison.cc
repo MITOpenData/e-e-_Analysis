@@ -21,6 +21,21 @@
 #include "include/smartJetName.h"
 #include "include/doLocalDebug.h"
 
+void doFill(TH1F* hist1_p, TH1F* hist2_p, TH1F* histDelta_p, Bool_t val1, Bool_t val2)
+{
+  Float_t val1Out, val2Out;
+  val1 ? val1Out = 1 : val1Out = 0;
+  val2 ? val2Out = 2 : val1Out = 0;
+
+  hist1_p->Fill(val1Out);
+  hist2_p->Fill(val2Out);
+  if(val1-val2 > histDelta_p->GetBinLowEdge(histDelta_p->GetNbinsX()+1)) histDelta_p->Fill(histDelta_p->GetBinCenter(histDelta_p->GetNbinsX()));
+  else if(val1-val2 < histDelta_p->GetBinLowEdge(1)) histDelta_p->Fill(histDelta_p->GetBinCenter(1));
+  else histDelta_p->Fill(val1-val2);
+	  
+  return;
+}
+
 void doFill(TH1F* hist1_p, TH1F* hist2_p, TH1F* histDelta_p, Float_t val1, Float_t val2)
 {
   hist1_p->Fill(val1);
@@ -431,12 +446,15 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
       else if(tempS.find("ntpc") != std::string::npos && tempS.size() == std::string("ntpc").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.ntpc, pData2.ntpc);
       else if(tempS.find("pt_wrtThr") != std::string::npos && tempS.size() == std::string("pt_wrtThr").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.pt_wrtThr, pData2.pt_wrtThr);
       else if(tempS.find("eta_wrtThr") != std::string::npos && tempS.size() == std::string("eta_wrtThr").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.eta_wrtThr, pData2.eta_wrtThr);
+      else if(tempS.find("rap_wrtThr") != std::string::npos && tempS.size() == std::string("rap_wrtThr").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.rap_wrtThr, pData2.rap_wrtThr);
       else if(tempS.find("theta_wrtThr") != std::string::npos && tempS.size() == std::string("theta_wrtThr").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.theta_wrtThr, pData2.theta_wrtThr);
       else if(tempS.find("phi_wrtThr") != std::string::npos && tempS.size() == std::string("phi_wrtThr").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.phi_wrtThr, pData2.phi_wrtThr);
       else if(tempS.find("pt_wrtChThr") != std::string::npos && tempS.size() == std::string("pt_wrtChThr").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.pt_wrtChThr, pData2.pt_wrtChThr);
       else if(tempS.find("eta_wrtChThr") != std::string::npos && tempS.size() == std::string("eta_wrtChThr").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.eta_wrtChThr, pData2.eta_wrtChThr);
+      else if(tempS.find("rap_wrtChThr") != std::string::npos && tempS.size() == std::string("rap_wrtChThr").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.rap_wrtChThr, pData2.rap_wrtChThr);
       else if(tempS.find("theta_wrtChThr") != std::string::npos && tempS.size() == std::string("theta_wrtChThr").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.theta_wrtChThr, pData2.theta_wrtChThr);
       else if(tempS.find("phi_wrtChThr") != std::string::npos && tempS.size() == std::string("phi_wrtChThr").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.phi_wrtChThr, pData2.phi_wrtChThr);
+      else if(tempS.find("passesWW") != std::string::npos && tempS.size() == std::string("passesWW").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], eData1.passesWW, eData2.passesWW);
       else if(tempS.find("missP") != std::string::npos && tempS.size() == std::string("missP").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], eData1.missP, eData2.missP);
       else if(tempS.find("missPt") != std::string::npos && tempS.size() == std::string("missPt").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], eData1.missPt, eData2.missPt);
       else if(tempS.find("missTheta") != std::string::npos && tempS.size() == std::string("missTheta").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], eData1.missTheta, eData2.missTheta);
