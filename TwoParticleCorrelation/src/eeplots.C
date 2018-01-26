@@ -159,8 +159,8 @@ int eeplots
     TTree *t1 = (TTree*)f->Get("t");
     TTree *ak4ESchemeJetTree = (TTree*)f->Get(smartJetName("ak4ESchemeJetTree", f).c_str());
     t1->AddFriend(ak4ESchemeJetTree);
-    //TTree *ak4JetTree = (TTree*)f->Get("ak4JetTree");
-    //TTree *ak8JetTree = (TTree*)f->Get("ak8JetTree");
+    //TTree *ak4JetTree = (TTree*)f->Get(smartJetName("ak4JetTree", f).c_str());
+    //TTree *ak8JetTree = (TTree*)f->Get(smartJetName("ak8JetTree", f).c_str());
     
     //// main Tree ////
     static const int nMaxPart = 10000;
