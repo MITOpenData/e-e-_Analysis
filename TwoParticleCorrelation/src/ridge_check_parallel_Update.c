@@ -23,9 +23,10 @@
 #include <TNtuple.h>
 
 //local headers
-#include "../include/fourier.h"
-#include "../include/TPCNtupleData.h"
-#include "../include/Selection.h"
+#include "include/fourier.h"
+#include "include/TPCNtupleData.h"
+#include "include/Selection.h"
+#include "include/smartJetName.h"
 
 /********************************************************************************************************************/
 // Two particle correlation analysis
@@ -78,14 +79,22 @@ int ridge_check_parallel
         ratio2PC[i] = new TH2F(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
     }
     TH1F * multiplicity = new TH1F("multiplicity",";nTrk;nEvents",200,0,200);
+
+    std::string ak4JetName = "ak4ESchemeJetTree";
+    if(inFileName.find(".root") != std::string::npos){
+      TFile* temp_p = new TFile(inFileName.c_str(), "READ");
+      ak4JetName = smartJetName(ak4JetName, temp_p);
+      temp_p->Close();
+      delete temp_p;
+    }
     
     // files and variables for input
     TChain * t = new TChain("t");       t->Add(inFileName.c_str());
-    TChain * jt = new TChain("ak4ESchemeJetTree");       jt->Add(inFileName.c_str());
+    TChain * jt = new TChain(ak4JetName.c_str());       jt->Add(inFileName.c_str());
     TPCNtupleData data(s.doBelle, s.doThrust);      setupTPCTree(t,jt,data);       data.setTPCTreeStatus(t);
     
     TChain * t_mix = new TChain("t");       t_mix->Add(inFileName.c_str());
-    TChain * jt_mix = new TChain("ak4ESchemeJetTree");       jt_mix->Add(inFileName.c_str());
+    TChain * jt_mix = new TChain(ak4JetName.c_str());       jt_mix->Add(inFileName.c_str());
     TPCNtupleData mix(s.doBelle, s.doThrust);       setupTPCTree(t_mix,jt_mix,mix);        mix.setTPCTreeStatus(t_mix);
     
     // analysis
