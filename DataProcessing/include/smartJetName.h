@@ -38,13 +38,15 @@ std::string smartJetName(const std::string inTreeGuess, std::vector<std::string>
 
   if(outStr.size() == 0){
     std::map<std::string, std::vector<std::string>> guessToAvailable;
-    guessToAvailable["ak4ESchemeJetTree"] = {"akR4ESchemeJetTree"};
+    guessToAvailable["ak4JetTree"] = {"ak4ESchemeJetTree", "akR4ESchemeJetTree"}
+    guessToAvailable["ak8JetTree"] = {"ak8ESchemeJetTree", "akR8ESchemeJetTree"}
+    guessToAvailable["ak4ESchemeJetTree"] = {"akR4ESchemeJetTree", "ak4JetTree"};
     guessToAvailable["ak4WTAmodpSchemeJetTree"] = {"akR4WTAmodpSchemeJetTree"};
-    guessToAvailable["ak8ESchemeJetTree"] = {"akR8ESchemeJetTree"};
+    guessToAvailable["ak8ESchemeJetTree"] = {"akR8ESchemeJetTree", "ak8JetTree"};
     guessToAvailable["ak8WTAmodpSchemeJetTree"] = {"akR8WTAmodpSchemeJetTree"};
-    guessToAvailable["akR4ESchemeJetTree"] = {"ak4ESchemeJetTree"};
+    guessToAvailable["akR4ESchemeJetTree"] = {"ak4ESchemeJetTree", "ak4JetTree"};
     guessToAvailable["akR4WTAmodpSchemeJetTree"] = {"ak4WTAmodpSchemeJetTree"};
-    guessToAvailable["akR8ESchemeJetTree"] = {"ak8ESchemeJetTree"};
+    guessToAvailable["akR8ESchemeJetTree"] = {"ak8ESchemeJetTree", "ak8JetTree"};
     guessToAvailable["akR8WTAmodpSchemeJetTree"] = {"ak8WTAmodpSchemeJetTree"};
 
     if(guessToAvailable.count(inTreeGuess) != 0){
