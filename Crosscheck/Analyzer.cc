@@ -11,6 +11,8 @@
 #include <iostream>
 #include <cmath>
 
+#include "include/smartJetName.h"
+
 inline float jtp(float pt, float eta){ return pt*TMath::CosH(eta); }
 
 void Analyzer(){
@@ -53,10 +55,10 @@ void Analyzer(){
   //files and variables for input
   TFile * f = TFile::Open(s.inputFile.c_str(),"read");
   TTree * t = (TTree*)f->Get("t"); 
-  TTree * jt = (TTree*)f->Get("ak4ESchemeJetTree"); 
+  TTree * jt = (TTree*)f->Get(smartJetName("ak4ESchemeJetTree", f).c_str()); 
   TFile * fMix = TFile::Open(s.inputFile.c_str(),"read");
   TTree * tMix = (TTree*)fMix->Get("t");
-  TTree * jtMix = (TTree*)fMix->Get("ak4ESchemeJetTree"); 
+  TTree * jtMix = (TTree*)fMix->Get(smartJetName("ak4ESchemeJetTree", fMix).c_str()); 
 
   int nParticle,     nParticleMix;
   float pt[500],     ptMix[500];

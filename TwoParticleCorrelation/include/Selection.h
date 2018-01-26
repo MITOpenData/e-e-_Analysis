@@ -31,6 +31,7 @@ class Selection
         static const Int_t nMultBins = 3;
         Int_t multBinsLow[nMultBins]  = {0 , 20, 30};
         Int_t multBinsHigh[nMultBins] = {20, 30, 999};
+        bool doMixedMultCut = false;
     
         // particle cuts
         Float_t ptMin = 0.4;
@@ -161,7 +162,7 @@ bool Selection::mixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta, 
 {
     // Original matched event criteria
     // (fabs(mix.nParticle-data.nParticle)>4&&data.nParticle<1000&&fabs(mix.jteta[0]-data.jteta[0])>0.2)
-    if (TMath::Abs(nParticle - nParticle_mix) <= 4) return false;
+    if (doMixedMultCut && TMath::Abs(nParticle - nParticle_mix) <= 4) return false;
     if (doMixedJetCut && TMath::Abs(jteta - jteta_mix) <= 0.2) return false;
     
     return true;

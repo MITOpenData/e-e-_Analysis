@@ -163,15 +163,22 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 
   //define jetMaker here so rParam can be used in jetTree name for clarity
   const double jtPtCut = .01;
-  const int nJtAlgo = 4;
-  const double rParam[nJtAlgo] = {0.4, 0.4, 0.8, 0.8};
-  const double recombScheme[nJtAlgo] = {fastjet::E_scheme, fastjet::WTA_modp_scheme, fastjet::E_scheme, fastjet::WTA_modp_scheme};
+  const int nJtAlgo = 8;
+  const double rParam[nJtAlgo] = {0.4, 0.4, 0.8, 0.8, -1., -1., -1., -1.};
+  const int nFinalClust[nJtAlgo] = {-1, -1, -1, -1, 2, 2, 3, 3};
+  const double recombScheme[nJtAlgo] = {fastjet::E_scheme, fastjet::WTA_modp_scheme, fastjet::E_scheme, fastjet::WTA_modp_scheme, fastjet::E_scheme, fastjet::WTA_modp_scheme, fastjet::E_scheme, fastjet::WTA_modp_scheme};
   fastjet::JetDefinition jDef[nJtAlgo];
   fastjet::JetDefinition jDefReclust[nJtAlgo];
   
   for(int i = 0; i < nJtAlgo; ++i){
-    jDef[i] = fastjet::JetDefinition(fastjet::ee_genkt_algorithm, rParam[i], -1, fastjet::RecombinationScheme(recombScheme[i]));
-    jDefReclust[i] = fastjet::JetDefinition(fastjet::ee_genkt_algorithm, 5, -1, fastjet::RecombinationScheme(recombScheme[i]));
+    if(rParam[i] > 0){
+      jDef[i] = fastjet::JetDefinition(fastjet::ee_genkt_algorithm, rParam[i], -1, fastjet::RecombinationScheme(recombScheme[i]));
+      jDefReclust[i] = fastjet::JetDefinition(fastjet::ee_genkt_algorithm, 5, -1, fastjet::RecombinationScheme(recombScheme[i]));
+    }
+    else{
+      jDef[i] = fastjet::JetDefinition(fastjet::ee_kt_algorithm, fastjet::RecombinationScheme(recombScheme[i]));
+      jDefReclust[i] = fastjet::JetDefinition(fastjet::ee_kt_algorithm, fastjet::RecombinationScheme(recombScheme[i]));
+    }
   }
 
   const std::string partTreeName = "t";
@@ -184,8 +191,11 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
     std::string recombSchemeStr = "EScheme";
     if(recombScheme[i] == fastjet::WTA_modp_scheme) recombSchemeStr = "WTAmodpScheme";
 
-    jetTreeName[i] = "ak" + std::to_string(int(rParam[i]*10)) + recombSchemeStr + "JetTree";
-    genJetTreeName[i] = "ak" + std::to_string(int(rParam[i]*10)) + recombSchemeStr + "GenJetTree";
+    std::string rOrJetStr = "akR" + std::to_string(int(rParam[i]*10));
+    if(rParam[i] < 0) rOrJetStr = "ktN" + std::to_string(nFinalClust[i]);
+
+    jetTreeName[i] = rOrJetStr + recombSchemeStr + "JetTree";
+    genJetTreeName[i] = rOrJetStr + recombSchemeStr + "GenJetTree";
   }
 
   std::string finalPartTreeName = partTreeName;
@@ -203,9 +213,6 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
   TTree *jout[nJtAlgo];
   for(int i = 0; i < nJtAlgo; ++i){jout[i] = new TTree(finalJetTreeName[i].c_str(), finalJetTreeName[i].c_str());}
 
-
-  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-
   TTree *tgout = 0;
   TTree *bgout = 0;
   TTree *jgout[nJtAlgo] = {0, 0, 0, 0};
@@ -213,7 +220,6 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
   if(isRecons && isMC){
     tgout = new TTree(genPartTreeName.c_str(), genPartTreeName.c_str());
     bgout = new TTree(genboostedTreeName.c_str(), genboostedTreeName.c_str()); 
-
     for(int i = 0; i < nJtAlgo; ++i){jgout[i] = new TTree(genJetTreeName[i].c_str(), genJetTreeName[i].c_str());}
   }
 
@@ -274,8 +280,8 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
     while(std::getline(file,getStr)){
       if(getStr.size() == 0) continue;
       else if(getStr.find("******") != std::string::npos) continue;
-      else if(getStr.find("END_EVENT") != std::string::npos) continue;
-      else if(getStr.find("END_FILE") != std::string::npos) continue;
+      else if(getStr.find("END_EVENT") != std::string::npos) continue; 
+     else if(getStr.find("END_FILE") != std::string::npos) continue;
       std::vector<std::string> num = processAlephString(getStr);
       
 
@@ -297,7 +303,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	
 	return 1;
       }
-
+    
       if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2))/* not all files do four 999 && check999(num.at(3)*/){
 	pData.nParticle=counterParticles;
         bData.nParticle=counterParticles;
@@ -329,7 +335,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	
 	//Processing particles->jets
 	for(int jIter = 0; jIter < nJtAlgo; ++jIter){
-	  processJets(particles, jDef[jIter], jDefReclust[jIter], &(jData[jIter]), jtPtCut);
+	  processJets(particles, jDef[jIter], jDefReclust[jIter], &(jData[jIter]), jtPtCut, rParam[jIter], nFinalClust[jIter]);
 	}
 
 	if(counterEntries>0){
@@ -514,7 +520,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
     
     if(counterEntries>0) tout->Fill(); 
     for(int jIter = 0; jIter < nJtAlgo; ++jIter){
-      processJets(particles, jDef[jIter], jDefReclust[jIter], &(jData[jIter]), jtPtCut);
+      processJets(particles, jDef[jIter], jDefReclust[jIter], &(jData[jIter]), jtPtCut, rParam[jIter], nFinalClust[jIter]);
     }
     if(counterEntries>0){
       for(int jIter = 0; jIter < nJtAlgo; ++jIter){
@@ -614,7 +620,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 
 	  //Processing particles->jets
 	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){
-	    processJets(particles, jDef[jIter], jDefReclust[jIter], &(jgData[jIter]), jtPtCut);
+	    processJets(particles, jDef[jIter], jDefReclust[jIter], &(jgData[jIter]), jtPtCut, rParam[jIter], nFinalClust[jIter]);
 	    if(counterEntries>0){
 	      jgout[jIter]->Fill();
               if(rParam[jIter]==0.8 && recombScheme[jIter]==fastjet::WTA_modp_scheme){
@@ -840,7 +846,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 
       if(counterEntries>0) tgout->Fill(); 
       for(int jIter = 0; jIter < nJtAlgo; ++jIter){
-	processJets(particles, jDef[jIter], jDefReclust[jIter], &(jgData[jIter]), jtPtCut);
+	processJets(particles, jDef[jIter], jDefReclust[jIter], &(jgData[jIter]), jtPtCut, rParam[jIter], nFinalClust[jIter]);
 	if(counterEntries>0){
 	  jgout[jIter]->Fill();
           if(rParam[jIter]==0.8 && recombScheme[jIter]==fastjet::WTA_modp_scheme){
