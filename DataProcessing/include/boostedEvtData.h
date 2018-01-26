@@ -32,8 +32,7 @@ class boostedEvtData{
                               "boostx",
                               "boosty",
                               "boostz",
-                              "boost"
-			     };
+                              "boost"};
 
   bool varIsGood[nVar];
   
