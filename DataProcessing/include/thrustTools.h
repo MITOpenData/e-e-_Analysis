@@ -32,7 +32,20 @@ inline double rapFromThrust(TVector3 thrust, TVector3 p, float mass){
   return 0.5*TMath::Log((E+pl)/(E-pl));//rapidity
 }
 
+inline bool checkEtaThrustPIs1(TVector3 thrust, TVector3 p)
+{
+  Double_t minDel = 0.000001;
+  Double_t thrust0 = thrust[0]/p[0];
+  Double_t thrust1 = thrust[1]/p[1];
+  Double_t thrust2 = thrust[2]/p[2];
+
+  return TMath::Abs(thrust0 - thrust1) < minDel && TMath::Abs(thrust0 - thrust2) < minDel && TMath::Abs(thrust1 - thrust2) < minDel;
+}
+
 inline double etaFromThrust(TVector3 thrust, TVector3 p){
+  Double_t minDel = 0.000001;
+  if(TMath::Abs(thrust[0]) < minDel && TMath::Abs(thrust[1]) < minDel && TMath::Abs(thrust[2]) < minDel) return 99.;
+  else if(checkEtaThrustPIs1(thrust, p)) return 99.;
   return -TMath::Log( TMath::Tan( thetaFromThrust(thrust,p)/2.0));
 }
 

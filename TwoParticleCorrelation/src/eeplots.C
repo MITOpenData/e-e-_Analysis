@@ -17,10 +17,10 @@
 #include "TStyle.h"
 
 //local headers
-#include "../include/xjjrootuti.h"
-#include "../include/getLogBins.h"
-#include "../include/getLinBins.h"
-
+#include "include/xjjrootuti.h"
+#include "include/getLogBins.h"
+#include "include/getLinBins.h"
+#include "include/smartJetName.h"
 
 ////////// Current Plots /////////
 // multiplicity, pt, eta, phi, rapidity, eta-phi scatter plot (all in beam and thrust axis)
@@ -157,10 +157,10 @@ int eeplots
     // Load the data
     TFile *f = new TFile(inFileName,"READ");
     TTree *t1 = (TTree*)f->Get("t");
-    TTree *ak4ESchemeJetTree = (TTree*)f->Get("ak4ESchemeJetTree");
+    TTree *ak4ESchemeJetTree = (TTree*)f->Get(smartJetName("ak4ESchemeJetTree", f).c_str());
     t1->AddFriend(ak4ESchemeJetTree);
-    //TTree *ak4JetTree = (TTree*)f->Get("ak4JetTree");
-    //TTree *ak8JetTree = (TTree*)f->Get("ak8JetTree");
+    //TTree *ak4JetTree = (TTree*)f->Get(smartJetName("ak4JetTree", f).c_str());
+    //TTree *ak8JetTree = (TTree*)f->Get(smartJetName("ak8JetTree", f).c_str());
     
     //// main Tree ////
     static const int nMaxPart = 10000;
