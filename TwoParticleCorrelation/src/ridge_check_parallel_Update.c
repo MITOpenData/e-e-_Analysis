@@ -90,6 +90,7 @@ int ridge_check_parallel
     
     // analysis
     Int_t nevent = (Int_t)t->GetEntries();
+    nevent = 1;
     /****************************************/
     // Main Event Loop
     /****************************************/
@@ -192,7 +193,7 @@ int ridge_check_parallel
             }
             
             nBkgrndEvts[histNum] += 1;
-            for ( Int_t j=0;j<data.nParticle;j++ )
+            for ( Int_t j=0;j<mix.nParticle;j++ )
             {
                 if(!s.ridge_trackSelection(data.getPt(j),data.getEta(j),data.nTPC[j],data.pwflag[j])) continue;
                 
