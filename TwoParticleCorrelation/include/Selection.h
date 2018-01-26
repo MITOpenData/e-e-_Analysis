@@ -55,7 +55,7 @@ class Selection
         Float_t fillAj = 0.0; // used for plotting h_Aj
     
         // other
-        bool doThrust = false;
+        bool doThrust = true;
         bool doBelle = false;
         bool doTheta = false;
         //Int_t maxevt = ;

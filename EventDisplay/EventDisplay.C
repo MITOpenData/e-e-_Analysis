@@ -39,7 +39,7 @@ void formatHelix(THelix * h, float pz, float pt, int color = 0, bool doWTA = fal
 }
 
 
-void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180119/LEP1Data1995_recons_aftercut-MERGED.root" ,int eventIndx = 574, float ptCut = 0, bool doWTA = false){
+void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180125/LEP1Data1995_recons_aftercut-MERGED.root" ,int eventIndx = 574, float ptCut = 0, bool doWTA = false){
 
   currentFile=inputFile;
   currentEvtIndx=eventIndx;
