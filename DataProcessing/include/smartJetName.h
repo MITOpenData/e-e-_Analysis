@@ -17,7 +17,7 @@ bool stringInVect(const std::string inStr, std::vector<std::string> inVect)
   bool isIn = false;
   for(unsigned int i = 0; i < inVect.size(); ++i){
     if(sameString(inVect.at(i), inStr)){
-      isIn = false;
+      isIn = true;
       break;
     }
   }
@@ -25,22 +25,8 @@ bool stringInVect(const std::string inStr, std::vector<std::string> inVect)
 }
 
 
-std::string smartJetName(const std::string inTreeGuess, TFile* inFile_p)
+std::string smartJetName(const std::string inTreeGuess, std::vector<std::string> fileStr)
 {
-  std::vector<std::string> fileStr = returnRootFileContentsList(inFile_p, "TTree", "Jet");
-  unsigned int pos = 0;
-  while(pos < fileStr.size()){
-    bool isGood = true;
-    for(unsigned int i = pos+1; i < fileStr.size(); ++i){
-      if(sameString(fileStr.at(i), fileStr.at(pos))){
-	fileStr.erase(fileStr.begin()+i);
-	isGood = false;
-	break;
-      }
-    }
-    if(isGood) pos++;
-  }
-
   std::string outStr = "";
 
   for(unsigned int i = 0; i < fileStr.size(); ++i){
@@ -62,7 +48,7 @@ std::string smartJetName(const std::string inTreeGuess, TFile* inFile_p)
     guessToAvailable["akR8WTAmodpSchemeJetTree"] = {"ak8WTAmodpSchemeJetTree"};
 
     if(guessToAvailable.count(inTreeGuess) != 0){
-      std::vector<string> available = guessToAvailable[inTreeGuess];
+      std::vector<std::string> available = guessToAvailable[inTreeGuess];
 
       for(unsigned int i = 0; i < available.size(); ++i){
 	if(stringInVect(available.at(i), fileStr)){
@@ -74,13 +60,32 @@ std::string smartJetName(const std::string inTreeGuess, TFile* inFile_p)
   }
 
   if(outStr.size() == 0){
-    std::cout << "WARNING: Input jet tree guess \'" << inTreeGuess << "\' is not valid for given file \'" << inFile_p->GetName() << "\', return empty string." << std::endl;
+    std::cout << "WARNING: Input jet tree guess \'" << inTreeGuess << "\' is not valid for given file, return empty string." << std::endl;
   }
   else if(outStr.size() != inTreeGuess.size() || outStr.find(inTreeGuess) == std::string::npos){
-    std::cout << "WARNNING: Input jet tree guess \'" << inTreeGuess << "\' is not found in file \'" << inFile_p->GetName() << "\', substituting \'" << outStr << "\'. Please fix if this substitution is not wanted." << std::endl;
+    std::cout << "WARNNING: Input jet tree guess \'" << inTreeGuess << "\' is not found in file, substituting \'" << outStr << "\'. Please fix if this substitution is not wanted." << std::endl;
   }
 
   return outStr;
+}
+
+std::string smartJetName(const std::string inTreeGuess, TFile* inFile_p)
+{
+  std::vector<std::string> fileStr = returnRootFileContentsList(inFile_p, "TTree", "Jet");
+  unsigned int pos = 0;
+  while(pos < fileStr.size()){
+    bool isGood = true;
+    for(unsigned int i = pos+1; i < fileStr.size(); ++i){
+      if(sameString(fileStr.at(i), fileStr.at(pos))){
+        fileStr.erase(fileStr.begin()+i);
+        isGood = false;
+        break;
+      }
+    }
+    if(isGood) pos++;
+  }
+  
+  return smartJetName(inTreeGuess, fileStr);
 }
 
 #endif

@@ -18,6 +18,8 @@
 #include "include/returnRootFileContentsList.h"
 #include "include/removeVectorDuplicates.h"
 #include "include/histDefUtility.h"
+#include "include/smartJetName.h"
+#include "include/doLocalDebug.h"
 
 void doFill(TH1F* hist1_p, TH1F* hist2_p, TH1F* histDelta_p, Float_t val1, Float_t val2)
 {
@@ -87,6 +89,8 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
   eventData eData1;
   eventData eData2;
 
+  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
   std::map<ULong64_t, Int_t> f1RunEvtToEntry;
 
   TFile* inFile1_p = new TFile(inFileName1.c_str(), "READ");
@@ -114,6 +118,8 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
     branchMins.push_back(inTree1_p->GetMinimum(list1_p->At(i)->GetName()));
     branchMaxs.push_back(inTree1_p->GetMaximum(list1_p->At(i)->GetName()));
   }
+
+  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
   std::vector<std::string> listOfJetTrees1 = returnRootFileContentsList(inFile1_p, "TTree", "JetTree");
   removeVectorDuplicates(&listOfJetTrees1);
@@ -174,19 +180,52 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
     }
   }
 
+  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
   std::vector<std::string> listOfJetTrees2 = returnRootFileContentsList(inFile2_p, "TTree", "JetTree");
   removeVectorDuplicates(&listOfJetTrees2);
 
+  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+  
   unsigned int lI = 0;
   while(lI < listOfJetTrees1.size()){
     bool isGood = false;
 
+  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
     for(unsigned int lI2 = 0; lI2 < listOfJetTrees2.size(); ++lI2){
       if(listOfJetTrees1.at(lI).size() == listOfJetTrees2.at(lI2).size() && listOfJetTrees1.at(lI).find(listOfJetTrees2.at(lI2)) != std::string::npos){
 	isGood = true;
+	std::string tempLOJT2 = listOfJetTrees2.at(lI);
+	listOfJetTrees2.at(lI) = listOfJetTrees2.at(lI2);
+	listOfJetTrees2.at(lI2) = tempLOJT2;
 	break;
       }
     }
+
+    if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+    if(!isGood){
+      std::string tempLOJT2 = smartJetName(listOfJetTrees1.at(lI), listOfJetTrees2);
+
+      if(tempLOJT2.size() != 0){
+	Int_t prevPos = -1;
+	for(unsigned int i = 0; i < listOfJetTrees2.size(); ++i){
+	  if(sameString(tempLOJT2, listOfJetTrees2.at(i))){
+	    prevPos = i;
+	    break;
+	  }
+	}
+
+	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+	isGood = true;
+	listOfJetTrees2.at(prevPos) = listOfJetTrees2.at(lI);
+	listOfJetTrees2.at(lI) = tempLOJT2;
+      }
+    }
+
+    if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
     if(!isGood){
       listOfJetTrees1.erase(listOfJetTrees1.begin()+lI);
@@ -195,7 +234,7 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
       listOfJetTreeMaxs.erase(listOfJetTreeMaxs.begin()+lI);
     }
     else{
-      TTree* tempTree_p = (TTree*)inFile2_p->Get(listOfJetTrees1.at(lI).c_str());
+      TTree* tempTree_p = (TTree*)inFile2_p->Get(listOfJetTrees2.at(lI).c_str());
       TObjArray* tempList_p = (TObjArray*)tempTree_p->GetListOfBranches();
 
       unsigned int j = 0;
@@ -209,6 +248,8 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
 	    break;
 	  }
 	}
+
+	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
 	if(!branchIsGood){
 	  listOfJetTreeBranches.at(lI).erase(listOfJetTreeBranches.at(lI).begin() + j);
@@ -228,6 +269,8 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
       ++lI;
     }
   }
+
+  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
   inFile2_p->Close();
   delete inFile2_p;
@@ -267,6 +310,8 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
     centerTitles({hist1_p[i], hist2_p[i], hist_Rat1Over2_p[i], hist_Delta1From2_EvtByEvt_p[i]});
   }
 
+  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
   for(Int_t jI = 0; jI < nJetTrees; ++jI){
     hist1_Jet_p.push_back( {} );
     hist2_Jet_p.push_back( {} );
@@ -305,6 +350,8 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
     }
   }
 
+  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
   inFile1_p = new TFile(inFileName1.c_str(), "READ");
   inTree1_p = (TTree*)inFile1_p->Get("t");
   inTree1_p->SetBranchStatus("*", 0);
@@ -326,7 +373,7 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
 
   TTree* jetTree2_p[nJetTrees];
   for(Int_t jI = 0; jI < nJetTrees; ++jI){
-    jetTree2_p[jI] = (TTree*)inFile2_p->Get(listOfJetTrees1.at(jI).c_str());
+    jetTree2_p[jI] = (TTree*)inFile2_p->Get(listOfJetTrees2.at(jI).c_str());
     jetTree2_p[jI]->SetBranchStatus("*", 0);
     jData2[jI].SetStatusAndAddressRead(jetTree2_p[jI], listOfJetTreeBranches.at(jI));
   }
@@ -334,6 +381,8 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
   const Int_t nEntries = inTree2_p->GetEntries();
 
   std::cout << "Doing full processing..." << std::endl;
+
+  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
   for(Int_t entry = 0; entry < nEntries; ++entry){
     if(entry%1000 == 0) std::cout << " Entry: " << entry << "/" << nEntries << std::endl;
@@ -421,6 +470,8 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
     }
   }
 
+  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
   inFile2_p->Close();
   delete inFile2_p;
 
@@ -433,6 +484,8 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
 
   std::vector<std::string> listOfPdf;
   std::vector<std::string> listOfVar;
+
+  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
   for(Int_t i = 0; i < nVarToComp; ++i){
     hist1_p[i]->Write("", TObject::kOverwrite);
@@ -545,6 +598,8 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
 
     delete hist_Delta1From2_EvtByEvt_p[i];
   }
+
+  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
   for(Int_t jI = 0; jI < nJetTrees; ++jI){
     const std::string jetStr = listOfJetTrees1.at(jI);
@@ -662,6 +717,8 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
     }
   }
 
+  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
   TNamed nameFile1("nameFile1", inFileName1.c_str());
   TNamed nameFile2("nameFile2", inFileName2.c_str());
 
@@ -682,6 +739,8 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
   }
   tempStr = tempStr + inFile1TexStr;
   inFile1TexStr = tempStr;
+
+  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
   tempStr = "";
   while(inFile2TexStr.find("_") != std::string::npos){
@@ -782,6 +841,8 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
     fileTex << "\\end{itemize}" << std::endl;
     fileTex << "\\end{frame}" << std::endl;
   }
+
+  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
   
   fileTex << std::endl;
   fileTex << "\\end{document}" << std::endl;
