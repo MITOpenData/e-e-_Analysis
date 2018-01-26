@@ -234,10 +234,10 @@ void Analyzer(){
             //correct for both particles and also divide by hte bin widths
             for(int k = 0; k<s.nMultBins; k++){
               if(s.isInMultBin(nTrk,k)){
-                if(!s.doThrust) fillAllQuadrants( signal2PC[k], dEta(eta[j1],eta[j2]), dPhi(phi[j1],phi[j2]), corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
-                if(s.doThrust) fillAllQuadrants( signal2PC[k], dEta(eta_wrtThr[j1],eta_wrtThr[j2]), dPhi(phi_wrtThr[j1],phi_wrtThr[j2]), corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
-                if(!s.doThrust) fillAllQuadrants(signal2PC_ptweighted[k], dEta(eta[j1],eta[j2]), dPhi(phi[j1],phi[j2]), pt[j1]*pt[j2]*corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
-                if(s.doThrust) fillAllQuadrants(signal2PC_ptweighted[k], dEta(eta_wrtThr[j1],eta_wrtThr[j2]), dPhi(phi_wrtThr[j1],phi_wrtThr[j2]), pt_wrtThr[j1]*pt_wrtThr[j2]*corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+                if(!s.doThrust) fillAllQuadrants( signal2PC[k], dEta(eta[j1],eta[j2]), dPhi(phi[j1],phi[j2]), corr1*corr2/(2*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+                if(s.doThrust) fillAllQuadrants( signal2PC[k], dEta(eta_wrtThr[j1],eta_wrtThr[j2]), dPhi(phi_wrtThr[j1],phi_wrtThr[j2]), corr1*corr2/(2*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+                if(!s.doThrust) fillAllQuadrants(signal2PC_ptweighted[k], dEta(eta[j1],eta[j2]), dPhi(phi[j1],phi[j2]), pt[j1]*pt[j2]*corr1*corr2/(2*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+                if(s.doThrust) fillAllQuadrants(signal2PC_ptweighted[k], dEta(eta_wrtThr[j1],eta_wrtThr[j2]), dPhi(phi_wrtThr[j1],phi_wrtThr[j2]), pt_wrtThr[j1]*pt_wrtThr[j2]*corr1*corr2/(2*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
               }
             }//end mult bin loop
           }//end 2nd particle loop
@@ -253,10 +253,10 @@ void Analyzer(){
           //correct for both particles and also divide by hte bin widths
           for(int k = 0; k<s.nMultBins; k++){
             if(s.isInMultBin(nTrk,k)){
-              if(!s.doThrust) fillAllQuadrants( bkgrnd2PC[k], dEta(eta[j1],etaMix[j2]), dPhi(phi[j1],phiMix[j2]), corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
-              if(s.doThrust) fillAllQuadrants( bkgrnd2PC[k], dEta(eta_wrtThr[j1],etaMix_wrtThr[j2]), dPhi(phi_wrtThr[j1],phiMix_wrtThr[j2]), corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
-              if(!s.doThrust) fillAllQuadrants( bkgrnd2PC_ptweighted[k], dEta(eta[j1],etaMix[j2]), dPhi(phi[j1],phiMix[j2]), pt[j1]*ptMix[j2]*corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
-              if(s.doThrust) fillAllQuadrants( bkgrnd2PC_ptweighted[k], dEta(eta_wrtThr[j1],etaMix_wrtThr[j2]), dPhi(phi_wrtThr[j1],phiMix_wrtThr[j2]), pt_wrtThr[j1]*ptMix_wrtThr[j2]*corr1*corr2/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+              if(!s.doThrust) fillAllQuadrants( bkgrnd2PC[k], dEta(eta[j1],etaMix[j2]), dPhi(phi[j1],phiMix[j2]), corr1*corr2/(2*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+              if(s.doThrust) fillAllQuadrants( bkgrnd2PC[k], dEta(eta_wrtThr[j1],etaMix_wrtThr[j2]), dPhi(phi_wrtThr[j1],phiMix_wrtThr[j2]), corr1*corr2/(2*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+              if(!s.doThrust) fillAllQuadrants( bkgrnd2PC_ptweighted[k], dEta(eta[j1],etaMix[j2]), dPhi(phi[j1],phiMix[j2]), pt[j1]*ptMix[j2]*corr1*corr2/(2*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+              if(s.doThrust) fillAllQuadrants( bkgrnd2PC_ptweighted[k], dEta(eta_wrtThr[j1],etaMix_wrtThr[j2]), dPhi(phi_wrtThr[j1],phiMix_wrtThr[j2]), pt_wrtThr[j1]*ptMix_wrtThr[j2]*corr1*corr2/(2*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
             }
           }//end mult bin loop
         }//end mixed particle loop
@@ -272,14 +272,14 @@ void Analyzer(){
     bkgrnd2PC[k]->Scale(1.0/(float)nBkgrndEvts[k]);
     ratio2PC[k] = (TH2F*)signal2PC[k]->Clone(Form("ratio2PC_%d_%d",s.multBinsLow[k],s.multBinsHigh[k]));
     ratio2PC[k]->Divide(bkgrnd2PC[k]);
-    ratio2PC[k]->Scale(bkgrnd2PC[k]->GetBinContent(bkgrnd2PC[k]->FindBin(0,0))/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins));
+    ratio2PC[k]->Scale(bkgrnd2PC[k]->GetBinContent(bkgrnd2PC[k]->FindBin(0,0)));
     getLongRangeYield(s,ratio2PC[k],longRangeYield[k]);
     
     signal2PC_ptweighted[k]->Scale(1.0/(float)nSignalEvts[k]);
     bkgrnd2PC_ptweighted[k]->Scale(1.0/(float)nBkgrndEvts[k]);
     ratio2PC_ptweighted[k] = (TH2F*)signal2PC_ptweighted[k]->Clone(Form("ratio2PC_ptweighted_%d_%d",s.multBinsLow[k],s.multBinsHigh[k]));
     ratio2PC_ptweighted[k]->Divide(bkgrnd2PC_ptweighted[k]);
-    ratio2PC_ptweighted[k]->Scale(bkgrnd2PC_ptweighted[k]->GetBinContent(bkgrnd2PC_ptweighted[k]->FindBin(0,0))/(s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins));
+    ratio2PC_ptweighted[k]->Scale(bkgrnd2PC_ptweighted[k]->GetBinContent(bkgrnd2PC_ptweighted[k]->FindBin(0,0)));
     getLongRangeYield(s,ratio2PC_ptweighted[k],longRangeYield_ptweighted[k]);
   }
 
