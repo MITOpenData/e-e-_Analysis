@@ -51,27 +51,42 @@ int main(int argc, char* argv[])
   const bool doRopeWalk = tempRopeWalk;
 
   const double jtPtCut = .01;
-  const int nJtAlgo = 4;
-  const double rParam[nJtAlgo] = {0.4, 0.4, 0.8, 0.8};
-  const double recombScheme[nJtAlgo] = {fastjet::E_scheme, fastjet::WTA_modp_scheme, fastjet::E_scheme, fastjet::WTA_modp_scheme};
+  const int nJtAlgo = 8;
+  const double rParam[nJtAlgo] = {0.4, 0.4, 0.8, 0.8, -1., -1., -1., -1.};
+  const int nFinalClust[nJtAlgo] = {-1, -1, -1, -1, 2, 2, 3, 3};
+
+  const double recombScheme[nJtAlgo] = {fastjet::E_scheme, fastjet::WTA_modp_scheme, fastjet::E_scheme, fastjet::WTA_modp_scheme, fastjet::E_scheme, fastjet::WTA_modp_scheme, fastjet::E_scheme, fastjet::WTA_modp_scheme};
   fastjet::JetDefinition jDef[nJtAlgo];
   fastjet::JetDefinition jDefReclust[nJtAlgo];
   std::string jetTreeName[nJtAlgo];
+
   for(int i = 0; i < nJtAlgo; ++i){
     std::string recombSchemeStr = "EScheme";
     if(recombScheme[i] == fastjet::WTA_modp_scheme) recombSchemeStr = "WTAmodpScheme";
 
-    jetTreeName[i] = "ak" + std::to_string(int(rParam[i]*10)) + recombSchemeStr + "JetTree";
+    std::string rOrJetStr = "akR" + std::to_string(int(rParam[i]*10));
+    if(rParam[i] < 0) rOrJetStr = "ktN" + std::to_string(nFinalClust[i]);
+
+    jetTreeName[i] = rOrJetStr + recombSchemeStr + "JetTree";
   }
 
   for(int i = 0; i < nJtAlgo; ++i){
     if(isSysPP){
+      if(rParam[i] < 0) continue;
+
       jDef[i] = fastjet::JetDefinition(fastjet::antikt_algorithm, rParam[i], fastjet::RecombinationScheme(recombScheme[i]));
       jDefReclust[i] = fastjet::JetDefinition(fastjet::antikt_algorithm, 5, fastjet::RecombinationScheme(recombScheme[i]));
     }
     else{
-      jDef[i] = fastjet::JetDefinition(fastjet::ee_genkt_algorithm, rParam[i], -1, fastjet::RecombinationScheme(recombScheme[i]));
-      jDefReclust[i] = fastjet::JetDefinition(fastjet::ee_genkt_algorithm, 5, -1, fastjet::RecombinationScheme(recombScheme[i]));
+      if(rParam[i] > 0){
+	jDef[i] = fastjet::JetDefinition(fastjet::ee_genkt_algorithm, rParam[i], -1, fastjet::RecombinationScheme(recombScheme[i]));
+	jDefReclust[i] = fastjet::JetDefinition(fastjet::ee_genkt_algorithm, 5, -1, fastjet::RecombinationScheme(recombScheme[i]))
+;
+      }
+      else{
+	jDef[i] = fastjet::JetDefinition(fastjet::ee_kt_algorithm, fastjet::RecombinationScheme(recombScheme[i]));
+	jDefReclust[i] = fastjet::JetDefinition(fastjet::ee_kt_algorithm, fastjet::RecombinationScheme(recombScheme[i]));
+      }
     }
   }
   
@@ -85,7 +100,10 @@ int main(int argc, char* argv[])
   TTree* genTree_p = new TTree("t", "t");
   TTree* boostedGenTree_p = new TTree("BoostedWTAR8Evt", "BoostedWTAR8Evt");
   TTree* jetTree_p[nJtAlgo];
-  for(int i = 0; i < nJtAlgo; ++i){jetTree_p[i] = new TTree(jetTreeName[i].c_str(), jetTreeName[i].c_str());}
+  for(int i = 0; i < nJtAlgo; ++i){
+    if(rParam[i] < 0 && isSysPP) continue;
+    jetTree_p[i] = new TTree(jetTreeName[i].c_str(), jetTreeName[i].c_str());
+  }
 
   particleData pData;
   jetData jData[nJtAlgo];
@@ -107,7 +125,10 @@ int main(int argc, char* argv[])
   eData.SetBranchWrite(genTree_p);
   bData.SetBranchWrite(boostedGenTree_p);
 
-  for(int i = 0; i < nJtAlgo; ++i){jData[i].SetBranchWrite(jetTree_p[i]);}
+  for(int i = 0; i < nJtAlgo; ++i){
+    if(rParam[i] < 0 && isSysPP) continue;
+    jData[i].SetBranchWrite(jetTree_p[i]);
+  }
 
   Pythia8::Pythia pythia;
   double mZ = pythia.particleData.m0(23);
@@ -285,10 +306,15 @@ int main(int argc, char* argv[])
 	pData.phi_wrtChThr[pI] = phiFromThrust(thrustCh, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]));
       }
 
-      for(int jIter = 0; jIter < nJtAlgo; ++jIter){processJets(particles, jDef[jIter], jDefReclust[jIter], &(jData[jIter]), jtPtCut);}
+      for(int jIter = 0; jIter < nJtAlgo; ++jIter){
+	if(rParam[jIter] < 0 && isSysPP) continue;
+	processJets(particles, jDef[jIter], jDefReclust[jIter], &(jData[jIter]), jtPtCut, rParam[jIter], nFinalClust[jIter]);
+      }
 
       genTree_p->Fill();
       for(int jIter = 0; jIter < nJtAlgo; ++jIter){
+	if(rParam[jIter] < 0 && isSysPP) continue;
+
 	jetTree_p[jIter]->Fill();
 	if(rParam[jIter]==0.8 && recombScheme[jIter]==fastjet::WTA_modp_scheme){
 	  if(jData[jIter].nref<2){setBoostedVariables(false, &pData, &bData);}
@@ -307,6 +333,8 @@ int main(int argc, char* argv[])
   delete genTree_p;
 
   for(int jIter = 0; jIter < nJtAlgo; ++jIter){
+    if(rParam[jIter] < 0 && isSysPP) continue;
+
     jetTree_p[jIter]->Write("", TObject::kOverwrite);
     delete jetTree_p[jIter];
   }

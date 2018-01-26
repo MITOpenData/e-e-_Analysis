@@ -15,6 +15,8 @@
 void processJets(std::vector<fastjet::PseudoJet> p, fastjet::JetDefinition jDef, fastjet::JetDefinition jDefReclust, jetData *d, const double ptCut, const double rParam, const int nExclJet)
 {
   d->nref = 0;
+  if(rParam < 0 && p.size() < nExclJet) return; // protection for exclusive jets
+
   if(p.size() > 0){
     fastjet::ClusterSequence cs(p, jDef);
     std::vector<fastjet::PseudoJet> jets;
