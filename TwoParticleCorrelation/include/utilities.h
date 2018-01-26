@@ -124,8 +124,10 @@ int calculateRatio(TH2F *h_2D, TH2F *h_2Dmix, TH2F *h_ratio)
                 errrel_den=h_2Dmix->GetBinError(x,y)/h_2Dmix->GetBinContent(x,y);
                 // Yen-Jie: Take out the error of B00 for the moment since this is a global uncertainty
                 errrel_ratio=TMath::Sqrt(errrel_num*errrel_num+errrel_den*errrel_den);   // +errrel_B00*errrel_B00
-                h_ratio->SetBinContent(x,y,ratio/normalization);
-                h_ratio->SetBinError(x,y,errrel_ratio*ratio/normalization);
+                //h_ratio->SetBinContent(x,y,ratio/normalization);
+                h_ratio->SetBinContent(x,y,ratio);
+                h_ratio->SetBinError(x,y,errrel_ratio*ratio);
+                //h_ratio->SetBinError(x,y,errrel_ratio*ratio/normalization);
             } else {
 	      h_ratio->SetBinContent(x,y,0);
 	      h_ratio->SetBinError(x,y,0);
