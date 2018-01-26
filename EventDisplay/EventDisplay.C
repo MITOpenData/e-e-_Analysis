@@ -10,6 +10,8 @@
 #include "TView3D.h"
 #include "TCanvas.h"
 
+#include "include/smartJetName.h"
+
 //nasty global variables for nextEvent() function
 std::string currentFile;
 int currentEvtIndx;
@@ -49,8 +51,8 @@ void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/
   if(doWTA){
     WTA_t = (TTree*)f->Get("BoostedWTAR8Evt");
   }
-  TTree * jt = (TTree*)f->Get("ak8ESchemeJetTree"); 
-  TTree * wta = (TTree*)f->Get("ak8WTAmodpSchemeJetTree");
+  TTree * jt = (TTree*)f->Get(smartJetName("ak8ESchemeJetTree", f).c_str()); 
+  TTree * wta = (TTree*)f->Get(smartJetName("ak8WTAmodpSchemeJetTree", f).c_str());
 
   int nParticle;
   float pt[500];
