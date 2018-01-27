@@ -36,6 +36,17 @@ void doFill(TH1F* hist1_p, TH1F* hist2_p, TH1F* histDelta_p, Bool_t val1, Bool_t
   return;
 }
 
+void doFill(TH1F* hist1_p, TH1F* hist2_p, TH1F* histDelta_p, Int_t val1, Int_t val2)
+{
+  hist1_p->Fill(val1);
+  hist2_p->Fill(val2);
+  if(val1-val2 > histDelta_p->GetBinLowEdge(histDelta_p->GetNbinsX()+1)) histDelta_p->Fill(histDelta_p->GetBinCenter(histDelta_p->GetNbinsX()));
+  else if(val1-val2 < histDelta_p->GetBinLowEdge(1)) histDelta_p->Fill(histDelta_p->GetBinCenter(1));
+  else histDelta_p->Fill(val1-val2);
+	  
+  return;
+}
+
 void doFill(TH1F* hist1_p, TH1F* hist2_p, TH1F* histDelta_p, Float_t val1, Float_t val2)
 {
   hist1_p->Fill(val1);
@@ -95,6 +106,7 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
   outFileName = outFileName + "_DOCOMP_" + std::to_string(date->GetDate()) + ".root";
 
   std::vector<std::string> listOfCompBranches;
+  std::vector<std::string> listExcluded;
   std::vector<double> branchMins;
   std::vector<double> branchMaxs;
 
@@ -165,6 +177,11 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
   TFile* inFile2_p = new TFile(inFileName2.c_str(), "READ");
   TTree* inTree2_p = (TTree*)inFile2_p->Get("t");
   TObjArray* list2_p = (TObjArray*)inTree2_p->GetListOfBranches();
+  std::vector<bool> inTreeBools;
+
+  for(Int_t i = 0; i < list2_p->GetEntries(); ++i){
+    inTreeBools.push_back(false);
+  }
 
   unsigned int pos = 0;
   while(pos < listOfCompBranches.size()){
@@ -176,11 +193,13 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
 
       if(tempStr.size() == tempStr2.size() && tempStr.find(tempStr2) != std::string::npos){
 	isInArr = true;
+	inTreeBools.at(i) = true;
 	break;
       }
     }
 
     if(!isInArr){
+      listExcluded.push_back(listOfCompBranches.at(pos));
       listOfCompBranches.erase(listOfCompBranches.begin()+pos);
       branchMins.erase(branchMins.begin()+pos);
       branchMaxs.erase(branchMaxs.begin()+pos);      
@@ -193,6 +212,16 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
       if(branchMaxs.at(pos) < tempMax) branchMaxs.at(pos) = tempMax;
       ++pos;
     }
+  }
+
+  for(Int_t i = 0; i < list2_p->GetEntries(); ++i){
+    std::string listName = list2_p->At(i)->GetName();
+    if(!inTreeBools.at(i)) listExcluded.push_back(listName);
+  }
+
+  std::cout << "Set of var not in both trees: " << std::endl;
+  for(unsigned int i = 0; i < listExcluded.size(); ++i){
+    std::cout << " " << i << "/" << listExcluded.size() << ": " << listExcluded.at(i) << std::endl;
   }
 
   if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
