@@ -50,6 +50,7 @@ class Settings{
 
 
     //plots
+    bool useBeamMult = true;
     static const int nMultBins = 3;
     int multBinsLow[nMultBins]  = {0 , 20, 30};
     int multBinsHigh[nMultBins] = {20, 30, 999};

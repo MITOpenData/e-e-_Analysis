@@ -135,8 +135,13 @@ void Analyzer(){
     float nTrig = 0;
     for(int t = 0; t<nParticle; t++){
       if(pwflag[t]==0 || (s.doUseLeptons && (pwflag[t]==1 || pwflag[t]==2))){
-        if(TMath::Abs(eta[t]) >= s.etaCut) continue;
-        if(pt[t]>s.nTrkPt[0] && pt[t]<s.nTrkPt[1])  nTrk++;//nTrk calculation
+        if(s.useBeamMult){
+          if(TMath::Abs(eta[t]) >= s.etaCut) continue;
+          if(pt[t]>s.nTrkPt[0] && pt[t]<s.nTrkPt[1])  nTrk++;//nTrk calculation
+        } else {
+          if(TMath::Abs(eta_wrtThr[t]) >= s.etaCut) continue;
+          if(pt_wrtThr[t]>s.nTrkPt[0] && pt_wrtThr[t]<s.nTrkPt[1])  nTrk++;//nTrk calculation
+        }
         if(!s.doThrust && (pt[t]<=s.trigPt[0] || pt[t]>=s.trigPt[1])) continue;//nTrig calculation
         if(s.doThrust && (pt_wrtThr[t]<=s.trigPt[0] || pt_wrtThr[t]>=s.trigPt[1])) continue;//nTrig calculation
         float corr = 1.0/getEff(s,pt[t],eta[t]);
@@ -185,8 +190,13 @@ void Analyzer(){
       if(s.doMultMatch){
         for(int t = 0; t<nParticleMix; t++){
           if(pwflagMix[t]==0 || (s.doUseLeptons && (pwflagMix[t]==1 || pwflagMix[t]==2))){
-            if(TMath::Abs(etaMix[t]) >= s.etaCut) continue;
-            if(ptMix[t]>s.nTrkPt[0] && ptMix[t]<s.nTrkPt[1])  nTrkMix++;//nTrk calculation
+            if(s.useBeamMult){
+              if(TMath::Abs(etaMix[t]) >= s.etaCut) continue;
+              if(ptMix[t]>s.nTrkPt[0] && ptMix[t]<s.nTrkPt[1])  nTrkMix++;//nTrk calculation
+            } else {
+              if(TMath::Abs(etaMix_wrtThr[t]) >= s.etaCut) continue;
+              if(ptMix_wrtThr[t]>s.nTrkPt[0] && ptMix_wrtThr[t]<s.nTrkPt[1])  nTrkMix++;//nTrk calculation
+            }
           }
         }
         if(!s.isInSameMultBin(nTrk,nTrkMix)) continue;
