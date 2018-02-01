@@ -168,7 +168,7 @@ int ridge_check_parallel
         {
             Int_t selected=i+1;
             std::cout<<"before if statement i = "<<i<<" selected = "<<selected<<" nevent = "<<nevent<<std::endl;
-            if (selected > nevent) selected = 0;
+            if (selected >= nevent) selected = 0;
             std::cout<<"before while loop event number = "<<i<< " mixed event number = "<<selected<<std::endl;
             t_mix->GetEntry(selected);
             jt_mix->GetEntry(selected);
@@ -182,7 +182,7 @@ int ridge_check_parallel
             while (histNum_mix != histNum && s.isMixedEvent(nTrk, nTrk_mix, data.jteta[0], mix.jteta[0]))
             {
                 selected++;
-                if (selected > nevent) selected = 0;
+                if (selected >= nevent) selected = 0;
                 t_mix->GetEntry(selected);
                 jt_mix->GetEntry(selected);
                 
