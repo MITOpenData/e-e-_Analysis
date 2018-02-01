@@ -173,8 +173,7 @@ int ridge_check_parallel
             Int_t nTrk_mix;
             if(!s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt, mix.eta, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta,s.donTrkThrust);
             if(s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt_wrtThr, mix.eta_wrtThr, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta,s.donTrkThrust);
-            
-            if( nTrk_mix < 0) continue;
+        
             Int_t histNum_mix = s.histNum(nTrk_mix);
             
             // Select a mixed event
