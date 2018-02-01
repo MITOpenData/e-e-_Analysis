@@ -181,6 +181,7 @@ int ridge_check_parallel
             {
                 selected++;
                 if (selected > nevent) break;
+                std::cout<<"Inside while loop, event number = "<<i<< " mixed event number = "<<selected<<std::endl;
                 t_mix->GetEntry(selected);
                 jt_mix->GetEntry(selected);
                 
