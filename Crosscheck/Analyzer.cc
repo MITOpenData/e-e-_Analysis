@@ -153,22 +153,10 @@ void Analyzer(){
     h_Ttheta->Fill(TTheta);
     h_Tphi->Fill(TPhi);
 
-    if(s.calcKinematicsWrtThrust && s.doThrust){
-      TVector3 tempThr = TVector3();
-      tempThr.SetPtThetaPhi(1,TTheta,TPhi);
-      for(int t = 0; t<nParticle; t++){
-        TVector3 tempPart = TVector3();
-        tempPart.SetPtThetaPhi(pt[t],theta[t],phi[t]);
-        pt_wrtThr[t] = ptFromThrust(tempThr,tempPart); 
-        eta_wrtThr[t] = etaFromThrust(tempThr,tempPart); 
-        phi_wrtThr[t] = phiFromThrust(tempThr,tempPart); 
-      }
-    }
-
     int nMixed = 0; 
     //start at the next event and add maxSkipSize each time
     for(int i2 = i+1; nMixed<s.nMixedEvents; i2 += (int)(s.maxSkipSize*randGen.Rndm())+1 ){
-      if( i2>=t->GetEntries()) i2 = (int)(s.maxSkipSize*randGen.Rndm())+1;
+      if( i2>=t->GetEntries()) i2 = (int)(s.maxSkipSize*randGen.Rndm());
       tMix->GetEntry(i2);
       if(MissP>s.MissPCut && s.doMissPCut) continue;
       if(s.isMC && processMix!=s.MCProcess) continue;
@@ -187,6 +175,7 @@ void Analyzer(){
         if(TMath::Abs(TTheta-TThetaMix)>s.thrustMatchWindow || TMath::ACos(TMath::Cos(TPhi-TPhiMix))>s.thrustMatchWindow) continue;
       }
       int nTrkMix = 0;
+      int nTrigMix = 0;
       if(s.doMultMatch){
         for(int t = 0; t<nParticleMix; t++){
           if(pwflagMix[t]==0 || (s.doUseLeptons && (pwflagMix[t]==1 || pwflagMix[t]==2))){
@@ -197,8 +186,13 @@ void Analyzer(){
               if(TMath::Abs(etaMix_wrtThr[t]) >= s.etaCut) continue;
               if(ptMix_wrtThr[t]>s.nTrkPt[0] && ptMix_wrtThr[t]<s.nTrkPt[1])  nTrkMix++;//nTrk calculation
             }
+            if(!s.doThrust && (ptMix[t]<=s.trigPt[0] || ptMix[t]>=s.trigPt[1])) continue;//nTrig calculation
+            if(s.doThrust && (ptMix_wrtThr[t]<=s.trigPt[0] || ptMix_wrtThr[t]>=s.trigPt[1])) continue;//nTrig calculation
+            float corr = 1.0/getEff(s,pt[t],eta[t]);
+            nTrigMix += corr;
           }
         }
+        if(nTrigMix<=1 && s.doExcludeNTrigLT2) continue;
         if(!s.isInSameMultBin(nTrk,nTrkMix)) continue;
       } 
  
@@ -206,18 +200,8 @@ void Analyzer(){
         if(s.isInMultBin(nTrk,k) && nMixed==0)  nSignalEvts[k]++;
         if(s.isInMultBin(nTrk,k))  nBkgrndEvts[k]++;
       }
-      if(s.calcKinematicsWrtThrust && s.doThrust){
-        TVector3 tempThr = TVector3();
-        tempThr.SetPtThetaPhi(1,TThetaMix,TPhiMix);
-        for(int t = 0; t<nParticleMix; t++){
-          TVector3 tempPart = TVector3();
-          tempPart.SetPtThetaPhi(ptMix[t],thetaMix[t],phiMix[t]);
-          ptMix_wrtThr[t] = ptFromThrust(tempThr,tempPart); 
-          etaMix_wrtThr[t] = etaFromThrust(tempThr,tempPart); 
-          phiMix_wrtThr[t] = phiFromThrust(tempThr,tempPart); 
-        }
-      }
-    
+      if(i>30900) std::cout << i << " " << i2 << " " << nTrk << " " << nTrkMix << std::endl;    
+ 
       //fill signal histogram
       for(int j1 = 0; j1<nParticle; j1++){
         if(!(pwflag[j1]==0 || (s.doUseLeptons && (pwflag[j1]==1 || pwflag[j1]==2)))) continue;
@@ -255,7 +239,7 @@ void Analyzer(){
           }//end 2nd particle loop
         }
         
-        //background mixed event histogram  
+        //background mixed event histogram 
         for(int j2 = 0; j2<nParticleMix; j2++){
           if(!s.doThrust && TMath::Abs(eta[j2]) > s.etaCut) continue;
           if(s.doThrust && TMath::Abs(eta_wrtThr[j2]) > s.etaCut) continue;
