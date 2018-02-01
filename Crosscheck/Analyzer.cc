@@ -43,11 +43,11 @@ void Analyzer(){
   TH1D *h_Aj = new TH1D("h_Aj","h_Aj",50,0,0.5);
   
   for(int i = 0; i<s.nMultBins; i++){
-    signal2PC[i] = new TH2F(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
-    bkgrnd2PC[i] = new TH2F(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+    signal2PC[i] = new TH2F(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-s.etaPlotRange,s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+    bkgrnd2PC[i] = new TH2F(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-s.etaPlotRange,s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
     longRangeYield[i] = new TH1F(Form("longRangeYield_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#phi;Y(#Delta#Phi)",s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0); 
-    signal2PC_ptweighted[i] = new TH2F(Form("signal2PC_ptweighted_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
-    bkgrnd2PC_ptweighted[i] = new TH2F(Form("bkgrnd2PC_ptweighted_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-2*s.etaPlotRange,2*s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+    signal2PC_ptweighted[i] = new TH2F(Form("signal2PC_ptweighted_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-s.etaPlotRange,s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+    bkgrnd2PC_ptweighted[i] = new TH2F(Form("bkgrnd2PC_ptweighted_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-s.etaPlotRange,s.etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
     longRangeYield_ptweighted[i] = new TH1F(Form("longRangeYield_ptweighted_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#phi;Y(#Delta#Phi)",s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0); 
   }
   TH1F * multiplicity = new TH1F("multiplicity",";nTrk;nEvents",200,0,200);
@@ -227,7 +227,8 @@ void Analyzer(){
           h_theta->Fill(theta[j1]);
           h_pt->Fill(pt[j1]);
         }
-        if(TMath::Abs(eta[j1]) > s.etaCut) continue;
+        if(!s.doThrust && TMath::Abs(eta[j1]) > s.etaCut) continue;
+        if(s.doThrust && TMath::Abs(eta_wrtThr[j1]) > s.etaCut) continue;
         if(!s.doThrust && (pt[j1]<s.trigPt[0] || pt[j1]>s.trigPt[1])) continue;
         if(s.doThrust && (pt_wrtThr[j1]<s.trigPt[0] || pt_wrtThr[j1]>s.trigPt[1])) continue;
         float corr1 = 1.0/getEff(s,pt[j1],eta[j1]);
@@ -235,7 +236,8 @@ void Analyzer(){
         //signal histogram
         if(nMixed == 0){
           for(int j2 = 0; j2<j1; j2++){
-            if(TMath::Abs(eta[j2]) > s.etaCut) continue;
+            if(!s.doThrust && TMath::Abs(eta[j2]) > s.etaCut) continue;
+            if(s.doThrust && TMath::Abs(eta_wrtThr[j2]) > s.etaCut) continue;
             if(!s.doThrust && (pt[j2]<s.assocPt[0] || pt[j2]>s.assocPt[1])) continue;
             if(s.doThrust && (pt_wrtThr[j2]<s.assocPt[0] || pt_wrtThr[j2]>s.assocPt[1])) continue;
             if(!(pwflag[j2]==0 || (s.doUseLeptons && (pwflag[j2]==1 || pwflag[j2]==2)))) continue;
@@ -255,7 +257,8 @@ void Analyzer(){
         
         //background mixed event histogram  
         for(int j2 = 0; j2<nParticleMix; j2++){
-          if(TMath::Abs(etaMix[j2]) > s.etaCut) continue;
+          if(!s.doThrust && TMath::Abs(eta[j2]) > s.etaCut) continue;
+          if(s.doThrust && TMath::Abs(eta_wrtThr[j2]) > s.etaCut) continue;
           if(!s.doThrust && (ptMix[j2]<s.assocPt[0] || ptMix[j2]>s.assocPt[1])) continue;
           if(s.doThrust && (ptMix_wrtThr[j2]<s.assocPt[0] || ptMix_wrtThr[j2]>s.assocPt[1])) continue;
           if(!(pwflagMix[j2]==0 || (s.doUseLeptons && (pwflagMix[j2]==1 || pwflagMix[j2]==2)))) continue;
