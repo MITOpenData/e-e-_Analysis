@@ -41,7 +41,7 @@ class Selection
         Float_t ptMax = 100.0;  Float_t ptMax_wrtThr = 100.0;
         Float_t etaCut = 1.8;   Float_t etaCut_wrtThr = 5.0;
         Int_t nTPCMin = 0; // completely inclusive, maybe tighten this
-        Int_t nTPCMax = 100; 
+        Int_t nTPCMax = 100;
     
         // jet cuts
         Float_t AjCut = 0.1;
@@ -77,7 +77,7 @@ class Selection
         Float_t getDifferential();
         int ridge_trackSelection(Float_t pt, Float_t eta, Int_t nTPC, Int_t pwflag, bool isThrust);
         int ridge_eventSelection(bool passesWW, Int_t nParticle, Float_t missP,Float_t pt[], Float_t eta[], Int_t nTPC[], Int_t pwflag[], Int_t nref, Float_t jtpt[], Float_t jteta[], bool isThrust);
-        bool mixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta, Float_t jteta_mix);
+        bool isMixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta, Float_t jteta_mix);
         int histNum(Int_t N);
     
     private:
@@ -200,12 +200,13 @@ int Selection::ridge_eventSelection
 
 // return true if the event passes the criteria for a mixed event
 // Currently matching the total multiplicity in the event and leading jet eta
-bool Selection::mixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta, Float_t jteta_mix)
+bool Selection::isMixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta, Float_t jteta_mix)
 {
     // Original matched event criteria
     // (fabs(mix.nParticle-data.nParticle)>4&&data.nParticle<1000&&fabs(mix.jteta[0]-data.jteta[0])>0.2)
-    if (doMixedMultCut && TMath::Abs(nParticle - nParticle_mix) <= 4) return false;
-    if (doMixedJetCut && TMath::Abs(jteta - jteta_mix) <= 0.2) return false;
+    
+    if (doMixedMultCut && TMath::Abs(nParticle - nParticle_mix) > 4) return false;
+    if (doMixedJetCut && TMath::Abs(jteta - jteta_mix) > 0.2) return false;
     
     return true;
 }
