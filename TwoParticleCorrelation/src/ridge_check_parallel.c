@@ -167,7 +167,7 @@ int ridge_check_parallel
         for (Int_t nMix = 0; nMix<s.bkgrd_runs; nMix++)
         {
             Int_t selected=i+1;
-            std::cout<<"before if statement i = "<<i<<" selected = "<<selected<<std::endl;
+            std::cout<<"before if statement i = "<<i<<" selected = "<<selected<<" nevent = "<<nevent<<std::endl;
             if (selected > nevent) selected = 0;
             std::cout<<"before while loop event number = "<<i<< " mixed event number = "<<selected<<std::endl;
             t_mix->GetEntry(selected);
