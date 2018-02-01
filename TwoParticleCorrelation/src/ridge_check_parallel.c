@@ -100,7 +100,7 @@ int ridge_check_parallel
     
     // analysis
     Int_t nevent = (Int_t)t->GetEntries();
-    nevent = 1;
+    //nevent = 1;
     /****************************************/
     // Main Event Loop
     /****************************************/
