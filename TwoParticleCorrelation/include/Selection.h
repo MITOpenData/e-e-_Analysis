@@ -24,6 +24,9 @@ class Selection
 {
     public:
     
+        // for testing purposes
+        bool doOneEvent = true;
+    
         // event cuts
         Float_t missPCut = 20;
         bool domissPCut = false;
@@ -48,7 +51,7 @@ class Selection
         bool doMixedJetCut = false;
     
         // plotting
-        Float_t etaPlotRange = 1.6;     Float_t etaPlotRange_wrtThr = 3.0; //this gets multiplied by 2
+        Float_t etaPlotRange = 3.2;     Float_t etaPlotRange_wrtThr = 6.0; //this gets multiplied by 2
         Float_t dEtaBins = 20;//keep even
         Float_t dPhiBins = 20;//keep factor of 4
         Float_t differential = (2*etaPlotRange/(float)dEtaBins)*(2*TMath::Pi()/(float)dPhiBins);
