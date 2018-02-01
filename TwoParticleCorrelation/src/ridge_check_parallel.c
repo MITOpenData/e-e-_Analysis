@@ -201,6 +201,8 @@ int ridge_check_parallel
             }
             
             nBkgrndEvts[histNum] += 1;
+            std::cout<<"event number = "<<i<< " mixed event number = "<<selected<<std::endl;
+            std::cout<<"nTrk_mix = "<<nTrk_mix<<" nTrk = "<<nTrk<<std::endl;
             for ( Int_t j=0;j<data.nParticle;j++ )
             {
                 if(!s.ridge_trackSelection(data.getPt(j),data.getEta(j),data.nTPC[j],data.pwflag[j],s.doThrust)) continue;
