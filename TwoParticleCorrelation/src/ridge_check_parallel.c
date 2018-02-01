@@ -113,8 +113,8 @@ int ridge_check_parallel
         Int_t nTrk = 0;
         
         //
-        if(s.donTrkBeam) nTrk = s.ridge_eventSelection(data.passesWW, data.nParticle, data.missP, data.pt, data.eta, data.nTPC, data.pwflag, data.nref, data.jtpt, data.jteta);
-        if(!s.donTrkBeam) nTrk = s.ridge_eventSelection(data.passesWW, data.nParticle, data.missP, data.pt_wrtThr, data.eta_wrtThr, data.nTPC, data.pwflag, data.nref, data.jtpt, data.jteta);
+        if(!s.donTrkThrust) nTrk = s.ridge_eventSelection(data.passesWW, data.nParticle, data.missP, data.pt, data.eta, data.nTPC, data.pwflag, data.nref, data.jtpt, data.jteta,s.donTrkThrust);
+        if(s.donTrkThrust) nTrk = s.ridge_eventSelection(data.passesWW, data.nParticle, data.missP, data.pt_wrtThr, data.eta_wrtThr, data.nTPC, data.pwflag, data.nref, data.jtpt, data.jteta,s.donTrkThrust);
         //if(!s.doThrust) nTrk = s.ridge_eventSelection(data.passesWW, data.nParticle, data.missP, data.pt, data.eta, data.nTPC, data.pwflag, data.nref, data.jtpt, data.jteta);
         //if(s.doThrust) nTrk = s.ridge_eventSelection(data.passesWW, data.nParticle, data.missP, data.pt_wrtThr, data.eta_wrtThr, data.nTPC, data.pwflag, data.nref, data.jtpt, data.jteta);
         
@@ -133,7 +133,7 @@ int ridge_check_parallel
         /****************************************/
         for ( Int_t j=0;j<data.nParticle;j++ )
         {
-            if(!s.ridge_trackSelection(data.getPt(j),data.getEta(j),data.nTPC[j],data.pwflag[j])) continue;
+            if(!s.ridge_trackSelection(data.getPt(j),data.getEta(j),data.nTPC[j],data.pwflag[j],s.doThrust)) continue;
             
             h_phi->Fill(data.getPhi(j));
             h_eta->Fill(data.getEta(j));
@@ -147,7 +147,7 @@ int ridge_check_parallel
             // Signal loop, calculate S correlation function
             for ( Int_t k=j+1;k<data.nParticle;k++ )
             {
-                if(!s.ridge_trackSelection(data.getPt(k),data.getEta(k),data.nTPC[k],data.pwflag[k])) continue;
+                if(!s.ridge_trackSelection(data.getPt(k),data.getEta(k),data.nTPC[k],data.pwflag[k],s.doThrust)) continue;
                 
                 Float_t angle2;
                 if (s.doTheta) angle2 = data.getTheta(k); else angle2 = data.getEta(k);
@@ -170,8 +170,8 @@ int ridge_check_parallel
             jt_mix->GetEntry(selected);
         
             Int_t nTrk_mix;
-            if(s.donTrkBeam) nTrk_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt, mix.eta, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
-            if(!s.donTrkBeam) nTrk_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt_wrtThr, mix.eta_wrtThr, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
+            if(!s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt, mix.eta, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta,s.donTrkThrust);
+            if(s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt_wrtThr, mix.eta_wrtThr, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta,s.donTrkThrust);
             
             if( nTrk_mix < 0) continue;
             Int_t histNum_mix = s.histNum(nTrk_mix);
@@ -185,8 +185,8 @@ int ridge_check_parallel
                 t_mix->GetEntry(selected);
                 jt_mix->GetEntry(selected);
                 
-                if(s.donTrkBeam) nTrk_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt, mix.eta, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
-                if(!s.donTrkBeam) nTrk_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt_wrtThr, mix.eta_wrtThr, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
+                if(!s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt, mix.eta, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta,s.donTrkThrust);
+                if(s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt_wrtThr, mix.eta_wrtThr, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta,s.donTrkThrust);
                 
                 if( nTrk_mix < 0) continue;
                 histNum_mix = s.histNum(nTrk_mix);
@@ -206,7 +206,7 @@ int ridge_check_parallel
             nBkgrndEvts[histNum] += 1;
             for ( Int_t j=0;j<data.nParticle;j++ )
             {
-                if(!s.ridge_trackSelection(data.getPt(j),data.getEta(j),data.nTPC[j],data.pwflag[j])) continue;
+                if(!s.ridge_trackSelection(data.getPt(j),data.getEta(j),data.nTPC[j],data.pwflag[j],s.doThrust)) continue;
                 
                 Float_t angle;
                 if (s.doTheta) angle = data.getTheta(j); else angle = data.getEta(j);
@@ -215,7 +215,7 @@ int ridge_check_parallel
                 // Background loop, calculate B correlation function from mixed event
                 for ( Int_t k=0;k<mix.nParticle;k++ )
                 {
-                    if(!s.ridge_trackSelection(mix.getPt(k),mix.getEta(k),mix.nTPC[k],mix.pwflag[k])) continue;
+                    if(!s.ridge_trackSelection(mix.getPt(k),mix.getEta(k),mix.nTPC[k],mix.pwflag[k],s.doThrust)) continue;
                     
                     Float_t angle_mix;
                     if (s.doTheta) angle_mix = mix.getTheta(k); else angle_mix = mix.getEta(k);

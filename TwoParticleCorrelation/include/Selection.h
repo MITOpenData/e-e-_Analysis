@@ -34,9 +34,9 @@ class Selection
         bool doMixedMultCut = false;
     
         // particle cuts
-        Float_t ptMin = 0.4;
-        Float_t ptMax = 100.0;
-        Float_t etaCut = 1.8;
+        Float_t ptMin = 0.4;    Float_t ptMin_wrtThr = 0.4;
+        Float_t ptMax = 100.0;  Float_t ptMax_wrtThr = 100.0;
+        Float_t etaCut = 1.8;   Float_t etaCut_wrtThr = 5.0;
         Int_t nTPCMin = 3; // completely inclusive, maybe tighten this
         Int_t nTPCMax = 23 ; 
     
@@ -48,7 +48,7 @@ class Selection
         bool doMixedJetCut = false;
     
         // plotting
-        Float_t etaPlotRange = 1.6;//this gets multiplied by 2
+        Float_t etaPlotRange = 1.6;     Float_t etaPlotRange_wrtThr = 3.0; //this gets multiplied by 2
         Float_t dEtaBins = 20;//keep even
         Float_t dPhiBins = 20;//keep factor of 4
         Float_t differential = (2*etaPlotRange/(float)dEtaBins)*(2*TMath::Pi()/(float)dPhiBins);
@@ -56,7 +56,7 @@ class Selection
     
         // other
         bool doThrust = true;  // used for determining thrust/beam angles to use in filling histograms
-        bool donTrkBeam = false; // used for calculation of nTrk (true = Beam)
+        bool donTrkThrust = true; // used for calculation of nTrk (true = Beam)
         bool doBelle = false;
         bool doTheta = false;
         //Int_t maxevt = ;
@@ -70,8 +70,8 @@ class Selection
         enum SIMPLEPWFLAG {ALEPH_CHARGED_TRACK, ALEPH_CHARGED_LEPTONS1, ALEPH_CHARGED_LEPTONS2, ALEPH_V0, ALEPH_PHOTON, ALEPH_NEUTRAL_HADRON};
     
         Selection();
-        int ridge_trackSelection(Float_t pt, Float_t eta, Int_t nTPC, Int_t pwflag);
-        int ridge_eventSelection(bool passesWW, Int_t nParticle, Float_t missP,Float_t pt[], Float_t eta[], Int_t nTPC[], Int_t pwflag[], Int_t nref, Float_t jtpt[], Float_t jteta[]);
+        int ridge_trackSelection(Float_t pt, Float_t eta, Int_t nTPC, Int_t pwflag, bool isThrust);
+        int ridge_eventSelection(bool passesWW, Int_t nParticle, Float_t missP,Float_t pt[], Float_t eta[], Int_t nTPC[], Int_t pwflag[], Int_t nref, Float_t jtpt[], Float_t jteta[], bool isThrust);
         bool mixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta, Float_t jteta_mix);
         int histNum(Int_t N);
     
@@ -92,13 +92,35 @@ int Selection::ridge_trackSelection
  Float_t pt,
  Float_t eta,
  Int_t nTPC,
- Int_t pwflag
+ Int_t pwflag,
+ 
+ // thrust vs beam
+ bool isThrust
  )
 {
+    
     if (pwflag != ALEPH_CHARGED_TRACK) return 0;
-    if (pt < ptMin || pt > ptMax) return 0;
+    
+    Float_t ptMin_temp = 0;
+    Float_t ptMax_temp = 0;
+    Float_t etaCut_temp = 0;
+    
+    if(!isThrust)
+    {
+        ptMin_temp = ptMin;
+        ptMax_temp = ptMax;
+        etaCut_temp = etaCut;
+    }
+    else if (isThrust)
+    {
+        ptMin_temp = ptMin_wrtThr;
+        ptMax_temp = ptMax_wrtThr;
+        etaCut_temp = etaCut_wrtThr;
+    }
+    
+    if (pt < ptMin_temp || pt > ptMax_temp) return 0;
     if (nTPC <= nTPCMin || nTPC >= nTPCMax) return 0;
-    if (TMath::Abs(eta) >= etaCut) return 0;
+    if (TMath::Abs(eta) >= etaCut_temp) return 0;
     
     return 1;
 }
@@ -121,7 +143,10 @@ int Selection::ridge_eventSelection
     // jet variables
     Int_t nref,
     Float_t jtpt[],
-    Float_t jteta[]
+    Float_t jteta[],
+ 
+    // thrust vs beam
+    bool isThrust
 
 )
 {
@@ -148,7 +173,7 @@ int Selection::ridge_eventSelection
     Int_t N = 0;
     for (Int_t j=0;j<nParticle;j++)
     {
-        N += ridge_trackSelection(pt[j],eta[j],nTPC[j],pwflag[j]);
+        N += ridge_trackSelection(pt[j],eta[j],nTPC[j],pwflag[j],isThrust);
     }
     if (N <= 1) return -1;
     // this is to ensure that we are able to find a mixed event
