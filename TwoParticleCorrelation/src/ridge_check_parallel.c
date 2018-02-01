@@ -177,6 +177,7 @@ int ridge_check_parallel
             
             // Select a mixed event
             Int_t flag=0;
+            std::cout<<"histNum_mix = "<<histNum_mix<<" histNum = "<<histNum<<std::endl;
             while (histNum_mix != histNum && !s.mixedEvent(nTrk, nTrk_mix, data.jteta[0], mix.jteta[0]))
             {
                 selected++;
