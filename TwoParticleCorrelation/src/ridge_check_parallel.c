@@ -154,10 +154,10 @@ int ridge_check_parallel
                 if (s.doTheta) angle2 = data.getTheta(k); else angle2 = data.getEta(k);
                 Float_t phi2 = data.getPhi(k);
                 
-                signal2PC[histNum]->Fill(angle1-angle2,dphi(phi1,phi2),1./(s.differential)/nTrk);
-                signal2PC[histNum]->Fill(angle1-angle2,dphi(phi2,phi1),1./(s.differential)/nTrk);
-                signal2PC[histNum]->Fill(angle2-angle1,dphi(phi1,phi2),1./(s.differential)/nTrk);
-                signal2PC[histNum]->Fill(angle2-angle1,dphi(phi2,phi1),1./(s.differential)/nTrk);
+                signal2PC[histNum]->Fill(angle1-angle2,dphi(phi1,phi2),1./(s.getDifferential())/nTrk);
+                signal2PC[histNum]->Fill(angle1-angle2,dphi(phi2,phi1),1./(s.getDifferential())/nTrk);
+                signal2PC[histNum]->Fill(angle2-angle1,dphi(phi1,phi2),1./(s.getDifferential())/nTrk);
+                signal2PC[histNum]->Fill(angle2-angle1,dphi(phi2,phi1),1./(s.getDifferential())/nTrk);
             }
         }
         
@@ -222,10 +222,10 @@ int ridge_check_parallel
                     if (s.doTheta) angle_mix = mix.getTheta(k); else angle_mix = mix.getEta(k);
                     Float_t phi_mix = mix.getPhi(k);
                     
-                    bkgrnd2PC[histNum]->Fill(angle-angle_mix,dphi(phi,phi_mix),1./(s.differential)/nTrk);
-                    bkgrnd2PC[histNum]->Fill(angle-angle_mix,dphi(phi_mix,phi),1./(s.differential)/nTrk);
-                    bkgrnd2PC[histNum]->Fill(angle_mix-angle,dphi(phi,phi_mix),1./(s.differential)/nTrk);
-                    bkgrnd2PC[histNum]->Fill(angle_mix-angle,dphi(phi_mix,phi),1./(s.differential)/nTrk);
+                    bkgrnd2PC[histNum]->Fill(angle-angle_mix,dphi(phi,phi_mix),1./(s.getDifferential())/nTrk);
+                    bkgrnd2PC[histNum]->Fill(angle-angle_mix,dphi(phi_mix,phi),1./(s.getDifferential())/nTrk);
+                    bkgrnd2PC[histNum]->Fill(angle_mix-angle,dphi(phi,phi_mix),1./(s.getDifferential())/nTrk);
+                    bkgrnd2PC[histNum]->Fill(angle_mix-angle,dphi(phi_mix,phi),1./(s.getDifferential())/nTrk);
                 } //end of mixed event loop
             } // end of working event loop
         } // end of nMix loop
