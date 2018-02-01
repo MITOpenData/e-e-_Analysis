@@ -56,7 +56,7 @@ class Selection
     
         // other
         bool doThrust = true;  // used for determining thrust/beam angles to use in filling histograms
-        bool donTrkBeam = true; // used for calculation of nTrk (true = Beam)
+        bool donTrkBeam = false; // used for calculation of nTrk (true = Beam)
         bool doBelle = false;
         bool doTheta = false;
         //Int_t maxevt = ;
