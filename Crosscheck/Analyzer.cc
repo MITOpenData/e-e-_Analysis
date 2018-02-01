@@ -113,8 +113,6 @@ void Analyzer(){
 
   for(int i = 0; i< (s.doAllData?t->GetEntries():s.nEvts); i++){
     t->GetEntry(i);
-    if(i%1000==0) std::cout << i << "/" << (s.doAllData?t->GetEntries():s.nEvts) << std::endl;
-    
 
     if(MissP>s.MissPCut && s.doMissPCut) continue;
     if(s.isMC && process!=s.MCProcess) continue;
