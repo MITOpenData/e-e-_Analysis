@@ -25,7 +25,7 @@ class Selection
     public:
     
         // for testing purposes
-        bool doOneEvent = false;     int numEvents = 100;
+        bool doOneEvent = true;     int numEvents = 100;
     
         // event cuts
         Float_t missPCut = 20;
