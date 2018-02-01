@@ -108,18 +108,21 @@ int ridge_check_parallel
         data.update();
         if (i%10000==0) std::cout <<i<<"/"<<nevent<<std::endl;
         
-        // event cut
-        Int_t N = 0;
-        if(!s.doThrust) N = s.ridge_eventSelection(data.passesWW, data.nParticle, data.missP, data.pt, data.eta, data.nTPC, data.pwflag, data.nref, data.jtpt, data.jteta);
+        // nTrk calculation
+        Int_t nTrk = 0;
         
-        if(s.doThrust) N = s.ridge_eventSelection(data.passesWW, data.nParticle, data.missP, data.pt_wrtThr, data.eta_wrtThr, data.nTPC, data.pwflag, data.nref, data.jtpt, data.jteta);
+        //
+        if(s.donTrkBeam) nTrk = s.ridge_eventSelection(data.passesWW, data.nParticle, data.missP, data.pt, data.eta, data.nTPC, data.pwflag, data.nref, data.jtpt, data.jteta);
+        if(!s.donTrkBeam) nTrk = s.ridge_eventSelection(data.passesWW, data.nParticle, data.missP, data.pt_wrtThr, data.eta_wrtThr, data.nTPC, data.pwflag, data.nref, data.jtpt, data.jteta);
+        //if(!s.doThrust) nTrk = s.ridge_eventSelection(data.passesWW, data.nParticle, data.missP, data.pt, data.eta, data.nTPC, data.pwflag, data.nref, data.jtpt, data.jteta);
+        //if(s.doThrust) nTrk = s.ridge_eventSelection(data.passesWW, data.nParticle, data.missP, data.pt_wrtThr, data.eta_wrtThr, data.nTPC, data.pwflag, data.nref, data.jtpt, data.jteta);
         
-        if( N < 0) continue;
-        Int_t histNum = s.histNum(N);
+        if( nTrk < 0) continue;
+        Int_t histNum = s.histNum(nTrk);
         
-        h_eff->Fill(N/data.nParticle);
+        h_eff->Fill(nTrk/data.nParticle);
         h_Aj->Fill(s.fillAj);
-        multiplicity->Fill(N);
+        multiplicity->Fill(nTrk);
         nSignalEvts[histNum] += 1;
         
         h_Ttheta->Fill(data.TTheta);
@@ -149,10 +152,10 @@ int ridge_check_parallel
                 if (s.doTheta) angle2 = data.getTheta(k); else angle2 = data.getEta(k);
                 Float_t phi2 = data.getPhi(k);
                 
-                signal2PC[histNum]->Fill(angle1-angle2,dphi(phi1,phi2),1./(s.differential)/N);
-                signal2PC[histNum]->Fill(angle1-angle2,dphi(phi2,phi1),1./(s.differential)/N);
-                signal2PC[histNum]->Fill(angle2-angle1,dphi(phi1,phi2),1./(s.differential)/N);
-                signal2PC[histNum]->Fill(angle2-angle1,dphi(phi2,phi1),1./(s.differential)/N);
+                signal2PC[histNum]->Fill(angle1-angle2,dphi(phi1,phi2),1./(s.differential)/nTrk);
+                signal2PC[histNum]->Fill(angle1-angle2,dphi(phi2,phi1),1./(s.differential)/nTrk);
+                signal2PC[histNum]->Fill(angle2-angle1,dphi(phi1,phi2),1./(s.differential)/nTrk);
+                signal2PC[histNum]->Fill(angle2-angle1,dphi(phi2,phi1),1./(s.differential)/nTrk);
             }
         }
         
@@ -165,28 +168,27 @@ int ridge_check_parallel
             t_mix->GetEntry(selected);
             jt_mix->GetEntry(selected);
         
-            Int_t N_mix;
-            if(!s.doThrust) N_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt, mix.eta, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
-            if(s.doThrust) N_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt_wrtThr, mix.eta_wrtThr, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
+            Int_t nTrk_mix;
+            if(s.donTrkBeam) nTrk_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt, mix.eta, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
+            if(!s.donTrkBeam) nTrk_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt_wrtThr, mix.eta_wrtThr, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
             
-            if( N_mix < 0) continue;
-            Int_t histNum_mix = s.histNum(N_mix);
+            if( nTrk_mix < 0) continue;
+            Int_t histNum_mix = s.histNum(nTrk_mix);
             
             // Select a mixed event
             Int_t flag=0;
-            while (histNum_mix != histNum && !s.mixedEvent(N, N_mix, data.jteta[0], mix.jteta[0]))
+            while (histNum_mix != histNum && !s.mixedEvent(nTrk, nTrk_mix, data.jteta[0], mix.jteta[0]))
             {
                 selected++;
                 if (selected > nevent) break;
                 t_mix->GetEntry(selected);
                 jt_mix->GetEntry(selected);
                 
-                if(!s.doThrust) N_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt, mix.eta, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
+                if(s.donTrkBeam) nTrk_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt, mix.eta, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
+                if(!s.donTrkBeam) nTrk_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt_wrtThr, mix.eta_wrtThr, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
                 
-                if(s.doThrust) N_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt_wrtThr, mix.eta_wrtThr, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta);
-                
-                if( N_mix < 0) continue;
-                histNum_mix = s.histNum(N_mix);
+                if( nTrk_mix < 0) continue;
+                histNum_mix = s.histNum(nTrk_mix);
             }
             
             // Use the Thrust axis from the signal event instead of mixed event
@@ -218,10 +220,10 @@ int ridge_check_parallel
                     if (s.doTheta) angle_mix = mix.getTheta(k); else angle_mix = mix.getEta(k);
                     Float_t phi_mix = mix.getPhi(k);
                     
-                    bkgrnd2PC[histNum]->Fill(angle-angle_mix,dphi(phi,phi_mix),1./(s.differential)/N);
-                    bkgrnd2PC[histNum]->Fill(angle-angle_mix,dphi(phi_mix,phi),1./(s.differential)/N);
-                    bkgrnd2PC[histNum]->Fill(angle_mix-angle,dphi(phi,phi_mix),1./(s.differential)/N);
-                    bkgrnd2PC[histNum]->Fill(angle_mix-angle,dphi(phi_mix,phi),1./(s.differential)/N);
+                    bkgrnd2PC[histNum]->Fill(angle-angle_mix,dphi(phi,phi_mix),1./(s.differential)/nTrk);
+                    bkgrnd2PC[histNum]->Fill(angle-angle_mix,dphi(phi_mix,phi),1./(s.differential)/nTrk);
+                    bkgrnd2PC[histNum]->Fill(angle_mix-angle,dphi(phi,phi_mix),1./(s.differential)/nTrk);
+                    bkgrnd2PC[histNum]->Fill(angle_mix-angle,dphi(phi_mix,phi),1./(s.differential)/nTrk);
                 } //end of mixed event loop
             } // end of working event loop
         } // end of nMix loop
