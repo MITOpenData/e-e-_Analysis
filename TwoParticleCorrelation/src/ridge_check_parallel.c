@@ -180,7 +180,7 @@ int ridge_check_parallel
             while (histNum_mix != histNum && s.isMixedEvent(nTrk, nTrk_mix, data.jteta[0], mix.jteta[0]))
             {
                 selected++;
-                if (selected > nevent) break;
+                if (selected > nevent) selected = 0;
                 t_mix->GetEntry(selected);
                 jt_mix->GetEntry(selected);
                 
