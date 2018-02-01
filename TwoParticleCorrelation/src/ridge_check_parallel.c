@@ -167,6 +167,7 @@ int ridge_check_parallel
         for (Int_t nMix = 0; nMix<s.bkgrd_runs; nMix++)
         {
             Int_t selected=i+1;
+            if (selected > nevent) selected = 0;
             t_mix->GetEntry(selected);
             jt_mix->GetEntry(selected);
         
