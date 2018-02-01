@@ -100,7 +100,7 @@ int ridge_check_parallel
     
     // analysis
     Int_t nevent = (Int_t)t->GetEntries();
-    if(s.doOneEvent) nevent = 1;
+    if(s.doOneEvent) nevent = s.numEvents;
     /****************************************/
     // Main Event Loop
     /****************************************/
