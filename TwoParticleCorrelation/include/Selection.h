@@ -70,6 +70,7 @@ class Selection
         enum SIMPLEPWFLAG {ALEPH_CHARGED_TRACK, ALEPH_CHARGED_LEPTONS1, ALEPH_CHARGED_LEPTONS2, ALEPH_V0, ALEPH_PHOTON, ALEPH_NEUTRAL_HADRON};
     
         Selection();
+        Float_t getEtaPlotRange();
         int ridge_trackSelection(Float_t pt, Float_t eta, Int_t nTPC, Int_t pwflag, bool isThrust);
         int ridge_eventSelection(bool passesWW, Int_t nParticle, Float_t missP,Float_t pt[], Float_t eta[], Int_t nTPC[], Int_t pwflag[], Int_t nref, Float_t jtpt[], Float_t jteta[], bool isThrust);
         bool mixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta, Float_t jteta_mix);
@@ -84,6 +85,11 @@ Selection::Selection()
     return;
 }
 
+Float_t Selection::getEtaPlotRange()
+{
+    if(doThrust) return etaPlotRange_wrtThr;
+    return etaPlotRange;
+}
 // return 1 if the track passes the selection
 // otherwise return 0
 int Selection::ridge_trackSelection
