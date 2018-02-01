@@ -168,6 +168,7 @@ int ridge_check_parallel
         {
             Int_t selected=i+1;
             if (selected > nevent) selected = 0;
+            std::cout<<"before while loop event number = "<<i<< " mixed event number = "<<selected<<std::endl;
             t_mix->GetEntry(selected);
             jt_mix->GetEntry(selected);
         
@@ -177,7 +178,6 @@ int ridge_check_parallel
             Int_t histNum_mix = s.histNum(nTrk_mix);
             
             // Select a mixed event
-            Int_t flag=0;
             while (histNum_mix != histNum && s.isMixedEvent(nTrk, nTrk_mix, data.jteta[0], mix.jteta[0]))
             {
                 selected++;
@@ -202,7 +202,7 @@ int ridge_check_parallel
             }
             
             nBkgrndEvts[histNum] += 1;
-            std::cout<<"event number = "<<i<< " mixed event number = "<<selected<<std::endl;
+            std::cout<<"after while loop event number = "<<i<< " mixed event number = "<<selected<<std::endl;
             std::cout<<"nTrk_mix = "<<nTrk_mix<<" nTrk = "<<nTrk<<std::endl;
             for ( Int_t j=0;j<data.nParticle;j++ )
             {
