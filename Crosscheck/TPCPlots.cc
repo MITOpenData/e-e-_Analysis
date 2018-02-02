@@ -84,7 +84,7 @@ void TPCPlots(){
     if(s.experiment==3)  l->AddEntry((TObject*)0,"CMS pp","");
     l->AddEntry((TObject*)0,Form("%d<=N^{trk}<%d",s.multBinsLow[i],s.multBinsHigh[i]),"");
     l->AddEntry((TObject*)0,Form("|#eta|<%f",s.etaCut),"");
-    l->AddEntry((TObject*)0,Form("%f<p_{T}<%f",s.trigPt[0],s.trigPt[1]),"");
+    l->AddEntry((TObject*)0,Form("%1.1f<p_{T}<%1.1f",s.trigPt[0],s.trigPt[1]),"");
 
     TCanvas * c1 = new TCanvas("c1","c1",800,800);
     c1->SetLeftMargin(0.2);
