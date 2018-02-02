@@ -167,7 +167,7 @@ int ridge_check_parallel
         for (Int_t nMix = 0; nMix<s.bkgrd_runs; nMix++)
         {
             Int_t selected=i+1;
-            if (selected >= nevent) selected = 0;
+            if (selected >= t->GetEntries()) selected = 0;
             t_mix->GetEntry(selected);
             jt_mix->GetEntry(selected);
         
@@ -180,7 +180,7 @@ int ridge_check_parallel
             while (histNum_mix != histNum && s.isMixedEvent(nTrk, nTrk_mix, data.jteta[0], mix.jteta[0]))
             {
                 selected++;
-                if (selected >= nevent) selected = 0;
+                if (selected >= t->GetEntries()) selected = 0;
                 t_mix->GetEntry(selected);
                 jt_mix->GetEntry(selected);
                 
@@ -199,6 +199,8 @@ int ridge_check_parallel
                 std::cout <<"Error in Mixing!"<<std::endl;
                 continue;
             }
+            
+            std::cout<<i<<" "<<selected<<" "<<nTrk<<" "<<nTrk_mix<<" "<<std::endl;
             
             nBkgrndEvts[histNum] += 1;
             for ( Int_t j=0;j<data.nParticle;j++ )
