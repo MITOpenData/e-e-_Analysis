@@ -167,9 +167,7 @@ int ridge_check_parallel
         for (Int_t nMix = 0; nMix<s.bkgrd_runs; nMix++)
         {
             Int_t selected=i+1;
-            std::cout<<"before if statement i = "<<i<<" selected = "<<selected<<" nevent = "<<nevent<<std::endl;
             if (selected >= nevent) selected = 0;
-            std::cout<<"before while loop event number = "<<i<< " mixed event number = "<<selected<<std::endl;
             t_mix->GetEntry(selected);
             jt_mix->GetEntry(selected);
         
@@ -203,8 +201,6 @@ int ridge_check_parallel
             }
             
             nBkgrndEvts[histNum] += 1;
-            std::cout<<"after while loop event number = "<<i<< " mixed event number = "<<selected<<std::endl;
-            std::cout<<"nTrk_mix = "<<nTrk_mix<<" nTrk = "<<nTrk<<std::endl;
             for ( Int_t j=0;j<data.nParticle;j++ )
             {
                 if(!s.ridge_trackSelection(data.getPt(j),data.getEta(j),data.nTPC[j],data.pwflag[j],s.doThrust)) continue;
