@@ -200,22 +200,19 @@ int ridge_check_parallel
                 continue;
             }
             
-            std::cout<<i<<" "<<selected<<" "<<nTrk<<" "<<nTrk_mix<<" "<<std::endl;
-            
             nBkgrndEvts[histNum] += 1;
             for ( Int_t j=0;j<data.nParticle;j++ )
             {
                 if(!s.ridge_trackSelection(data.getPt(j),data.getEta(j),data.nTPC[j],data.pwflag[j],s.doThrust)) continue;
-                
                 Float_t angle;
                 if (s.doTheta) angle = data.getTheta(j); else angle = data.getEta(j);
                 Float_t phi = data.getPhi(j);
                 
                 // Background loop, calculate B correlation function from mixed event
+                checkNtrk_mix = 0;
                 for ( Int_t k=0;k<mix.nParticle;k++ )
                 {
                     if(!s.ridge_trackSelection(mix.getPt(k),mix.getEta(k),mix.nTPC[k],mix.pwflag[k],s.doThrust)) continue;
-                    
                     Float_t angle_mix;
                     if (s.doTheta) angle_mix = mix.getTheta(k); else angle_mix = mix.getEta(k);
                     Float_t phi_mix = mix.getPhi(k);
@@ -226,6 +223,8 @@ int ridge_check_parallel
                     bkgrnd2PC[histNum]->Fill(angle_mix-angle,dphi(phi_mix,phi),1./(s.getDifferential())/nTrk);
                 } //end of mixed event loop
             } // end of working event loop
+            //std::cout<<i<<" "<<selected<<" "<<nTrk<<" "<<nTrk_mix<<" "<<std::endl;
+            
         } // end of nMix loop
     } // end of loop over events
     
