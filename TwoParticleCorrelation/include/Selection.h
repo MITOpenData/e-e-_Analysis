@@ -24,6 +24,8 @@ class Selection
 {
     public:
     
+        Int_t experiment = 0; // 0 ALEPH , 1 DELPHI, 2 BELLE, 3 CMS pp
+    
         // for testing purposes
         bool doOneEvent = false;     int numEvents = 250;
     
@@ -58,15 +60,19 @@ class Selection
         Float_t fillAj = 0.0; // used for plotting h_Aj
     
         // other
-        bool doThrust = true;  // used for determining thrust/beam angles to use in filling histograms
-        bool donTrkThrust = true; // used for calculation of nTrk (true = Beam)
+        bool doThrust = false;  // used for determining thrust/beam angles to use in filling histograms
+        bool donTrkThrust = false; // used for calculation of nTrk (true = Beam)
         bool doBelle = false;
         bool doTheta = false;
         //Int_t maxevt = ;
         Int_t nbin = 20;
         Int_t bkgrd_runs = 1; // decide if we should actually be using this
     
-                                                                
+        //kinematics (if trig != assoc cuts, make sure doExcludeNTrigLT2 is set to false)
+        float trigPt[2] = {0.4,100};
+        float assocPt[2] = {0.4,100};
+        float nTrkPt[2] = {0.4,100};
+    
         // BELLE Particle Definition
         enum SIMPLEPID {BELLE_PHOTON, BELLE_ELECTRON, BELLE_PION, BELLE_MUON, BELLE_KAON, BELLE_PROTON};
         // ALEPH Particle Flow Classification

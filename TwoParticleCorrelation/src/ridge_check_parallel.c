@@ -209,7 +209,6 @@ int ridge_check_parallel
                 Float_t phi = data.getPhi(j);
                 
                 // Background loop, calculate B correlation function from mixed event
-                checkNtrk_mix = 0;
                 for ( Int_t k=0;k<mix.nParticle;k++ )
                 {
                     if(!s.ridge_trackSelection(mix.getPt(k),mix.getEta(k),mix.nTPC[k],mix.pwflag[k],s.doThrust)) continue;
