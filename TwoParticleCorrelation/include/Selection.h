@@ -60,8 +60,8 @@ class Selection
         Float_t fillAj = 0.0; // used for plotting h_Aj
     
         // other
-        bool doThrust = false;  // used for determining thrust/beam angles to use in filling histograms
-        bool donTrkThrust = false; // used for calculation of nTrk (true = Beam)
+        bool doThrust = true;  // used for determining thrust/beam angles to use in filling histograms
+        bool donTrkThrust = true; // used for calculation of nTrk (true = Beam)
         bool doBelle = false;
         bool doTheta = false;
         //Int_t maxevt = ;
