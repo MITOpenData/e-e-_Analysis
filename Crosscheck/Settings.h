@@ -71,7 +71,7 @@ class Settings{
     float AjCut = 0.1;
     float thirdJetCut = 0.03;
     bool doAllData = true;
-    int nEvts = 105;
+    int nEvts = 250;
 
     Settings();
     bool isInMultBin(int n, int bin);

@@ -239,8 +239,8 @@ void Analyzer(){
         
         //background mixed event histogram 
         for(int j2 = 0; j2<nParticleMix; j2++){
-          if(!s.doThrust && TMath::Abs(eta[j2]) > s.etaCut) continue;
-          if(s.doThrust && TMath::Abs(eta_wrtThr[j2]) > s.etaCut) continue;
+          if(!s.doThrust && TMath::Abs(etaMix[j2]) > s.etaCut) continue;
+          if(s.doThrust && TMath::Abs(etaMix_wrtThr[j2]) > s.etaCut) continue;
           if(!s.doThrust && (ptMix[j2]<s.assocPt[0] || ptMix[j2]>s.assocPt[1])) continue;
           if(s.doThrust && (ptMix_wrtThr[j2]<s.assocPt[0] || ptMix_wrtThr[j2]>s.assocPt[1])) continue;
           if(!(pwflagMix[j2]==0 || (s.doUseLeptons && (pwflagMix[j2]==1 || pwflagMix[j2]==2)))) continue;
