@@ -147,7 +147,7 @@ int Selection::ridge_trackSelection
     }
     
     if (pt < ptMin_temp || pt > ptMax_temp) return 0;
-    if (doNTPC && nTPC <= nTPCMin || nTPC >= nTPCMax) return 0;
+    if (doNTPC && (nTPC <= nTPCMin || nTPC >= nTPCMax) ) return 0;
     if (TMath::Abs(eta) >= etaCut_temp) return 0;
     
     return 1;
