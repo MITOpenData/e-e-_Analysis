@@ -44,6 +44,7 @@ class Selection
         Float_t etaCut = 1.8;   Float_t etaCut_wrtThr = 5.0;
         Int_t nTPCMin = 0; // completely inclusive, maybe tighten this
         Int_t nTPCMax = 100;
+        bool doNTPC = 0;
     
         // jet cuts
         Float_t AjCut = 0.1;
@@ -146,7 +147,7 @@ int Selection::ridge_trackSelection
     }
     
     if (pt < ptMin_temp || pt > ptMax_temp) return 0;
-    if (nTPC <= nTPCMin || nTPC >= nTPCMax) return 0;
+    if (doNTPC && nTPC <= nTPCMin || nTPC >= nTPCMax) return 0;
     if (TMath::Abs(eta) >= etaCut_temp) return 0;
     
     return 1;
