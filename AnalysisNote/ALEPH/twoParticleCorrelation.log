@@ -1,19 +1,26 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  10 JAN 2018 09:33
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  2 FEB 2018 15:39
 entering extended mode
  restricted \write18 enabled.
- file:line:error style messages enabled.
  %&-line parsing enabled.
 **twoParticleCorrelation.tex
 (./twoParticleCorrelation.tex
 LaTeX2e <2017-04-15>
 Babel <3.10> and hyphenation patterns for 84 language(s) loaded.
-./twoParticleCorrelation.tex:1: Undefined control sequence.
+! Undefined control sequence.
 l.1 \section
             {Two-Particle Correlation Function}
 ? 
-./twoParticleCorrelation.tex:1: Emergency stop.
-l.1 \section
-            {Two-Particle Correlation Function}
+! Interruption.
+<to be read again> 
+                   {
+l.1 \section{
+             Two-Particle Correlation Function}
+? 
+! Emergency stop.
+<to be read again> 
+                   {
+l.1 \section{
+             Two-Particle Correlation Function}
 End of file on the terminal!
 
  
@@ -24,6 +31,5 @@ Here is how much of TeX's memory you used:
  3658 multiletter control sequences out of 15000+600000
  3640 words of font info for 14 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 5i,0n,1p,72b,8s stack positions out of 5000i,500n,10000p,200000b,80000s
-./twoParticleCorrelation.tex:1:  ==> Fatal error occurred, no output PDF file p
-roduced!
+ 5i,0n,1p,73b,8s stack positions out of 5000i,500n,10000p,200000b,80000s
+!  ==> Fatal error occurred, no output PDF file produced!

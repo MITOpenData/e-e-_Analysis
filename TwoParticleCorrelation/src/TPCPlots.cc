@@ -67,7 +67,7 @@ void formatZaxis(TH2D * h, bool minIsZero = true){
   //else                h->GetZaxis()->SetRangeUser(minimum-0.2*(mean-minimum),mean+2.0*(mean-minimum));
 }
 
-void TPCPlots(const std::string inFileName1, const std::string inFileName2)
+void TPCPlots(const std::string inFileName1, const std::string inFileName2, const std::string dataName)
 {
   Selection s;
     
@@ -78,7 +78,7 @@ void TPCPlots(const std::string inFileName1, const std::string inFileName2)
   TH2D * r_sig[s.nMultBins], *r_bkg[s.nMultBins], *r_ratio[s.nMultBins];
   
   TFile * f1 = TFile::Open(inFileName1.c_str(),"read");
-  TFile * f2 = TFile::Open(inFileName1.c_str(),"read");
+  TFile * f2 = TFile::Open(inFileName2.c_str(),"read");
     
   for(int i = 0; i<s.nMultBins; i++)
   {
@@ -90,9 +90,9 @@ void TPCPlots(const std::string inFileName1, const std::string inFileName2)
     bkg2[i] = (TH2D*)f2->Get(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
     ratio2[i] = (TH2D*)f2->Get(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
 
-    r_sig[i] = (TH2D*)sig1[i]->Clone(Form("r_signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));    r_sig[i]->Divide(sig2[i]);
-    r_bkg[i] = (TH2D*)bkg1[i]->Clone(Form("r_bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));    r_bkg[i]->Divide(bkg2[i]);
-    r_ratio[i] = (TH2D*)ratio1[i]->Clone(Form("r_ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));   r_ratio[i]->Divide(ratio2[i]);
+    r_sig[i] = (TH2D*)sig1[i]->Clone(Form("%s_r_signal2PC_%d_%d",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));    r_sig[i]->Divide(sig2[i]);
+    r_bkg[i] = (TH2D*)bkg1[i]->Clone(Form("%s_r_bkgrnd2PC_%d_%d",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));    r_bkg[i]->Divide(bkg2[i]);
+    r_ratio[i] = (TH2D*)ratio1[i]->Clone(Form("%s_r_ratio2PC_%d_%d",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));   r_ratio[i]->Divide(ratio2[i]);
       
     TLegend * l = new TLegend(0.6,0.8,0.95,0.95);
     l->SetFillStyle(0);
@@ -113,81 +113,81 @@ void TPCPlots(const std::string inFileName1, const std::string inFileName2)
     sig1[i]->Draw("surf1 fb");
     l->Draw("same");
     //sig[i]->GetZaxis()->SetRangeUser(0.9*sig[i]->GetMinimum(),0.4*sig[i]->GetMaximum());
-    c1->SaveAs(Form("../pdfDir/signal1_%d_%d.png",s.multBinsLow[i],s.multBinsHigh[i]));
-    c1->SaveAs(Form("../pdfDir/signal1_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i]));
-    c1->SaveAs(Form("../pdfDir/signal1_%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_signal1_%d_%d.png",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_signal1_%d_%d.pdf",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_signal1_%d_%d.C",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
       
     formatTPCAxes(sig2[i],1.5,1.5,2);
     formatZaxis(sig2[i],1);
     sig2[i]->Draw("surf1 fb");
     l->Draw("same");
     //sig[i]->GetZaxis()->SetRangeUser(0.9*sig[i]->GetMinimum(),0.4*sig[i]->GetMaximum());
-    c1->SaveAs(Form("../pdfDir/signal2_%d_%d.png",s.multBinsLow[i],s.multBinsHigh[i]));
-    c1->SaveAs(Form("../pdfDir/signal2_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i]));
-    c1->SaveAs(Form("../pdfDir/signal2_%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_signal2_%d_%d.png",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_signal2_%d_%d.pdf",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_signal2_%d_%d.C",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
       
     formatTPCAxes(r_sig[i],1.5,1.5,2);
     formatZaxis(r_sig[i],1);
     r_sig[i]->Draw("surf1 fb");
     l->Draw("same");
     //sig[i]->GetZaxis()->SetRangeUser(0.9*sig[i]->GetMinimum(),0.4*sig[i]->GetMaximum());
-    c1->SaveAs(Form("../pdfDir/r_signal_%d_%d.png",s.multBinsLow[i],s.multBinsHigh[i]));
-    c1->SaveAs(Form("../pdfDir/r_signal_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i]));
-    c1->SaveAs(Form("../pdfDir/r_signal_%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_r_signal_%d_%d.png",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_r_signal_%d_%d.pdf",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_r_signal_%d_%d.C",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
     
     formatTPCAxes(bkg1[i],1.5,1.5,2);
     formatZaxis(bkg1[i],1);
     bkg1[i]->Draw("surf1 fb");
     l->Draw("same");
     //bkg[i]->GetZaxis()->SetRangeUser(0.9*bkg[i]->GetMinimum(),1.1*bkg[i]->GetMaximum());
-    c1->SaveAs(Form("../pdfDir/background1_%d_%d.png",s.multBinsLow[i],s.multBinsHigh[i]));
-    c1->SaveAs(Form("../pdfDir/background1_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i]));
-    c1->SaveAs(Form("../pdfDir/background1_%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_background1_%d_%d.png",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_background1_%d_%d.pdf",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_background1_%d_%d.C",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
     
     formatTPCAxes(bkg2[i],1.5,1.5,2);
     formatZaxis(bkg2[i],1);
     bkg2[i]->Draw("surf1 fb");
     l->Draw("same");
     //bkg[i]->GetZaxis()->SetRangeUser(0.9*bkg[i]->GetMinimum(),1.1*bkg[i]->GetMaximum());
-    c1->SaveAs(Form("../pdfDir/background2_%d_%d.png",s.multBinsLow[i],s.multBinsHigh[i]));
-    c1->SaveAs(Form("../pdfDir/background2_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i]));
-    c1->SaveAs(Form("../pdfDir/background2_%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_background2_%d_%d.png",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_background2_%d_%d.pdf",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_background2_%d_%d.C",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
     
     formatTPCAxes(r_bkg[i],1.5,1.5,2);
     formatZaxis(r_bkg[i],1);
     r_bkg[i]->Draw("surf1 fb");
     l->Draw("same");
     //bkg[i]->GetZaxis()->SetRangeUser(0.9*bkg[i]->GetMinimum(),1.1*bkg[i]->GetMaximum());
-    c1->SaveAs(Form("../pdfDir/r_background_%d_%d.png",s.multBinsLow[i],s.multBinsHigh[i]));
-    c1->SaveAs(Form("../pdfDir/r_background_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i]));
-    c1->SaveAs(Form("../pdfDir/r_background_%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_r_background_%d_%d.png",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_r_background_%d_%d.pdf",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_r_background_%d_%d.C",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
       
     formatTPCAxes(ratio1[i],1.5,1.5,2);
     formatZaxis(ratio1[i],0);
     ratio1[i]->Draw("surf1 fb");
     l->Draw("same");
     //ratio[i]->GetZaxis()->SetRangeUser(0.9*ratio[i]->GetMinimum(),0.4*ratio[i]->GetMaximum());
-    c1->SaveAs(Form("../pdfDir/ratio1_%d_%d.png",s.multBinsLow[i],s.multBinsHigh[i]));
-    c1->SaveAs(Form("../pdfDir/ratio1_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i]));
-    c1->SaveAs(Form("../pdfDir/ratio1_%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_ratio1_%d_%d.png",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_ratio1_%d_%d.pdf",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_ratio1_%d_%d.C",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
  
     formatTPCAxes(ratio2[i],1.5,1.5,2);
     formatZaxis(ratio2[i],0);
     ratio2[i]->Draw("surf1 fb");
     l->Draw("same");
     //ratio[i]->GetZaxis()->SetRangeUser(0.9*ratio[i]->GetMinimum(),0.4*ratio[i]->GetMaximum());
-    c1->SaveAs(Form("../pdfDir/ratio2_%d_%d.png",s.multBinsLow[i],s.multBinsHigh[i]));
-    c1->SaveAs(Form("../pdfDir/ratio2_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i]));
-    c1->SaveAs(Form("../pdfDir/ratio2_%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_ratio2_%d_%d.png",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_ratio2_%d_%d.pdf",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_ratio2_%d_%d.C",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
       
     formatTPCAxes(r_ratio[i],1.5,1.5,2);
     formatZaxis(r_ratio[i],0);
     r_ratio[i]->Draw("surf1 fb");
     l->Draw("same");
     //ratio[i]->GetZaxis()->SetRangeUser(0.9*ratio[i]->GetMinimum(),0.4*ratio[i]->GetMaximum());
-    c1->SaveAs(Form("../pdfDir/r_ratio_%d_%d.png",s.multBinsLow[i],s.multBinsHigh[i]));
-    c1->SaveAs(Form("../pdfDir/r_ratio_%d_%d.pdf",s.multBinsLow[i],s.multBinsHigh[i]));
-    c1->SaveAs(Form("../pdfDir/r_ratio_%d_%d.C",s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_r_ratio_%d_%d.png",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_r_ratio_%d_%d.pdf",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_r_ratio_%d_%d.C",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
       
       
     delete c1;
@@ -215,82 +215,82 @@ void TPCPlots(const std::string inFileName1, const std::string inFileName2)
   eta1->Draw("p");
   eta1->SetTitle(";#eta;N");
   eta1->SetStats(0);
-  c2->SaveAs("../pdfDir/eta1.png");
-  c2->SaveAs("../pdfDir/eta1.pdf");
-  c2->SaveAs("../pdfDir/eta1.C");
+  c2->SaveAs(Form("../pdfDir/%s_eta1.png",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_eta1.pdf",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_eta1.C",dataName.c_str()));
   eta2->Draw("p");
   eta2->SetTitle(";#eta;N");
   eta2->SetStats(0);
-  c2->SaveAs("../pdfDir/eta2.png");
-  c2->SaveAs("../pdfDir/eta2.pdf");
-  c2->SaveAs("../pdfDir/eta2.C");
+  c2->SaveAs(Form("../pdfDir/%s_eta2.png",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_eta2.pdf",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_eta2.C",dataName.c_str()));
     
   phi1->Draw("p");
   phi1->SetTitle(";#phi;N");
   phi1->SetStats(0);
-  c2->SaveAs("../pdfDir/phi1.png");
-  c2->SaveAs("../pdfDir/phi1.pdf");
-  c2->SaveAs("../pdfDir/phi1.C");
+  c2->SaveAs(Form("../pdfDir/%s_phi1.png",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_phi1.pdf",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_phi1.C",dataName.c_str()));
   phi2->Draw("p");
   phi2->SetTitle(";#phi;N");
   phi2->SetStats(0);
-  c2->SaveAs("../pdfDir/phi2.png");
-  c2->SaveAs("../pdfDir/phi2.pdf");
-  c2->SaveAs("../pdfDir/phi2.C");
+  c2->SaveAs(Form("../pdfDir/%s_phi2.png",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_phi2.pdf",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_phi2.C",dataName.c_str()));
     
   theta1->Draw("p");
   theta1->SetTitle(";#theta;N");
   theta1->SetStats(0);
-  c2->SaveAs("../pdfDir/theta1.png");
-  c2->SaveAs("../pdfDir/theta1.pdf");
-  c2->SaveAs("../pdfDir/theta1.C");
+  c2->SaveAs(Form("../pdfDir/%s_theta1.png",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_theta1.pdf",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_theta1.C",dataName.c_str()));
   theta2->Draw("p");
   theta2->SetTitle(";#theta;N");
   theta2->SetStats(0);
-  c2->SaveAs("../pdfDir/theta2.png");
-  c2->SaveAs("../pdfDir/theta2.pdf");
-  c2->SaveAs("../pdfDir/theta2.C");
+  c2->SaveAs(Form("../pdfDir/%s_theta2.png",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_theta2.pdf",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_theta2.C",dataName.c_str()));
     
   TTheta1->Draw("p");
   TTheta1->SetTitle(";#theta_{thrust};N");
   TTheta1->SetStats(0);
-  c2->SaveAs("../pdfDir/Ttheta1.png");
-  c2->SaveAs("../pdfDir/Ttheta1.pdf");
-  c2->SaveAs("../pdfDir/Ttheta1.C");
+  c2->SaveAs(Form("../pdfDir/%s_TTheta1.png",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_TTheta1.pdf",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_TTheta1.C",dataName.c_str()));
   TTheta2->Draw("p");
   TTheta2->SetTitle(";#theta_{thrust};N");
   TTheta2->SetStats(0);
-  c2->SaveAs("../pdfDir/Ttheta2.png");
-  c2->SaveAs("../pdfDir/Ttheta2.pdf");
-  c2->SaveAs("../pdfDir/Ttheta2.C");
+  c2->SaveAs(Form("../pdfDir/%s_TTheta2.png",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_TTheta2.pdf",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_TTheta2.C",dataName.c_str()));
     
   TPhi1->Draw("p");
   TPhi1->SetTitle(";#phi_{thrust};N");
   TPhi1->SetStats(0);
-  c2->SaveAs("../pdfDir/Tphi1.png");
-  c2->SaveAs("../pdfDir/Tphi1.pdf");
-  c2->SaveAs("../pdfDir/Tphi1.C");
+  c2->SaveAs(Form("../pdfDir/%s_TPhi1.png",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_TPhi1.pdf",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_TPhi1.C",dataName.c_str()));
   TPhi2->Draw("p");
   TPhi2->SetTitle(";#phi_{thrust};N");
   TPhi2->SetStats(0);
-  c2->SaveAs("../pdfDir/Tphi2.png");
-  c2->SaveAs("../pdfDir/Tphi2.pdf");
-  c2->SaveAs("../pdfDir/Tphi2.C");
+  c2->SaveAs(Form("../pdfDir/%s_TPhi2.png",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_TPhi2.pdf",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_TPhi2.C",dataName.c_str()));
 
   c2->SetLogy();
   pt1->Draw("p");
   pt1->SetTitle(";p_{T};N");
   pt1->SetStats(0);
-  c2->SaveAs("../pdfDir/pt1.png");
-  c2->SaveAs("../pdfDir/pt1.pdf");
-  c2->SaveAs("../pdfDir/pt1.C");
+  c2->SaveAs(Form("../pdfDir/%s_pt1.png",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_pt1.pdf",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_pt1.C",dataName.c_str()));
   c2->SetLogy();
   pt2->Draw("p");
   pt2->SetTitle(";p_{T};N");
   pt2->SetStats(0);
-  c2->SaveAs("../pdfDir/pt2.png");
-  c2->SaveAs("../pdfDir/pt2.pdf");
-  c2->SaveAs("../pdfDir/pt2.C");
+  c2->SaveAs(Form("../pdfDir/%s_pt2.png",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_pt2.pdf",dataName.c_str()));
+  c2->SaveAs(Form("../pdfDir/%s_pt2.C",dataName.c_str()));
     
   delete c2;
     
