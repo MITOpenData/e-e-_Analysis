@@ -34,23 +34,33 @@ class TPCNtupleData{
     Float_t jtphi[nMaxPart];
     
     //thrust axis variables
-    float pt_wrtThr[nMaxPart];
-    float eta_wrtThr[nMaxPart];
-    float theta_wrtThr[nMaxPart];
-    float phi_wrtThr[nMaxPart];
+    Float_t pt_wrtThr[nMaxPart];
+    Float_t eta_wrtThr[nMaxPart];
+    Float_t theta_wrtThr[nMaxPart];
+    Float_t phi_wrtThr[nMaxPart];
     Float_t TTheta;
     Float_t TPhi;
     
+    // WTA axis variables
+    Float_t WTAAxis_Theta;
+    Float_t WTAAxis_Phi;
+    Float_t boostx;
+    Float_t boosty;
+    Float_t boostz;
+    Float_t boost;
+    
     bool isBelle;
+    bool isWTA;
     int doThrust;
     Float_t memory;
     TVector3 thrust;
     TVector3 p;
     
-    TPCNtupleData(bool ana=0, int thrustAna=0)
+    TPCNtupleData(bool ana=0, int thrustAna=0, bool tree=0)
     {
        isBelle = ana;
        doThrust = thrustAna;
+       isWTA = tree;
        thrust.SetXYZ(1,0,0);
        p.SetXYZ(1,0,0);
     }
@@ -201,6 +211,7 @@ void setupTPCTree(TTree *t1, TTree *t2, TPCNtupleData &data)
     t2->SetBranchAddress("jtphi",data.jtphi);
     t2->SetBranchAddress("nref",&data.nref);
 
+    
     if (!data.isBelle)
     {
         t1->SetBranchAddress("pwflag",data.pwflag);
@@ -209,6 +220,12 @@ void setupTPCTree(TTree *t1, TTree *t2, TPCNtupleData &data)
         t1->SetBranchAddress("pz",data.pz);
         t1->SetBranchAddress("TTheta", &data.TTheta);
         t1->SetBranchAddress("TPhi", &data.TPhi);
+    }
+    
+    if(data.isWTA)
+    {
+        t1->SetBranchAddress("WTAAxis_Theta",&data.WTAAxis_Theta);
+        t1->SetBranchAddress("WTAAxis_Phi",&data.WTAAxis_Phi);
     }
 }
 

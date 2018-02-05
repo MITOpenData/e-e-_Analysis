@@ -80,23 +80,35 @@ int ridge_check_parallel
         ratio2PC[i] = new TH2F(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
     }
     TH1F * multiplicity = new TH1F("multiplicity",";nTrk;nEvents",200,0,200);
-
-    std::string ak4JetName = "ak4ESchemeJetTree";
+    
+    std::string jtTreeName = "";
+    if (s.jttree == 0) jtTreeName = "ak4ESchemeJetTree";
+    if (s.jttree == 1) jtTreeName = "ak4WTAmodpSchemeJetTree";
+    if (s.jttree == 2) jtTreeName = "ak8ESchemeJetTree";
+    if (s.jttree == 3) jtTreeName = "ak8WTAmodpSchemeJetTree";
+    
     if(inFileName.find(".root") != std::string::npos){
       TFile* temp_p = new TFile(inFileName.c_str(), "READ");
-      ak4JetName = smartJetName(ak4JetName, temp_p);
+      jtTreeName = smartJetName(jtTreeName, temp_p);
       temp_p->Close();
       delete temp_p;
     }
     
     // files and variables for input
-    TChain * t = new TChain("t");       t->Add(inFileName.c_str());
-    TChain * jt = new TChain(ak4JetName.c_str());       jt->Add(inFileName.c_str());
-    TPCNtupleData data(s.doBelle, s.doThrust);      setupTPCTree(t,jt,data);       data.setTPCTreeStatus(t);
+    // get the correct tree for the analysis
+    std::string treeName = "";
+    if (s.tree == 0) treeName = "t";
+    if (s.tree == 1) treeName = "BoostedWTAR8Evt";
     
-    TChain * t_mix = new TChain("t");       t_mix->Add(inFileName.c_str());
-    TChain * jt_mix = new TChain(ak4JetName.c_str());       jt_mix->Add(inFileName.c_str());
-    TPCNtupleData mix(s.doBelle, s.doThrust);       setupTPCTree(t_mix,jt_mix,mix);        mix.setTPCTreeStatus(t_mix);
+    TChain * t = new TChain(treeName.c_str());       t->Add(inFileName.c_str());
+    TChain * jt = new TChain(jtTreeName.c_str());       jt->Add(inFileName.c_str());
+    
+    /////// ANTHONY YOU ARE RIGHT HERE. UPDATE THE DECLARATION BELOW TO ALSO TAKE IN THE s.tree AND THEN WHEN YOU DO getPt YOU MAKE IT SO IT CHECKS THE TREE AND THEN GOES AND GETS THE CORRECT VARIABLE FROM THE TREE. THIS MEANS NOT UPDATING THE "t" TREE BUT INSTEAD UPDATING THE "jt" TREE ///////////
+    TPCNtupleData data(s.doBelle, s.doThrust, s.tree);      setupTPCTree(t,jt,data);       data.setTPCTreeStatus(t);
+    
+    TChain * t_mix = new TChain(treeName.c_str());       t_mix->Add(inFileName.c_str());
+    TChain * jt_mix = new TChain(jtTreeName.c_str());       jt_mix->Add(inFileName.c_str());
+    TPCNtupleData mix(s.doBelle, s.doThrust, s.tree);       setupTPCTree(t_mix,jt_mix,mix);        mix.setTPCTreeStatus(t_mix);
     
     // analysis
     Int_t nevent = (Int_t)t->GetEntries();
