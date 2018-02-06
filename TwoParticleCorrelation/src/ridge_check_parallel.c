@@ -3,6 +3,9 @@
 #include <string>
 #include <iostream>
 #include <stdlib.h>
+#include <vector>
+#include <map>
+#include <fstream>
 
 //root dependencies
 #include <TFile.h>
@@ -21,6 +24,7 @@
 #include <TVector3.h>
 #include <TFormula.h>
 #include <TNtuple.h>
+#include "TDatime.h"
 
 //local headers
 #include "include/fourier.h"
@@ -47,9 +51,18 @@ using namespace std;
 int ridge_check_parallel
     (
      const std::string inFileName, // input file
-     const std::string outFileName    // output file
+     std::string outFileName    // output file
     )
 {
+    
+    //////////////////// CREATE OUTFILE NAME ////////////////
+    // create a outFileName if the one supplied is nothing
+    // load the date
+    TDatime* date = new TDatime();
+    if(outFileName.size() == 0) outFileName = inFileName;
+    if(outFileName.find(".root") != std::string::npos){outFileName.replace(outFileName.find(".root"), 5, "");}
+    outFileName = outFileName + "_PLOTS_" + std::to_string(date->GetDate());
+    
     // ROOT Global setting
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
