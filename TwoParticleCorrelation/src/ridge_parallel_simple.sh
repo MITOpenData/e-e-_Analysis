@@ -11,9 +11,11 @@
 inFileList=$1
 outFileName=$2
 
+i=0
 while read line
 do
-    root -b -q ridge_check_parallel.c\(\"$line\",\"out_$line\"\) &
+    root -b -q ridge_check_parallel.c\(\"$line\",\"out_$i\"\) &
+    let i=i+1
 done <$inFileList
 wait
 
