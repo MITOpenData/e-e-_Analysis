@@ -194,19 +194,19 @@ TVector3 getThrustHerwig(int n, float *px, float *py, float *pz){
   if(n<=0) return thrust;
 
   if(n==1){//thrust is just the particle
-    TVector3 thrust = TVector3(px[0],py[0],pz[0]);   
+    thrust = TVector3(px[0],py[0],pz[0]);   
     thrust.SetMag(thrust.Mag()/pSum);
     return thrust;
   }
 
   if(n==2){//special case for 2 particles
     if(TMath::Power(px[0],2)+TMath::Power(py[0],2)+TMath::Power(pz[0],2) >= TMath::Power(px[1],2)+TMath::Power(py[1],2)+TMath::Power(pz[1],2)){
-      TVector3 thrust = TVector3(px[0],py[0],pz[0]);   
+      thrust = TVector3(px[0],py[0],pz[0]);   
       thrust.SetMag(thrust.Mag()/pSum);
       return thrust;
     }
     else{
-      TVector3 thrust = TVector3(px[1],py[1],pz[1]);   
+      thrust = TVector3(px[1],py[1],pz[1]);   
       thrust.SetMag(thrust.Mag()/pSum);
       return thrust;
     }
