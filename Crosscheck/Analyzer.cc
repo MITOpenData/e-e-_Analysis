@@ -198,7 +198,6 @@ void Analyzer(){
         if(s.isInMultBin(nTrk,k) && nMixed==0)  nSignalEvts[k]++;
         if(s.isInMultBin(nTrk,k))  nBkgrndEvts[k]++;
       }
-      if(i>30900) std::cout << i << " " << i2 << " " << nTrk << " " << nTrkMix << std::endl;    
  
       //fill signal histogram
       for(int j1 = 0; j1<nParticle; j1++){

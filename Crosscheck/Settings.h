@@ -17,7 +17,7 @@ class Settings{
     bool isMC = false;
     int MCProcess = 5;
     //ALEPH data
-    std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/LEP2/20180119/LEP2MC1996YDATAEMINI_recons_aftercut-MERGED.root";
+    std::string inputFile = "/home/abadea/Public/forPeople/forAustin/20180126/LEP1.root";
     //std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee/20171208/outFile_MERGED_nEvt2000000_nMinChgPart0_RopeWalk0.root";//regular pythia 8
     //std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_RopeWalk/20171208/outFile_MERGED_nEvt2000000_nMinChgPart0_RopeWalk1.root";//ropewalk pythia 8
     //std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_minChgNPart30/20171208/outFile_MERGED__nEvt20000_nMinChgPart30_RopeWalk0.root";//high mult regular pythia
@@ -32,14 +32,14 @@ class Settings{
     float assocPt[2] = {0.4,100};
     float nTrkPt[2] = {0.4,100};
     
-    //float etaCut = 1.8;//BEAM AXIS
-    float etaCut = 5.0;//THRUST AXIS
+    float etaCut = 1.8;//BEAM AXIS
+    //float etaCut = 5.0;//THRUST AXIS
     //beam  axis stuff
     //float etaPlotRange = 1.8;//this gets multiplied by 2
     //float dEtaBins = 36;//keep even
     //float dPhiBins = 36;//keep factor of 4
-    //float etaPlotRange = 3.2;//BEAM AXIS this gets multiplied by 2 to give full deta range
-    float etaPlotRange = 6.0;//THRUST AXIS this gets multiplied by 2
+    float etaPlotRange = 3.2;//BEAM AXIS this gets multiplied by 2 to give full deta range
+    //float etaPlotRange = 6.0;//THRUST AXIS this gets multiplied by 2
     float dEtaBins = 20;//keep even
     float dPhiBins = 20;//keep factor of 4
 
@@ -51,7 +51,7 @@ class Settings{
 
 
     //plots
-    bool useBeamMult = false;
+    bool useBeamMult = true;
     static const int nMultBins = 3;
     int multBinsLow[nMultBins]  = {0 , 20, 30};
     int multBinsHigh[nMultBins] = {20, 30, 999};
@@ -59,7 +59,7 @@ class Settings{
     bool calcKinematicsWrtThrust = false;
 
     //other
-    bool doThrust = true;
+    bool doThrust = false;
     bool doChargedThrust = false;
     float thrustMatchWindow = 99.0;
     bool doMultMatch = true;
