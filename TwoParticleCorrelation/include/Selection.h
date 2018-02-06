@@ -59,6 +59,7 @@ class Selection
         Float_t dPhiBins = 20;//keep factor of 4
         Float_t differential = (2*etaPlotRange/(float)dEtaBins)*(2*TMath::Pi()/(float)dPhiBins);
         Float_t fillAj = 0.0; // used for plotting h_Aj
+        Float_t dEtaRangeToIntegrate[2] = {2.0,3.6}; //try to make this correspond with bin edges based on above parameters
     
         // other
         bool doThrust = false;  // used for determining thrust/beam angles to use in filling histograms

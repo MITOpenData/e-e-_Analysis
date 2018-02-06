@@ -60,6 +60,7 @@ int ridge_check_parallel
     TH2F * signal2PC[s.nMultBins];
     TH2F * bkgrnd2PC[s.nMultBins];
     TH2F * ratio2PC[s.nMultBins];
+    TH1F * longRangeYield[s.nMultBins];
     float nSignalEvts[s.nMultBins] = {0};
     float nBkgrndEvts[s.nMultBins] = {0};
     
@@ -78,6 +79,7 @@ int ridge_check_parallel
         signal2PC[i] = new TH2F(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
         bkgrnd2PC[i] = new TH2F(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
         ratio2PC[i] = new TH2F(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+        longRangeYield[i] = new TH1F(Form("longRangeYield_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#phi;Y(#Delta#Phi)",s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
     }
     TH1F * multiplicity = new TH1F("multiplicity",";nTrk;nEvents",200,0,200);
     
@@ -248,9 +250,12 @@ int ridge_check_parallel
         signal2PC[i]->Scale(1./ (float)nSignalEvts[i]);
         bkgrnd2PC[i]->Scale(1./(float)nBkgrndEvts[i]);
         calculateRatio(signal2PC[i],bkgrnd2PC[i],ratio2PC[i]);
+        getLongRangeYield(s,ratio2PC[i],longRangeYield[i]);
+
         signal2PC[i]->Write();
         bkgrnd2PC[i]->Write();
         ratio2PC[i]->Write();
+        longRangeYield[i]->Write();
     }
     
     h_eff->Write();

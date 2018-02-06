@@ -8,6 +8,8 @@
 #include <iostream>
 #include <TMath.h>
 
+#include "Selection.h"
+
 #define PI 3.14159265358979
 
 
@@ -136,4 +138,24 @@ int calculateRatio(TH2F *h_2D, TH2F *h_2Dmix, TH2F *h_ratio)
     }
     
     return 0;
+}
+
+void getLongRangeYield(Selection s, TH2F * h, TH1F * g){
+    float binArea = (4*s.etaPlotRange/(float)s.dEtaBins)*(2*TMath::Pi()/(float)s.dPhiBins);
+    
+    for(int i = 0; i<s.dPhiBins; i++){
+        float sum = 0;
+        float err2 = 0;
+        for(int j = 0; j<s.dEtaBins; j++){
+            float center = h->GetXaxis()->GetBinCenter(j+1);
+            if(TMath::Abs(center)>=s.dEtaRangeToIntegrate[0] && TMath::Abs(center)<s.dEtaRangeToIntegrate[1]){
+                sum += h->GetBinContent(j+1,i+1);
+                err2+= h->GetBinError(j+1,i+1)*h->GetBinError(j+1,i+1);
+            }
+        }
+        g->SetBinContent(i+1,sum);
+        g->SetBinError(i+1,TMath::Power(err2,0.5));
+    }
+    //scale by bin area to get yield
+    g->Scale(2*binArea);//scale by 2 because we only integrated the positive side, adn there is also yield in the negative eta side
 }
