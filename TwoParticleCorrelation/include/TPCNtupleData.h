@@ -50,17 +50,17 @@ class TPCNtupleData{
     Float_t boost;
     
     bool isBelle;
-    bool isWTA;
+    int sideTree;
     int doThrust;
     Float_t memory;
     TVector3 thrust;
     TVector3 p;
     
-    TPCNtupleData(bool ana=0, int thrustAna=0, bool tree=0)
+    TPCNtupleData(bool ana=0, int thrustAna=0, int tree=0)
     {
        isBelle = ana;
        doThrust = thrustAna;
-       isWTA = tree;
+       sideTree = tree;
        thrust.SetXYZ(1,0,0);
        p.SetXYZ(1,0,0);
     }
@@ -157,7 +157,8 @@ class TPCNtupleData{
         if (memory!=pt[0]*1000+eta[0]) std::cout <<"Bug in the code!"<<std::endl;
     }
     
-    void setTPCTreeStatus(TTree *t1)
+    // main tree, side tree
+    void setTPCTreeStatus(TTree *t1, TTree *t2)
     {
       t1->SetBranchStatus("*", 0);
       t1->SetBranchStatus("nParticle", 1);
@@ -184,12 +185,23 @@ class TPCNtupleData{
         t1->SetBranchStatus("TTheta", 1);
         t1->SetBranchStatus("TPhi", 1);
       }
+    
+      if (sideTree == 1)
+      {
+          t2->SetBranchStatus("WTAAxis_Theta",1);
+          t2->SetBranchStatus("WTAAxis_Phi",1);
+          t2->SetBranchStatus("pt", 1);
+          t2->SetBranchStatus("eta", 1);
+          t2->SetBranchStatus("theta", 1);
+          t2->SetBranchStatus("phi", 1);
+      }
     }
 };
 
 
 // Set the branch addresses
-void setupTPCTree(TTree *t1, TTree *t2, TPCNtupleData &data)
+// main tree, side tree, jet tree, data
+void setupTPCTree(TTree *t1, TTree *t2, TTree *t3, TPCNtupleData &data)
 {
     t1->SetBranchAddress("nParticle",&data.nParticle);
     t1->SetBranchAddress("passesWW",&data.passesWW);
@@ -206,10 +218,10 @@ void setupTPCTree(TTree *t1, TTree *t2, TPCNtupleData &data)
     t1->SetBranchAddress("phi_wrtThr",data.phi_wrtThr);
     t1->SetBranchAddress("ntpc",data.nTPC);
     
-    t2->SetBranchAddress("jtpt",data.jtpt);
-    t2->SetBranchAddress("jteta",data.jteta);
-    t2->SetBranchAddress("jtphi",data.jtphi);
-    t2->SetBranchAddress("nref",&data.nref);
+    t3->SetBranchAddress("jtpt",data.jtpt);
+    t3->SetBranchAddress("jteta",data.jteta);
+    t3->SetBranchAddress("jtphi",data.jtphi);
+    t3->SetBranchAddress("nref",&data.nref);
 
     
     if (!data.isBelle)
@@ -222,10 +234,15 @@ void setupTPCTree(TTree *t1, TTree *t2, TPCNtupleData &data)
         t1->SetBranchAddress("TPhi", &data.TPhi);
     }
     
-    if(data.isWTA)
+    if(data.sideTree == 1) // WTA Axis
     {
-        t1->SetBranchAddress("WTAAxis_Theta",&data.WTAAxis_Theta);
-        t1->SetBranchAddress("WTAAxis_Phi",&data.WTAAxis_Phi);
+        t2->SetBranchAddress("WTAAxis_Theta",&data.WTAAxis_Theta);
+        t2->SetBranchAddress("WTAAxis_Phi",&data.WTAAxis_Phi);
+        
+        t2->SetBranchAddress("pt",data.pt);
+        t2->SetBranchAddress("eta",data.eta);
+        t2->SetBranchAddress("theta",data.theta);
+        t2->SetBranchAddress("phi",data.phi);
     }
 }
 

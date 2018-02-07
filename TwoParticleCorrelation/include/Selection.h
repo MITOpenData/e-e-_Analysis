@@ -26,6 +26,14 @@ class Selection
     
         Int_t experiment = 0; // 0 ALEPH , 1 DELPHI, 2 BELLE, 3 CMS pp
     
+        // Initial Setup
+        int side_tree = 1;  // 0 t, 1 BoostedWTAR8Evt,
+        int jttree = 0; // 0 ak4ESchemeJetTree, 1 ak4WTAmodpSchemeJetTree, 2 ak8ESchemeJetTree, 3 ak8WTAmodpSchemeJetTree
+        bool doThrust = false;  // used for determining thrust/beam angles to use in filling histograms
+        bool donTrkThrust = false; // used for calculation of nTrk (true = Beam)
+        bool doBelle = false;
+        bool doTheta = false;
+    
         // for testing purposes
         bool doOneEvent = false;     int numEvents = 250;
     
@@ -61,12 +69,6 @@ class Selection
         Float_t fillAj = 0.0; // used for plotting h_Aj
         Float_t dEtaRangeToIntegrate[2] = {2.0,3.6}; //try to make this correspond with bin edges based on above parameters
     
-        // other
-        bool doThrust = false;  // used for determining thrust/beam angles to use in filling histograms
-        bool donTrkThrust = false; // used for calculation of nTrk (true = Beam)
-        bool doBelle = false;
-        bool doTheta = false;
-    
         //Int_t maxevt = ;
         Int_t nbin = 20;
         Int_t bkgrd_runs = 1; // decide if we should actually be using this
@@ -80,10 +82,6 @@ class Selection
         enum SIMPLEPID {BELLE_PHOTON, BELLE_ELECTRON, BELLE_PION, BELLE_MUON, BELLE_KAON, BELLE_PROTON};
         // ALEPH Particle Flow Classification
         enum SIMPLEPWFLAG {ALEPH_CHARGED_TRACK, ALEPH_CHARGED_LEPTONS1, ALEPH_CHARGED_LEPTONS2, ALEPH_V0, ALEPH_PHOTON, ALEPH_NEUTRAL_HADRON};
-    
-        // different trees in the input files
-        int tree = 0;  // 0 t, 1 BoostedWTAR8Evt,
-        int jttree = 0; // 0 ak4ESchemeJetTree, 1 ak4WTAmodpSchemeJetTree, 2 ak8ESchemeJetTree, 3 ak8WTAmodpSchemeJetTree
     
         Selection();
         Float_t getEtaPlotRange();

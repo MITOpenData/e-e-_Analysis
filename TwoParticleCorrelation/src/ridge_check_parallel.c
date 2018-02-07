@@ -111,19 +111,20 @@ int ridge_check_parallel
     
     // files and variables for input
     // get the correct tree for the analysis
-    std::string treeName = "";
-    if (s.tree == 0) treeName = "t";
-    if (s.tree == 1) treeName = "BoostedWTAR8Evt";
+    std::string sideTree = "";
+    if (s.side_tree == 1) sideTree = "BoostedWTAR8Evt";
     
-    TChain * t = new TChain(treeName.c_str());       t->Add(inFileName.c_str());
+    TChain * t = new TChain("t");       t->Add(inFileName.c_str());
+    TChain * side_t = new TChain(sideTree.c_str());       side_t->Add(inFileName.c_str());
     TChain * jt = new TChain(jtTreeName.c_str());       jt->Add(inFileName.c_str());
+
+    TPCNtupleData data(s.doBelle, s.doThrust, s.side_tree);      setupTPCTree(t,side_t,jt,data);       data.setTPCTreeStatus(t,side_t);
     
-    /////// ANTHONY YOU ARE RIGHT HERE. UPDATE THE DECLARATION BELOW TO ALSO TAKE IN THE s.tree AND THEN WHEN YOU DO getPt YOU MAKE IT SO IT CHECKS THE TREE AND THEN GOES AND GETS THE CORRECT VARIABLE FROM THE TREE. THIS MEANS NOT UPDATING THE "t" TREE BUT INSTEAD UPDATING THE "jt" TREE ///////////
-    TPCNtupleData data(s.doBelle, s.doThrust, s.tree);      setupTPCTree(t,jt,data);       data.setTPCTreeStatus(t);
-    
-    TChain * t_mix = new TChain(treeName.c_str());       t_mix->Add(inFileName.c_str());
+    TChain * t_mix = new TChain("t");       t_mix->Add(inFileName.c_str());
+    TChain * side_t_mix = new TChain(sideTree.c_str());       side_t_mix->Add(inFileName.c_str());
     TChain * jt_mix = new TChain(jtTreeName.c_str());       jt_mix->Add(inFileName.c_str());
-    TPCNtupleData mix(s.doBelle, s.doThrust, s.tree);       setupTPCTree(t_mix,jt_mix,mix);        mix.setTPCTreeStatus(t_mix);
+    
+    TPCNtupleData mix(s.doBelle, s.doThrust, s.side_tree);       setupTPCTree(t_mix,side_t_mix,jt_mix,mix);        mix.setTPCTreeStatus(t_mix,side_t_mix);
     
     // analysis
     Int_t nevent = (Int_t)t->GetEntries();
