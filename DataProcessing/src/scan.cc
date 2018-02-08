@@ -26,6 +26,7 @@
 #include "include/boostedEvtData.h"
 #include "include/thrustTools.h"
 #include "include/boostTools.h"
+#include "include/sphericityTools.h"
 #include "include/processJets.h"
 
 bool getIsMC(std::string inStr)
@@ -307,6 +308,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
       if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2))/* not all files do four 999 && check999(num.at(3)*/){
 	pData.nParticle=counterParticles;
         bData.nParticle=counterParticles;
+        
         thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz, THRUST::OPTIMAL); 
         thrust_charged = getChargedThrust(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag, THRUST::OPTIMAL);
 	eData.nChargedHadrons = nTrk;
@@ -327,6 +329,9 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	eData.missChargedPt = netP_charged.Perp();
 	eData.missChargedTheta = netP_charged.Theta();
 	eData.missChargedPhi = netP_charged.Phi();
+
+        Sphericity spher = Sphericity(pData.nParticle, pData.px, pData.py, pData.pz);
+        spher.setTree(&eData);
 
 	eSelection.setEventSelection(&pData);
 	eData.passesWW = eSelection.getPassesWW();

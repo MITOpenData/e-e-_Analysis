@@ -2,6 +2,7 @@
 #define SPHERETOOLS
 #include "TLorentzVector.h"
 #include "TVector3.h"
+#include "TVectorD.h"
 #include "TMath.h"
 #include "TMatrixD.h"
 #include "eventData.h"
@@ -127,17 +128,17 @@ void Sphericity::calculateSphericity(int n, float *px, float *py, float *pz, flo
   }
 }
 
-void Sphericity::setData(eventData *e){ 
-  e.Sphericity = sphericity();
-  e.STheta sphericityAxis().Theta();
-  e.SPhi = sphericityAxis().Phi();
-  e.Aplanarity = aplanarity();
-  e.Sphericity_linearized = linSphericity();
-  e.STheta_linearized = linSphericityAxis().Theta();
-  e.SPhi_linearized = linSphericityAxis().Phi();
-  e.Aplanarity_linearized = linAplanarity();
-  e.C_linearized = linC();
-  e.D_linearized = linD();
+void Sphericity::setTree(eventData *e){ 
+  e->Sphericity = sphericity();
+  e->STheta = sphericityAxis().Theta();
+  e->SPhi = sphericityAxis().Phi();
+  e->Aplanarity = aplanarity();
+  e->Sphericity_linearized = linSphericity();
+  e->STheta_linearized = linSphericityAxis().Theta();
+  e->SPhi_linearized = linSphericityAxis().Phi();
+  e->Aplanarity_linearized = linAplanarity();
+  e->C_linearized = linC();
+  e->D_linearized = linD();
 }
 
 Sphericity::Sphericity(int n, float *px, float *py, float *pz){
