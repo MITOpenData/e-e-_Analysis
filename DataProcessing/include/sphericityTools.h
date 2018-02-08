@@ -4,6 +4,7 @@
 #include "TVector3.h"
 #include "TMath.h"
 #include "TMatrixD.h"
+#include "eventData.h"
 #include <iostream>
 
 class Sphericity{
@@ -11,6 +12,8 @@ class Sphericity{
   public:
     Sphericity(int n, float *px, float *py, float *pz);
     ~Sphericity();
+
+    void setTree(eventData *e);
 
     inline TVector3 sphericityAxis();
     inline TVector3 linSphericityAxis();
@@ -122,6 +125,19 @@ void Sphericity::calculateSphericity(int n, float *px, float *py, float *pz, flo
     linv2 = TVector3(eigenVectors(1,0),eigenVectors(1,1), eigenVectors(1,2));
     linv3 = TVector3(eigenVectors(2,0),eigenVectors(2,1), eigenVectors(2,2));
   }
+}
+
+void Sphericity::setData(eventData *e){ 
+  e.Sphericity = sphericity();
+  e.STheta sphericityAxis().Theta();
+  e.SPhi = sphericityAxis().Phi();
+  e.Aplanarity = aplanarity();
+  e.Sphericity_linearized = linSphericity();
+  e.STheta_linearized = linSphericityAxis().Theta();
+  e.SPhi_linearized = linSphericityAxis().Phi();
+  e.Aplanarity_linearized = linAplanarity();
+  e.C_linearized = linC();
+  e.D_linearized = linD();
 }
 
 Sphericity::Sphericity(int n, float *px, float *py, float *pz){
