@@ -26,7 +26,19 @@ class eventData{
   Float_t TTheta_charged;
   Float_t TPhi_charged;
 
-  static const int nVar = 18;
+  //Sphericity variables
+  Float_t Sphericity;
+  Float_t STheta;
+  Float_t SPhi;
+  Float_t Aplanarity;
+  Float_t Sphericity_linearized;
+  Float_t STheta_linearized;
+  Float_t SPhi_linearized;
+  Float_t Aplanarity_linearized;
+  Float_t C_linearized;
+  Float_t D_linearized;
+
+  static const int nVar = 28;
   std::string varStr[nVar] = {"passesWW",
 			      "missP",
 			      "missPt",
@@ -44,7 +56,18 @@ class eventData{
 			      "TPhi",
 			      "Thrust_charged",
 			      "TTheta_charged",
-			      "TPhi_charged"};
+			      "TPhi_charged",
+                              "Sphericity",
+                              "STheta",
+                              "SPhi",
+                              "Aplanarity",
+                              "Sphericity_linearized",
+                              "STheta_linearized",
+                              "SPhi_linearized",
+                              "Aplanarity_linearized",
+                              "C_linearized",
+                              "D_linearized"
+                             };
 
   bool varIsGood[nVar];
 
@@ -73,6 +96,16 @@ eventData::eventData()
   Thrust_charged = -999;
   TTheta_charged = -999;
   TPhi_charged = -999;
+  Sphericity = -999;
+  STheta = -999;
+  SPhi = -999;
+  Aplanarity = -999;
+  Sphericity_linearized = -999;
+  STheta_linearized = -999;
+  SPhi_linearized = -999;
+  Aplanarity_linearized = -999;
+  C_linearized = -999;
+  D_linearized = -999;
 
   for(int i = 0; i < nVar; ++i){varIsGood[i] = true;}
   return;
@@ -116,6 +149,16 @@ void eventData::SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::string
   if(varIsGood[15]) inTree_p->SetBranchAddress("Thrust_charged", &Thrust_charged);
   if(varIsGood[16]) inTree_p->SetBranchAddress("TTheta_charged", &TTheta_charged);
   if(varIsGood[17]) inTree_p->SetBranchAddress("TPhi_charged", &TPhi_charged);
+  if(varIsGood[18]) inTree_p->SetBranchAddress("Sphericity", &Sphericity);
+  if(varIsGood[19]) inTree_p->SetBranchAddress("STheta", &STheta);
+  if(varIsGood[20]) inTree_p->SetBranchAddress("SPhi", &SPhi);
+  if(varIsGood[21]) inTree_p->SetBranchAddress("Aplanarity", &Aplanarity);
+  if(varIsGood[22]) inTree_p->SetBranchAddress("Sphericity_linearized", &Sphericity_linearized);
+  if(varIsGood[23]) inTree_p->SetBranchAddress("STheta_linearized", &STheta_linearized);
+  if(varIsGood[24]) inTree_p->SetBranchAddress("SPhi_linearized", &SPhi_linearized);
+  if(varIsGood[25]) inTree_p->SetBranchAddress("Aplanarity_linearized", &Aplanarity_linearized);
+  if(varIsGood[26]) inTree_p->SetBranchAddress("C_linearized", &C_linearized);
+  if(varIsGood[27]) inTree_p->SetBranchAddress("D_linearized", &D_linearized);
 
   return;
 }
@@ -140,6 +183,16 @@ void eventData::SetBranchWrite(TTree* inTree_p)
   inTree_p->Branch("Thrust_charged", &Thrust_charged, "Thrust_charged/F");
   inTree_p->Branch("TTheta_charged", &TTheta_charged, "TTheta_charged/F");
   inTree_p->Branch("TPhi_charged", &TPhi_charged, "TPhi_charged/F");
+  inTree_p->Branch("Sphericity", &Sphericity,"Sphericity/F");
+  inTree_p->Branch("STheta", &STheta,"STheta/F");
+  inTree_p->Branch("SPhi", &SPhi,"SPhi/F");
+  inTree_p->Branch("Aplanarity", &Aplanarity,"Aplanarity/F");
+  inTree_p->Branch("Sphericity_linearized", &Sphericity_linearized,"Sphericity_linearized/F");
+  inTree_p->Branch("STheta_linearized", &STheta_linearized,"STheta_linearized/F");
+  inTree_p->Branch("SPhi_linearized", &SPhi_linearized,"SPhi_linearized/F");
+  inTree_p->Branch("Aplanarity_linearized", &Aplanarity_linearized,"Aplanarity_linearized/F");
+  inTree_p->Branch("C_linearized", &C_linearized,"C_linearized/F");
+  inTree_p->Branch("D_linearized", &D_linearized,"D_linearized/F");
   
   return;
 }
