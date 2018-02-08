@@ -101,7 +101,6 @@ void Sphericity::calculateSphericity(int n, float *px, float *py, float *pz, int
     }
   }
 
-  std::cout << m(0,0) << " " << m(1,0) << " " << m(2,0) << " " << m(1,1)  << " " << m(1,2) << " " << m(2,2) << std::endl;
 
   //symmetrize other side of the matrix
   m(0,1) = m(1,0);
