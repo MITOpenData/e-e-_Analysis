@@ -4,7 +4,6 @@
 #include "TVector3.h"
 #include "TMath.h"
 #include "TMatrixD.h"
-#include "TMatrixDEigen.h"
 #include <iostream>
 
 class Sphericity{
@@ -70,6 +69,9 @@ inline float Sphericity::linD(){
   return 27*linl1*linl2*linl3;
 }
 
+//where the magic happens
+//refer to http://home.fnal.gov/~mrenna/lutp0613man2/node234.html
+//generalized sphericity method, and sets important class member at the end for r==2 and r==1
 void Sphericity::calculateSphericity(int n, float *px, float *py, float *pz, float r){
   float norm = 0;
 
@@ -97,8 +99,29 @@ void Sphericity::calculateSphericity(int n, float *px, float *py, float *pz, flo
   m(0,1) = m(1,0);
   m(0,2) = m(2,0);
   m(2,1) = m(1,2);
-  
-   
+
+  //calculate eigenvalues and vectors  
+  TVectorD eigenValues;
+  TMatrixD eigenVectors = TMatrixD(3,3);
+  eigenVectors = m.EigenVectors(eigenValues);
+
+  //fill r==1 and r==2
+  if(r==2){
+    l1 = eigenValues(0);
+    l2 = eigenValues(1);
+    l3 = eigenValues(2);
+    v1 = TVector3(eigenVectors(0,0),eigenVectors(0,1), eigenVectors(0,2));
+    v2 = TVector3(eigenVectors(1,0),eigenVectors(1,1), eigenVectors(1,2));
+    v3 = TVector3(eigenVectors(2,0),eigenVectors(2,1), eigenVectors(2,2));
+  }
+  if(r==1){
+    linl1 = eigenValues(0);
+    linl2 = eigenValues(1);
+    linl3 = eigenValues(2);
+    linv1 = TVector3(eigenVectors(0,0),eigenVectors(0,1), eigenVectors(0,2));
+    linv2 = TVector3(eigenVectors(1,0),eigenVectors(1,1), eigenVectors(1,2));
+    linv3 = TVector3(eigenVectors(2,0),eigenVectors(2,1), eigenVectors(2,2));
+  }
 }
 
 Sphericity::Sphericity(int n, float *px, float *py, float *pz){
