@@ -330,7 +330,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	eData.missChargedTheta = netP_charged.Theta();
 	eData.missChargedPhi = netP_charged.Phi();
 
-        Sphericity spher = Sphericity(pData.nParticle, pData.px, pData.py, pData.pz);
+        Sphericity spher = Sphericity(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag, true);
         spher.setTree(&eData);
 
 	eSelection.setEventSelection(&pData);
@@ -518,7 +518,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
     eData.missChargedTheta = netP_charged.Theta();
     eData.missChargedPhi = netP_charged.Phi();
         
-    Sphericity spher = Sphericity(pData.nParticle, pData.px, pData.py, pData.pz);
+    Sphericity spher = Sphericity(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag, true);
     spher.setTree(&eData);
 	
     eSelection.setEventSelection(&pData);
@@ -619,7 +619,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	  egData.missChargedTheta = netP_charged.Theta();
 	  egData.missChargedPhi = netP_charged.Phi();
         
-          Sphericity spher = Sphericity(pgData.nParticle, pgData.px, pgData.py, pgData.pz);
+          Sphericity spher = Sphericity(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag, true);
           spher.setTree(&egData);
 
 	  egSelection.setEventSelection(&pgData);
@@ -852,7 +852,7 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
       egData.missChargedTheta = netP_charged.Theta();
       egData.missChargedPhi = netP_charged.Phi();
         
-      Sphericity spher = Sphericity(pgData.nParticle, pgData.px, pgData.py, pgData.pz);
+      Sphericity spher = Sphericity(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag, true);
       spher.setTree(&egData);
 
       egSelection.setEventSelection(&pgData);
