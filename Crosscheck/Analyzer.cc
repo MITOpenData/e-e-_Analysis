@@ -21,6 +21,10 @@ void Analyzer(){
 
   //set up plots
   Settings s = Settings();
+
+  //override doThrust bool if doing WTA
+  if(s.doWTAAxis) s.doThrust = true;
+
   TFile * output = TFile::Open("Analyzer_Output.root","recreate");
   TH2F * signal2PC[s.nMultBins]; 
   TH2F * bkgrnd2PC[s.nMultBins];
@@ -56,9 +60,16 @@ void Analyzer(){
   TFile * f = TFile::Open(s.inputFile.c_str(),"read");
   TTree * t = (TTree*)f->Get("t"); 
   TTree * jt = (TTree*)f->Get(smartJetName("ak4ESchemeJetTree", f).c_str()); 
+  TTree * wta;
   TFile * fMix = TFile::Open(s.inputFile.c_str(),"read");
   TTree * tMix = (TTree*)fMix->Get("t");
   TTree * jtMix = (TTree*)fMix->Get(smartJetName("ak4ESchemeJetTree", fMix).c_str()); 
+  TTree * wtaMix;
+
+  if(s.doWTAAxis){
+    wta = (TTree*)f->Get("BoostedWTAR8Evt");
+    wtaMix = (TTree*)fMix->Get("BoostedWTAR8Evt");
+  }
 
   int nParticle,     nParticleMix;
   float pt[500],     ptMix[500];
@@ -94,12 +105,22 @@ void Analyzer(){
     t->SetBranchAddress("TTheta_charged",&TTheta);       tMix->SetBranchAddress("TTheta_charged",&TThetaMix);
     t->SetBranchAddress("TPhi_charged",&TPhi);           tMix->SetBranchAddress("TPhi_charged",&TPhiMix);
   }else{
-    t->SetBranchAddress("pt_wrtThr",&pt_wrtThr);               tMix->SetBranchAddress("pt_wrtThr",&ptMix_wrtThr);
-    t->SetBranchAddress("eta_wrtThr",&eta_wrtThr);             tMix->SetBranchAddress("eta_wrtThr",&etaMix_wrtThr);
-    t->SetBranchAddress("theta_wrtThr",&theta_wrtThr);         tMix->SetBranchAddress("theta_wrtThr",&thetaMix_wrtThr);
-    t->SetBranchAddress("phi_wrtThr",&phi_wrtThr);             tMix->SetBranchAddress("phi_wrtThr",&phiMix_wrtThr);
-    t->SetBranchAddress("TTheta",&TTheta);       tMix->SetBranchAddress("TTheta",&TThetaMix);
-    t->SetBranchAddress("TPhi",&TPhi);           tMix->SetBranchAddress("TPhi",&TPhiMix);
+    if(!s.doWTAAxis){
+      t->SetBranchAddress("pt_wrtThr",&pt_wrtThr);               tMix->SetBranchAddress("pt_wrtThr",&ptMix_wrtThr);
+      t->SetBranchAddress("eta_wrtThr",&eta_wrtThr);             tMix->SetBranchAddress("eta_wrtThr",&etaMix_wrtThr);
+      t->SetBranchAddress("theta_wrtThr",&theta_wrtThr);         tMix->SetBranchAddress("theta_wrtThr",&thetaMix_wrtThr);
+      t->SetBranchAddress("phi_wrtThr",&phi_wrtThr);             tMix->SetBranchAddress("phi_wrtThr",&phiMix_wrtThr);
+      t->SetBranchAddress("TTheta",&TTheta);       tMix->SetBranchAddress("TTheta",&TThetaMix);
+      t->SetBranchAddress("TPhi",&TPhi);           tMix->SetBranchAddress("TPhi",&TPhiMix);
+    }
+    else {
+      wta->SetBranchAddress("pt",&pt_wrtThr);               wtaMix->SetBranchAddress("pt",&ptMix_wrtThr);
+      wta->SetBranchAddress("eta",&eta_wrtThr);             wtaMix->SetBranchAddress("eta",&etaMix_wrtThr);
+      wta->SetBranchAddress("theta",&theta_wrtThr);         wtaMix->SetBranchAddress("theta",&thetaMix_wrtThr);
+      wta->SetBranchAddress("phi",&phi_wrtThr);             wtaMix->SetBranchAddress("phi",&phiMix_wrtThr);
+      wta->SetBranchAddress("WTAAxis_Theta",&TTheta);       wtaMix->SetBranchAddress("WTAAxis_Theta",&TThetaMix);
+      wta->SetBranchAddress("WTAAxis_Phi",&TPhi);           wtaMix->SetBranchAddress("WTAAxis_Phi",&TPhiMix);
+    }
   }
   t->SetBranchAddress("px",&px);               tMix->SetBranchAddress("px",&pxMix);
   t->SetBranchAddress("py",&py);               tMix->SetBranchAddress("py",&pyMix);
@@ -112,7 +133,9 @@ void Analyzer(){
   jt->SetBranchAddress("jteta",&jteta);          jtMix->SetBranchAddress("jteta",&jtetaMix);
 
   for(int i = 0; i< (s.doAllData?t->GetEntries():s.nEvts); i++){
+    if(i%1000==0) std::cout << i << "/" << (s.doAllData?t->GetEntries():s.nEvts)<< std::endl;  
     t->GetEntry(i);
+    if(s.doWTAAxis) wta->GetEntry(i);
 
     if(MissP>s.MissPCut && s.doMissPCut) continue;
     if(s.isMC && process!=s.MCProcess) continue;
@@ -156,6 +179,8 @@ void Analyzer(){
     for(int i2 = i+1; nMixed<s.nMixedEvents; i2 += (int)(s.maxSkipSize*randGen.Rndm())+1 ){
       if( i2>=t->GetEntries()) i2 = (int)(s.maxSkipSize*randGen.Rndm());
       tMix->GetEntry(i2);
+      if(s.doWTAAxis) wtaMix->GetEntry(i2);
+      
       if(MissP>s.MissPCut && s.doMissPCut) continue;
       if(s.isMC && processMix!=s.MCProcess) continue;
       if(s.doAjCut){

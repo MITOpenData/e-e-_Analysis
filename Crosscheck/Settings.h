@@ -32,14 +32,11 @@ class Settings{
     float assocPt[2] = {0.4,100};
     float nTrkPt[2] = {0.4,100};
     
-    float etaCut = 1.8;//BEAM AXIS
-    //float etaCut = 5.0;//THRUST AXIS
+    //float etaCut = 1.8;//BEAM AXIS
+    float etaCut = 5.0;//THRUST AXIS
     //beam  axis stuff
-    //float etaPlotRange = 1.8;//this gets multiplied by 2
-    //float dEtaBins = 36;//keep even
-    //float dPhiBins = 36;//keep factor of 4
-    float etaPlotRange = 3.2;//BEAM AXIS this gets multiplied by 2 to give full deta range
-    //float etaPlotRange = 6.0;//THRUST AXIS this gets multiplied by 2
+    //float etaPlotRange = 3.2;//BEAM AXIS this gets multiplied by 2 to give full deta range
+    float etaPlotRange = 6.0;//THRUST AXIS this gets multiplied by 2
     float dEtaBins = 20;//keep even
     float dPhiBins = 20;//keep factor of 4
 
@@ -51,7 +48,7 @@ class Settings{
 
 
     //plots
-    bool useBeamMult = true;
+    bool useBeamMult = false;
     static const int nMultBins = 3;
     int multBinsLow[nMultBins]  = {0 , 20, 30};
     int multBinsHigh[nMultBins] = {20, 30, 999};
@@ -59,7 +56,8 @@ class Settings{
     bool calcKinematicsWrtThrust = false;
 
     //other
-    bool doThrust = false;
+    bool doThrust = true;
+    bool doWTAAxis = true;//make doChargedThrust false if this is true, will override doThrust to true
     bool doChargedThrust = false;
     float thrustMatchWindow = 99.0;
     bool doMultMatch = true;
@@ -71,7 +69,7 @@ class Settings{
     float AjCut = 0.1;
     float thirdJetCut = 0.03;
     bool doAllData = true;
-    int nEvts = 250;
+    int nEvts = 100000;
 
     Settings();
     bool isInMultBin(int n, int bin);
