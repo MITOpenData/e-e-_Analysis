@@ -220,6 +220,7 @@ int ridge_check_parallel
                 selected++;
                 if (selected >= t->GetEntries()) selected = 0;
                 t_mix->GetEntry(selected);
+                side_t_mix->GetEntry(selected);
                 jt_mix->GetEntry(selected);
                 
                 if(!s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(mix.passesWW, mix.nParticle, mix.missP, mix.pt, mix.eta, mix.nTPC, mix.pwflag, mix.nref, mix.jtpt, mix.jteta,s.donTrkThrust);
