@@ -86,7 +86,7 @@ void Analyzer(){
   int pwflag[500], pwflagMix[500];
   float TTheta,      TThetaMix;
   float TPhi,        TPhiMix;
-  float MissP;
+  float MissP;       MissPMix;
   int process,       processMix;
   int nref,          nrefMix;
   float jtpt[100],   jtptMix[100];
@@ -127,7 +127,7 @@ void Analyzer(){
   t->SetBranchAddress("py",&py);               tMix->SetBranchAddress("py",&pyMix);
   t->SetBranchAddress("pz",&pz);               tMix->SetBranchAddress("pz",&pzMix);
   t->SetBranchAddress("pwflag",&pwflag);       tMix->SetBranchAddress("pwflag",&pwflagMix);
-  t->SetBranchAddress("missP",&MissP);
+  t->SetBranchAddress("missP",&MissP);         tMix->SetBranchAddress("missP",&MissPMix);
   t->SetBranchAddress("process",&process);     tMix->SetBranchAddress("process",&processMix);
   t->SetBranchAddress("passesWW",&passesWW);   tMix->SetBranchAddress("passesWW",&passesWWMix);
   jt->SetBranchAddress("nref",&nref);          jtMix->SetBranchAddress("nref",&nrefMix);
@@ -185,7 +185,7 @@ void Analyzer(){
       if(s.doWTAAxis) wtaMix->GetEntry(i2);
       
       if(s.doRejectWW && !passesWWMix) continue;
-      if(MissP>s.MissPCut && s.doMissPCut) continue;
+      if(MissPMix>s.MissPCut && s.doMissPCut) continue;
       if(s.isMC && processMix!=s.MCProcess) continue;
       if(s.doAjCut){
         jtMix->GetEntry(i2);
