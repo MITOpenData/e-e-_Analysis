@@ -1,6 +1,6 @@
 //root dependencies
-#include "TH1D.h"
-#include "TH2D.h"
+#include "TH1F.h"
+#include "TH2F.h"
 #include "TCanvas.h"
 #include "TLegend.h"
 #include "TMath.h"
@@ -14,8 +14,9 @@
 
 //local headers
 #include "include/Selection.h"
+#include "include/utilities.h"
 
-void formatTPCAxes(TH2D * h, float offsetx, float offsety, float offsetz){
+void formatTPCAxes(TH2F * h, float offsetx, float offsety, float offsetz){
    h->SetTitleOffset(offsetx,"X");
    h->SetTitleOffset(offsety,"Y");
    h->SetTitleOffset(offsetz,"Z");
@@ -30,7 +31,7 @@ void formatTPCAxes(TH2D * h, float offsetx, float offsety, float offsetz){
    h->GetZaxis()->SetTitle("#frac{1}{N^{trig}} #frac{d^{2}N^{pair}}{d#Delta#etad#Delta#phi}");
    h->SetStats(0);
 }
-void formatTH1D(TH1D * h, float offsetx, float offsety){
+void formatTH1F(TH1F * h, float offsetx, float offsety){
    h->SetTitleOffset(offsetx,"X");
    h->SetTitleOffset(offsety,"Y");
    h->GetXaxis()->CenterTitle();
@@ -38,7 +39,7 @@ void formatTH1D(TH1D * h, float offsetx, float offsety){
    h->SetStats(0);
 }
 
-void formatZaxis(TH2D * h, bool minIsZero = true){
+void formatZaxis(TH2F * h, bool minIsZero = true){
   float maximum = -1;
   float minimum = 99999;
   float averageSum = 0;
@@ -73,32 +74,41 @@ void TPCPlots(const std::string inFileName1, const std::string inFileName2, cons
     
   gStyle->SetLegendBorderSize(0);
 
-  TH2D * sig1[s.nMultBins], *bkg1[s.nMultBins], *ratio1[s.nMultBins];
-  TH2D * sig2[s.nMultBins], *bkg2[s.nMultBins], *ratio2[s.nMultBins];
-  TH2D * r_sig[s.nMultBins], *r_bkg[s.nMultBins], *r_ratio[s.nMultBins];
-  TH1D * longRangeYield1[s.nMultBins], *longRangeYield2[s.nMultBins];
-  TH1D * r_longRangeYield[s.nMultBins];
+  TH2F * sig1[s.nMultBins], *bkg1[s.nMultBins], *ratio1[s.nMultBins];
+  TH2F * sig2[s.nMultBins], *bkg2[s.nMultBins], *ratio2[s.nMultBins];
+  TH2F * r_sig[s.nMultBins], *r_bkg[s.nMultBins], *r_ratio[s.nMultBins];
+  TH1F * longRangeYield1[s.nMultBins], *longRangeYield2[s.nMultBins];
+  TH1F * r_longRangeYield[s.nMultBins];
 
   TFile * f1 = TFile::Open(inFileName1.c_str(),"read");
   TFile * f2 = TFile::Open(inFileName2.c_str(),"read");
     
+  Float_t etaPlotRange = s.getEtaPlotRange();
   for(int i = 0; i<s.nMultBins; i++)
   {
     //if(i>1) continue;
-    sig1[i] = (TH2D*)f1->Get(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
-    bkg1[i] = (TH2D*)f1->Get(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
-    ratio1[i] = (TH2D*)f1->Get(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
-    longRangeYield1[i] = (TH1D*)f1->Get(Form("longRangeYield_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
+    sig1[i] = (TH2F*)f1->Get(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
+    bkg1[i] = (TH2F*)f1->Get(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
+    ratio1[i] = new TH2F(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+    ratio1[i]->Sumw2();
+    longRangeYield1[i] = new TH1F(Form("longRangeYield_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#phi;Y(#Delta#Phi)",s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+    longRangeYield1[i]->Sumw2();
+    calculateRatio(sig1[i],bkg1[i],ratio1[i]);
+    getLongRangeYield(s,ratio1[i],longRangeYield1[i]);
 
-    sig2[i] = (TH2D*)f2->Get(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
-    bkg2[i] = (TH2D*)f2->Get(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
-    ratio2[i] = (TH2D*)f2->Get(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
-    longRangeYield2[i] = (TH1D*)f2->Get(Form("longRangeYield_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
+    sig2[i] = (TH2F*)f2->Get(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
+    bkg2[i] = (TH2F*)f2->Get(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
+    ratio2[i] = new TH2F(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+    ratio2[i]->Sumw2();
+    longRangeYield2[i] = new TH1F(Form("longRangeYield_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#phi;Y(#Delta#Phi)",s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+    longRangeYield2[i]->Sumw2();
+    calculateRatio(sig2[i],bkg2[i],ratio2[i]);
+    getLongRangeYield(s,ratio2[i],longRangeYield2[i]);
 
-    r_sig[i] = (TH2D*)sig1[i]->Clone(Form("%s_r_signal2PC_%d_%d",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));    r_sig[i]->Divide(sig2[i]);
-    r_bkg[i] = (TH2D*)bkg1[i]->Clone(Form("%s_r_bkgrnd2PC_%d_%d",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));    r_bkg[i]->Divide(bkg2[i]);
-    r_ratio[i] = (TH2D*)ratio1[i]->Clone(Form("%s_r_ratio2PC_%d_%d",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));   r_ratio[i]->Divide(ratio2[i]);
-    r_longRangeYield[i] = (TH1D*)longRangeYield1[i]->Clone(Form("%s_r_longRangeYield_%d_%d",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i])); r_longRangeYield[i]->Divide(longRangeYield2[i]);
+    r_sig[i] = (TH2F*)sig1[i]->Clone(Form("%s_r_signal2PC_%d_%d",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));    r_sig[i]->Divide(sig2[i]);
+    r_bkg[i] = (TH2F*)bkg1[i]->Clone(Form("%s_r_bkgrnd2PC_%d_%d",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));    r_bkg[i]->Divide(bkg2[i]);
+    r_ratio[i] = (TH2F*)ratio1[i]->Clone(Form("%s_r_ratio2PC_%d_%d",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));   r_ratio[i]->Divide(ratio2[i]);
+    r_longRangeYield[i] = (TH1F*)longRangeYield1[i]->Clone(Form("%s_r_longRangeYield_%d_%d",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i])); r_longRangeYield[i]->Divide(longRangeYield2[i]);
 
     TLegend * l = new TLegend(0.6,0.8,0.95,0.95);
     l->SetFillStyle(0);
@@ -195,14 +205,14 @@ void TPCPlots(const std::string inFileName1, const std::string inFileName2, cons
     c1->SaveAs(Form("../pdfDir/%s_r_ratio_%d_%d.pdf",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
     c1->SaveAs(Form("../pdfDir/%s_r_ratio_%d_%d.C",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
       
-    formatTH1D(longRangeYield1[i],1.5,1.5);
+    formatTH1F(longRangeYield1[i],1.5,1.5);
     longRangeYield1[i]->Draw();
     l->Draw("same");
     c1->SaveAs(Form("../pdfDir/%s_r_longRangeYield1_%d_%d.png",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
     c1->SaveAs(Form("../pdfDir/%s_r_longRangeYield1_%d_%d.pdf",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
     c1->SaveAs(Form("../pdfDir/%s_r_longRangeYield1_%d_%d.C",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
 
-    formatTH1D(longRangeYield2[i],1.5,1.5);
+    formatTH1F(longRangeYield2[i],1.5,1.5);
     longRangeYield2[i]->Draw();
     l->Draw("same");
     c1->SaveAs(Form("../pdfDir/%s_r_longRangeYield2_%d_%d.png",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
@@ -215,21 +225,21 @@ void TPCPlots(const std::string inFileName1, const std::string inFileName2, cons
     delete l;
   }
 
-  TH1D *eta1, *theta1, *pt1, *phi1, *TTheta1, *TPhi1;
-  pt1 = (TH1D*)f1->Get("pt");
-  eta1 = (TH1D*)f1->Get("eta");
-  theta1 = (TH1D*)f1->Get("theta");
-  phi1 = (TH1D*)f1->Get("phi");
-  TTheta1 = (TH1D*)f1->Get("T_theta");
-  TPhi1 = (TH1D*)f1->Get("T_phi");
+  TH1F *eta1, *theta1, *pt1, *phi1, *TTheta1, *TPhi1;
+  pt1 = (TH1F*)f1->Get("pt");
+  eta1 = (TH1F*)f1->Get("eta");
+  theta1 = (TH1F*)f1->Get("theta");
+  phi1 = (TH1F*)f1->Get("phi");
+  TTheta1 = (TH1F*)f1->Get("T_theta");
+  TPhi1 = (TH1F*)f1->Get("T_phi");
     
-  TH1D *eta2, *theta2, *pt2, *phi2, *TTheta2, *TPhi2;
-  pt2 = (TH1D*)f2->Get("pt");
-  eta2 = (TH1D*)f2->Get("eta");
-  theta2 = (TH1D*)f2->Get("theta");
-  phi2 = (TH1D*)f2->Get("phi");
-  TTheta2 = (TH1D*)f2->Get("T_theta");
-  TPhi2 = (TH1D*)f2->Get("T_phi");
+  TH1F *eta2, *theta2, *pt2, *phi2, *TTheta2, *TPhi2;
+  pt2 = (TH1F*)f2->Get("pt");
+  eta2 = (TH1F*)f2->Get("eta");
+  theta2 = (TH1F*)f2->Get("theta");
+  phi2 = (TH1F*)f2->Get("phi");
+  TTheta2 = (TH1F*)f2->Get("T_theta");
+  TPhi2 = (TH1F*)f2->Get("T_phi");
 
   TCanvas * c2 = new TCanvas("c2","c2",800,800);
     
