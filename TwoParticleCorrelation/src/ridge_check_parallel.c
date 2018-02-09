@@ -206,6 +206,7 @@ int ridge_check_parallel
             Int_t selected=i+1;
             if (selected >= t->GetEntries()) selected = 0;
             t_mix->GetEntry(selected);
+            side_t_mix->GetEntry(selected);
             jt_mix->GetEntry(selected);
         
             Int_t nTrk_mix;
