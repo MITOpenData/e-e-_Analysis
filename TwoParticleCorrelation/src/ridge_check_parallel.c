@@ -85,6 +85,8 @@ int ridge_check_parallel
     TH1D * h_Ttheta = new TH1D("T_theta","T_theta",100,0,TMath::Pi());
     TH1D * h_Tphi = new TH1D("T_phi","T_phi",100,-TMath::Pi(),TMath::Pi());
     TH1D * h_Aj = new TH1D("h_Aj","h_Aj",50,0,0.5);
+    TH1D * nTrkHist = new TH1D("nTrkHisto","nTrkHisto",10,0,10);
+    TH1D * nBkgHist = new TH1D("nBkgHisto","nBkgHisto",10,0,10);
     
     Float_t etaPlotRange = s.getEtaPlotRange();
     for(int i = 0; i<s.nMultBins; i++)
