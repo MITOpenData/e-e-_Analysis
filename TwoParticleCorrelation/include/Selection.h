@@ -43,8 +43,8 @@ class Selection
         bool domissPCut = false;
         bool doWW = false;
         static const Int_t nMultBins = 3;
-        Int_t multBinsLow[nMultBins]  = {0 , 20, 110};
-        Int_t multBinsHigh[nMultBins] = {20, 110, 999};
+        Int_t multBinsLow[nMultBins]  = {0 , 20, 30};
+        Int_t multBinsHigh[nMultBins] = {20, 30, 999};
         bool doMixedMultCut = false;
     
         // particle cuts
