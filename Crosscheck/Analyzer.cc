@@ -296,8 +296,8 @@ void Analyzer(std::string inputFile = "test.root", std::string outputFile = "Ana
   output->cd();
   for(int k = 0; k<s.nMultBins; k++){
     std::cout << nSignalEvts[k] <<" " << std::endl;
-    signal2PC[k]->Scale(1.0/(float)nSignalEvts[k]);
-    bkgrnd2PC[k]->Scale(1.0/(float)nBkgrndEvts[k]);
+    if(!s.doParallel) signal2PC[k]->Scale(1.0/(float)nSignalEvts[k]);
+    if(!s.doParallel) bkgrnd2PC[k]->Scale(1.0/(float)nBkgrndEvts[k]);
 
     nEvtSigHist->Fill(k,nSignalEvts[k]);
     nEvtBkgHist->Fill(k,nBkgrndEvts[k]);
