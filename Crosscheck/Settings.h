@@ -17,7 +17,7 @@ class Settings{
     bool isMC = false;
     int MCProcess = 5;
     //ALEPH data
-    std::string inputFile = "/home/abadea/Public/forPeople/forAustin/20180126/LEP1.root";
+    std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180126/LEP1Data1992_recons_aftercut-MERGED.root";
     //std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee/20171208/outFile_MERGED_nEvt2000000_nMinChgPart0_RopeWalk0.root";//regular pythia 8
     //std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_RopeWalk/20171208/outFile_MERGED_nEvt2000000_nMinChgPart0_RopeWalk1.root";//ropewalk pythia 8
     //std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_minChgNPart30/20171208/outFile_MERGED__nEvt20000_nMinChgPart30_RopeWalk0.root";//high mult regular pythia
@@ -69,8 +69,8 @@ class Settings{
     bool keep3jetEvts = false;
     float AjCut = 0.1;
     float thirdJetCut = 0.03;
-    bool doAllData = false;
-    int nEvts = 100000;
+    bool doAllData = true;
+    int nEvts = 50000;
 
     Settings();
     bool isInMultBin(int n, int bin);

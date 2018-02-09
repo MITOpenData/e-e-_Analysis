@@ -86,7 +86,7 @@ void Analyzer(){
   int pwflag[500], pwflagMix[500];
   float TTheta,      TThetaMix;
   float TPhi,        TPhiMix;
-  float MissP;       MissPMix;
+  float MissP,       MissPMix;
   int process,       processMix;
   int nref,          nrefMix;
   float jtpt[100],   jtptMix[100];
