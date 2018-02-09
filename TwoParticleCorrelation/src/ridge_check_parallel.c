@@ -85,8 +85,8 @@ int ridge_check_parallel
     TH1D * h_Ttheta = new TH1D("T_theta","T_theta",100,0,TMath::Pi());
     TH1D * h_Tphi = new TH1D("T_phi","T_phi",100,-TMath::Pi(),TMath::Pi());
     TH1D * h_Aj = new TH1D("h_Aj","h_Aj",50,0,0.5);
-    TH1D * nTrkHist = new TH1D("nTrkHisto","nTrkHisto",10,0,10);
-    TH1D * nBkgHist = new TH1D("nBkgHisto","nBkgHisto",10,0,10);
+    TH1D * nEvtSigHist = new TH1D("nEvtSigHisto","nEvtSigHisto",10,0,10);
+ +  TH1D * nEvtBkgHist = new TH1D("nEvtBkgHisto","nEvtBkgHisto",10,0,10);
     
     Float_t etaPlotRange = s.getEtaPlotRange();
     for(int i = 0; i<s.nMultBins; i++)
@@ -274,8 +274,10 @@ int ridge_check_parallel
     {
         std::cout << "nSignalEvts "<< s.multBinsLow[i]<<" "<<s.multBinsHigh[i]<<" : "<<nSignalEvts[i] <<" " << std::endl;
         std::cout << "nBkgrndEvts "<< s.multBinsLow[i]<<" "<<s.multBinsHigh[i]<<" : "<<nBkgrndEvts[i] <<" " << std::endl;
-        signal2PC[i]->Scale(1./ (float)nSignalEvts[i]);
-        bkgrnd2PC[i]->Scale(1./(float)nBkgrndEvts[i]);
+        if(!s.doParallel) signal2PC[k]->Scale(1.0/(float)nSignalEvts[k]);
+        if(!s.doParallel) bkgrnd2PC[k]->Scale(1.0/(float)nBkgrndEvts[k]);
+        nEvtSigHist->Fill(k,nSignalEvts[k]);
+ +      nEvtBkgHist->Fill(k,nBkgrndEvts[k]);
         calculateRatio(signal2PC[i],bkgrnd2PC[i],ratio2PC[i]);
         getLongRangeYield(s,ratio2PC[i],longRangeYield[i]);
 
