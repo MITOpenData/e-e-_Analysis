@@ -23,7 +23,7 @@ void Analyzer(std::string inputFile = "test.root", std::string outputFile = "Ana
   //set up plots
   Settings s = Settings();
 
-  if(s.isParallel==false) inputFile = s.inputFile;
+  if(s.doParallel==false) inputFile = s.inputFile;
 
   //override doThrust bool if doing WTA
   if(s.doWTAAxis) s.doThrust = true;
