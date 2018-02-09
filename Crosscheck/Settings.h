@@ -16,6 +16,9 @@ class Settings{
     int experiment = 0;
     bool isMC = false;
     int MCProcess = 5;
+
+    bool isParallel = true;
+
     //ALEPH data
     std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180126/LEP1Data1992_recons_aftercut-MERGED.root";
     //std::string inputFile = "/data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee/20171208/outFile_MERGED_nEvt2000000_nMinChgPart0_RopeWalk0.root";//regular pythia 8

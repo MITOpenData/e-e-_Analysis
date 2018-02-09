@@ -10,22 +10,25 @@
 #include "TVector3.h"
 #include <iostream>
 #include <cmath>
+#include <string>
 
 #include "include/smartJetName.h"
 
 inline float jtp(float pt, float eta){ return pt*TMath::CosH(eta); }
 
-void Analyzer(){
+void Analyzer(std::string inputFile = "test.root", std::string outputFile = "Analyzer_Output.root"){
   TH1::SetDefaultSumw2();
   TRandom2 randGen = TRandom2();
 
   //set up plots
   Settings s = Settings();
 
+  if(s.isParallel==false) inputFile = s.inputFile;
+
   //override doThrust bool if doing WTA
   if(s.doWTAAxis) s.doThrust = true;
 
-  TFile * output = TFile::Open("Analyzer_Output.root","recreate");
+  TFile * output = TFile::Open(outputFile.c_str(),"recreate");
   TH2F * signal2PC[s.nMultBins]; 
   TH2F * bkgrnd2PC[s.nMultBins];
   TH2F * ratio2PC[s.nMultBins]; 
@@ -57,11 +60,11 @@ void Analyzer(){
   TH1F * multiplicity = new TH1F("multiplicity",";nTrk;nEvents",200,0,200);
 
   //files and variables for input
-  TFile * f = TFile::Open(s.inputFile.c_str(),"read");
+  TFile * f = TFile::Open(inputFile.c_str(),"read");
   TTree * t = (TTree*)f->Get("t"); 
   TTree * jt = (TTree*)f->Get(smartJetName("ak4ESchemeJetTree", f).c_str()); 
   TTree * wta;
-  TFile * fMix = TFile::Open(s.inputFile.c_str(),"read");
+  TFile * fMix = TFile::Open(inputFile.c_str(),"read");
   TTree * tMix = (TTree*)fMix->Get("t");
   TTree * jtMix = (TTree*)fMix->Get(smartJetName("ak4ESchemeJetTree", fMix).c_str()); 
   TTree * wtaMix;
