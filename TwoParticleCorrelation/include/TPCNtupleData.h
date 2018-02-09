@@ -1,16 +1,19 @@
 #include <TTree.h>
 #include <TVector3.h>
 #include "utilities.h"
-
+#include "Selection.h"
 // DataFormat
 class TPCNtupleData{
     public:
     static const int nMaxPart = 10000;
     
+    Selection s;
+
     Int_t nParticle;
     bool passesWW;
     Float_t missP;
-    
+    Float_t pthatWeight;
+
     Float_t pt[nMaxPart];
     Float_t eta[nMaxPart];
     Float_t theta[nMaxPart];
@@ -176,6 +179,10 @@ class TPCNtupleData{
       t1->SetBranchStatus("passesWW",1);
       t1->SetBranchStatus("missP",1);
         
+      if(s.doPP)
+      {
+        t1->SetBranchStatus("pthatWeight",1);
+      }
       if (!isBelle)
       {
         t1->SetBranchStatus("pwflag", 1);
@@ -203,6 +210,8 @@ class TPCNtupleData{
 // main tree, side tree, jet tree, data
 void setupTPCTree(TTree *t1, TTree *t2, TTree *t3, TPCNtupleData &data)
 {
+    Selection s;
+
     t1->SetBranchAddress("nParticle",&data.nParticle);
     t1->SetBranchAddress("passesWW",&data.passesWW);
     t1->SetBranchAddress("missP",&data.missP);
@@ -223,6 +232,10 @@ void setupTPCTree(TTree *t1, TTree *t2, TTree *t3, TPCNtupleData &data)
     t3->SetBranchAddress("jtphi",data.jtphi);
     t3->SetBranchAddress("nref",&data.nref);
 
+    if(s.doPP)
+    {
+        t1->SetBranchAddress("pthatWeight",&data.pthatWeight);
+    }
     
     if (!data.isBelle)
     {

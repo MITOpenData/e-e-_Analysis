@@ -33,6 +33,7 @@ class Selection
         bool donTrkThrust = false; // used for calculation of nTrk (true = Beam)
         bool doBelle = false;
         bool doTheta = false;
+        bool doPP = true;
     
         // for testing purposes
         bool doOneEvent = false;     int numEvents = 250;
