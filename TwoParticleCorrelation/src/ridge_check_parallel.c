@@ -285,6 +285,8 @@ int ridge_check_parallel
         bkgrnd2PC[i]->Write();
         ratio2PC[i]->Write();
         longRangeYield[i]->Write();
+        nEvtSigHist->Write();
+        nEvtBkgHist->Write();
     }
     
     h_eff->Write();
