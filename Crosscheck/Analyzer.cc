@@ -40,6 +40,8 @@ void Analyzer(std::string inputFile = "test.root", std::string outputFile = "Ana
   float nSignalEvts[s.nMultBins] = {0};
   float nBkgrndEvts[s.nMultBins] = {0};
 
+  TH1D * nEvtSigHist = new TH1D("nEvtSigHisto","nEvtSigHisto",10,0,10);
+  TH1D * nEvtBkgHist = new TH1D("nEvtBkgHisto","nEvtBkgHisto",10,0,10);
 
   TH1D *h_phi = new TH1D("phi","phi",100,-TMath::Pi(),TMath::Pi());
   TH1D *h_eta = new TH1D("eta","eta",100,-5,5);
@@ -296,6 +298,10 @@ void Analyzer(std::string inputFile = "test.root", std::string outputFile = "Ana
     std::cout << nSignalEvts[k] <<" " << std::endl;
     signal2PC[k]->Scale(1.0/(float)nSignalEvts[k]);
     bkgrnd2PC[k]->Scale(1.0/(float)nBkgrndEvts[k]);
+
+    nEvtSigHist->Fill(k,nSignalEvts[k]);
+    nEvtBkgHist->Fill(k,nBkgrndEvts[k]);
+
     ratio2PC[k] = (TH2F*)signal2PC[k]->Clone(Form("ratio2PC_%d_%d",s.multBinsLow[k],s.multBinsHigh[k]));
     ratio2PC[k]->Divide(bkgrnd2PC[k]);
     ratio2PC[k]->Scale(bkgrnd2PC[k]->GetBinContent(bkgrnd2PC[k]->FindBin(0,0)));
