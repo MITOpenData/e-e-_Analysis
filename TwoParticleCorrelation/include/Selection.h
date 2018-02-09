@@ -36,7 +36,7 @@ class Selection
         bool doPP = false;
     
         // for testing purposes
-        bool doOneEvent = false;     int numEvents = 250;
+        bool doOneEvent = false;     int numEvents = 50000;
     
         // event cuts
         Float_t missPCut = 20;
