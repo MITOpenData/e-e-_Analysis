@@ -27,13 +27,13 @@ class Selection
         Int_t experiment = 0; // 0 ALEPH , 1 DELPHI, 2 BELLE, 3 CMS pp
     
         // Initial Setup
-        int side_tree = 0;  // 0 t, 1 BoostedWTAR8Evt,
+        int side_tree = 1;  // 0 t, 1 BoostedWTAR8Evt,
         int jttree = 0; // 0 ak4ESchemeJetTree, 1 ak4WTAmodpSchemeJetTree, 2 ak8ESchemeJetTree, 3 ak8WTAmodpSchemeJetTree
-        bool doThrust = false;  // used for determining thrust/beam angles to use in filling histograms
-        bool donTrkThrust = false; // used for calculation of nTrk (true = Beam)
+        bool doThrust = true;  // used for determining thrust/beam angles to use in filling histograms
+        bool donTrkThrust = true; // used for calculation of nTrk (true = Beam)
         bool doBelle = false;
         bool doTheta = false;
-        bool doPP = true;
+        bool doPP = false;
     
         // for testing purposes
         bool doOneEvent = false;     int numEvents = 250;
@@ -49,7 +49,7 @@ class Selection
     
         // particle cuts
         Float_t ptMin = 0.4;    Float_t ptMin_wrtThr = 0.4;
-        Float_t ptMax = 3.0;  Float_t ptMax_wrtThr = 100.0;
+        Float_t ptMax = 100.0;  Float_t ptMax_wrtThr = 100.0;
         Float_t etaCut = 1.8;   Float_t etaCut_wrtThr = 5.0;
         Int_t nTPCMin = 0; // completely inclusive, maybe tighten this
         Int_t nTPCMax = 100;
@@ -145,7 +145,7 @@ int Selection::ridge_trackSelection
         ptMax_temp = ptMax_wrtThr;
         etaCut_temp = etaCut_wrtThr;
     }
-    
+    if(doPP) ptMax_temp = 3.0;
     if (pt < ptMin_temp || pt > ptMax_temp) return 0;
     if (doNTPC && (nTPC <= nTPCMin || nTPC >= nTPCMax) ) return 0;
     if (TMath::Abs(eta) >= etaCut_temp) return 0;
