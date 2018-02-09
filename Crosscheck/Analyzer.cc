@@ -307,8 +307,8 @@ void Analyzer(std::string inputFile = "test.root", std::string outputFile = "Ana
     ratio2PC[k]->Scale(bkgrnd2PC[k]->GetBinContent(bkgrnd2PC[k]->FindBin(0,0)));
     getLongRangeYield(s,ratio2PC[k],longRangeYield[k]);
     
-    signal2PC_ptweighted[k]->Scale(1.0/(float)nSignalEvts[k]);
-    bkgrnd2PC_ptweighted[k]->Scale(1.0/(float)nBkgrndEvts[k]);
+    if(!s.doParallel) signal2PC_ptweighted[k]->Scale(1.0/(float)nSignalEvts[k]);
+    if(!s.doParallel) bkgrnd2PC_ptweighted[k]->Scale(1.0/(float)nBkgrndEvts[k]);
     ratio2PC_ptweighted[k] = (TH2F*)signal2PC_ptweighted[k]->Clone(Form("ratio2PC_ptweighted_%d_%d",s.multBinsLow[k],s.multBinsHigh[k]));
     ratio2PC_ptweighted[k]->Divide(bkgrnd2PC_ptweighted[k]);
     ratio2PC_ptweighted[k]->Scale(bkgrnd2PC_ptweighted[k]->GetBinContent(bkgrnd2PC_ptweighted[k]->FindBin(0,0)));

@@ -17,7 +17,7 @@ class Settings{
     bool isMC = false;
     int MCProcess = 5;
 
-    bool isParallel = false;
+    bool isParallel = true;
 
     //ALEPH data
     std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180126/LEP1Data1992_recons_aftercut-MERGED.root";
