@@ -91,6 +91,7 @@ void Analyzer(){
   int nref,          nrefMix;
   float jtpt[100],   jtptMix[100];
   float jteta[100],   jtetaMix[100];
+  bool passesWW,     passesWWMix;
 
   t->SetBranchAddress("nParticle",&nParticle); tMix->SetBranchAddress("nParticle",&nParticleMix);
   t->SetBranchAddress("pt",&pt);               tMix->SetBranchAddress("pt",&ptMix);
@@ -128,6 +129,7 @@ void Analyzer(){
   t->SetBranchAddress("pwflag",&pwflag);       tMix->SetBranchAddress("pwflag",&pwflagMix);
   t->SetBranchAddress("missP",&MissP);
   t->SetBranchAddress("process",&process);     tMix->SetBranchAddress("process",&processMix);
+  t->SetBranchAddress("passesWW",&passesWW);   tMix->SetBranchAddress("passesWW",&passesWWMix);
   jt->SetBranchAddress("nref",&nref);          jtMix->SetBranchAddress("nref",&nrefMix);
   jt->SetBranchAddress("jtpt",&jtpt);          jtMix->SetBranchAddress("jtpt",&jtptMix);
   jt->SetBranchAddress("jteta",&jteta);          jtMix->SetBranchAddress("jteta",&jtetaMix);
@@ -137,6 +139,7 @@ void Analyzer(){
     t->GetEntry(i);
     if(s.doWTAAxis) wta->GetEntry(i);
 
+    if(s.doRejectWW && !passesWW) continue;
     if(MissP>s.MissPCut && s.doMissPCut) continue;
     if(s.isMC && process!=s.MCProcess) continue;
     if(s.doAjCut){
@@ -181,6 +184,7 @@ void Analyzer(){
       tMix->GetEntry(i2);
       if(s.doWTAAxis) wtaMix->GetEntry(i2);
       
+      if(s.doRejectWW && !passesWWMix) continue;
       if(MissP>s.MissPCut && s.doMissPCut) continue;
       if(s.isMC && processMix!=s.MCProcess) continue;
       if(s.doAjCut){

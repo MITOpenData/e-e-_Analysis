@@ -64,11 +64,12 @@ class Settings{
     bool doMissPCut = false;
     float MissPCut = 20;
     bool doExcludeNTrigLT2 = true;
+    bool doRejectWW = false;
     bool doAjCut = false;
     bool keep3jetEvts = false;
     float AjCut = 0.1;
     float thirdJetCut = 0.03;
-    bool doAllData = true;
+    bool doAllData = false;
     int nEvts = 100000;
 
     Settings();
