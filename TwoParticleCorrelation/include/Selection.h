@@ -27,7 +27,7 @@ class Selection
         Int_t experiment = 0; // 0 ALEPH , 1 DELPHI, 2 BELLE, 3 CMS pp
     
         // Initial Setup
-        int side_tree = 1;  // 0 t, 1 BoostedWTAR8Evt,
+        int side_tree = 0;  // 0 t, 1 BoostedWTAR8Evt,
         int jttree = 0; // 0 ak4ESchemeJetTree, 1 ak4WTAmodpSchemeJetTree, 2 ak8ESchemeJetTree, 3 ak8WTAmodpSchemeJetTree
         bool doThrust = false;  // used for determining thrust/beam angles to use in filling histograms
         bool donTrkThrust = false; // used for calculation of nTrk (true = Beam)
@@ -42,13 +42,13 @@ class Selection
         bool domissPCut = false;
         bool doWW = false;
         static const Int_t nMultBins = 3;
-        Int_t multBinsLow[nMultBins]  = {0 , 20, 30};
-        Int_t multBinsHigh[nMultBins] = {20, 30, 999};
+        Int_t multBinsLow[nMultBins]  = {0 , 20, 110};
+        Int_t multBinsHigh[nMultBins] = {20, 110, 999};
         bool doMixedMultCut = false;
     
         // particle cuts
         Float_t ptMin = 0.4;    Float_t ptMin_wrtThr = 0.4;
-        Float_t ptMax = 100.0;  Float_t ptMax_wrtThr = 100.0;
+        Float_t ptMax = 3.0;  Float_t ptMax_wrtThr = 100.0;
         Float_t etaCut = 1.8;   Float_t etaCut_wrtThr = 5.0;
         Int_t nTPCMin = 0; // completely inclusive, maybe tighten this
         Int_t nTPCMax = 100;

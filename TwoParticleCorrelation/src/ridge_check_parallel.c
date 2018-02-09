@@ -149,7 +149,7 @@ int ridge_check_parallel
         
         if( nTrk < 0) continue;
         Int_t histNum = s.histNum(nTrk);
-        
+	
         h_eff->Fill(nTrk/data.nParticle);
         h_Aj->Fill(s.fillAj);
         multiplicity->Fill(nTrk);
