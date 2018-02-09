@@ -96,7 +96,7 @@ int ridge_check_parallel
         ratio2PC[i] = new TH2F(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
         ratio2PC[i]->Sumw2();
         longRangeYield[i] = new TH1F(Form("longRangeYield_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#phi;Y(#Delta#Phi)",s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
-        longRangeYield[i]-Sumw2();
+        longRangeYield[i]->Sumw2();
     }
     TH1F * multiplicity = new TH1F("multiplicity",";nTrk;nEvents",200,0,200);
     
@@ -133,6 +133,7 @@ int ridge_check_parallel
     // analysis
     Int_t nevent = (Int_t)t->GetEntries();
     if(s.doOneEvent) nevent = s.numEvents;
+
     /****************************************/
     // Main Event Loop
     /****************************************/
@@ -161,6 +162,9 @@ int ridge_check_parallel
         
         h_Ttheta->Fill(data.TTheta);
         h_Tphi->Fill(data.TPhi);
+
+        Float_t fillNumerator = 1.0;
+        if (s.doPP) fillNumerator = data.pthatWeight;
         /****************************************/
         // S calculation using multiplicity cut //
         /****************************************/
@@ -186,10 +190,10 @@ int ridge_check_parallel
                 if (s.doTheta) angle2 = data.getTheta(k); else angle2 = data.getEta(k);
                 Float_t phi2 = data.getPhi(k);
                 
-                signal2PC[histNum]->Fill(angle1-angle2,dphi(phi1,phi2),1./(s.getDifferential(data.pthatWeight))/nTrk);
-                signal2PC[histNum]->Fill(angle1-angle2,dphi(phi2,phi1),1./(s.getDifferential(data.pthatWeight))/nTrk);
-                signal2PC[histNum]->Fill(angle2-angle1,dphi(phi1,phi2),1./(s.getDifferential(data.pthatWeight))/nTrk);
-                signal2PC[histNum]->Fill(angle2-angle1,dphi(phi2,phi1),1./(s.getDifferential(data.pthatWeight))/nTrk);
+                signal2PC[histNum]->Fill(angle1-angle2,dphi(phi1,phi2),fillNumerator/(s.getDifferential())/nTrk);
+                signal2PC[histNum]->Fill(angle1-angle2,dphi(phi2,phi1),fillNumerator/(s.getDifferential())/nTrk);
+                signal2PC[histNum]->Fill(angle2-angle1,dphi(phi1,phi2),fillNumerator/(s.getDifferential())/nTrk);
+                signal2PC[histNum]->Fill(angle2-angle1,dphi(phi2,phi1),fillNumerator/(s.getDifferential())/nTrk);
             }
         }
         
@@ -248,10 +252,10 @@ int ridge_check_parallel
                     if (s.doTheta) angle_mix = mix.getTheta(k); else angle_mix = mix.getEta(k);
                     Float_t phi_mix = mix.getPhi(k);
                     
-                    bkgrnd2PC[histNum]->Fill(angle-angle_mix,dphi(phi,phi_mix),1./(s.getDifferential(data.pthatWeight))/nTrk);
-                    bkgrnd2PC[histNum]->Fill(angle-angle_mix,dphi(phi_mix,phi),1./(s.getDifferential(data.pthatWeight))/nTrk);
-                    bkgrnd2PC[histNum]->Fill(angle_mix-angle,dphi(phi,phi_mix),1./(s.getDifferential(data.pthatWeight))/nTrk);
-                    bkgrnd2PC[histNum]->Fill(angle_mix-angle,dphi(phi_mix,phi),1./(s.getDifferential(data.pthatWeight))/nTrk);
+                    bkgrnd2PC[histNum]->Fill(angle-angle_mix,dphi(phi,phi_mix),fillNumerator/(s.getDifferential())/nTrk);
+                    bkgrnd2PC[histNum]->Fill(angle-angle_mix,dphi(phi_mix,phi),fillNumerator/(s.getDifferential())/nTrk);
+                    bkgrnd2PC[histNum]->Fill(angle_mix-angle,dphi(phi,phi_mix),fillNumerator/(s.getDifferential())/nTrk);
+                    bkgrnd2PC[histNum]->Fill(angle_mix-angle,dphi(phi_mix,phi),fillNumerator/(s.getDifferential())/nTrk);
                 } //end of mixed event loop
             } // end of working event loop
             //std::cout<<i<<" "<<selected<<" "<<nTrk<<" "<<nTrk_mix<<" "<<std::endl;

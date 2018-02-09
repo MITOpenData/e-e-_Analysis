@@ -86,7 +86,7 @@ class Selection
     
         Selection();
         Float_t getEtaPlotRange();
-        Float_t getDifferential(Float_t pthatWeight);
+        Float_t getDifferential();
         int ridge_trackSelection(Float_t pt, Float_t eta, Int_t nTPC, Int_t pwflag, bool isThrust);
         int ridge_eventSelection(bool passesWW, Int_t nParticle, Float_t missP,Float_t pt[], Float_t eta[], Int_t nTPC[], Int_t pwflag[], Int_t nref, Float_t jtpt[], Float_t jteta[], bool isThrust);
         bool isMixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta, Float_t jteta_mix);
@@ -107,10 +107,9 @@ Float_t Selection::getEtaPlotRange()
     return etaPlotRange;
 }
 
-Float_t Selection::getDifferential(Float_t pthatWeight)
+Float_t Selection::getDifferential()
 {
     if(doThrust) return (2*etaPlotRange_wrtThr/(float)dEtaBins)*(2*TMath::Pi()/(float)dPhiBins);
-    if(doPP) return (2*etaPlotRange/(float)dEtaBins)*(2*TMath::Pi()/(float)dPhiBins)/pthatWeight; // \pthatWeight since we want to multiply by it
     return (2*etaPlotRange/(float)dEtaBins)*(2*TMath::Pi()/(float)dPhiBins);
 }
 // return 1 if the track passes the selection
