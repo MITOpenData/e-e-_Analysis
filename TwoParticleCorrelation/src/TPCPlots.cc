@@ -94,9 +94,9 @@ void TPCPlots(const std::string inFileName1, const std::string inFileName2, cons
   {
     //if(i>1) continue;
     sig1[i] = (TH2F*)f1->Get(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
-    sig1[i]->Scale(1./nEvtSigHist1->GetBinContent(i));
+    sig1[i]->Scale(1./nEvtSigHist1->GetBinContent(i+1)); // plus 1 because 0 is the underflow bin
     bkg1[i] = (TH2F*)f1->Get(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
-    bkg1[i]->Scale(1./nEvtBkgHist1->GetBinContent(i));
+    bkg1[i]->Scale(1./nEvtBkgHist1->GetBinContent(i+1));
     ratio1[i] = new TH2F(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
     ratio1[i]->Sumw2();
     longRangeYield1[i] = new TH1F(Form("longRangeYield_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#phi;Y(#Delta#Phi)",s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
@@ -105,9 +105,9 @@ void TPCPlots(const std::string inFileName1, const std::string inFileName2, cons
     getLongRangeYield(s,ratio1[i],longRangeYield1[i]);
 
     sig2[i] = (TH2F*)f2->Get(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
-    sig2[i]->Scale(1./nEvtSigHist2->GetBinContent(i));
+    sig2[i]->Scale(1./nEvtSigHist2->GetBinContent(i+1));
     bkg2[i] = (TH2F*)f2->Get(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
-    bkg2[i]->Scale(1./nEvtBkgHist2->GetBinContent(i));
+    bkg2[i]->Scale(1./nEvtBkgHist2->GetBinContent(i+1));
     ratio2[i] = new TH2F(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
     ratio2[i]->Sumw2();
     longRangeYield2[i] = new TH1F(Form("longRangeYield_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#phi;Y(#Delta#Phi)",s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);

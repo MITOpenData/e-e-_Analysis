@@ -34,7 +34,7 @@ class Selection
         bool doBelle = false;
         bool doTheta = false;
         bool doPP = false;
-        bool isParallel = true;
+        bool doParallel = true;
         // for testing purposes
         bool doOneEvent = false;     int numEvents = 50000;
     
