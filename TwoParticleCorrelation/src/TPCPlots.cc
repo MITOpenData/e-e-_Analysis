@@ -76,7 +76,9 @@ void TPCPlots(const std::string inFileName1, const std::string inFileName2, cons
   TH2D * sig1[s.nMultBins], *bkg1[s.nMultBins], *ratio1[s.nMultBins];
   TH2D * sig2[s.nMultBins], *bkg2[s.nMultBins], *ratio2[s.nMultBins];
   TH2D * r_sig[s.nMultBins], *r_bkg[s.nMultBins], *r_ratio[s.nMultBins];
-  
+  TH1D * longRangeYield1[s.nMultBins], *longRangeYield2[s.nMultBins];
+  TH1D * r_longRangeYield[s.nMultBins];
+
   TFile * f1 = TFile::Open(inFileName1.c_str(),"read");
   TFile * f2 = TFile::Open(inFileName2.c_str(),"read");
     
@@ -86,14 +88,18 @@ void TPCPlots(const std::string inFileName1, const std::string inFileName2, cons
     sig1[i] = (TH2D*)f1->Get(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
     bkg1[i] = (TH2D*)f1->Get(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
     ratio1[i] = (TH2D*)f1->Get(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
+    longRangeYield1[i] = (TH1D*)f1->Get(Form("longRangeYield_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
+
     sig2[i] = (TH2D*)f2->Get(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
     bkg2[i] = (TH2D*)f2->Get(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
     ratio2[i] = (TH2D*)f2->Get(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
+    longRangeYield2[i] = (TH1D*)f2->Get(Form("longRangeYield_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
 
     r_sig[i] = (TH2D*)sig1[i]->Clone(Form("%s_r_signal2PC_%d_%d",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));    r_sig[i]->Divide(sig2[i]);
     r_bkg[i] = (TH2D*)bkg1[i]->Clone(Form("%s_r_bkgrnd2PC_%d_%d",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));    r_bkg[i]->Divide(bkg2[i]);
     r_ratio[i] = (TH2D*)ratio1[i]->Clone(Form("%s_r_ratio2PC_%d_%d",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));   r_ratio[i]->Divide(ratio2[i]);
-      
+    r_longRangeYield[i] = (TH1D*)longRangeYield1[i]->Clone(Form("%s_r_longRangeYield_%d_%d",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i])); r_longRangeYield[i]->Divide(longRangeYield2[i]);
+
     TLegend * l = new TLegend(0.6,0.8,0.95,0.95);
     l->SetFillStyle(0);
     if(s.experiment==0)  l->AddEntry((TObject*)0,"ALEPH e^{+}e^{-}, #sqrt{s}= XXX GeV","");
@@ -189,7 +195,22 @@ void TPCPlots(const std::string inFileName1, const std::string inFileName2, cons
     c1->SaveAs(Form("../pdfDir/%s_r_ratio_%d_%d.pdf",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
     c1->SaveAs(Form("../pdfDir/%s_r_ratio_%d_%d.C",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
       
-      
+    formatTH1D(longRangeYield1[i],1.5,1.5);
+    longRangeYield1[i]->Draw();
+    l->Draw("same");
+    c1->SaveAs(Form("../pdfDir/%s_r_longRangeYield1_%d_%d.png",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_r_longRangeYield1_%d_%d.pdf",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_r_longRangeYield1_%d_%d.C",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+
+    formatTH1D(longRangeYield2[i],1.5,1.5);
+    longRangeYield2[i]->Draw();
+    l->Draw("same");
+    c1->SaveAs(Form("../pdfDir/%s_r_longRangeYield2_%d_%d.png",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_r_longRangeYield2_%d_%d.pdf",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_r_longRangeYield2_%d_%d.C",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+
+
+
     delete c1;
     delete l;
   }

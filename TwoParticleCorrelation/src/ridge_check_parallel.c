@@ -115,7 +115,7 @@ int ridge_check_parallel
     
     // files and variables for input
     // get the correct tree for the analysis
-    std::string sideTree = "";
+    std::string sideTree = "t";
     if (s.side_tree == 1) sideTree = "BoostedWTAR8Evt";
     
     TChain * t = new TChain("t");       t->Add(inFileName.c_str());
@@ -139,6 +139,7 @@ int ridge_check_parallel
     /****************************************/
     for (Int_t i=0;i<nevent;i++) {
         t->GetEntry(i);
+        side_t->GetEntry(i);
         jt->GetEntry(i);
         data.update();
         if (i%10000==0) std::cout <<i<<"/"<<nevent<<std::endl;
