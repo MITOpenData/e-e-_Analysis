@@ -252,10 +252,10 @@ void setupTPCTree(TTree *t1, TTree *t2, TTree *t3, TPCNtupleData &data)
         t2->SetBranchAddress("WTAAxis_Theta",&data.WTAAxis_Theta);
         t2->SetBranchAddress("WTAAxis_Phi",&data.WTAAxis_Phi);
         
-        t2->SetBranchAddress("pt",data.pt);
-        t2->SetBranchAddress("eta",data.eta);
-        t2->SetBranchAddress("theta",data.theta);
-        t2->SetBranchAddress("phi",data.phi);
+        t2->SetBranchAddress("pt_wrtThr",data.pt);
+        t2->SetBranchAddress("eta_wrtThr",data.eta);
+        t2->SetBranchAddress("theta_wrtThr",data.theta);
+        t2->SetBranchAddress("phi_wrtThr",data.phi);
     }
 }
 
