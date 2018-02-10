@@ -27,13 +27,13 @@ class Selection
         Int_t experiment = 0; // 0 ALEPH , 1 DELPHI, 2 BELLE, 3 CMS pp
     
         // Initial Setup
-        int side_tree = 1;  // 0 t, 1 BoostedWTAR8Evt,
+        int side_tree = 0;  // 0 t, 1 BoostedWTAR8Evt,
         int jttree = 0; // 0 ak4ESchemeJetTree, 1 ak4WTAmodpSchemeJetTree, 2 ak8ESchemeJetTree, 3 ak8WTAmodpSchemeJetTree
-        bool doThrust = true;  // used for determining thrust/beam angles to use in filling histograms
-        bool donTrkThrust = true; // used for calculation of nTrk (true = Beam)
+        bool doThrust = false;  // used for determining thrust/beam angles to use in filling histograms
+        bool donTrkThrust = false; // used for calculation of nTrk (true = Beam)
         bool doBelle = false;
         bool doTheta = false;
-        bool doPP = false;
+        bool doPP = true;
         bool doParallel = true;
         // for testing purposes
         bool doOneEvent = false;     int numEvents = 50000;
@@ -103,6 +103,16 @@ class Selection
 Selection::Selection()
 {
     std::cout << "Getting settings.." << std::endl;
+    if(doPP)
+    {
+        multBinsLow[2] = 110;
+        multBinsHigh[1] = 110;
+        ptMax = 3.0;
+        side_tree = 0;  // 0 t, 1 BoostedWTAR8Evt,
+        jttree = 0; // 0 ak4ESchemeJetTree, 1 ak4WTAmodpSchemeJetTree, 2 ak8ESchemeJetTree, 3 ak8WTAmodpSchemeJetTree
+        doThrust = false;  // used for determining thrust/beam angles to use in filling histograms
+        donTrkThrust = false; // used for calculation of nTrk (true = Beam)
+    }
     return;
 }
 
