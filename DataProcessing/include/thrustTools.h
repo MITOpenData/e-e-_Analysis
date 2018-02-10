@@ -26,10 +26,27 @@ inline double thetaFromThrust(TVector3 thrust, TVector3 p){
 }
 
 //this is actually rapidity w/ pion mass assumption
-inline double etaFromThrust(TVector3 thrust, TVector3 p){
-  float pl = p*thrust.Unit();//logitudinal momentum component
-  float E = TMath::Power(p.Mag2()+0.13957*0.13957,0.5);//energy w/ mass assumption
+inline double rapFromThrust(TVector3 thrust, TVector3 p, float mass){
+  float pl = p*(thrust.Unit());//logitudinal momentum component
+  float E = TMath::Power(p.Mag2()+mass*mass,0.5);//energy
   return 0.5*TMath::Log((E+pl)/(E-pl));//rapidity
+}
+
+inline bool checkEtaThrustPIs1(TVector3 thrust, TVector3 p)
+{
+  Double_t minDel = 0.000001;
+  Double_t thrust0 = thrust[0]/p[0];
+  Double_t thrust1 = thrust[1]/p[1];
+  Double_t thrust2 = thrust[2]/p[2];
+
+  return TMath::Abs(thrust0 - thrust1) < minDel && TMath::Abs(thrust0 - thrust2) < minDel && TMath::Abs(thrust1 - thrust2) < minDel;
+}
+
+inline double etaFromThrust(TVector3 thrust, TVector3 p){
+  Double_t minDel = 0.000001;
+  if(TMath::Abs(thrust[0]) < minDel && TMath::Abs(thrust[1]) < minDel && TMath::Abs(thrust[2]) < minDel) return 99.;
+  else if(checkEtaThrustPIs1(thrust, p)) return 99.;
+  return -TMath::Log( TMath::Tan( thetaFromThrust(thrust,p)/2.0));
 }
 
 inline double phiFromThrust(TVector3 thrust, TVector3 p){
@@ -49,6 +66,7 @@ void setThrustVariables(particleData *p, eventData *e, TVector3 thrust, TVector3
     TVector3 part = TVector3(p->px[i], p->py[i], p->pz[i]);
     p->pt_wrtThr[i] = ptFromThrust(thrust, part);
     p->eta_wrtThr[i] = etaFromThrust(thrust, part);
+    p->rap_wrtThr[i] = rapFromThrust(thrust, part, p->mass[i]);
     p->theta_wrtThr[i] = thetaFromThrust(thrust, part);
     p->phi_wrtThr[i] = phiFromThrust(thrust, part);
     
@@ -176,19 +194,19 @@ TVector3 getThrustHerwig(int n, float *px, float *py, float *pz){
   if(n<=0) return thrust;
 
   if(n==1){//thrust is just the particle
-    TVector3 thrust = TVector3(px[0],py[0],pz[0]);   
+    thrust = TVector3(px[0],py[0],pz[0]);   
     thrust.SetMag(thrust.Mag()/pSum);
     return thrust;
   }
 
   if(n==2){//special case for 2 particles
     if(TMath::Power(px[0],2)+TMath::Power(py[0],2)+TMath::Power(pz[0],2) >= TMath::Power(px[1],2)+TMath::Power(py[1],2)+TMath::Power(pz[1],2)){
-      TVector3 thrust = TVector3(px[0],py[0],pz[0]);   
+      thrust = TVector3(px[0],py[0],pz[0]);   
       thrust.SetMag(thrust.Mag()/pSum);
       return thrust;
     }
     else{
-      TVector3 thrust = TVector3(px[1],py[1],pz[1]);   
+      thrust = TVector3(px[1],py[1],pz[1]);   
       thrust.SetMag(thrust.Mag()/pSum);
       return thrust;
     }

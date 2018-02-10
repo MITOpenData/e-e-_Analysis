@@ -1,10 +1,12 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9.6210 64-bit) (preloaded format=pdflatex 2017.2.9)  2 JUN 2017 10:21
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  5 FEB 2018 11:21
 entering extended mode
-**./main.tex
-(main.tex
-LaTeX2e <2017/01/01> patch level 1
-Babel <3.9r> and hyphenation patterns for 75 language(s) loaded.
-(revtex4-1.cls
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**main.tex
+(./main.tex
+LaTeX2e <2017-04-15>
+Babel <3.10> and hyphenation patterns for 84 language(s) loaded.
+(./revtex4-1.cls
 Document Class: revtex4-1 2010/07/25/20:33:00 4.1r (http://publish.aps.org/revt
 ex4/ for documentation)
  Copyright (c) 2009 The American Physical Society.
@@ -66,7 +68,7 @@ Class revtex4-1 Info: Overriding \@vspace, \@vspacer, \@no@pgbk, \@newline, and
 
 Class revtex4-1 Warning: No Society specified, using default society aps.
 
-(aps4-1.rtx
+(./aps4-1.rtx
 File: aps4-1 2010/07/25/20:33:00 4.1r (http://publish.aps.org/revtex4/ for docu
 mentation)
 Class revtex4-1 Info: RevTeX society APS selected on input line 31.
@@ -75,17 +77,19 @@ Class revtex4-1 Info: RevTeX society APS selected on input line 31.
 Class revtex4-1 Warning: No journal specified, using default pra.
 
 Class revtex4-1 Info: APS journal PRA selected on input line 7545.
-(aps12pt4-1.rtx
+(./aps12pt4-1.rtx
 File: aps12pt4-1 2010/07/25/20:33:00 4.1r (http://publish.aps.org/revtex4/ for 
 documentation)
 Class revtex4-1 Info: RevTeX pointsize 12pt selected on input line 30.
-) ("C:\Program Files\MiKTeX 2.9\tex\latex\textcase\textcase.sty"
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/textcase/textcase.sty
 Package: textcase 2004/10/07 v0.07 Text only upper/lower case changing (DPC)
-) ("C:\Program Files\MiKTeX 2.9\tex\latex\url\url.sty"
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip10
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
-("C:\Program Files\MiKTeX 2.9\tex\latex\natbib\natbib.sty"
+(/usr/local/texlive/2017/texmf-dist/tex/latex/natbib/natbib.sty
 Package: natbib 2010/09/13 8.31b (PWD, AO)
 \bibhang=\skip44
 \bibsep=\skip45
@@ -93,36 +97,37 @@ LaTeX Info: Redefining \cite on input line 694.
 \c@NAT@ctr=\count94
 )
 Class revtex4-1 Info: Repairing natbib's \BibitemShut on input line 7549.
- (revsymb4-1.sty
+
+(./revsymb4-1.sty
 Package: revsymb4-1 2010/07/25/20:33:00 4.1r (http://publish.aps.org/revtex4/ f
 or documentation)
 LaTeX Info: Redefining \REV@mathfrak on input line 119.
 ))
-("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphicx.sty"
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 2014/10/28 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)
 
-("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\keyval.sty"
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics/keyval.sty
 Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
 \KV@toks@=\toks16
 )
-("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphics.sty"
-Package: graphics 2016/10/09 v1.0u Standard LaTeX Graphics (DPC,SPQR)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2017/04/14 v1.1b Standard LaTeX Graphics (DPC,SPQR)
 
-("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\trig.sty"
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics/trig.sty
 Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
 )
-("C:\Program Files\MiKTeX 2.9\tex\latex\graphics-cfg\graphics.cfg"
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: pdftex.def on input line 99.
 
-("C:\Program Files\MiKTeX 2.9\tex\latex\graphics-def\pdftex.def"
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics-def/pdftex.def
 File: pdftex.def 2017/01/12 v0.06k Graphics/color for pdfTeX
 
-("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty"
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/infwarerr.sty
 Package: infwarerr 2016/05/16 v1.4 Providing info/warning/error messages (HO)
 )
-("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty"
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
 Package: ltxcmds 2016/05/16 v1.23 LaTeX kernel commands for general use (HO)
 )
 \Gread@gobject=\count95
@@ -130,10 +135,10 @@ Package: ltxcmds 2016/05/16 v1.23 LaTeX kernel commands for general use (HO)
 \Gin@req@height=\dimen102
 \Gin@req@width=\dimen103
 )
-("C:\Program Files\MiKTeX 2.9\tex\latex\tools\dcolumn.sty"
+(/usr/local/texlive/2017/texmf-dist/tex/latex/tools/dcolumn.sty
 Package: dcolumn 2014/10/28 v1.06 decimal alignment package (DPC)
 
-("C:\Program Files\MiKTeX 2.9\tex\latex\tools\array.sty"
+(/usr/local/texlive/2017/texmf-dist/tex/latex/tools/array.sty
 Package: array 2016/10/06 v2.4d Tabular extension package (FMi)
 \col@sep=\dimen104
 \extrarowheight=\dimen105
@@ -141,7 +146,7 @@ Package: array 2016/10/06 v2.4d Tabular extension package (FMi)
 \extratabsurround=\skip46
 \backup@length=\skip47
 ))
-("C:\Program Files\MiKTeX 2.9\tex\latex\tools\bm.sty"
+(/usr/local/texlive/2017/texmf-dist/tex/latex/tools/bm.sty
 Package: bm 2017/01/16 v1.2c Bold Symbol Support (DPC/FMi)
 \symboldoperators=\mathgroup4
 \symboldletters=\mathgroup5
@@ -149,30 +154,37 @@ Package: bm 2017/01/16 v1.2c Bold Symbol Support (DPC/FMi)
 LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 141.
 LaTeX Info: Redefining \bm on input line 207.
 )
+(/usr/local/texlive/2017/texmf-dist/tex/latex/placeins/placeins.sty
+Package: placeins 2005/04/18  v 2.2
+)
 Class revtex4-1 Info: Unrecognized array package. Please update this document c
-lass! (Proceeding with fingers crossed.) on input line 58.
-Class revtex4-1 Info: Robustifying \LaTeX's \boldmath command on input line 58.
+lass! (Proceeding with fingers crossed.) on input line 59.
+Class revtex4-1 Info: Robustifying \LaTeX's \boldmath command on input line 59.
 
-Class revtex4-1 Info: cite was not loaded (OK!) on input line 58.
-Class revtex4-1 Info: mcite was not loaded (OK!) on input line 58.
-Class revtex4-1 Info: multicol was not loaded (OK!) on input line 58.
- (main.aux)
+Class revtex4-1 Info: cite was not loaded (OK!) on input line 59.
+Class revtex4-1 Info: mcite was not loaded (OK!) on input line 59.
+Class revtex4-1 Info: multicol was not loaded (OK!) on input line 59.
+
+(./main.aux
+
+LaTeX Warning: Label `fig:figure6' multiply defined.
+
+)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 58.
-LaTeX Font Info:    ... okay on input line 58.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 58.
-LaTeX Font Info:    ... okay on input line 58.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 58.
-LaTeX Font Info:    ... okay on input line 58.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 58.
-LaTeX Font Info:    ... okay on input line 58.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 58.
-LaTeX Font Info:    ... okay on input line 58.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 58.
-LaTeX Font Info:    ... okay on input line 58.
-
-("C:\Program Files\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+ (/usr/local/texlive/2017/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count96
 \scratchdimen=\dimen106
@@ -185,38 +197,38 @@ LaTeX Font Info:    ... okay on input line 58.
 \MPnumerator=\count100
 \makeMPintoPDFobject=\count101
 \everyMPtoPDFconversion=\toks19
-) ("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\pdftexcmds.sty"
-Package: pdftexcmds 2016/05/21 v0.22 Utility functions of pdfTeX for LuaTeX (HO
+) (/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
+Package: pdftexcmds 2017/03/19 v0.25 Utility functions of pdfTeX for LuaTeX (HO
 )
 
-("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifluatex.sty"
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/ifluatex.sty
 Package: ifluatex 2016/05/16 v1.4 Provides the ifluatex switch (HO)
 Package ifluatex Info: LuaTeX not detected.
 )
-("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifpdf.sty"
-Package: ifpdf 2016/05/14 v3.1 Provides the ifpdf switch
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2017/03/15 v3.2 Provides the ifpdf switch
 )
 Package pdftexcmds Info: LuaTeX not detected.
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
 Package pdftexcmds Info: \pdfdraftmode found.
 )
-("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\epstopdf-base.sty"
+(/usr/local/texlive/2017/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
 
-("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\grfext.sty"
+(/usr/local/texlive/2017/texmf-dist/tex/latex/oberdiek/grfext.sty
 Package: grfext 2016/05/16 v1.2 Manage graphics extensions (HO)
 
-("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\kvdefinekeys.sty"
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/kvdefinekeys.sty
 Package: kvdefinekeys 2016/05/16 v1.4 Define keys (HO)
 ))
-("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\kvoptions.sty"
+(/usr/local/texlive/2017/texmf-dist/tex/latex/oberdiek/kvoptions.sty
 Package: kvoptions 2016/05/16 v3.12 Key value format for package options (HO)
 
-("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\kvsetkeys.sty"
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
 Package: kvsetkeys 2016/05/16 v1.17 Key value parser (HO)
 
-("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\etexcmds.sty"
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/etexcmds.sty
 Package: etexcmds 2016/05/16 v1.6 Avoid name clashes with e-TeX commands (HO)
 Package etexcmds Info: Could not find \expanded.
 (etexcmds)             That can mean that you are not using pdfTeX 1.50 or
@@ -229,61 +241,678 @@ Package grfext Info: Graphics extension search list:
 (grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
 G,.JBIG2,.JB2,.eps]
 (grfext)             \AppendGraphicsExtensions on input line 456.
-)
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
 \openout3 = `mainNotes.bib'.
 
 
 <aleph-logo.jpg, id=1, 241.90375pt x 100.375pt>
 File: aleph-logo.jpg Graphic file (type jpg)
  <use aleph-logo.jpg>
-Package pdftex.def Info: aleph-logo.jpg used on input line 62.
+Package pdftex.def Info: aleph-logo.jpg used on input line 63.
 (pdftex.def)             Requested size: 113.81102pt x 47.22525pt.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.95> on input line 83.
+(Font)              <10.95> on input line 98.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 83.
+(Font)              <8> on input line 98.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 83.
+(Font)              <6> on input line 98.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 90.
+(Font)              <14.4> on input line 105.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 90.
+(Font)              <7> on input line 105.
 
 
 Class revtex4-1 Warning: If you want your PACS to appear in your output, use do
 cument class option showpacs.
 
-[1{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map} <./aleph-logo.jpg>]
-(introduction.tex [2]) (data.tex) (analysis.tex [3]) (systematics.tex)
-(result.tex [4] [5]) (summary.tex) (main.bbl [6] [7]) [8] (main.aux)
+[1{/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./ale
+ph-logo.jpg>] (./introduction.tex
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 3.
+ [2]) (./data.tex) (./dataQuality.tex
+<images/DataQualityCheck/LEP1_eta.pdf, id=20, 569.12625pt x 546.04pt>
+File: images/DataQualityCheck/LEP1_eta.pdf Graphic file (type pdf)
 
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right .
+<use images/DataQualityCheck/LEP1_eta.pdf>
+Package pdftex.def Info: images/DataQualityCheck/LEP1_eta.pdf used on input lin
+e 10.
+(pdftex.def)             Requested size: 210.59857pt x 202.05663pt.
 
+<images/DataQualityCheck/LEP1_pt.pdf, id=21, 569.12625pt x 546.04pt>
+File: images/DataQualityCheck/LEP1_pt.pdf Graphic file (type pdf)
+
+<use images/DataQualityCheck/LEP1_pt.pdf>
+Package pdftex.def Info: images/DataQualityCheck/LEP1_pt.pdf used on input line
+ 18.
+(pdftex.def)             Requested size: 210.59857pt x 202.05663pt.
+
+<images/DataQualityCheck/LEP1_mult.pdf, id=22, 569.12625pt x 546.04pt>
+File: images/DataQualityCheck/LEP1_mult.pdf Graphic file (type pdf)
+
+<use images/DataQualityCheck/LEP1_mult.pdf>
+Package pdftex.def Info: images/DataQualityCheck/LEP1_mult.pdf used on input li
+ne 26.
+(pdftex.def)             Requested size: 210.59857pt x 202.05663pt.
+
+<images/DataQualityCheck/z0.pdf, id=23, 569.12625pt x 408.52625pt>
+File: images/DataQualityCheck/z0.pdf Graphic file (type pdf)
+
+<use images/DataQualityCheck/z0.pdf>
+Package pdftex.def Info: images/DataQualityCheck/z0.pdf used on input line 34.
+(pdftex.def)             Requested size: 210.59857pt x 151.17104pt.
+
+<images/DataQualityCheck/d0.pdf, id=24, 569.12625pt x 408.52625pt>
+File: images/DataQualityCheck/d0.pdf Graphic file (type pdf)
+
+<use images/DataQualityCheck/d0.pdf>
+Package pdftex.def Info: images/DataQualityCheck/d0.pdf used on input line 42.
+(pdftex.def)             Requested size: 210.59857pt x 151.17104pt.
+
+<images/DataQualityCheck/ntpc.pdf, id=25, 569.12625pt x 408.52625pt>
+File: images/DataQualityCheck/ntpc.pdf Graphic file (type pdf)
+
+<use images/DataQualityCheck/ntpc.pdf>
+Package pdftex.def Info: images/DataQualityCheck/ntpc.pdf used on input line 50
+.
+(pdftex.def)             Requested size: 210.59857pt x 151.17104pt.
+
+<images/DataQualityCheck/LEP2_eta.pdf, id=26, 569.12625pt x 546.04pt>
+File: images/DataQualityCheck/LEP2_eta.pdf Graphic file (type pdf)
+
+<use images/DataQualityCheck/LEP2_eta.pdf>
+Package pdftex.def Info: images/DataQualityCheck/LEP2_eta.pdf used on input lin
+e 59.
+(pdftex.def)             Requested size: 210.59857pt x 202.05663pt.
+
+<images/DataQualityCheck/LEP2_pt.pdf, id=27, 569.12625pt x 546.04pt>
+File: images/DataQualityCheck/LEP2_pt.pdf Graphic file (type pdf)
+
+<use images/DataQualityCheck/LEP2_pt.pdf>
+Package pdftex.def Info: images/DataQualityCheck/LEP2_pt.pdf used on input line
+ 67.
+(pdftex.def)             Requested size: 210.59857pt x 202.05663pt.
+
+<images/DataQualityCheck/LEP2_mult.pdf, id=28, 569.12625pt x 546.04pt>
+File: images/DataQualityCheck/LEP2_mult.pdf Graphic file (type pdf)
+
+<use images/DataQualityCheck/LEP2_mult.pdf>
+Package pdftex.def Info: images/DataQualityCheck/LEP2_mult.pdf used on input li
+ne 75.
+(pdftex.def)             Requested size: 210.59857pt x 202.05663pt.
+
+<images/DataQualityCheck/PYTHIA8_eta.pdf, id=29, 569.12625pt x 546.04pt>
+File: images/DataQualityCheck/PYTHIA8_eta.pdf Graphic file (type pdf)
+
+<use images/DataQualityCheck/PYTHIA8_eta.pdf>
+Package pdftex.def Info: images/DataQualityCheck/PYTHIA8_eta.pdf used on input 
+line 84.
+(pdftex.def)             Requested size: 210.59857pt x 202.05663pt.
+
+<images/DataQualityCheck/PYTHIA8_pt.pdf, id=30, 569.12625pt x 546.04pt>
+File: images/DataQualityCheck/PYTHIA8_pt.pdf Graphic file (type pdf)
+
+<use images/DataQualityCheck/PYTHIA8_pt.pdf>
+Package pdftex.def Info: images/DataQualityCheck/PYTHIA8_pt.pdf used on input l
+ine 92.
+(pdftex.def)             Requested size: 210.59857pt x 202.05663pt.
+
+<images/DataQualityCheck/PYTHIA8_mult.pdf, id=31, 569.12625pt x 546.04pt>
+File: images/DataQualityCheck/PYTHIA8_mult.pdf Graphic file (type pdf)
+
+<use images/DataQualityCheck/PYTHIA8_mult.pdf>
+Package pdftex.def Info: images/DataQualityCheck/PYTHIA8_mult.pdf used on input
+ line 100.
+(pdftex.def)             Requested size: 210.59857pt x 202.05663pt.
+
+<images/DataQualityCheck/eta_LEP1_PYTHIA8.pdf, id=32, 569.12625pt x 546.04pt>
+File: images/DataQualityCheck/eta_LEP1_PYTHIA8.pdf Graphic file (type pdf)
+
+<use images/DataQualityCheck/eta_LEP1_PYTHIA8.pdf>
+Package pdftex.def Info: images/DataQualityCheck/eta_LEP1_PYTHIA8.pdf used on i
+nput line 109.
+(pdftex.def)             Requested size: 210.59857pt x 202.05663pt.
+
+<images/DataQualityCheck/pt_LEP1_PYTHIA8.pdf, id=33, 569.12625pt x 546.04pt>
+File: images/DataQualityCheck/pt_LEP1_PYTHIA8.pdf Graphic file (type pdf)
+
+<use images/DataQualityCheck/pt_LEP1_PYTHIA8.pdf>
+Package pdftex.def Info: images/DataQualityCheck/pt_LEP1_PYTHIA8.pdf used on in
+put line 117.
+(pdftex.def)             Requested size: 210.59857pt x 202.05663pt.
+
+<images/DataQualityCheck/mult_LEP1_PYTHIA8.pdf, id=34, 569.12625pt x 546.04pt>
+File: images/DataQualityCheck/mult_LEP1_PYTHIA8.pdf Graphic file (type pdf)
+
+<use images/DataQualityCheck/mult_LEP1_PYTHIA8.pdf>
+Package pdftex.def Info: images/DataQualityCheck/mult_LEP1_PYTHIA8.pdf used on 
+input line 125.
+(pdftex.def)             Requested size: 210.59857pt x 202.05663pt.
+) (./comparingMults.tex
+[3] [4 <./images/DataQualityCheck/LEP1_eta.pdf, page is rotated 90 degrees> <./
+images/DataQualityCheck/LEP1_pt.pdf, page is rotated 90 degrees>] [5 <./images/
+DataQualityCheck/LEP1_mult.pdf, page is rotated 90 degrees> <./images/DataQuali
+tyCheck/z0.pdf, page is rotated 90 degrees>] [6 <./images/DataQualityCheck/d0.p
+df, page is rotated 90 degrees> <./images/DataQualityCheck/ntpc.pdf, page is ro
+tated 90 degrees>] [7 <./images/DataQualityCheck/LEP2_eta.pdf, page is rotated 
+90 degrees> <./images/DataQualityCheck/LEP2_pt.pdf, page is rotated 90 degrees>
+] [8 <./images/DataQualityCheck/LEP2_mult.pdf, page is rotated 90 degrees> <./i
+mages/DataQualityCheck/PYTHIA8_eta.pdf, page is rotated 90 degrees>] [9 <./imag
+es/DataQualityCheck/PYTHIA8_pt.pdf, page is rotated 90 degrees> <./images/DataQ
+ualityCheck/PYTHIA8_mult.pdf, page is rotated 90 degrees>] [10 <./images/DataQu
+alityCheck/eta_LEP1_PYTHIA8.pdf, page is rotated 90 degrees> <./images/DataQual
+ityCheck/pt_LEP1_PYTHIA8.pdf, page is rotated 90 degrees>] [11 <./images/DataQu
+alityCheck/mult_LEP1_PYTHIA8.pdf, page is rotated 90 degrees>]
+<images/MultiplicityConversion/nTrkOffline_ALEPH.pdf, id=710, 569.12625pt x 408
+.52625pt>
+File: images/MultiplicityConversion/nTrkOffline_ALEPH.pdf Graphic file (type pd
+f)
+ <use images/MultiplicityConversion/nTrkOffline_ALEPH.pdf>
+Package pdftex.def Info: images/MultiplicityConversion/nTrkOffline_ALEPH.pdf us
+ed on input line 11.
+(pdftex.def)             Requested size: 210.59857pt x 151.17104pt.
+
+<images/MultiplicityConversion/nTrk_AlephMCGen_Cut.pdf, id=711, 569.12625pt x 4
+08.52625pt>
+File: images/MultiplicityConversion/nTrk_AlephMCGen_Cut.pdf Graphic file (type 
+pdf)
+ <use images/MultiplicityConversion/nTrk_AlephMCGen_Cut.pdf>
+Package pdftex.def Info: images/MultiplicityConversion/nTrk_AlephMCGen_Cut.pdf 
+used on input line 19.
+(pdftex.def)             Requested size: 210.59857pt x 151.17104pt.
+
+<images/MultiplicityConversion/nTrk_AlephMCGen.pdf, id=712, 569.12625pt x 408.5
+2625pt>
+File: images/MultiplicityConversion/nTrk_AlephMCGen.pdf Graphic file (type pdf)
+
+ <use images/MultiplicityConversion/nTrk_AlephMCGen.pdf>
+Package pdftex.def Info: images/MultiplicityConversion/nTrk_AlephMCGen.pdf used
+ on input line 27.
+(pdftex.def)             Requested size: 210.59857pt x 151.17104pt.
+
+<images/MultiplicityConversion/nTrk_CMSMCGen.pdf, id=713, 569.12625pt x 408.526
+25pt>
+File: images/MultiplicityConversion/nTrk_CMSMCGen.pdf Graphic file (type pdf)
+ <use images/MultiplicityConversion/nTrk_CMSMCGen.pdf>
+Package pdftex.def Info: images/MultiplicityConversion/nTrk_CMSMCGen.pdf used o
+n input line 35.
+(pdftex.def)             Requested size: 210.59857pt x 151.17104pt.
+
+<images/MultiplicityConversion/conversion.pdf, id=714, 569.12625pt x 408.52625p
+t>
+File: images/MultiplicityConversion/conversion.pdf Graphic file (type pdf)
+ <use images/MultiplicityConversion/conversion.pdf>
+Package pdftex.def Info: images/MultiplicityConversion/conversion.pdf used on i
+nput line 43.
+(pdftex.def)             Requested size: 210.59857pt x 151.17104pt.
+
+<images/MultiplicityConversion/conversion_weighted.pdf, id=715, 569.12625pt x 4
+08.52625pt>
+File: images/MultiplicityConversion/conversion_weighted.pdf Graphic file (type 
+pdf)
+ <use images/MultiplicityConversion/conversion_weighted.pdf>
+Package pdftex.def Info: images/MultiplicityConversion/conversion_weighted.pdf 
+used on input line 51.
+(pdftex.def)             Requested size: 210.59857pt x 151.17104pt.
+
+<images/MultiplicityConversion/new_nTrk_ALEPHConverted.pdf, id=716, 569.12625pt
+ x 408.52625pt>
+File: images/MultiplicityConversion/new_nTrk_ALEPHConverted.pdf Graphic file (t
+ype pdf)
+
+<use images/MultiplicityConversion/new_nTrk_ALEPHConverted.pdf>
+Package pdftex.def Info: images/MultiplicityConversion/new_nTrk_ALEPHConverted.
+pdf used on input line 59.
+(pdftex.def)             Requested size: 210.59857pt x 151.17104pt.
+)
+(./analysis.tex (./thrust.tex) (./QCD.tex) (./twoParticleCorrelation.tex
+[12] [13 <./images/MultiplicityConversion/nTrkOffline_ALEPH.pdf, page is rotate
+d 90 degrees> <./images/MultiplicityConversion/nTrk_AlephMCGen_Cut.pdf, page is
+ rotated 90 degrees> <./images/MultiplicityConversion/nTrk_AlephMCGen.pdf, page
+ is rotated 90 degrees>] [14 <./images/MultiplicityConversion/nTrk_CMSMCGen.pdf
+, page is rotated 90 degrees> <./images/MultiplicityConversion/conversion.pdf, 
+page is rotated 90 degrees> <./images/MultiplicityConversion/conversion_weighte
+d.pdf, page is rotated 90 degrees>] [15 <./images/MultiplicityConversion/new_nT
+rk_ALEPHConverted.pdf, page is rotated 90 degrees>]
+<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_0_20.pdf, id=1034, 56
+9.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_0_20.pdf Graphic
+ file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_rati
+o1_0_20.pdf used on input line 37.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_0_20.pdf, id=1035, 56
+9.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_0_20.pdf Graphic
+ file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_rati
+o2_0_20.pdf used on input line 43.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_0_20.pdf, id=1036, 5
+69.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_0_20.pdf Graphi
+c file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ra
+tio_0_20.pdf used on input line 49.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_20_30.pdf, id=1037, 5
+69.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_20_30.pdf Graphi
+c file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_rati
+o1_20_30.pdf used on input line 60.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_20_30.pdf, id=1038, 5
+69.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_20_30.pdf Graphi
+c file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_rati
+o2_20_30.pdf used on input line 66.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_20_30.pdf, id=1039, 
+569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_20_30.pdf Graph
+ic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ra
+tio_20_30.pdf used on input line 71.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_30_999.pdf, id=1040, 
+569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_30_999.pdf Graph
+ic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_rati
+o1_30_999.pdf used on input line 81.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_30_999.pdf, id=1041, 
+569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_30_999.pdf Graph
+ic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_rati
+o2_30_999.pdf used on input line 87.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_30_999.pdf, id=1042,
+ 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_30_999.pdf Grap
+hic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ra
+tio_30_999.pdf used on input line 92.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_0_20.pdf, id=1043
+, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_0_20.pdf Gra
+phic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_
+ratio1_0_20.pdf used on input line 104.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_0_20.pdf, id=1044
+, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_0_20.pdf Gra
+phic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_
+ratio2_0_20.pdf used on input line 110.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_r_ratio_0_20.pdf, id=104
+5, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_r_ratio_0_20.pdf Gr
+aphic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_r_ratio_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_
+r_ratio_0_20.pdf used on input line 115.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_20_30.pdf, id=104
+6, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_20_30.pdf Gr
+aphic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_
+ratio1_20_30.pdf used on input line 126.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_20_30.pdf, id=104
+7, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_20_30.pdf Gr
+aphic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_
+ratio2_20_30.pdf used on input line 132.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_r_ratio_20_30.pdf, id=10
+48, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_r_ratio_20_30.pdf G
+raphic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_r_ratio_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_
+r_ratio_20_30.pdf used on input line 137.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_30_999.pdf, id=10
+49, 569.12625pt x 553.06625pt>
+File: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_30_999.pdf G
+raphic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_
+ratio1_30_999.pdf used on input line 147.
+(pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
+
+<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_30_999.pdf, id=10
+50, 569.12625pt x 553.06625pt>
+File: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_30_999.pdf G
+raphic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_
+ratio2_30_999.pdf used on input line 153.
+(pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
+
+<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_r_ratio_30_999.pdf, id=1
+051, 569.12625pt x 553.06625pt>
+File: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_r_ratio_30_999.pdf 
+Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_r_ratio_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_
+r_ratio_30_999.pdf used on input line 158.
+(pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
+
+<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_0_20.pdf, id=1052, 56
+9.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_0_20.pdf Graphic
+ file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_rati
+o1_0_20.pdf used on input line 169.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_0_20.pdf, id=1053, 56
+9.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_0_20.pdf Graphic
+ file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_rati
+o2_0_20.pdf used on input line 175.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio_0_20.pdf, id=1054, 5
+69.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio_0_20.pdf Graphi
+c file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ra
+tio_0_20.pdf used on input line 180.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_20_30.pdf, id=1055, 5
+69.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_20_30.pdf Graphi
+c file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_rati
+o1_20_30.pdf used on input line 191.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_20_30.pdf, id=1056, 5
+69.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_20_30.pdf Graphi
+c file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_rati
+o2_20_30.pdf used on input line 197.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio_20_30.pdf, id=1057, 
+569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio_20_30.pdf Graph
+ic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ra
+tio_20_30.pdf used on input line 202.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_30_999.pdf, id=1058, 
+569.12625pt x 553.06625pt>
+File: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_30_999.pdf Graph
+ic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_rati
+o1_30_999.pdf used on input line 212.
+(pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
+
+<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_30_999.pdf, id=1059, 
+569.12625pt x 553.06625pt>
+File: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_30_999.pdf Graph
+ic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_rati
+o2_30_999.pdf used on input line 218.
+(pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
+
+<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio_30_999.pdf, id=1060,
+ 569.12625pt x 553.06625pt>
+File: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio_30_999.pdf Grap
+hic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ra
+tio_30_999.pdf used on input line 223.
+(pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
+
+<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio1_0_20.pdf, id=1061
+, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio1_0_20.pdf Gra
+phic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio1_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_
+ratio1_0_20.pdf used on input line 234.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_0_20.pdf, id=1062
+, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_0_20.pdf Gra
+phic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_
+ratio2_0_20.pdf used on input line 240.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_0_20.pdf, id=106
+3, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_0_20.pdf Gr
+aphic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_
+r_ratio_0_20.pdf used on input line 245.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio1_20_30.pdf, id=106
+4, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio1_20_30.pdf Gr
+aphic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio1_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_
+ratio1_20_30.pdf used on input line 256.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_20_30.pdf, id=106
+5, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_20_30.pdf Gr
+aphic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_
+ratio2_20_30.pdf used on input line 262.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_20_30.pdf, id=10
+66, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_20_30.pdf G
+raphic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_
+r_ratio_20_30.pdf used on input line 267.
+(pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
+
+<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio1_30_999.pdf, id=10
+67, 569.12625pt x 553.06625pt>
+File: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio1_30_999.pdf G
+raphic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio1_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_
+ratio1_30_999.pdf used on input line 277.
+(pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
+
+<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_30_999.pdf, id=10
+68, 569.12625pt x 553.06625pt>
+File: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_30_999.pdf G
+raphic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_
+ratio2_30_999.pdf used on input line 283.
+(pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
+
+<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_30_999.pdf, id=1
+069, 569.12625pt x 553.06625pt>
+File: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_30_999.pdf 
+Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_
+r_ratio_30_999.pdf used on input line 288.
+(pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
+)) (./systematics.tex) (./result.tex [16 <./images/TwoParticleCorrelation/LEP1_
+BEAM/LEP1_BEAM_ratio1_0_20.pdf, page is rotated 90 degrees> <./images/TwoPartic
+leCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_0_20.pdf, page is rotated 90 degrees> 
+<./images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_0_20.pdf, page is 
+rotated 90 degrees>] [17 <./images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r
+atio1_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/L
+EP1_BEAM/LEP1_BEAM_ratio2_20_30.pdf, page is rotated 90 degrees> <./images/TwoP
+articleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_20_30.pdf, page is rotated 90 de
+grees> <./images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_30_999.pdf, 
+page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEA
+M_ratio2_30_999.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelati
+on/LEP1_BEAM/LEP1_BEAM_r_ratio_30_999.pdf, page is rotated 90 degrees>] [18 <./
+images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_0_20.pdf, page is 
+rotated 90 degrees> <./images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ra
+tio2_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP
+1_THRUST/LEP1_THRUST_r_ratio_0_20.pdf, page is rotated 90 degrees> <./images/Tw
+oParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_20_30.pdf, page is rotated 
+90 degrees> <./images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_20_
+30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP1_THRUS
+T/LEP1_THRUST_r_ratio_20_30.pdf, page is rotated 90 degrees>]) (./summary.tex)
+(./main.bbl [19 <./images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1
+_30_999.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP1_
+THRUST/LEP1_THRUST_ratio2_30_999.pdf, page is rotated 90 degrees> <./images/Two
+ParticleCorrelation/LEP1_THRUST/LEP1_THRUST_r_ratio_30_999.pdf, page is rotated
+ 90 degrees> <./images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_0_20.p
+df, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP2_BEAM/LEP2
+_BEAM_ratio2_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrela
+tion/LEP2_BEAM/LEP2_BEAM_r_ratio_0_20.pdf, page is rotated 90 degrees>]
+[20 <./images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_20_30.pdf, page
+ is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ra
+tio2_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LE
+P2_BEAM/LEP2_BEAM_r_ratio_20_30.pdf, page is rotated 90 degrees> <./images/TwoP
+articleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_30_999.pdf, page is rotated 90 de
+grees> <./images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_30_999.pdf, 
+page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEA
+M_r_ratio_30_999.pdf, page is rotated 90 degrees>] [21 <./images/TwoParticleCor
+relation/LEP2_THRUST/LEP2_THRUST_ratio1_0_20.pdf, page is rotated 90 degrees> <
+./images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_0_20.pdf, page i
+s rotated 90 degrees> <./images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_
+r_ratio_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/
+LEP2_THRUST/LEP2_THRUST_ratio1_20_30.pdf, page is rotated 90 degrees> <./images
+/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_20_30.pdf, page is rotat
+ed 90 degrees> <./images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio
+_20_30.pdf, page is rotated 90 degrees>] [22 <./images/TwoParticleCorrelation/L
+EP2_THRUST/LEP2_THRUST_ratio1_30_999.pdf, page is rotated 90 degrees> <./images
+/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_30_999.pdf, page is rota
+ted 90 degrees> <./images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_rati
+o_30_999.pdf, page is rotated 90 degrees>]) [23] (./main.aux)
+
+LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 3724 strings out of 493333
- 49965 string characters out of 3139154
- 125572 words of memory out of 3000000
- 7201 multiletter control sequences out of 15000+200000
- 13364 words of font info for 46 fonts, out of 3000000 for 9000
+ 4122 strings out of 492995
+ 69945 string characters out of 6132704
+ 134130 words of memory out of 5000000
+ 7537 multiletter control sequences out of 15000+600000
+ 15517 words of font info for 53 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 39i,7n,30p,1482b,339s stack positions out of 5000i,500n,10000p,200000b,50000s
-<C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Pr
-ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Fi
-les/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKT
-eX 2.9/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Program Files/MiKTeX 2.9/f
-onts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type
-1/public/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/
-amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/
-cm/cmr8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.
-pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/P
-rogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Program F
-iles/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti12.pfb><C:/Program Files/MiK
-TeX 2.9/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on main.pdf (8 pages, 208695 bytes).
+ 39i,7n,25p,1537b,323s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
+></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
+</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
+/usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></
+usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></us
+r/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/
+local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/lo
+cal/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local
+/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/
+texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/te
+xlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/tex
+live/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texl
+ive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on main.pdf (23 pages, 2440937 bytes).
 PDF statistics:
- 82 PDF objects out of 1000 (max. 8388607)
+ 2694 PDF objects out of 2984 (max. 8388607)
+ 1135 compressed objects within 12 object streams
  0 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 296 words of extra memory for PDF output out of 10000 (max. 10000000)
 

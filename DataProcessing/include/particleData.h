@@ -23,6 +23,7 @@ class particleData{
   float pz[nMaxPart];
   float pt[nMaxPart];
   float pmag[nMaxPart];
+  float rap[nMaxPart];
   float eta[nMaxPart];
   float theta[nMaxPart];
   float phi[nMaxPart];
@@ -38,14 +39,16 @@ class particleData{
   //thrust axis variables
   float pt_wrtThr[nMaxPart];
   float eta_wrtThr[nMaxPart];
+  float rap_wrtThr[nMaxPart];
   float theta_wrtThr[nMaxPart];
   float phi_wrtThr[nMaxPart];
   float pt_wrtChThr[nMaxPart];
   float eta_wrtChThr[nMaxPart];
+  float rap_wrtChThr[nMaxPart];
   float theta_wrtChThr[nMaxPart];
   float phi_wrtChThr[nMaxPart];
 
-  static const int nVar = 34;
+  static const int nVar = 37;
   std::string varStr[nVar] = {"nParticle",
 			      "EventNo",
 			      "RunNo",
@@ -62,6 +65,7 @@ class particleData{
 			      "pz",
 			      "pt",
 			      "pmag",
+			      "rap",
 			      "eta",
 			      "theta",
 			      "phi",
@@ -74,10 +78,12 @@ class particleData{
 			      "ntpc",
 			      "pt_wrtThr",
 			      "eta_wrtThr",
+			      "rap_wrtThr",
 			      "theta_wrtThr",
 			      "phi_wrtThr",
 			      "pt_wrtChThr",
 			      "eta_wrtChThr",
+			      "rap_wrtChThr",
 			      "theta_wrtChThr",
 			      "phi_wrtChThr"};
 
@@ -85,10 +91,54 @@ class particleData{
   
   particleData();
   void SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::string> inList);
+  void SetBranchWrite(TTree* inTree_p);
 };
 
 particleData::particleData()
 {
+  //init values in event they are written to tree but are meaningless - treat -999 as danger
+  nParticle = -999;
+  EventNo = -999;
+  RunNo = -999;
+  year = -999;
+  process = -999;
+  Energy = -999;
+  bFlag = -999;
+  bx = -999;
+  by = -999;
+  ebx = -999;
+  eby = -999;
+
+  for(Int_t i = 0; i < nMaxPart; ++i){
+    px[i] = -999;
+    py[i] = -999;
+    pz[i] = -999;
+    pt[i] = -999;
+    pmag[i] = -999;
+    rap[i] = -999;
+    eta[i] = -999;
+    theta[i] = -999;
+    phi[i] = -999;
+    mass[i] = -999;
+    charge[i] = -999;
+    pwflag[i] = -999;
+    pid[i] = -999;
+    d0[i] = -999;
+    z0[i] = -999;
+    ntpc[i] = -999;
+    
+    pt_wrtThr[i] = -999;
+    eta_wrtThr[i] = -999;
+    rap_wrtThr[i] = -999;
+    theta_wrtThr[i] = -999;
+    phi_wrtThr[i] = -999;
+    pt_wrtChThr[i] = -999;
+    eta_wrtChThr[i] = -999;
+    rap_wrtChThr[i] = -999;
+    theta_wrtChThr[i] = -999;
+    phi_wrtChThr[i] = -999;
+  }
+  
   for(int i = 0; i < nVar; ++i){varIsGood[i] = true;}
   return;
 }
@@ -129,24 +179,70 @@ void particleData::SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::str
   if(varIsGood[13]) inTree_p->SetBranchAddress("pz", pz);
   if(varIsGood[14]) inTree_p->SetBranchAddress("pt", pt);
   if(varIsGood[15]) inTree_p->SetBranchAddress("pmag", pmag);
-  if(varIsGood[16]) inTree_p->SetBranchAddress("eta", eta);
-  if(varIsGood[17]) inTree_p->SetBranchAddress("theta", theta);
-  if(varIsGood[18]) inTree_p->SetBranchAddress("phi", phi);
-  if(varIsGood[19]) inTree_p->SetBranchAddress("mass", mass);
-  if(varIsGood[20]) inTree_p->SetBranchAddress("charge", charge);
-  if(varIsGood[21]) inTree_p->SetBranchAddress("pwflag", pwflag);
-  if(varIsGood[22]) inTree_p->SetBranchAddress("pid", pid);
-  if(varIsGood[23]) inTree_p->SetBranchAddress("d0", d0);
-  if(varIsGood[24]) inTree_p->SetBranchAddress("z0", z0);
-  if(varIsGood[25]) inTree_p->SetBranchAddress("ntpc", ntpc);
-  if(varIsGood[26]) inTree_p->SetBranchAddress("pt_wrtThr", pt_wrtThr);
-  if(varIsGood[27]) inTree_p->SetBranchAddress("eta_wrtThr", eta_wrtThr);
-  if(varIsGood[28]) inTree_p->SetBranchAddress("theta_wrtThr", theta_wrtThr);
-  if(varIsGood[29]) inTree_p->SetBranchAddress("phi_wrtThr", phi_wrtThr);
-  if(varIsGood[30]) inTree_p->SetBranchAddress("pt_wrtChThr", pt_wrtChThr);
-  if(varIsGood[31]) inTree_p->SetBranchAddress("eta_wrtChThr", eta_wrtChThr);
-  if(varIsGood[32]) inTree_p->SetBranchAddress("theta_wrtChThr", theta_wrtChThr);
-  if(varIsGood[33]) inTree_p->SetBranchAddress("phi_wrtChThr", phi_wrtChThr);
+  if(varIsGood[16]) inTree_p->SetBranchAddress("rap", rap);
+  if(varIsGood[17]) inTree_p->SetBranchAddress("eta", eta);
+  if(varIsGood[18]) inTree_p->SetBranchAddress("theta", theta);
+  if(varIsGood[19]) inTree_p->SetBranchAddress("phi", phi);
+  if(varIsGood[20]) inTree_p->SetBranchAddress("mass", mass);
+  if(varIsGood[21]) inTree_p->SetBranchAddress("charge", charge);
+  if(varIsGood[22]) inTree_p->SetBranchAddress("pwflag", pwflag);
+  if(varIsGood[23]) inTree_p->SetBranchAddress("pid", pid);
+  if(varIsGood[24]) inTree_p->SetBranchAddress("d0", d0);
+  if(varIsGood[25]) inTree_p->SetBranchAddress("z0", z0);
+  if(varIsGood[26]) inTree_p->SetBranchAddress("ntpc", ntpc);
+  if(varIsGood[27]) inTree_p->SetBranchAddress("pt_wrtThr", pt_wrtThr);
+  if(varIsGood[28]) inTree_p->SetBranchAddress("eta_wrtThr", eta_wrtThr);
+  if(varIsGood[29]) inTree_p->SetBranchAddress("rap_wrtThr", rap_wrtThr);
+  if(varIsGood[30]) inTree_p->SetBranchAddress("theta_wrtThr", theta_wrtThr);
+  if(varIsGood[31]) inTree_p->SetBranchAddress("phi_wrtThr", phi_wrtThr);
+  if(varIsGood[32]) inTree_p->SetBranchAddress("pt_wrtChThr", pt_wrtChThr);
+  if(varIsGood[33]) inTree_p->SetBranchAddress("eta_wrtChThr", eta_wrtChThr);
+  if(varIsGood[34]) inTree_p->SetBranchAddress("rap_wrtChThr", rap_wrtChThr);
+  if(varIsGood[35]) inTree_p->SetBranchAddress("theta_wrtChThr", theta_wrtChThr);
+  if(varIsGood[36]) inTree_p->SetBranchAddress("phi_wrtChThr", phi_wrtChThr);
+  
+  return;
+}
+
+void particleData::SetBranchWrite(TTree* inTree_p)
+{
+  inTree_p->Branch("EventNo", &EventNo, "EventNo/I");
+  inTree_p->Branch("RunNo", &RunNo, "RunNo/I");
+  inTree_p->Branch("year", &year, "year/I");
+  inTree_p->Branch("process", &process, "process/I");
+  inTree_p->Branch("Energy", &Energy, "Energy/F");
+  inTree_p->Branch("bFlag", &bFlag, "bFlag/I");
+  inTree_p->Branch("bx", &bx, "bx/F");
+  inTree_p->Branch("by", &by, "by/F");
+  inTree_p->Branch("ebx", &ebx, "ebx/F");
+  inTree_p->Branch("eby", &eby, "eby/F");
+  inTree_p->Branch("nParticle", &nParticle, "nParticle/I"); 
+  inTree_p->Branch("px", px, "px[nParticle]/F");
+  inTree_p->Branch("py", py, "py[nParticle]/F");
+  inTree_p->Branch("pz", pz, "pz[nParticle]/F");
+  inTree_p->Branch("pt", pt, "pt[nParticle]/F");
+  inTree_p->Branch("pmag", pmag, "pmag[nParticle]/F");
+  inTree_p->Branch("rap", rap, "rap[nParticle]/F");
+  inTree_p->Branch("eta", eta, "eta[nParticle]/F");
+  inTree_p->Branch("theta", theta, "theta[nParticle]/F");
+  inTree_p->Branch("phi", phi, "phi[nParticle]/F");
+  inTree_p->Branch("mass", mass, "mass[nParticle]/F");
+  inTree_p->Branch("charge", charge, "charge[nParticle]/F");
+  inTree_p->Branch("pwflag", pwflag, "pwflag[nParticle]/I");
+  inTree_p->Branch("pid", pid, "pid[nParticle]/I");
+  inTree_p->Branch("d0", d0, "d0[nParticle]/F");
+  inTree_p->Branch("z0", z0, "z0[nParticle]/F");
+  inTree_p->Branch("ntpc", ntpc, "ntpc[nParticle]/I");
+  inTree_p->Branch("pt_wrtThr", pt_wrtThr, "pt_wrtThr[nParticle]/F");
+  inTree_p->Branch("eta_wrtThr", eta_wrtThr, "eta_wrtThr[nParticle]/F");
+  inTree_p->Branch("rap_wrtThr", rap_wrtThr, "rap_wrtThr[nParticle]/F");
+  inTree_p->Branch("theta_wrtThr", theta_wrtThr, "theta_wrtThr[nParticle]/F");
+  inTree_p->Branch("phi_wrtThr", phi_wrtThr, "phi_wrtThr[nParticle]/F");
+  inTree_p->Branch("pt_wrtChThr", pt_wrtChThr, "pt_wrtChThr[nParticle]/F");
+  inTree_p->Branch("eta_wrtChThr", eta_wrtChThr, "eta_wrtChThr[nParticle]/F");
+  inTree_p->Branch("rap_wrtChThr", rap_wrtChThr, "rap_wrtChThr[nParticle]/F");
+  inTree_p->Branch("theta_wrtChThr", theta_wrtChThr, "theta_wrtChThr[nParticle]/F");
+  inTree_p->Branch("phi_wrtChThr", phi_wrtChThr, "phi_wrtChThr[nParticle]/F");
   
   return;
 }

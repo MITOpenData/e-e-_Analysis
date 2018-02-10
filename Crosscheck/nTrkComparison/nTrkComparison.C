@@ -7,6 +7,7 @@
 #include <vector>
 #include <iostream>
 #include "TProfile.h"
+#include "TGraphErrors.h"
 
 void nTrkComparison(int nTrkLow = 0, int nTrkHigh = 999){
 
@@ -23,6 +24,8 @@ void nTrkComparison(int nTrkLow = 0, int nTrkHigh = 999){
   TTree * TalephMCReco = (TTree*) alephMC->Get("t");
   TTree * TalephMCGen = (TTree*)  alephMC->Get("tgen");
   TTree * TcmsMCGen = (TTree*) cmsMC->Get("HiGenParticleAna/hi");
+
+  TFile * out = TFile::Open("output.root","recreate");
 
   TH1D * Ntrk_AlephOffline = new TH1D("Ntrk_AlephOffline","Ntrk_AlephOffline",300,0,300);
   Taleph->Draw(Form("Sum$(%s)>>Ntrk_AlephOffline",alephCut.c_str()),Form("Sum$(%s)>%d && Sum$(%s)<%d",alephCut.c_str(),nTrkLow,alephCut.c_str(),nTrkHigh));
@@ -116,6 +119,8 @@ void nTrkComparison(int nTrkLow = 0, int nTrkHigh = 999){
   }
   conversion->Print("All");
 
+  out->Write();
+
   TCanvas * c1 = new TCanvas("c1","c1",800,600);
   Ntrk_AlephOffline->GetXaxis()->SetRangeUser(0,100); 
   Ntrk_AlephOffline->GetXaxis()->SetTitle("nTrk"); 
@@ -174,5 +179,20 @@ void nTrkComparison(int nTrkLow = 0, int nTrkHigh = 999){
   c1->SaveAs("img/conversion_weighted.png");
   c1->SaveAs("img/conversion_weighted.pdf");
   c1->SaveAs("img/conversion_weighted.C");
-  
+
+  c1->Clear();
+  TGraphErrors * g = new TGraphErrors(60);    
+  for(int i = 1; i<61; i++){
+    g->SetPoint(i,i*conversion->GetBinContent(i),Ntrk_AlephOffline->GetBinContent(i));
+    g->SetPointError(i,0,Ntrk_AlephOffline->GetBinError(i));
+  } 
+  g->GetXaxis()->SetTitle("nTrk^{ALEPH to CMS}_{Offline}");
+  g->GetYaxis()->SetTitle("nEvts");
+  g->SetTitle("");
+  g->Draw("AP");
+  c1->SaveAs("img/new_nTrk_ALEPHConverted.png");
+  c1->SaveAs("img/new_nTrk_ALEPHConverted.pdf");
+  c1->SaveAs("img/conversion_ALEPHConverted.C");
+
+
 }
