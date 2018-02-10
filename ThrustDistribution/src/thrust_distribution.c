@@ -40,7 +40,7 @@
 
 std::vector<float> compute_errors(std::string dataname);
 void relative_error();
-int thrust_distribution(TString filename = "~/lxplus/LEP2MC1996to2000_YDATAEMINI_recons_aftercut-MERGED.root", //file used
+int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.root", //file used
                          std::string dataname = "LEP2",
                          Float_t min_Energy = 203, // lower cut on Energy   i.e. Energy>91 to take event
                          Float_t max_Energy = 209, // upper cut on Energy    i.e. Energy<91.5 to take event
@@ -132,6 +132,7 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2MC1996to2000_YDATAEMINI
     Int_t pwflag[5000];
     Float_t Energy;
     Float_t missP;
+    bool passesWW;
     
     t1->SetBranchAddress("nParticle",&nParticle);
     t1->SetBranchAddress("px",px);
@@ -143,6 +144,7 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2MC1996to2000_YDATAEMINI
     t1->SetBranchAddress("pwflag",pwflag);
     t1->SetBranchAddress("Energy", &Energy);
     t1->SetBranchAddress("missP", &missP);
+    t1->SetBranchAddress("passesWW", &passesWW);
     
     Int_t nevent = (Int_t)t1->GetEntries();
     Int_t nevent_process = nevent;
@@ -189,7 +191,7 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2MC1996to2000_YDATAEMINI
         }
         
         // NUMBER 1: if we get 5 charged particles
-        if(pwflag0>=5)
+        if(pwflag0>=5 && passesWW)
         {
             Float_t Thrust = T_sum/T_mag;
             h_thrust->Fill(Thrust, correct_entry(Thrust));
@@ -218,6 +220,7 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2MC1996to2000_YDATAEMINI
     gStyle->SetOptStat(0);
     h_thrust->GetXaxis()->CenterTitle();
     h_thrust->GetYaxis()->CenterTitle();
+    h_thrust->GetYaxis()->SetRangeUser(0,20);
     h_thrust->SetMarkerStyle(4);
     h_thrust->SetMarkerSize(0.7);
     h_thrust->Draw();
@@ -275,6 +278,7 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2MC1996to2000_YDATAEMINI
     //gPad->SetLogx();
     h_one_minus_thrust->GetXaxis()->CenterTitle();
     h_one_minus_thrust->GetYaxis()->CenterTitle();
+    h_one_minus_thrust->GetYaxis()->SetRangeUser(0,20);
     h_one_minus_thrust->SetMarkerStyle(4);
     h_one_minus_thrust->Draw();
 
