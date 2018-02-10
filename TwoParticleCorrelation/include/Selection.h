@@ -51,7 +51,12 @@ class Selection
         Float_t ptMin = 0.4;    Float_t ptMin_wrtThr = 0.4;
         Float_t ptMax = 100.0;  Float_t ptMax_wrtThr = 100.0;
         Float_t etaCut = 1.8;   Float_t etaCut_wrtThr = 5.0;
-        Int_t nTPCMin = 0; // completely inclusive, maybe tighten this
+        Float_t thetaMin = 20;
+        Float_t thetaMax = 160;
+        Float_t pMin = 0.2;
+        Float_t dxyCut = 3;
+        Float_t dzCut = 5;
+        Int_t nTPCMin = 4; // completely inclusive, maybe tighten this
         Int_t nTPCMax = 100;
         bool doNTPC = 0;
     
