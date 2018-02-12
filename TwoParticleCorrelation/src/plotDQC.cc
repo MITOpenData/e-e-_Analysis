@@ -139,7 +139,7 @@ void formatTH1F(TH1F * h)
     h->GetXaxis()->SetTitleOffset(h->GetXaxis()->GetTitleOffset()*3.);
 }
 
-int plotDQC(const std::string inFileName, std::string outFileName = "")
+int plotDQC(const std::string inFileName, std::string outFileName = "", int drawHist = 0)
 {
     
   ///// check if there are multiple files /////
@@ -1195,69 +1195,81 @@ int plotDQC(const std::string inFileName, std::string outFileName = "")
   //if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
                            
   // Writing and plotting all of the histograms
+  TCanvas* canv_p;
+  TPad* pad1; TPad* pad2_p; TPad* pad3_p;
+  std::vector<TPad*> pad2;
+  std::vector<TPad*> pad3;
   for(int nI = 0; nI < nVarToComp; ++nI)
   {
-      TCanvas* canv_p = new TCanvas("canv_c", "canv_c", 1000, 500);
-      canv_p->SetTopMargin(0.01);
-      canv_p->SetRightMargin(0.01);
-      canv_p->SetLeftMargin(0.01);
-      canv_p->SetBottomMargin(0.01);
-      
-      TPad* pad1 = new TPad("pad1", "pad1", 0.0, splitPoint, 0.5, 1.0);
-      pad1->Draw();
-      pad1->SetTopMargin(0.01);
-      pad1->SetRightMargin(0.01);
-      pad1->SetBottomMargin(0.01);
-      pad1->SetLeftMargin(pad1->GetLeftMargin()*1.3);
-      
-      std::vector<TPad*> pad2;
-      std::vector<TPad*> pad3;
-      
-      for (unsigned int pI = 0; pI < histRat.size();pI++)
+      if(drawHist)
       {
-          TPad* pad2_p = new TPad("pad2", "pad2", 0.0, 0.0, 0.5, splitPoint);
-          pad2_p->Draw();
-          pad2_p->SetTopMargin(0.01);
-          pad2_p->SetRightMargin(0.01);
-          pad2_p->SetBottomMargin(pad2_p->GetLeftMargin()*1./splitPoint);
-          pad2_p->SetLeftMargin(pad2_p->GetLeftMargin());
-          pad2.push_back(pad2_p);
-          
-          TPad* pad3_p = new TPad("pad3", "pad3", 0.5, 0.0, 1.0, 1.0);
-          pad3_p->Draw();
-          pad3_p->SetTopMargin(0.01);
-          pad3_p->SetRightMargin(0.01);
-          pad3_p->SetLeftMargin(pad3_p->GetLeftMargin());
-          pad3_p->SetBottomMargin(pad3_p->GetLeftMargin());
-          pad3.push_back(pad3_p);
+        canv_p = new TCanvas("canv_c", "canv_c", 1000, 500);
+        canv_p->SetTopMargin(0.01);
+        canv_p->SetRightMargin(0.01);
+        canv_p->SetLeftMargin(0.01);
+        canv_p->SetBottomMargin(0.01);
+        
+        TPad* pad1 = new TPad("pad1", "pad1", 0.0, splitPoint, 0.5, 1.0);
+        pad1->Draw();
+        pad1->SetTopMargin(0.01);
+        pad1->SetRightMargin(0.01);
+        pad1->SetBottomMargin(0.01);
+        pad1->SetLeftMargin(pad1->GetLeftMargin()*1.3);
+        
+        std::vector<TPad*> pad2;
+        std::vector<TPad*> pad3;
+        
+        for (unsigned int pI = 0; pI < histRat.size();pI++)
+        {
+            pad2_p = new TPad("pad2", "pad2", 0.0, 0.0, 0.5, splitPoint);
+            pad2_p->Draw();
+            pad2_p->SetTopMargin(0.01);
+            pad2_p->SetRightMargin(0.01);
+            pad2_p->SetBottomMargin(pad2_p->GetLeftMargin()*1./splitPoint);
+            pad2_p->SetLeftMargin(pad2_p->GetLeftMargin());
+            pad2.push_back(pad2_p);
+            
+            pad3_p = new TPad("pad3", "pad3", 0.5, 0.0, 1.0, 1.0);
+            pad3_p->Draw();
+            pad3_p->SetTopMargin(0.01);
+            pad3_p->SetRightMargin(0.01);
+            pad3_p->SetLeftMargin(pad3_p->GetLeftMargin());
+            pad3_p->SetBottomMargin(pad3_p->GetLeftMargin());
+            pad3.push_back(pad3_p);
+        }
       }
-      
       unsigned int loc = 0;
       for(unsigned int hI = 0; hI < hist.size(); ++hI)
       {
           hist.at(hI).at(nI)->Write("", TObject::kOverwrite);
           hist.at(hI).at(nI)->Sumw2();
-          pad1->cd();
-          formatTH1F(hist.at(hI).at(nI));
-          
-          if(hI == 0) hist.at(hI).at(nI)->DrawCopy("HIST E1");
-          else hist.at(hI).at(nI)->DrawCopy("SAME *HIST E1");
-          
+          if(drawHist)
+          {
+            pad1->cd();
+            formatTH1F(hist.at(hI).at(nI));
+            if(hI == 0) hist.at(hI).at(nI)->DrawCopy("HIST E1");
+            else hist.at(hI).at(nI)->DrawCopy("SAME *HIST E1");
+          }
           for(unsigned int hII = hI+1; hII < hist.size(); ++hII)
           {
               histRat.at(loc).at(nI)->Sumw2();
               histRat.at(loc).at(nI)->Divide(hist.at(hI).at(nI),hist.at(hII).at(nI));
               histRat.at(loc).at(nI)->Write("", TObject::kOverwrite);
-              pad2.at(loc)->cd();
-              formatTH1F(histRat.at(loc).at(nI));
-              histRat.at(loc).at(nI)->SetMaximum(1.3);
-              histRat.at(loc).at(nI)->SetMinimum(0.7);
-              histRat.at(loc).at(nI)->DrawCopy("P E1");
-              
+              if(drawHist)
+              {
+                pad2.at(loc)->cd();
+                formatTH1F(histRat.at(loc).at(nI));
+                histRat.at(loc).at(nI)->SetMaximum(1.3);
+                histRat.at(loc).at(nI)->SetMinimum(0.7);
+                histRat.at(loc).at(nI)->DrawCopy("P E1");
+              }
               histDelta.at(loc).at(nI)->Write("", TObject::kOverwrite);
-              pad3.at(loc)->cd();
-              formatTH1F(histDelta.at(loc).at(nI));
-              histDelta.at(loc).at(nI)->DrawCopy("HIST E1");
+              if(drawHist)
+              {
+                pad3.at(loc)->cd();
+                formatTH1F(histDelta.at(loc).at(nI));
+                histDelta.at(loc).at(nI)->DrawCopy("HIST E1");
+              }  
               
               ++loc;
           }
@@ -1265,18 +1277,21 @@ int plotDQC(const std::string inFileName, std::string outFileName = "")
       if ( (loc) != nTriangNum ) std::cout<<"Incorrect number of jet delta and ratio histograms initialized"<<std::endl;
       
       std::string pdfStr = listOfCompBranches.at(nI) + "_" + outFileName + "_" + std::to_string(date->GetDate()) + ".pdf";
-      canv_p->SaveAs(("../pdfDir/" + pdfStr).c_str());
+      if(drawHist) canv_p->SaveAs(("../pdfDir/" + pdfStr).c_str());
       listOfPdf.push_back(pdfStr);
       listOfVar.push_back(listOfCompBranches.at(nI));
       
       // clean up before next variable
-      delete pad1;
-      for (unsigned int pI = 0; pI < histRat.size(); pI++)
+      if(drawHist)
       {
-          delete pad2.at(pI);
-          delete pad3.at(pI);
+        delete pad1;
+        for (unsigned int pI = 0; pI < histRat.size(); pI++)
+        {
+            delete pad2.at(pI);
+            delete pad3.at(pI);
+        }
+        delete canv_p;
       }
-      delete canv_p;
       for (unsigned int hI = 0; hI < hist.size(); hI++) delete hist.at(hI).at(nI);
       for (unsigned int hI = 0; hI < histRat.size(); hI++){ delete histRat.at(hI).at(nI);delete histDelta.at(hI).at(nI); }
   }
@@ -1288,13 +1303,15 @@ int plotDQC(const std::string inFileName, std::string outFileName = "")
         const std::string jetStr = listOfJetTrees1.at(jI);
         for(unsigned int bI = 0; bI < listOfJetTreeBranches.at(jI).size(); ++bI)
         {
-            TCanvas* canv_p = new TCanvas("canv_c", "canv_c", 1000, 500);
+          if(drawHist)
+          {
+            canv_p = new TCanvas("canv_c", "canv_c", 1000, 500);
             canv_p->SetTopMargin(0.01);
             canv_p->SetRightMargin(0.01);
             canv_p->SetLeftMargin(0.01);
             canv_p->SetBottomMargin(0.01);
             
-            TPad* pad1 = new TPad("pad1", "pad1", 0.0, splitPoint, 0.5, 1.0);
+            pad1 = new TPad("pad1", "pad1", 0.0, splitPoint, 0.5, 1.0);
             pad1->Draw();
             pad1->SetTopMargin(0.01);
             pad1->SetRightMargin(0.01);
@@ -1306,7 +1323,7 @@ int plotDQC(const std::string inFileName, std::string outFileName = "")
 
             for (unsigned int fI = 0; fI < histRat_Jet.size(); fI++)
             {
-                TPad* pad2_p = new TPad("pad2", "pad2", 0.0, 0.0, 0.5, splitPoint);
+                pad2_p = new TPad("pad2", "pad2", 0.0, 0.0, 0.5, splitPoint);
                 pad2_p->Draw();
                 pad2_p->SetTopMargin(0.01);
                 pad2_p->SetRightMargin(0.01);
@@ -1314,7 +1331,7 @@ int plotDQC(const std::string inFileName, std::string outFileName = "")
                 pad2_p->SetLeftMargin(pad2_p->GetLeftMargin());
                 pad2.push_back(pad2_p);
                 
-                TPad* pad3_p = new TPad("pad3", "pad3", 0.5, 0.0, 1.0, 1.0);
+                pad3_p = new TPad("pad3", "pad3", 0.5, 0.0, 1.0, 1.0);
                 pad3_p->Draw();
                 pad3_p->SetTopMargin(0.01);
                 pad3_p->SetRightMargin(0.01);
@@ -1323,34 +1340,40 @@ int plotDQC(const std::string inFileName, std::string outFileName = "")
                 pad3.push_back(pad3_p);
              
             }
-        
+          }
             unsigned int loc = 0;
             for(unsigned int hI = 0; hI < hist_Jet.size(); ++hI)
             {
                 hist_Jet.at(hI).at(jI).at(bI)->Write("", TObject::kOverwrite);
                 hist_Jet.at(hI).at(jI).at(bI)->Sumw2();
-                pad1->cd();
-                formatTH1F(hist_Jet.at(hI).at(jI).at(bI));
-                
-                if(hI == 0) hist_Jet.at(hI).at(jI).at(bI)->DrawCopy("HIST E1");
-                else hist_Jet.at(hI).at(jI).at(bI)->DrawCopy("SAME *HIST E1");
-                
+                if(drawHist)
+                {
+                  pad1->cd();
+                  formatTH1F(hist_Jet.at(hI).at(jI).at(bI));
+                  if(hI == 0) hist_Jet.at(hI).at(jI).at(bI)->DrawCopy("HIST E1");
+                  else hist_Jet.at(hI).at(jI).at(bI)->DrawCopy("SAME *HIST E1");
+                }
+
                 for(unsigned int hII = hI+1; hII < hist_Jet.size(); ++hII)
                 {
                     histRat_Jet.at(loc).at(jI).at(bI)->Sumw2();
                     histRat_Jet.at(loc).at(jI).at(bI)->Divide(hist_Jet.at(hI).at(jI).at(bI),hist_Jet.at(hII).at(jI).at(bI));
                     histRat_Jet.at(loc).at(jI).at(bI)->Write("", TObject::kOverwrite);
-                    pad2.at(loc)->cd();
-                    formatTH1F(histRat_Jet.at(loc).at(jI).at(bI));
-                    histRat_Jet.at(loc).at(jI).at(bI)->SetMaximum(1.3);
-                    histRat_Jet.at(loc).at(jI).at(bI)->SetMinimum(0.7);
-                    histRat_Jet.at(loc).at(jI).at(bI)->DrawCopy("P E1");
-                    
+                    if(drawHist)
+                    {
+                      pad2.at(loc)->cd();
+                      formatTH1F(histRat_Jet.at(loc).at(jI).at(bI));
+                      histRat_Jet.at(loc).at(jI).at(bI)->SetMaximum(1.3);
+                      histRat_Jet.at(loc).at(jI).at(bI)->SetMinimum(0.7);
+                      histRat_Jet.at(loc).at(jI).at(bI)->DrawCopy("P E1");
+                    }
                     histDelta_Jet.at(loc).at(jI).at(bI)->Write("", TObject::kOverwrite);
-                    pad3.at(loc)->cd();
-                    formatTH1F(histDelta_Jet.at(loc).at(jI).at(bI));
-                    histDelta_Jet.at(loc).at(jI).at(bI)->DrawCopy("HIST E1");
-                    
+                    if(drawHist)
+                    {
+                      pad3.at(loc)->cd();
+                      formatTH1F(histDelta_Jet.at(loc).at(jI).at(bI));
+                      histDelta_Jet.at(loc).at(jI).at(bI)->DrawCopy("HIST E1");
+                    }
                     ++loc;
                 }
             }
@@ -1358,17 +1381,20 @@ int plotDQC(const std::string inFileName, std::string outFileName = "")
             if ( (loc) != nTriangNum ) std::cout<<"Incorrect number of jet delta and ratio histograms written"<<std::endl;
             
             std::string pdfStr = listOfJetTreeBranches.at(jI).at(bI) + "_" + jetStr+ "_" + outFileName + "_" + std::to_string(date->GetDate()) + ".pdf";
-            canv_p->SaveAs(("../pdfDir/" + pdfStr).c_str());
+            if(drawHist)canv_p->SaveAs(("../pdfDir/" + pdfStr).c_str());
             listOfPdf.push_back(pdfStr);
             listOfVar.push_back((jetStr + "_" + listOfJetTreeBranches.at(jI).at(bI)).c_str());
             // clean up before next variable
-            delete pad1;
-            for (unsigned int pI = 0; pI < histRat_Jet.size(); pI++)
+            if(drawHist)
             {
-                delete pad2.at(pI);
-                delete pad3.at(pI);
+              delete pad1;
+              for (unsigned int pI = 0; pI < histRat_Jet.size(); pI++)
+              {
+                  delete pad2.at(pI);
+                  delete pad3.at(pI);
+              }
+              delete canv_p;
             }
-            delete canv_p;
             for(unsigned int hI = 0; hI < hist_Jet.size(); ++hI) delete hist_Jet.at(hI).at(jI).at(bI);
             for(unsigned int hI = 0; hI < histRat_Jet.size(); ++hI) { delete histRat_Jet.at(hI).at(jI).at(bI); histDelta_Jet.at(hI).at(jI).at(bI); }
         }
