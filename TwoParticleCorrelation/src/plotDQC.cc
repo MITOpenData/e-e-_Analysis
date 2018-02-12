@@ -870,7 +870,7 @@ int plotDQC(const std::string inFileName, std::string outFileName = "")
           std::vector< std::vector<Int_t> > pData_temp;
           for(unsigned int pI = 0; pI < pData.size(); ++pI)
           {
-              std::vector<Float_t> temp;
+              std::vector<Int_t> temp;
               temp.assign(pData.at(pI).ntpc,pData.at(pI).ntpc+pData.at(pI).nParticle);
               pData_temp.push_back(temp);
           }
