@@ -139,7 +139,7 @@ void formatTH1F(TH1F * h)
     h->GetXaxis()->SetTitleOffset(h->GetXaxis()->GetTitleOffset()*3.);
 }
 
-int plotDQC_REAL(const std::string inFileName, std::string outFileName = "")
+int plotDQC(const std::string inFileName, std::string outFileName = "", int drawHist = 0)
 {
     
   ///// check if there are multiple files /////
@@ -227,7 +227,6 @@ int plotDQC_REAL(const std::string inFileName, std::string outFileName = "")
 
     // get the list of jet trees in the file
     
-    ///////// ANTHONY YOU ARE HERE AND ARE CHECKING IF THIS LIST BELOW CONTAINS ALL OF THE JET TREES BECAUSE YOUR OUTPUT FILE ONLY CONTAINS 1 OF THE JET TREES /////////
   std::vector<std::string> listOfJetTrees1 = returnRootFileContentsList(inFile.at(0), "TTree", "JetTree");
   removeVectorDuplicates(&listOfJetTrees1);
   std::vector< std::vector<std::string> > listOfJetTreeBranches;
@@ -473,28 +472,31 @@ int plotDQC_REAL(const std::string inFileName, std::string outFileName = "")
   
   unsigned int nf = fileList.size();
   unsigned int nTriangNum = nf*(nf-1)/2.;
-   
   // check to make sure that the correct number of histograms were created
   if (hist.size() != nf) std::cout<<"Incorrect number of file lists created for hist"<<std::endl;
   if (hist.at(0).size() != (unsigned int) nVarToComp) std::cout<<"Incorrect number of histograms created"<<std::endl;
-  
-  if (histRat.size()!= nTriangNum) std::cout<<"Incorrect number of file lists created for histRat"<<std::endl;
-  if (histRat.at(0).size()!= (unsigned int) nVarToComp) std::cout<<"Incorrect number of ratio histograms created"<<std::endl;
-  
-  if (histDelta.size()!= nTriangNum) std::cout<<"Incorrect number of file lists created for histDelta"<<std::endl;
-  if (histDelta.at(0).size()!= (unsigned int) nVarToComp) std::cout<<"Incorrect number of delta histograms created"<<std::endl;
   
   if (hist_Jet.size() != nf) std::cout<<"Incorrect number of file lists created for hist_Jet"<<std::endl;
   if (hist_Jet.at(0).size() != (unsigned int) nJetTrees) std::cout<<"Incorrect number of jet tree lists created"<<std::endl;
   if (hist_Jet.at(0).at(0).size() != (unsigned int) listOfJetTreeBranches.at(0).size() ) std::cout<<"Incorrect number of jet tree histograms created"<<std::endl;
   
-  if (histRat_Jet.size() != nTriangNum) std::cout<<"Incorrect number of file lists created for histRat_Jet"<<std::endl;
-  if (histRat_Jet.at(0).size() != (unsigned int) nJetTrees) std::cout<<"Incorrect number of jet tree ratio lists created"<<std::endl;
-  if (histRat_Jet.at(0).at(0).size() != (unsigned int) listOfJetTreeBranches.at(0).size() ) std::cout<<"Incorrect number of jet tree ratio histograms created"<<std::endl;
+  if(nf>=2) // if there are 2 or more files
+  {
+    if (histRat.size()!= nTriangNum) std::cout<<"Incorrect number of file lists created for histRat"<<std::endl;
+    if (histRat.at(0).size()!= (unsigned int) nVarToComp) std::cout<<"Incorrect number of ratio histograms created"<<std::endl;
     
-  if (histDelta_Jet.size()!= nTriangNum) std::cout<<"Incorrect number of jet delta histograms created"<<std::endl;
-  if (histDelta_Jet.at(0).size() != (unsigned int) nJetTrees) std::cout<<"Incorrect number of jet tree delta lists created"<<std::endl;
-  if (histDelta_Jet.at(0).at(0).size() != (unsigned int) listOfJetTreeBranches.at(0).size() ) std::cout<<"Incorrect number of jet tree delta histograms created"<<std::endl;
+    if (histDelta.size()!= nTriangNum) std::cout<<"Incorrect number of file lists created for histDelta"<<std::endl;
+    if (histDelta.at(0).size()!= (unsigned int) nVarToComp) std::cout<<"Incorrect number of delta histograms created"<<std::endl;
+
+    if (histRat_Jet.size() != nTriangNum) std::cout<<"Incorrect number of file lists created for histRat_Jet"<<std::endl;
+    if (histRat_Jet.at(0).size() != (unsigned int) nJetTrees) std::cout<<"Incorrect number of jet tree ratio lists created"<<std::endl;
+    if (histRat_Jet.at(0).at(0).size() != (unsigned int) listOfJetTreeBranches.at(0).size() ) std::cout<<"Incorrect number of jet tree ratio histograms created"<<std::endl;
+      
+    if (histDelta_Jet.size()!= nTriangNum) std::cout<<"Incorrect number of jet delta histograms created"<<std::endl;
+    if (histDelta_Jet.at(0).size() != (unsigned int) nJetTrees) std::cout<<"Incorrect number of jet tree delta lists created"<<std::endl;
+    if (histDelta_Jet.at(0).at(0).size() != (unsigned int) listOfJetTreeBranches.at(0).size() ) std::cout<<"Incorrect number of jet tree delta histograms created"<<std::endl;
+  }
+  
     
     
   // check that the brachMax and brachMin are not equal and add a little bit of space to make the plot look nicer
@@ -525,6 +527,7 @@ int plotDQC_REAL(const std::string inFileName, std::string outFileName = "")
     if ( (loc) != nTriangNum ) std::cout<<"Incorrect number of delta and ratio histograms initialized"<<std::endl;
     //hist1_p[i] = new TH1F((listOfCompBranches.at(i) + "_file1_h").c_str(), (";" + listOfCompBranches.at(i) + ";Counts").c_str(), 100, branchMins.at(i), branchMaxs.at(i));
   }
+  
   for(Int_t jI = 0; jI < nJetTrees; ++jI)
   {
     std::string jetStr = listOfJetTrees1.at(jI);
@@ -604,6 +607,7 @@ int plotDQC_REAL(const std::string inFileName, std::string outFileName = "")
     // check if the key is in the list
     ULong64_t key = pData.at(0).RunNo*10000000 + pData.at(0).EventNo;
     bool keyPasses = true;
+    
     for( unsigned int fI = 0; fI < fileList.size(); ++fI)
     {
           if(RunEvtToEntry.at(fI).find(key) == RunEvtToEntry.at(fI).end())
@@ -661,6 +665,30 @@ int plotDQC_REAL(const std::string inFileName, std::string outFileName = "")
           std::vector< Int_t > pData_process;
           for(unsigned int pI = 0; pI < pData.size(); ++pI){pData_process.push_back(pData.at(pI).process);}
           doFill(hist_p,histDelta_p,pData_process);
+      }
+      else if(tempS.find("Energy") != std::string::npos && tempS.size() == std::string("Energy").size())
+      {
+          std::vector< Float_t > pData_temp;
+          for(unsigned int pI = 0; pI < pData.size(); ++pI){pData_temp.push_back(pData.at(pI).Energy);}
+          doFill(hist_p,histDelta_p,pData_temp);
+      }
+      else if(tempS.find("bFlag") != std::string::npos && tempS.size() == std::string("bFlag").size())
+      {
+          std::vector< Float_t > pData_temp;
+          for(unsigned int pI = 0; pI < pData.size(); ++pI){pData_temp.push_back(pData.at(pI).bFlag);}
+          doFill(hist_p,histDelta_p,pData_temp);
+      }
+      else if(tempS.find("bx") != std::string::npos && tempS.size() == std::string("bx").size())
+      {
+          std::vector< Float_t > pData_temp;
+          for(unsigned int pI = 0; pI < pData.size(); ++pI){pData_temp.push_back(pData.at(pI).bx);}
+          doFill(hist_p,histDelta_p,pData_temp);
+      }
+      else if(tempS.find("by") != std::string::npos && tempS.size() == std::string("by").size())
+      {
+          std::vector< Float_t > pData_temp;
+          for(unsigned int pI = 0; pI < pData.size(); ++pI){pData_temp.push_back(pData.at(pI).by);}
+          doFill(hist_p,histDelta_p,pData_temp);
       }
       else if(tempS.find("ebx") != std::string::npos && tempS.size() == std::string("ebx").size())
       {
@@ -731,6 +759,17 @@ int plotDQC_REAL(const std::string inFileName, std::string outFileName = "")
           }
           doFillArr(hist_p,histDelta_p,pData_process);
       }
+      else if(tempS.find("rap") != std::string::npos && tempS.size() == std::string("rap").size())
+      {
+          std::vector< std::vector<Float_t> > pData_temp;
+          for(unsigned int pI = 0; pI < pData.size(); ++pI)
+          {
+              std::vector<Float_t> temp;
+              temp.assign(pData.at(pI).rap,pData.at(pI).rap+pData.at(pI).nParticle);
+              pData_temp.push_back(temp);
+          }
+          doFillArr(hist_p,histDelta_p,pData_temp);
+      }
       else if(tempS.find("eta") != std::string::npos && tempS.size() == std::string("eta").size())
       {
           std::vector< std::vector<Float_t> > pData_process;
@@ -738,17 +777,6 @@ int plotDQC_REAL(const std::string inFileName, std::string outFileName = "")
           {
               std::vector<Float_t> temp;
               temp.assign(pData.at(pI).eta,pData.at(pI).eta+pData.at(pI).nParticle);
-              pData_process.push_back(temp);
-          }
-          doFillArr(hist_p,histDelta_p,pData_process);
-      }
-      else if(tempS.find("rap") != std::string::npos && tempS.size() == std::string("rap").size())
-      {
-          std::vector< std::vector<Float_t> > pData_process;
-          for(unsigned int pI = 0; pI < pData.size(); ++pI)
-          {
-              std::vector<Float_t> temp;
-              temp.assign(pData.at(pI).rap,pData.at(pI).rap+pData.at(pI).nParticle);
               pData_process.push_back(temp);
           }
           doFillArr(hist_p,histDelta_p,pData_process);
@@ -843,14 +871,14 @@ int plotDQC_REAL(const std::string inFileName, std::string outFileName = "")
       }
       else if(tempS.find("ntpc") != std::string::npos && tempS.size() == std::string("ntpc").size())
       {
-          std::vector< std::vector<Float_t> > pData_process;
+          std::vector< std::vector<Int_t> > pData_temp;
           for(unsigned int pI = 0; pI < pData.size(); ++pI)
           {
-              std::vector<Float_t> temp;
+              std::vector<Int_t> temp;
               temp.assign(pData.at(pI).ntpc,pData.at(pI).ntpc+pData.at(pI).nParticle);
-              pData_process.push_back(temp);
+              pData_temp.push_back(temp);
           }
-          doFillArr(hist_p,histDelta_p,pData_process);
+          doFillArr(hist_p,histDelta_p,pData_temp);
       }
       else if(tempS.find("pt_wrtThr") != std::string::npos && tempS.size() == std::string("pt_wrtThr").size())
       {
@@ -873,6 +901,17 @@ int plotDQC_REAL(const std::string inFileName, std::string outFileName = "")
               pData_process.push_back(temp);
           }
           doFillArr(hist_p,histDelta_p,pData_process);
+      }
+      else if(tempS.find("rap_wrtThr") != std::string::npos && tempS.size() == std::string("rap_wrtThr").size())
+      {
+          std::vector< std::vector<Float_t> > pData_temp;
+          for(unsigned int pI = 0; pI < pData.size(); ++pI)
+          {
+              std::vector<Float_t> temp;
+              temp.assign(pData.at(pI).rap_wrtThr,pData.at(pI).rap_wrtThr+pData.at(pI).nParticle);
+              pData_temp.push_back(temp);
+          }
+          doFillArr(hist_p,histDelta_p,pData_temp);
       }
       else if(tempS.find("theta_wrtThr") != std::string::npos && tempS.size() == std::string("theta_wrtThr").size())
       {
@@ -902,7 +941,7 @@ int plotDQC_REAL(const std::string inFileName, std::string outFileName = "")
           for(unsigned int pI = 0; pI < pData.size(); ++pI)
           {
               std::vector<Float_t> temp;
-              temp.assign(pData.at(pI).pt_wrtThr,pData.at(pI).pt_wrtThr+pData.at(pI).nParticle);
+              temp.assign(pData.at(pI).pt_wrtChThr,pData.at(pI).pt_wrtChThr+pData.at(pI).nParticle);
               pData_process.push_back(temp);
           }
           doFillArr(hist_p,histDelta_p,pData_process);
@@ -913,10 +952,21 @@ int plotDQC_REAL(const std::string inFileName, std::string outFileName = "")
           for(unsigned int pI = 0; pI < pData.size(); ++pI)
           {
               std::vector<Float_t> temp;
-              temp.assign(pData.at(pI).eta_wrtThr,pData.at(pI).eta_wrtThr+pData.at(pI).nParticle);
+              temp.assign(pData.at(pI).eta_wrtChThr,pData.at(pI).eta_wrtChThr+pData.at(pI).nParticle);
               pData_process.push_back(temp);
           }
           doFillArr(hist_p,histDelta_p,pData_process);
+      }
+      else if(tempS.find("rap_wrtChThr") != std::string::npos && tempS.size() == std::string("rap_wrtChThr").size())
+      {
+          std::vector< std::vector<Float_t> > pData_temp;
+          for(unsigned int pI = 0; pI < pData.size(); ++pI)
+          {
+              std::vector<Float_t> temp;
+              temp.assign(pData.at(pI).rap_wrtChThr,pData.at(pI).rap_wrtChThr+pData.at(pI).nParticle);
+              pData_temp.push_back(temp);
+          }
+          doFillArr(hist_p,histDelta_p,pData_temp);
       }
       else if(tempS.find("theta_wrtChThr") != std::string::npos && tempS.size() == std::string("theta_wrtChThr").size())
       {
@@ -924,7 +974,7 @@ int plotDQC_REAL(const std::string inFileName, std::string outFileName = "")
           for(unsigned int pI = 0; pI < pData.size(); ++pI)
           {
               std::vector<Float_t> temp;
-              temp.assign(pData.at(pI).theta_wrtThr,pData.at(pI).theta_wrtThr+pData.at(pI).nParticle);
+              temp.assign(pData.at(pI).theta_wrtChThr,pData.at(pI).theta_wrtChThr+pData.at(pI).nParticle);
               pData_process.push_back(temp);
           }
           doFillArr(hist_p,histDelta_p,pData_process);
@@ -935,200 +985,119 @@ int plotDQC_REAL(const std::string inFileName, std::string outFileName = "")
           for(unsigned int pI = 0; pI < pData.size(); ++pI)
           {
               std::vector<Float_t> temp;
-              temp.assign(pData.at(pI).phi_wrtThr,pData.at(pI).phi_wrtThr+pData.at(pI).nParticle);
+              temp.assign(pData.at(pI).phi_wrtChThr,pData.at(pI).phi_wrtChThr+pData.at(pI).nParticle);
               pData_process.push_back(temp);
           }
           doFillArr(hist_p,histDelta_p,pData_process);
       }
-        /*
+      else if(tempS.find("passesWW") != std::string::npos && tempS.size() == std::string("passesWW").size())
+      {
+          std::vector< Int_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).passesWW);}
+          doFill(hist_p,histDelta_p,eData_temp);
+      }  
       else if(tempS.find("missP") != std::string::npos && tempS.size() == std::string("missP").size())
       {
-          std::vector< std::vector<Float_t> > pData_process;
-          for(unsigned int pI = 0; pI < pData.size(); ++pI)
-          {
-              std::vector<Float_t> temp;
-              temp.assign(pData.at(pI).missP,pData.at(pI).missP+pData.at(pI).nParticle);
-              pData_process.push_back(temp);
-          }
-          doFillArr(hist_p,histDelta_p,pData_process);
+          std::vector< Float_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).missP);}
+          doFill(hist_p,histDelta_p,eData_temp);
       }
       else if(tempS.find("missPt") != std::string::npos && tempS.size() == std::string("missPt").size())
       {
-          std::vector< std::vector<Float_t> > pData_process;
-          for(unsigned int pI = 0; pI < pData.size(); ++pI)
-          {
-              std::vector<Float_t> temp;
-              temp.assign(pData.at(pI).missPt,pData.at(pI).missPt+pData.at(pI).nParticle);
-              pData_process.push_back(temp);
-          }
-          doFillArr(hist_p,histDelta_p,pData_process);
+          std::vector< Float_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).missPt);}
+          doFill(hist_p,histDelta_p,eData_temp);
       }
       else if(tempS.find("missTheta") != std::string::npos && tempS.size() == std::string("missTheta").size())
       {
-          std::vector< std::vector<Float_t> > pData_process;
-          for(unsigned int pI = 0; pI < pData.size(); ++pI)
-          {
-              std::vector<Float_t> temp;
-              temp.assign(pData.at(pI).missTheta,pData.at(pI).missTheta + pData.at(pI).nParticle);
-              pData_process.push_back(temp);
-          }
-          doFillArr(hist_p,histDelta_p,pData_process);
+          std::vector< Float_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).missTheta);}
+          doFill(hist_p,histDelta_p,eData_temp);
       }
       else if(tempS.find("missPhi") != std::string::npos && tempS.size() == std::string("missPhi").size())
       {
-          std::vector< std::vector<Float_t> > pData_process;
-          for(unsigned int pI = 0; pI < pData.size(); ++pI)
-          {
-              std::vector<Float_t> temp;
-              temp.assign(pData.at(pI).missPhi,pData.at(pI).missPhi + pData.at(pI).nParticle);
-              pData_process.push_back(temp);
-          }
-          doFillArr(hist_p,histDelta_p,pData_process);
+          std::vector< Float_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).missPhi);}
+          doFill(hist_p,histDelta_p,eData_temp);
       }
       else if(tempS.find("missChargedP") != std::string::npos && tempS.size() == std::string("missChargedP").size())
       {
-          std::vector< std::vector<Float_t> > pData_process;
-          for(unsigned int pI = 0; pI < pData.size(); ++pI)
-          {
-              std::vector<Float_t> temp;
-              temp.assign(pData.at(pI).missChargedP, pData.at(pI).missChargedP + pData.at(pI).nParticle);
-              pData_process.push_back(temp);
-          }
-          doFillArr(hist_p,histDelta_p,pData_process);
+          std::vector< Float_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).missChargedP);}
+          doFill(hist_p,histDelta_p,eData_temp);
       }
       else if(tempS.find("missChargedPt") != std::string::npos && tempS.size() == std::string("missChargedPt").size())
       {
-          std::vector< std::vector<Float_t> > pData_process;
-          for(unsigned int pI = 0; pI < pData.size(); ++pI)
-          {
-              std::vector<Float_t> temp;
-              temp.assign(pData.at(pI).missChargedPt,pData.at(pI).missChargedPt + pData.at(pI).nParticle);
-              pData_process.push_back(temp);
-          }
-          doFillArr(hist_p,histDelta_p,pData_process);
+          std::vector< Float_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).missChargedPt);}
+          doFill(hist_p,histDelta_p,eData_temp);
       }
       else if(tempS.find("missChargedTheta") != std::string::npos && tempS.size() == std::string("missChargedTheta").size())
       {
-          std::vector< std::vector<Float_t> > pData_process;
-          for(unsigned int pI = 0; pI < pData.size(); ++pI)
-          {
-              std::vector<Float_t> temp;
-              temp.assign(pData.at(pI).missChargedTheta,pData.at(pI).missChargedTheta + pData.at(pI).nParticle);
-              pData_process.push_back(temp);
-          }
-          doFillArr(hist_p,histDelta_p,pData_process);
+          std::vector< Float_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).missChargedTheta);}
+          doFill(hist_p,histDelta_p,eData_temp);
       }
       else if(tempS.find("missChargedPhi") != std::string::npos && tempS.size() == std::string("missChargedPhi").size())
       {
-          std::vector< std::vector<Float_t> > pData_process;
-          for(unsigned int pI = 0; pI < pData.size(); ++pI)
-          {
-              std::vector<Float_t> temp;
-              temp.assign(pData.at(pI).missChargedPhi,pData.at(pI).missChargedPhi + pData.at(pI).nParticle);
-              pData_process.push_back(temp);
-          }
-          doFillArr(hist_p,histDelta_p,pData_process);
+          std::vector< Float_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).missChargedPhi);}
+          doFill(hist_p,histDelta_p,eData_temp);
       }
       else if(tempS.find("nChargedHadrons") != std::string::npos && tempS.size() == std::string("nChargedHadrons").size())
       {
-          std::vector< std::vector<Float_t> > pData_process;
-          for(unsigned int pI = 0; pI < pData.size(); ++pI)
-          {
-              std::vector<Float_t> temp;
-              temp.assign(pData.at(pI).nChargedHadrons, pData.at(pI).nChargedHadrons + pData.at(pI).nParticle);
-              pData_process.push_back(temp);
-          }
-          doFillArr(hist_p,histDelta_p,pData_process);
+          std::vector< Int_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).nChargedHadrons);}
+          doFill(hist_p,histDelta_p,eData_temp);
       }
       else if(tempS.find("nChargedHadrons_GT0p4") != std::string::npos && tempS.size() == std::string("nChargedHadrons_GT0p4").size())
       {
-          std::vector< std::vector<Float_t> > pData_process;
-          for(unsigned int pI = 0; pI < pData.size(); ++pI)
-          {
-              std::vector<Float_t> temp;
-              temp.assign(pData.at(pI).nChargedHadrons_GT0p4, pData.at(pI).nChargedHadrons_GT0p4 + pData.at(pI).nParticle);
-              pData_process.push_back(temp);
-          }
-          doFillArr(hist_p,histDelta_p,pData_process);
+          std::vector< Int_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).nChargedHadrons_GT0p4);}
+          doFill(hist_p,histDelta_p,eData_temp);
       }
       else if(tempS.find("nChargedHadrons_GT0p4Thrust") != std::string::npos && tempS.size() == std::string("nChargedHadrons_GT0p4Thrust").size())
       {
-          std::vector< std::vector<Float_t> > pData_process;
-          for(unsigned int pI = 0; pI < pData.size(); ++pI)
-          {
-              std::vector<Float_t> temp;
-              temp.assign(pData.at(pI).nChargedHadrons_GT0p4Thrust, pData.at(pI).nChargedHadrons_GT0p4Thrust + pData.at(pI).nParticle);
-              pData_process.push_back(temp);
-          }
-          doFillArr(hist_p,histDelta_p,pData_process);
+          std::vector< Int_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).nChargedHadrons_GT0p4Thrust);}
+          doFill(hist_p,histDelta_p,eData_temp);
       }
       else if(tempS.find("Thrust") != std::string::npos && tempS.size() == std::string("Thrust").size())
       {
-          std::vector< std::vector<Float_t> > pData_process;
-          for(unsigned int pI = 0; pI < pData.size(); ++pI)
-          {
-              std::vector<Float_t> temp;
-              temp.assign(pData.at(pI).Thrust, pData.at(pI).Thrust + pData.at(pI).nParticle);
-              pData_process.push_back(temp);
-          }
-          doFillArr(hist_p,histDelta_p,pData_process);
+          std::vector< Float_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).Thrust);}
+          doFill(hist_p,histDelta_p,eData_temp);
       }
       else if(tempS.find("TTheta") != std::string::npos && tempS.size() == std::string("TTheta").size())
       {
-          std::vector< std::vector<Float_t> > pData_process;
-          for(unsigned int pI = 0; pI < pData.size(); ++pI)
-          {
-              std::vector<Float_t> temp;
-              temp.assign(pData.at(pI).TTheta, pData.at(pI).TTheta + pData.at(pI).nParticle);
-              pData_process.push_back(temp);
-          }
-          doFillArr(hist_p,histDelta_p,pData_process);
+          std::vector< Float_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).TTheta);}
+          doFill(hist_p,histDelta_p,eData_temp);
       }
       else if(tempS.find("TPhi") != std::string::npos && tempS.size() == std::string("TPhi").size())
       {
-          std::vector< std::vector<Float_t> > pData_process;
-          for(unsigned int pI = 0; pI < pData.size(); ++pI)
-          {
-              std::vector<Float_t> temp;
-              temp.assign(pData.at(pI).TPhi, pData.at(pI).TPhi + pData.at(pI).nParticle);
-              pData_process.push_back(temp);
-          }
-          doFillArr(hist_p,histDelta_p,pData_process);
+          std::vector< Float_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).TPhi);}
+          doFill(hist_p,histDelta_p,eData_temp);
       }
       else if(tempS.find("Thrust_charged") != std::string::npos && tempS.size() == std::string("Thrust_charged").size())
       {
-          std::vector< std::vector<Float_t> > pData_process;
-          for(unsigned int pI = 0; pI < pData.size(); ++pI)
-          {
-              std::vector<Float_t> temp;
-              temp.assign(pData.at(pI).Thrust_charged, pData.at(pI).Thrust_charged + pData.at(pI).nParticle);
-              pData_process.push_back(temp);
-          }
-          doFillArr(hist_p,histDelta_p,pData_process);
+          std::vector< Float_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).Thrust_charged);}
+          doFill(hist_p,histDelta_p,eData_temp);
       }
       else if(tempS.find("TTheta_charged") != std::string::npos && tempS.size() == std::string("TTheta_charged").size())
       {
-          std::vector< std::vector<Float_t> > pData_process;
-          for(unsigned int pI = 0; pI < pData.size(); ++pI)
-          {
-              std::vector<Float_t> temp;
-              temp.assign(pData.at(pI).TTheta_charged, pData.at(pI).TTheta_charged + pData.at(pI).nParticle);
-              pData_process.push_back(temp);
-          }
-          doFillArr(hist_p,histDelta_p,pData_process);
+          std::vector< Float_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).TTheta_charged);}
+          doFill(hist_p,histDelta_p,eData_temp);
       }
       else if(tempS.find("TPhi_charged") != std::string::npos && tempS.size() == std::string("TPhi_charged").size())
       {
-          std::vector< std::vector<Float_t> > pData_process;
-          for(unsigned int pI = 0; pI < pData.size(); ++pI)
-          {
-              std::vector<Float_t> temp;
-              temp.assign(pData.at(pI).TPhi_charged, pData.at(pI).TPhi_charged + pData.at(pI).nParticle);
-              pData_process.push_back(temp);
-          }
-          doFillArr(hist_p,histDelta_p,pData_process);
-      }
-         */
+          std::vector< Float_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).TPhi_charged);}
+          doFill(hist_p,histDelta_p,eData_temp);
+      }     
     }
       
     
@@ -1138,11 +1107,13 @@ int plotDQC_REAL(const std::string inFileName, std::string outFileName = "")
       for(unsigned bI = 0; bI < listOfJetTreeBranches.at(jI).size(); ++bI)
       {
           std::string tempS = listOfJetTreeBranches.at(jI).at(bI);
+
           std::vector< TH1F* > hist_Jet_p = {};
           for(unsigned int hI = 0; hI < hist_Jet.size(); ++hI){hist_Jet_p.push_back(hist_Jet.at(hI).at(jI).at(bI));}
           std::vector< TH1F* >  histDelta_Jet_p = {};
           for(unsigned int hI = 0; hI < histDelta_Jet.size(); ++hI){histDelta_Jet_p.push_back(histDelta_Jet.at(hI).at(jI).at(bI));}
           // .at(file).at(jet tree name)
+
           if(tempS.find("nref") != std::string::npos && tempS.size() == std::string("nref").size())
           {
               std::vector< Int_t > jData_temp;
@@ -1205,7 +1176,6 @@ int plotDQC_REAL(const std::string inFileName, std::string outFileName = "")
               doFillArr(hist_Jet_p,histDelta_Jet_p,jData_temp);
           }
           //Note cant handle 2d arrays proper will add later
-          
       }
     }
     
@@ -1225,69 +1195,81 @@ int plotDQC_REAL(const std::string inFileName, std::string outFileName = "")
   //if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
                            
   // Writing and plotting all of the histograms
+  TCanvas* canv_p;
+  TPad* pad1; TPad* pad2_p; TPad* pad3_p;
+  std::vector<TPad*> pad2;
+  std::vector<TPad*> pad3;
   for(int nI = 0; nI < nVarToComp; ++nI)
   {
-      TCanvas* canv_p = new TCanvas("canv_c", "canv_c", 1000, 500);
-      canv_p->SetTopMargin(0.01);
-      canv_p->SetRightMargin(0.01);
-      canv_p->SetLeftMargin(0.01);
-      canv_p->SetBottomMargin(0.01);
-      
-      TPad* pad1 = new TPad("pad1", "pad1", 0.0, splitPoint, 0.5, 1.0);
-      pad1->Draw();
-      pad1->SetTopMargin(0.01);
-      pad1->SetRightMargin(0.01);
-      pad1->SetBottomMargin(0.01);
-      pad1->SetLeftMargin(pad1->GetLeftMargin()*1.3);
-      
-      std::vector<TPad*> pad2;
-      std::vector<TPad*> pad3;
-      
-      for (unsigned int pI = 0; pI < histRat.size();pI++)
+      if(drawHist)
       {
-          TPad* pad2_p = new TPad("pad2", "pad2", 0.0, 0.0, 0.5, splitPoint);
-          pad2_p->Draw();
-          pad2_p->SetTopMargin(0.01);
-          pad2_p->SetRightMargin(0.01);
-          pad2_p->SetBottomMargin(pad2_p->GetLeftMargin()*1./splitPoint);
-          pad2_p->SetLeftMargin(pad2_p->GetLeftMargin());
-          pad2.push_back(pad2_p);
-          
-          TPad* pad3_p = new TPad("pad3", "pad3", 0.5, 0.0, 1.0, 1.0);
-          pad3_p->Draw();
-          pad3_p->SetTopMargin(0.01);
-          pad3_p->SetRightMargin(0.01);
-          pad3_p->SetLeftMargin(pad3_p->GetLeftMargin());
-          pad3_p->SetBottomMargin(pad3_p->GetLeftMargin());
-          pad3.push_back(pad3_p);
+        canv_p = new TCanvas("canv_c", "canv_c", 1000, 500);
+        canv_p->SetTopMargin(0.01);
+        canv_p->SetRightMargin(0.01);
+        canv_p->SetLeftMargin(0.01);
+        canv_p->SetBottomMargin(0.01);
+        
+        TPad* pad1 = new TPad("pad1", "pad1", 0.0, splitPoint, 0.5, 1.0);
+        pad1->Draw();
+        pad1->SetTopMargin(0.01);
+        pad1->SetRightMargin(0.01);
+        pad1->SetBottomMargin(0.01);
+        pad1->SetLeftMargin(pad1->GetLeftMargin()*1.3);
+        
+        std::vector<TPad*> pad2;
+        std::vector<TPad*> pad3;
+        
+        for (unsigned int pI = 0; pI < histRat.size();pI++)
+        {
+            pad2_p = new TPad("pad2", "pad2", 0.0, 0.0, 0.5, splitPoint);
+            pad2_p->Draw();
+            pad2_p->SetTopMargin(0.01);
+            pad2_p->SetRightMargin(0.01);
+            pad2_p->SetBottomMargin(pad2_p->GetLeftMargin()*1./splitPoint);
+            pad2_p->SetLeftMargin(pad2_p->GetLeftMargin());
+            pad2.push_back(pad2_p);
+            
+            pad3_p = new TPad("pad3", "pad3", 0.5, 0.0, 1.0, 1.0);
+            pad3_p->Draw();
+            pad3_p->SetTopMargin(0.01);
+            pad3_p->SetRightMargin(0.01);
+            pad3_p->SetLeftMargin(pad3_p->GetLeftMargin());
+            pad3_p->SetBottomMargin(pad3_p->GetLeftMargin());
+            pad3.push_back(pad3_p);
+        }
       }
-      
       unsigned int loc = 0;
       for(unsigned int hI = 0; hI < hist.size(); ++hI)
       {
           hist.at(hI).at(nI)->Write("", TObject::kOverwrite);
           hist.at(hI).at(nI)->Sumw2();
-          pad1->cd();
-          formatTH1F(hist.at(hI).at(nI));
-          
-          if(hI == 0) hist.at(hI).at(nI)->DrawCopy("HIST E1");
-          else hist.at(hI).at(nI)->DrawCopy("SAME *HIST E1");
-          
+          if(drawHist)
+          {
+            pad1->cd();
+            formatTH1F(hist.at(hI).at(nI));
+            if(hI == 0) hist.at(hI).at(nI)->DrawCopy("HIST E1");
+            else hist.at(hI).at(nI)->DrawCopy("SAME *HIST E1");
+          }
           for(unsigned int hII = hI+1; hII < hist.size(); ++hII)
           {
               histRat.at(loc).at(nI)->Sumw2();
               histRat.at(loc).at(nI)->Divide(hist.at(hI).at(nI),hist.at(hII).at(nI));
               histRat.at(loc).at(nI)->Write("", TObject::kOverwrite);
-              pad2.at(loc)->cd();
-              formatTH1F(histRat.at(loc).at(nI));
-              histRat.at(loc).at(nI)->SetMaximum(1.3);
-              histRat.at(loc).at(nI)->SetMinimum(0.7);
-              histRat.at(loc).at(nI)->DrawCopy("P E1");
-              
+              if(drawHist)
+              {
+                pad2.at(loc)->cd();
+                formatTH1F(histRat.at(loc).at(nI));
+                histRat.at(loc).at(nI)->SetMaximum(1.3);
+                histRat.at(loc).at(nI)->SetMinimum(0.7);
+                histRat.at(loc).at(nI)->DrawCopy("P E1");
+              }
               histDelta.at(loc).at(nI)->Write("", TObject::kOverwrite);
-              pad3.at(loc)->cd();
-              formatTH1F(histDelta.at(loc).at(nI));
-              histDelta.at(loc).at(nI)->DrawCopy("HIST E1");
+              if(drawHist)
+              {
+                pad3.at(loc)->cd();
+                formatTH1F(histDelta.at(loc).at(nI));
+                histDelta.at(loc).at(nI)->DrawCopy("HIST E1");
+              }  
               
               ++loc;
           }
@@ -1295,18 +1277,21 @@ int plotDQC_REAL(const std::string inFileName, std::string outFileName = "")
       if ( (loc) != nTriangNum ) std::cout<<"Incorrect number of jet delta and ratio histograms initialized"<<std::endl;
       
       std::string pdfStr = listOfCompBranches.at(nI) + "_" + outFileName + "_" + std::to_string(date->GetDate()) + ".pdf";
-      canv_p->SaveAs((/*"pdfDir/" + */pdfStr).c_str());
+      if(drawHist) canv_p->SaveAs(("../pdfDir/" + pdfStr).c_str());
       listOfPdf.push_back(pdfStr);
       listOfVar.push_back(listOfCompBranches.at(nI));
       
       // clean up before next variable
-      delete pad1;
-      for (unsigned int pI = 0; pI < histRat.size(); pI++)
+      if(drawHist)
       {
-          delete pad2.at(pI);
-          delete pad3.at(pI);
+        delete pad1;
+        for (unsigned int pI = 0; pI < histRat.size(); pI++)
+        {
+            delete pad2.at(pI);
+            delete pad3.at(pI);
+        }
+        delete canv_p;
       }
-      delete canv_p;
       for (unsigned int hI = 0; hI < hist.size(); hI++) delete hist.at(hI).at(nI);
       for (unsigned int hI = 0; hI < histRat.size(); hI++){ delete histRat.at(hI).at(nI);delete histDelta.at(hI).at(nI); }
   }
@@ -1318,13 +1303,15 @@ int plotDQC_REAL(const std::string inFileName, std::string outFileName = "")
         const std::string jetStr = listOfJetTrees1.at(jI);
         for(unsigned int bI = 0; bI < listOfJetTreeBranches.at(jI).size(); ++bI)
         {
-            TCanvas* canv_p = new TCanvas("canv_c", "canv_c", 1000, 500);
+          if(drawHist)
+          {
+            canv_p = new TCanvas("canv_c", "canv_c", 1000, 500);
             canv_p->SetTopMargin(0.01);
             canv_p->SetRightMargin(0.01);
             canv_p->SetLeftMargin(0.01);
             canv_p->SetBottomMargin(0.01);
             
-            TPad* pad1 = new TPad("pad1", "pad1", 0.0, splitPoint, 0.5, 1.0);
+            pad1 = new TPad("pad1", "pad1", 0.0, splitPoint, 0.5, 1.0);
             pad1->Draw();
             pad1->SetTopMargin(0.01);
             pad1->SetRightMargin(0.01);
@@ -1336,7 +1323,7 @@ int plotDQC_REAL(const std::string inFileName, std::string outFileName = "")
 
             for (unsigned int fI = 0; fI < histRat_Jet.size(); fI++)
             {
-                TPad* pad2_p = new TPad("pad2", "pad2", 0.0, 0.0, 0.5, splitPoint);
+                pad2_p = new TPad("pad2", "pad2", 0.0, 0.0, 0.5, splitPoint);
                 pad2_p->Draw();
                 pad2_p->SetTopMargin(0.01);
                 pad2_p->SetRightMargin(0.01);
@@ -1344,7 +1331,7 @@ int plotDQC_REAL(const std::string inFileName, std::string outFileName = "")
                 pad2_p->SetLeftMargin(pad2_p->GetLeftMargin());
                 pad2.push_back(pad2_p);
                 
-                TPad* pad3_p = new TPad("pad3", "pad3", 0.5, 0.0, 1.0, 1.0);
+                pad3_p = new TPad("pad3", "pad3", 0.5, 0.0, 1.0, 1.0);
                 pad3_p->Draw();
                 pad3_p->SetTopMargin(0.01);
                 pad3_p->SetRightMargin(0.01);
@@ -1353,34 +1340,40 @@ int plotDQC_REAL(const std::string inFileName, std::string outFileName = "")
                 pad3.push_back(pad3_p);
              
             }
-        
+          }
             unsigned int loc = 0;
             for(unsigned int hI = 0; hI < hist_Jet.size(); ++hI)
             {
                 hist_Jet.at(hI).at(jI).at(bI)->Write("", TObject::kOverwrite);
                 hist_Jet.at(hI).at(jI).at(bI)->Sumw2();
-                pad1->cd();
-                formatTH1F(hist_Jet.at(hI).at(jI).at(bI));
-                
-                if(hI == 0) hist_Jet.at(hI).at(jI).at(bI)->DrawCopy("HIST E1");
-                else hist_Jet.at(hI).at(jI).at(bI)->DrawCopy("SAME *HIST E1");
-                
+                if(drawHist)
+                {
+                  pad1->cd();
+                  formatTH1F(hist_Jet.at(hI).at(jI).at(bI));
+                  if(hI == 0) hist_Jet.at(hI).at(jI).at(bI)->DrawCopy("HIST E1");
+                  else hist_Jet.at(hI).at(jI).at(bI)->DrawCopy("SAME *HIST E1");
+                }
+
                 for(unsigned int hII = hI+1; hII < hist_Jet.size(); ++hII)
                 {
                     histRat_Jet.at(loc).at(jI).at(bI)->Sumw2();
                     histRat_Jet.at(loc).at(jI).at(bI)->Divide(hist_Jet.at(hI).at(jI).at(bI),hist_Jet.at(hII).at(jI).at(bI));
                     histRat_Jet.at(loc).at(jI).at(bI)->Write("", TObject::kOverwrite);
-                    pad2.at(loc)->cd();
-                    formatTH1F(histRat_Jet.at(loc).at(jI).at(bI));
-                    histRat_Jet.at(loc).at(jI).at(bI)->SetMaximum(1.3);
-                    histRat_Jet.at(loc).at(jI).at(bI)->SetMinimum(0.7);
-                    histRat_Jet.at(loc).at(jI).at(bI)->DrawCopy("P E1");
-                    
+                    if(drawHist)
+                    {
+                      pad2.at(loc)->cd();
+                      formatTH1F(histRat_Jet.at(loc).at(jI).at(bI));
+                      histRat_Jet.at(loc).at(jI).at(bI)->SetMaximum(1.3);
+                      histRat_Jet.at(loc).at(jI).at(bI)->SetMinimum(0.7);
+                      histRat_Jet.at(loc).at(jI).at(bI)->DrawCopy("P E1");
+                    }
                     histDelta_Jet.at(loc).at(jI).at(bI)->Write("", TObject::kOverwrite);
-                    pad3.at(loc)->cd();
-                    formatTH1F(histDelta_Jet.at(loc).at(jI).at(bI));
-                    histDelta_Jet.at(loc).at(jI).at(bI)->DrawCopy("HIST E1");
-                    
+                    if(drawHist)
+                    {
+                      pad3.at(loc)->cd();
+                      formatTH1F(histDelta_Jet.at(loc).at(jI).at(bI));
+                      histDelta_Jet.at(loc).at(jI).at(bI)->DrawCopy("HIST E1");
+                    }
                     ++loc;
                 }
             }
@@ -1388,17 +1381,20 @@ int plotDQC_REAL(const std::string inFileName, std::string outFileName = "")
             if ( (loc) != nTriangNum ) std::cout<<"Incorrect number of jet delta and ratio histograms written"<<std::endl;
             
             std::string pdfStr = listOfJetTreeBranches.at(jI).at(bI) + "_" + jetStr+ "_" + outFileName + "_" + std::to_string(date->GetDate()) + ".pdf";
-            canv_p->SaveAs((/*"pdfDir/" +*/ pdfStr).c_str());
+            if(drawHist)canv_p->SaveAs(("../pdfDir/" + pdfStr).c_str());
             listOfPdf.push_back(pdfStr);
             listOfVar.push_back((jetStr + "_" + listOfJetTreeBranches.at(jI).at(bI)).c_str());
             // clean up before next variable
-            delete pad1;
-            for (unsigned int pI = 0; pI < histRat_Jet.size(); pI++)
+            if(drawHist)
             {
-                delete pad2.at(pI);
-                delete pad3.at(pI);
+              delete pad1;
+              for (unsigned int pI = 0; pI < histRat_Jet.size(); pI++)
+              {
+                  delete pad2.at(pI);
+                  delete pad3.at(pI);
+              }
+              delete canv_p;
             }
-            delete canv_p;
             for(unsigned int hI = 0; hI < hist_Jet.size(); ++hI) delete hist_Jet.at(hI).at(jI).at(bI);
             for(unsigned int hI = 0; hI < histRat_Jet.size(); ++hI) { delete histRat_Jet.at(hI).at(jI).at(bI); histDelta_Jet.at(hI).at(jI).at(bI); }
         }
