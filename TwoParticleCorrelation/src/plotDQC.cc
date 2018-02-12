@@ -227,7 +227,6 @@ int plotDQC(const std::string inFileName, std::string outFileName = "")
 
     // get the list of jet trees in the file
     
-    ///////// ANTHONY YOU ARE HERE AND ARE CHECKING IF THIS LIST BELOW CONTAINS ALL OF THE JET TREES BECAUSE YOUR OUTPUT FILE ONLY CONTAINS 1 OF THE JET TREES /////////
   std::vector<std::string> listOfJetTrees1 = returnRootFileContentsList(inFile.at(0), "TTree", "JetTree");
   removeVectorDuplicates(&listOfJetTrees1);
   std::vector< std::vector<std::string> > listOfJetTreeBranches;
@@ -473,28 +472,31 @@ int plotDQC(const std::string inFileName, std::string outFileName = "")
   
   unsigned int nf = fileList.size();
   unsigned int nTriangNum = nf*(nf-1)/2.;
-   
   // check to make sure that the correct number of histograms were created
   if (hist.size() != nf) std::cout<<"Incorrect number of file lists created for hist"<<std::endl;
   if (hist.at(0).size() != (unsigned int) nVarToComp) std::cout<<"Incorrect number of histograms created"<<std::endl;
-  
-  if (histRat.size()!= nTriangNum) std::cout<<"Incorrect number of file lists created for histRat"<<std::endl;
-  if (histRat.at(0).size()!= (unsigned int) nVarToComp) std::cout<<"Incorrect number of ratio histograms created"<<std::endl;
-  
-  if (histDelta.size()!= nTriangNum) std::cout<<"Incorrect number of file lists created for histDelta"<<std::endl;
-  if (histDelta.at(0).size()!= (unsigned int) nVarToComp) std::cout<<"Incorrect number of delta histograms created"<<std::endl;
   
   if (hist_Jet.size() != nf) std::cout<<"Incorrect number of file lists created for hist_Jet"<<std::endl;
   if (hist_Jet.at(0).size() != (unsigned int) nJetTrees) std::cout<<"Incorrect number of jet tree lists created"<<std::endl;
   if (hist_Jet.at(0).at(0).size() != (unsigned int) listOfJetTreeBranches.at(0).size() ) std::cout<<"Incorrect number of jet tree histograms created"<<std::endl;
   
-  if (histRat_Jet.size() != nTriangNum) std::cout<<"Incorrect number of file lists created for histRat_Jet"<<std::endl;
-  if (histRat_Jet.at(0).size() != (unsigned int) nJetTrees) std::cout<<"Incorrect number of jet tree ratio lists created"<<std::endl;
-  if (histRat_Jet.at(0).at(0).size() != (unsigned int) listOfJetTreeBranches.at(0).size() ) std::cout<<"Incorrect number of jet tree ratio histograms created"<<std::endl;
+  if(nf>=2) // if there are 2 or more files
+  {
+    if (histRat.size()!= nTriangNum) std::cout<<"Incorrect number of file lists created for histRat"<<std::endl;
+    if (histRat.at(0).size()!= (unsigned int) nVarToComp) std::cout<<"Incorrect number of ratio histograms created"<<std::endl;
     
-  if (histDelta_Jet.size()!= nTriangNum) std::cout<<"Incorrect number of jet delta histograms created"<<std::endl;
-  if (histDelta_Jet.at(0).size() != (unsigned int) nJetTrees) std::cout<<"Incorrect number of jet tree delta lists created"<<std::endl;
-  if (histDelta_Jet.at(0).at(0).size() != (unsigned int) listOfJetTreeBranches.at(0).size() ) std::cout<<"Incorrect number of jet tree delta histograms created"<<std::endl;
+    if (histDelta.size()!= nTriangNum) std::cout<<"Incorrect number of file lists created for histDelta"<<std::endl;
+    if (histDelta.at(0).size()!= (unsigned int) nVarToComp) std::cout<<"Incorrect number of delta histograms created"<<std::endl;
+
+    if (histRat_Jet.size() != nTriangNum) std::cout<<"Incorrect number of file lists created for histRat_Jet"<<std::endl;
+    if (histRat_Jet.at(0).size() != (unsigned int) nJetTrees) std::cout<<"Incorrect number of jet tree ratio lists created"<<std::endl;
+    if (histRat_Jet.at(0).at(0).size() != (unsigned int) listOfJetTreeBranches.at(0).size() ) std::cout<<"Incorrect number of jet tree ratio histograms created"<<std::endl;
+      
+    if (histDelta_Jet.size()!= nTriangNum) std::cout<<"Incorrect number of jet delta histograms created"<<std::endl;
+    if (histDelta_Jet.at(0).size() != (unsigned int) nJetTrees) std::cout<<"Incorrect number of jet tree delta lists created"<<std::endl;
+    if (histDelta_Jet.at(0).at(0).size() != (unsigned int) listOfJetTreeBranches.at(0).size() ) std::cout<<"Incorrect number of jet tree delta histograms created"<<std::endl;
+  }
+  
     
     
   // check that the brachMax and brachMin are not equal and add a little bit of space to make the plot look nicer
@@ -525,6 +527,7 @@ int plotDQC(const std::string inFileName, std::string outFileName = "")
     if ( (loc) != nTriangNum ) std::cout<<"Incorrect number of delta and ratio histograms initialized"<<std::endl;
     //hist1_p[i] = new TH1F((listOfCompBranches.at(i) + "_file1_h").c_str(), (";" + listOfCompBranches.at(i) + ";Counts").c_str(), 100, branchMins.at(i), branchMaxs.at(i));
   }
+  
   for(Int_t jI = 0; jI < nJetTrees; ++jI)
   {
     std::string jetStr = listOfJetTrees1.at(jI);
@@ -604,6 +607,7 @@ int plotDQC(const std::string inFileName, std::string outFileName = "")
     // check if the key is in the list
     ULong64_t key = pData.at(0).RunNo*10000000 + pData.at(0).EventNo;
     bool keyPasses = true;
+    
     for( unsigned int fI = 0; fI < fileList.size(); ++fI)
     {
           if(RunEvtToEntry.at(fI).find(key) == RunEvtToEntry.at(fI).end())
