@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  11 FEB 2018 22:27
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  14 FEB 2018 19:10
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -489,17 +489,928 @@ dgroup }{\global \@minipagefalse \hb@xt@ \hsize {\hfil \unhbox \@tempboxa \hfil
 \c@lotdepth=\count149
 \sf@top=\skip59
 \sf@bottom=\skip60
+) (/usr/local/texlive/2017/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count150
+\float@exts=\toks20
+\float@box=\box59
+\@float@everytoks=\toks21
+\@floatcapt=\box60
 )
 Class revtex4-1 Info: colortbl package is loaded. (Proceeding with fingers cros
-sed.) on input line 65.
-Class revtex4-1 Info: Robustifying \LaTeX's \boldmath command on input line 65.
+sed.) on input line 66.
 
-Class revtex4-1 Info: cite was not loaded (OK!) on input line 65.
-Class revtex4-1 Info: mcite was not loaded (OK!) on input line 65.
-Class revtex4-1 Info: multicol was not loaded (OK!) on input line 65.
- (./main.aux
+
+Class revtex4-1 Warning: Repair the float package.
+
+Class revtex4-1 Info: Robustifying \LaTeX's \boldmath command on input line 66.
+
+Class revtex4-1 Info: cite was not loaded (OK!) on input line 66.
+Class revtex4-1 Info: mcite was not loaded (OK!) on input line 66.
+Class revtex4-1 Info: multicol was not loaded (OK!) on input line 66.
+(./main.aux
 
 LaTeX Warning: Label `fig:figure6' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `fig:test' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `fig:test' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `fig:test' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `fig:test' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `fig:test' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `fig:test' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `fig:test' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `fig:test' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `fig:test' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `fig:test' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `fig:test' multiply defined.
+
+
+LaTeX Warning: Label `sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:a' multiply defined.
+
+
+LaTeX Warning: Label `sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:b' multiply defined.
+
+
+LaTeX Warning: Label `sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:c' multiply defined.
+
+
+LaTeX Warning: Label `sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `sub@sfig:d' multiply defined.
+
+
+LaTeX Warning: Label `fig:test' multiply defined.
 
 
 LaTeX Warning: Label `sfig:a' multiply defined.
@@ -903,38 +1814,38 @@ LaTeX Warning: Label `fig:test' multiply defined.
 )
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 65.
-LaTeX Font Info:    ... okay on input line 65.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 65.
-LaTeX Font Info:    ... okay on input line 65.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 65.
-LaTeX Font Info:    ... okay on input line 65.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 65.
-LaTeX Font Info:    ... okay on input line 65.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 65.
-LaTeX Font Info:    ... okay on input line 65.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 65.
-LaTeX Font Info:    ... okay on input line 65.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 65.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 65.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 66.
+LaTeX Font Info:    ... okay on input line 66.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 66.
+LaTeX Font Info:    ... okay on input line 66.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 66.
+LaTeX Font Info:    ... okay on input line 66.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 66.
+LaTeX Font Info:    ... okay on input line 66.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 66.
+LaTeX Font Info:    ... okay on input line 66.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 66.
+LaTeX Font Info:    ... okay on input line 66.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 66.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 66.
  (/usr/local/texlive/2017/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 65.
+LaTeX Font Info:    ... okay on input line 66.
 
 (/usr/local/texlive/2017/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count150
+\scratchcounter=\count151
 \scratchdimen=\dimen165
-\scratchbox=\box59
-\nofMPsegments=\count151
-\nofMParguments=\count152
-\everyMPshowfont=\toks20
-\MPscratchCnt=\count153
+\scratchbox=\box61
+\nofMPsegments=\count152
+\nofMParguments=\count153
+\everyMPshowfont=\toks22
+\MPscratchCnt=\count154
 \MPscratchDim=\dimen166
-\MPnumerator=\count154
-\makeMPintoPDFobject=\count155
-\everyMPtoPDFconversion=\toks21
+\MPnumerator=\count155
+\makeMPintoPDFobject=\count156
+\everyMPtoPDFconversion=\toks23
 ) (/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2017/03/19 v0.25 Utility functions of pdfTeX for LuaTeX (HO
 )
@@ -986,6 +1897,7 @@ e
 ))
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: subfig package v1.3 is loaded.
+Package caption Info: float package is loaded.
 Package caption Info: End \AtBeginDocument code.
 \openout3 = `mainNotes.bib'.
 
@@ -993,18 +1905,18 @@ Package caption Info: End \AtBeginDocument code.
 <aleph-logo.jpg, id=1, 241.90375pt x 100.375pt>
 File: aleph-logo.jpg Graphic file (type jpg)
  <use aleph-logo.jpg>
-Package pdftex.def Info: aleph-logo.jpg used on input line 69.
+Package pdftex.def Info: aleph-logo.jpg used on input line 70.
 (pdftex.def)             Requested size: 113.81102pt x 47.22525pt.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.95> on input line 104.
+(Font)              <10.95> on input line 105.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 104.
+(Font)              <8> on input line 105.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 104.
+(Font)              <6> on input line 105.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <14.4> on input line 111.
+(Font)              <14.4> on input line 112.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 111.
+(Font)              <7> on input line 112.
 
 
 Class revtex4-1 Warning: If you want your PACS to appear in your output, use do
@@ -1218,654 +2130,2363 @@ d 90 degrees> <./images/MultiplicityConversion/nTrk_AlephMCGen_Cut.pdf, page is
 page is rotated 90 degrees> <./images/MultiplicityConversion/conversion_weighte
 d.pdf, page is rotated 90 degrees>] [14 <./images/MultiplicityConversion/new_nT
 rk_ALEPHConverted.pdf, page is rotated 90 degrees>] [15]
-<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_0_20.pdf, id=1036, 56
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background1_0_20.pdf, id=
+1034, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background1_0_20.pdf
+ Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background1_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_b
+ackground1_0_20.pdf used on input line 75.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background2_0_20.pdf, id=
+1035, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background2_0_20.pdf
+ Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background2_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_b
+ackground2_0_20.pdf used on input line 76.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background1_0_20.pdf,
+ id=1036, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background1_0_20
+.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background1_0_20.
+pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_background1_0_20.pdf used on input line 77.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background2_0_20.pdf,
+ id=1037, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background2_0_20
+.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background2_0_20.
+pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_background2_0_20.pdf used on input line 78.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background1_20_30.pdf, id
+=1038, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background1_20_30.pd
+f Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background1_20_30.pdf
+>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_b
+ackground1_20_30.pdf used on input line 79.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background2_20_30.pdf, id
+=1039, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background2_20_30.pd
+f Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background2_20_30.pdf
+>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_b
+ackground2_20_30.pdf used on input line 80.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background1_20_30.pdf
+, id=1040, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background1_20_3
+0.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background1_20_30
+.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_background1_20_30.pdf used on input line 81.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background2_20_30.pdf
+, id=1041, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background2_20_3
+0.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background2_20_30
+.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_background2_20_30.pdf used on input line 82.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background1_30_999.pdf, i
+d=1042, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background1_30_999.p
+df Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background1_30_999.pd
+f>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_b
+ackground1_30_999.pdf used on input line 83.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background2_30_999.pdf, i
+d=1043, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background2_30_999.p
+df Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background2_30_999.pd
+f>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_b
+ackground2_30_999.pdf used on input line 84.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background1_30_999.pd
+f, id=1044, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background1_30_9
+99.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background1_30_99
+9.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_background1_30_999.pdf used on input line 85.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background2_30_999.pd
+f, id=1045, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background2_30_9
+99.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background2_30_99
+9.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_background2_30_999.pdf used on input line 86.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal1_0_20.pdf, id=1046
+, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal1_0_20.pdf Gra
+phic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal1_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_s
+ignal1_0_20.pdf used on input line 93.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal2_0_20.pdf, id=1047
+, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal2_0_20.pdf Gra
+phic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal2_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_s
+ignal2_0_20.pdf used on input line 94.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal1_0_20.pdf, id=
+1048, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal1_0_20.pdf
+ Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal1_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_signal1_0_20.pdf used on input line 95.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal2_0_20.pdf, id=
+1049, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal2_0_20.pdf
+ Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal2_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_signal2_0_20.pdf used on input line 96.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal1_20_30.pdf, id=105
+0, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal1_20_30.pdf Gr
+aphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal1_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_s
+ignal1_20_30.pdf used on input line 97.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal2_20_30.pdf, id=105
+1, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal2_20_30.pdf Gr
+aphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal2_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_s
+ignal2_20_30.pdf used on input line 98.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal1_20_30.pdf, id
+=1052, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal1_20_30.pd
+f Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal1_20_30.pdf
+>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_signal1_20_30.pdf used on input line 99.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal2_20_30.pdf, id
+=1053, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal2_20_30.pd
+f Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal2_20_30.pdf
+>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_signal2_20_30.pdf used on input line 100.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal1_30_999.pdf, id=10
+54, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal1_30_999.pdf G
+raphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal1_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_s
+ignal1_30_999.pdf used on input line 101.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal2_30_999.pdf, id=10
+55, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal2_30_999.pdf G
+raphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal2_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_s
+ignal2_30_999.pdf used on input line 102.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal1_30_999.pdf, i
+d=1056, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal1_30_999.p
+df Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal1_30_999.pd
+f>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_signal1_30_999.pdf used on input line 103.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal2_30_999.pdf, i
+d=1057, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal2_30_999.p
+df Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal2_30_999.pd
+f>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_signal2_30_999.pdf used on input line 104.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+ [16 <./images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background1_0_20.p
+df, page is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/BEAM/
+LEP_BEAM_background2_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticl
+eCorrelation/20180126/BEAM/PYTHIA8_BEAM_background1_0_20.pdf, page is rotated 9
+0 degrees> <./images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_backgrou
+nd2_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/2018
+0126/BEAM/LEP_BEAM_background1_20_30.pdf, page is rotated 90 degrees> <./images
+/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background2_20_30.pdf, page is r
+otated 90 degrees> <./images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_
+background1_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrela
+tion/20180126/BEAM/PYTHIA8_BEAM_background2_20_30.pdf, page is rotated 90 degre
+es> <./images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background1_30_999.
+pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/BEAM
+/LEP_BEAM_background2_30_999.pdf, page is rotated 90 degrees> <./images/TwoPart
+icleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background1_30_999.pdf, page is rota
+ted 90 degrees> <./images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_bac
+kground2_30_999.pdf, page is rotated 90 degrees>]
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio1_0_20.pdf, id=1579,
+ 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio1_0_20.pdf Grap
+hic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio1_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_r
+atio1_0_20.pdf used on input line 111.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio2_0_20.pdf, id=1580,
+ 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio2_0_20.pdf Grap
+hic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio2_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_r
+atio2_0_20.pdf used on input line 112.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio1_0_20.pdf, id=1
+581, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio1_0_20.pdf 
+Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio1_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_ratio1_0_20.pdf used on input line 113.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio2_0_20.pdf, id=1
+582, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio2_0_20.pdf 
+Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio2_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_ratio2_0_20.pdf used on input line 114.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio1_20_30.pdf, id=1583
+, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio1_20_30.pdf Gra
+phic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio1_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_r
+atio1_20_30.pdf used on input line 115.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio2_20_30.pdf, id=1584
+, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio2_20_30.pdf Gra
+phic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio2_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_r
+atio2_20_30.pdf used on input line 116.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio1_20_30.pdf, id=
+1585, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio1_20_30.pdf
+ Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio1_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_ratio1_20_30.pdf used on input line 117.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio2_20_30.pdf, id=
+1586, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio2_20_30.pdf
+ Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio2_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_ratio2_20_30.pdf used on input line 118.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio1_30_999.pdf, id=158
+7, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio1_30_999.pdf Gr
+aphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio1_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_r
+atio1_30_999.pdf used on input line 119.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio2_30_999.pdf, id=158
+8, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio2_30_999.pdf Gr
+aphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio2_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_r
+atio2_30_999.pdf used on input line 120.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio1_30_999.pdf, id
+=1589, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio1_30_999.pd
+f Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio1_30_999.pdf
+>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_ratio1_30_999.pdf used on input line 121.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio2_30_999.pdf, id
+=1590, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio2_30_999.pd
+f Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio2_30_999.pdf
+>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_ratio2_30_999.pdf used on input line 122.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+ [17 <./images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal1_0_20.pdf, 
+page is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/BEAM/LEP_
+BEAM_signal2_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrela
+tion/20180126/BEAM/PYTHIA8_BEAM_signal1_0_20.pdf, page is rotated 90 degrees> <
+./images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal2_0_20.pdf, pa
+ge is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/BEAM/LEP_BE
+AM_signal1_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelat
+ion/20180126/BEAM/LEP_BEAM_signal2_20_30.pdf, page is rotated 90 degrees> <./im
+ages/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal1_20_30.pdf, page 
+is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_B
+EAM_signal2_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrela
+tion/20180126/BEAM/LEP_BEAM_signal1_30_999.pdf, page is rotated 90 degrees> <./
+images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal2_30_999.pdf, page i
+s rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_signal1_30_999.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrela
+tion/20180126/BEAM/PYTHIA8_BEAM_signal2_30_999.pdf, page is rotated 90 degrees>
+]
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield1_0_20.pdf,
+ id=2112, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield1_0_20
+.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield1_0_20.
+pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_l
+ongRangeYield1_0_20.pdf used on input line 129.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield2_0_20.pdf,
+ id=2113, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield2_0_20
+.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield2_0_20.
+pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_l
+ongRangeYield2_0_20.pdf used on input line 130.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield1_0_20.
+pdf, id=2114, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield1_
+0_20.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield1_0
+_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_longRangeYield1_0_20.pdf used on input line 131.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield2_0_20.
+pdf, id=2115, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield2_
+0_20.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield2_0
+_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_longRangeYield2_0_20.pdf used on input line 132.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield1_20_30.pdf
+, id=2116, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield1_20_3
+0.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield1_20_30
+.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_l
+ongRangeYield1_20_30.pdf used on input line 133.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield2_20_30.pdf
+, id=2117, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield2_20_3
+0.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield2_20_30
+.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_l
+ongRangeYield2_20_30.pdf used on input line 134.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield1_20_30
+.pdf, id=2118, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield1_
+20_30.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield1_2
+0_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_longRangeYield1_20_30.pdf used on input line 135.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield2_20_30
+.pdf, id=2119, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield2_
+20_30.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield2_2
+0_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_longRangeYield2_20_30.pdf used on input line 136.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield1_30_999.pd
+f, id=2120, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield1_30_9
+99.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield1_30_99
+9.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_l
+ongRangeYield1_30_999.pdf used on input line 137.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield2_30_999.pd
+f, id=2121, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield2_30_9
+99.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield2_30_99
+9.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_l
+ongRangeYield2_30_999.pdf used on input line 138.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield1_30_99
+9.pdf, id=2122, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield1_
+30_999.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield1_3
+0_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_longRangeYield1_30_999.pdf used on input line 139.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield2_30_99
+9.pdf, id=2123, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield2_
+30_999.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield2_3
+0_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BE
+AM_longRangeYield2_30_999.pdf used on input line 140.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+ [18 <./images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio1_0_20.pdf, p
+age is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/BEAM/LEP_B
+EAM_ratio2_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelati
+on/20180126/BEAM/PYTHIA8_BEAM_ratio1_0_20.pdf, page is rotated 90 degrees> <./i
+mages/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio2_0_20.pdf, page i
+s rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_r
+atio1_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/2
+0180126/BEAM/LEP_BEAM_ratio2_20_30.pdf, page is rotated 90 degrees> <./images/T
+woParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio1_20_30.pdf, page is rota
+ted 90 degrees> <./images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_rat
+io2_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/201
+80126/BEAM/LEP_BEAM_ratio1_30_999.pdf, page is rotated 90 degrees> <./images/Tw
+oParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio2_30_999.pdf, page is rotated 
+90 degrees> <./images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio1_
+30_999.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/201801
+26/BEAM/PYTHIA8_BEAM_ratio2_30_999.pdf, page is rotated 90 degrees>]
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background1_0_20.pdf,
+ id=2645, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background1_0_20
+.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background1_0_20.
+pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_background1_0_20.pdf used on input line 149.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background2_0_20.pdf,
+ id=2646, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background2_0_20
+.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background2_0_20.
+pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_background2_0_20.pdf used on input line 150.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background1_0_20.
+pdf, id=2647, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background1_
+0_20.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background1_0
+_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_background1_0_20.pdf used on input line 151.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background2_0_20.
+pdf, id=2648, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background2_
+0_20.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background2_0
+_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_background2_0_20.pdf used on input line 152.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background1_20_30.pdf
+, id=2649, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background1_20_3
+0.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background1_20_30
+.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_background1_20_30.pdf used on input line 153.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background2_20_30.pdf
+, id=2650, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background2_20_3
+0.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background2_20_30
+.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_background2_20_30.pdf used on input line 154.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background1_20_30
+.pdf, id=2651, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background1_
+20_30.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background1_2
+0_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_background1_20_30.pdf used on input line 155.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background2_20_30
+.pdf, id=2652, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background2_
+20_30.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background2_2
+0_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_background2_20_30.pdf used on input line 156.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background1_30_999.pd
+f, id=2653, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background1_30_9
+99.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background1_30_99
+9.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_background1_30_999.pdf used on input line 157.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background2_30_999.pd
+f, id=2654, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background2_30_9
+99.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background2_30_99
+9.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_background2_30_999.pdf used on input line 158.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background1_30_99
+9.pdf, id=2655, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background1_
+30_999.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background1_3
+0_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_background1_30_999.pdf used on input line 159.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background2_30_99
+9.pdf, id=2656, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background2_
+30_999.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background2_3
+0_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_background2_30_999.pdf used on input line 160.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+ [19 <./images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield1_0_
+20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/B
+EAM/LEP_BEAM_longRangeYield2_0_20.pdf, page is rotated 90 degrees> <./images/Tw
+oParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield1_0_20.pdf, page 
+is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_B
+EAM_longRangeYield2_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticle
+Correlation/20180126/BEAM/LEP_BEAM_longRangeYield1_20_30.pdf, page is rotated 9
+0 degrees> <./images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYie
+ld2_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/201
+80126/BEAM/PYTHIA8_BEAM_longRangeYield1_20_30.pdf, page is rotated 90 degrees> 
+<./images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield2_20_
+30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/B
+EAM/LEP_BEAM_longRangeYield1_30_999.pdf, page is rotated 90 degrees> <./images/
+TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield2_30_999.pdf, page 
+is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_B
+EAM_longRangeYield1_30_999.pdf, page is rotated 90 degrees> <./images/TwoPartic
+leCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield2_30_999.pdf, page is ro
+tated 90 degrees>]
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal1_0_20.pdf, id=
+3179, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal1_0_20.pdf
+ Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal1_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_signal1_0_20.pdf used on input line 167.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal2_0_20.pdf, id=
+3180, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal2_0_20.pdf
+ Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal2_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_signal2_0_20.pdf used on input line 168.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal1_0_20.pdf,
+ id=3181, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal1_0_20
+.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal1_0_20.
+pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_signal1_0_20.pdf used on input line 169.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal2_0_20.pdf,
+ id=3182, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal2_0_20
+.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal2_0_20.
+pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_signal2_0_20.pdf used on input line 170.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal1_20_30.pdf, id
+=3183, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal1_20_30.pd
+f Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal1_20_30.pdf
+>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_signal1_20_30.pdf used on input line 171.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal2_20_30.pdf, id
+=3184, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal2_20_30.pd
+f Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal2_20_30.pdf
+>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_signal2_20_30.pdf used on input line 172.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal1_20_30.pdf
+, id=3185, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal1_20_3
+0.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal1_20_30
+.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_signal1_20_30.pdf used on input line 173.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal2_20_30.pdf
+, id=3186, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal2_20_3
+0.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal2_20_30
+.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_signal2_20_30.pdf used on input line 174.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal1_30_999.pdf, i
+d=3187, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal1_30_999.p
+df Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal1_30_999.pd
+f>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_signal1_30_999.pdf used on input line 175.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal2_30_999.pdf, i
+d=3188, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal2_30_999.p
+df Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal2_30_999.pd
+f>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_signal2_30_999.pdf used on input line 176.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal1_30_999.pd
+f, id=3189, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal1_30_9
+99.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal1_30_99
+9.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_signal1_30_999.pdf used on input line 177.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal2_30_999.pd
+f, id=3190, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal2_30_9
+99.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal2_30_99
+9.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_signal2_30_999.pdf used on input line 178.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+ [20 <./images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background1_0_
+20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/T
+HRUST/LEP_THRUST_background2_0_20.pdf, page is rotated 90 degrees> <./images/Tw
+oParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background1_0_20.pdf, page 
+is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8
+_THRUST_background2_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticle
+Correlation/20180126/THRUST/LEP_THRUST_background1_20_30.pdf, page is rotated 9
+0 degrees> <./images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_backgrou
+nd2_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/201
+80126/THRUST/PYTHIA8_THRUST_background1_20_30.pdf, page is rotated 90 degrees> 
+<./images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background2_20_
+30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/T
+HRUST/LEP_THRUST_background1_30_999.pdf, page is rotated 90 degrees> <./images/
+TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background2_30_999.pdf, page 
+is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8
+_THRUST_background1_30_999.pdf, page is rotated 90 degrees> <./images/TwoPartic
+leCorrelation/20180126/THRUST/PYTHIA8_THRUST_background2_30_999.pdf, page is ro
+tated 90 degrees>]
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio1_0_20.pdf, id=3
+713, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio1_0_20.pdf 
+Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio1_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_ratio1_0_20.pdf used on input line 185.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio2_0_20.pdf, id=3
+714, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio2_0_20.pdf 
+Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio2_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_ratio2_0_20.pdf used on input line 186.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio1_0_20.pdf, 
+id=3715, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio1_0_20.
+pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio1_0_20.p
+df>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_ratio1_0_20.pdf used on input line 187.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio2_0_20.pdf, 
+id=3716, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio2_0_20.
+pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio2_0_20.p
+df>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_ratio2_0_20.pdf used on input line 188.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio1_20_30.pdf, id=
+3717, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio1_20_30.pdf
+ Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio1_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_ratio1_20_30.pdf used on input line 189.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio2_20_30.pdf, id=
+3718, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio2_20_30.pdf
+ Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio2_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_ratio2_20_30.pdf used on input line 190.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio1_20_30.pdf,
+ id=3719, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio1_20_30
+.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio1_20_30.
+pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_ratio1_20_30.pdf used on input line 191.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio2_20_30.pdf,
+ id=3720, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio2_20_30
+.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio2_20_30.
+pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_ratio2_20_30.pdf used on input line 192.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio1_30_999.pdf, id
+=3721, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio1_30_999.pd
+f Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio1_30_999.pdf
+>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_ratio1_30_999.pdf used on input line 193.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio2_30_999.pdf, id
+=3722, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio2_30_999.pd
+f Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio2_30_999.pdf
+>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_ratio2_30_999.pdf used on input line 194.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio1_30_999.pdf
+, id=3723, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio1_30_99
+9.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio1_30_999
+.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_ratio1_30_999.pdf used on input line 195.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio2_30_999.pdf
+, id=3724, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio2_30_99
+9.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio2_30_999
+.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_ratio2_30_999.pdf used on input line 196.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+ [21 <./images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal1_0_20.p
+df, page is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/THRUS
+T/LEP_THRUST_signal2_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticl
+eCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal1_0_20.pdf, page is rotated 9
+0 degrees> <./images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_sign
+al2_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/2018
+0126/THRUST/LEP_THRUST_signal1_20_30.pdf, page is rotated 90 degrees> <./images
+/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal2_20_30.pdf, page is r
+otated 90 degrees> <./images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THR
+UST_signal1_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrela
+tion/20180126/THRUST/PYTHIA8_THRUST_signal2_20_30.pdf, page is rotated 90 degre
+es> <./images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal1_30_999.
+pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/THRU
+ST/LEP_THRUST_signal2_30_999.pdf, page is rotated 90 degrees> <./images/TwoPart
+icleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal1_30_999.pdf, page is rota
+ted 90 degrees> <./images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST
+_signal2_30_999.pdf, page is rotated 90 degrees>]
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield1_0_20.
+pdf, id=4246, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield1_
+0_20.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield1_0
+_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_longRangeYield1_0_20.pdf used on input line 203.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield2_0_20.
+pdf, id=4247, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield2_
+0_20.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield2_0
+_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_longRangeYield2_0_20.pdf used on input line 204.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYield1_0
+_20.pdf, id=4248, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYie
+ld1_0_20.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYiel
+d1_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_longRangeYield1_0_20.pdf used on input line 205.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYield2_0
+_20.pdf, id=4249, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYie
+ld2_0_20.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYiel
+d2_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_longRangeYield2_0_20.pdf used on input line 206.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield1_20_30
+.pdf, id=4250, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield1_
+20_30.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield1_2
+0_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_longRangeYield1_20_30.pdf used on input line 207.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield2_20_30
+.pdf, id=4251, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield2_
+20_30.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield2_2
+0_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_longRangeYield2_20_30.pdf used on input line 208.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYield1_2
+0_30.pdf, id=4252, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYie
+ld1_20_30.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYiel
+d1_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_longRangeYield1_20_30.pdf used on input line 209.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYield2_2
+0_30.pdf, id=4253, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYie
+ld2_20_30.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYiel
+d2_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_longRangeYield2_20_30.pdf used on input line 210.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield1_30_99
+9.pdf, id=4254, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield1_
+30_999.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield1_3
+0_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_longRangeYield1_30_999.pdf used on input line 211.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield2_30_99
+9.pdf, id=4255, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield2_
+30_999.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield2_3
+0_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/LEP_THRU
+ST_longRangeYield2_30_999.pdf used on input line 212.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYield1_3
+0_999.pdf, id=4256, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYie
+ld1_30_999.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYiel
+d1_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_longRangeYield1_30_999.pdf used on input line 213.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYield2_3
+0_999.pdf, id=4257, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYie
+ld2_30_999.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYiel
+d2_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_
+THRUST_longRangeYield2_30_999.pdf used on input line 214.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+ [22 <./images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio1_0_20.pd
+f, page is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/THRUST
+/LEP_THRUST_ratio2_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticleC
+orrelation/20180126/THRUST/PYTHIA8_THRUST_ratio1_0_20.pdf, page is rotated 90 d
+egrees> <./images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio2_
+0_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126
+/THRUST/LEP_THRUST_ratio1_20_30.pdf, page is rotated 90 degrees> <./images/TwoP
+articleCorrelation/20180126/THRUST/LEP_THRUST_ratio2_20_30.pdf, page is rotated
+ 90 degrees> <./images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ra
+tio1_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/20
+180126/THRUST/PYTHIA8_THRUST_ratio2_20_30.pdf, page is rotated 90 degrees> <./i
+mages/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio1_30_999.pdf, page
+ is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/THRUST/LEP_TH
+RUST_ratio2_30_999.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrel
+ation/20180126/THRUST/PYTHIA8_THRUST_ratio1_30_999.pdf, page is rotated 90 degr
+ees> <./images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio2_30_
+999.pdf, page is rotated 90 degrees>]
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background1_0_20.pdf, id=47
+79, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background1_0_20.pdf G
+raphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background1_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_bac
+kground1_0_20.pdf used on input line 223.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background2_0_20.pdf, id=47
+80, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background2_0_20.pdf G
+raphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background2_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_bac
+kground2_0_20.pdf used on input line 224.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background1_0_20.pdf, i
+d=4781, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background1_0_20.p
+df Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background1_0_20.pd
+f>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_background1_0_20.pdf used on input line 225.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background2_0_20.pdf, i
+d=4782, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background2_0_20.p
+df Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background2_0_20.pd
+f>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_background2_0_20.pdf used on input line 226.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background1_20_30.pdf, id=4
+783, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background1_20_30.pdf 
+Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background1_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_bac
+kground1_20_30.pdf used on input line 227.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background2_20_30.pdf, id=4
+784, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background2_20_30.pdf 
+Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background2_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_bac
+kground2_20_30.pdf used on input line 228.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background1_20_30.pdf, 
+id=4785, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background1_20_30.
+pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background1_20_30.p
+df>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_background1_20_30.pdf used on input line 229.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background2_20_30.pdf, 
+id=4786, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background2_20_30.
+pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background2_20_30.p
+df>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_background2_20_30.pdf used on input line 230.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background1_30_999.pdf, id=
+4787, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background1_30_999.pdf
+ Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background1_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_bac
+kground1_30_999.pdf used on input line 231.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background2_30_999.pdf, id=
+4788, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background2_30_999.pdf
+ Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background2_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_bac
+kground2_30_999.pdf used on input line 232.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background1_30_999.pdf,
+ id=4789, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background1_30_999
+.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background1_30_999.
+pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_background1_30_999.pdf used on input line 233.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background2_30_999.pdf,
+ id=4790, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background2_30_999
+.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background2_30_999.
+pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_background2_30_999.pdf used on input line 234.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+ [23 <./images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield
+1_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/201801
+26/THRUST/LEP_THRUST_longRangeYield2_0_20.pdf, page is rotated 90 degrees> <./i
+mages/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYield1_0_2
+0.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/TH
+RUST/PYTHIA8_THRUST_longRangeYield2_0_20.pdf, page is rotated 90 degrees> <./im
+ages/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield1_20_30.pd
+f, page is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/THRUST
+/LEP_THRUST_longRangeYield2_20_30.pdf, page is rotated 90 degrees> <./images/Tw
+oParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYield1_20_30.pdf, 
+page is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/THRUST/PY
+THIA8_THRUST_longRangeYield2_20_30.pdf, page is rotated 90 degrees> <./images/T
+woParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield1_30_999.pdf, pa
+ge is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/THRUST/LEP_
+THRUST_longRangeYield2_30_999.pdf, page is rotated 90 degrees> <./images/TwoPar
+ticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYield1_30_999.pdf, pag
+e is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/THRUST/PYTHI
+A8_THRUST_longRangeYield2_30_999.pdf, page is rotated 90 degrees>]
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal1_0_20.pdf, id=5312, 
+569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal1_0_20.pdf Graph
+ic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal1_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_sig
+nal1_0_20.pdf used on input line 241.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal2_0_20.pdf, id=5313, 
+569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal2_0_20.pdf Graph
+ic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal2_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_sig
+nal2_0_20.pdf used on input line 242.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal1_0_20.pdf, id=53
+14, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal1_0_20.pdf G
+raphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal1_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_signal1_0_20.pdf used on input line 243.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal2_0_20.pdf, id=53
+15, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal2_0_20.pdf G
+raphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal2_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_signal2_0_20.pdf used on input line 244.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal1_20_30.pdf, id=5316,
+ 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal1_20_30.pdf Grap
+hic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal1_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_sig
+nal1_20_30.pdf used on input line 245.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal2_20_30.pdf, id=5317,
+ 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal2_20_30.pdf Grap
+hic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal2_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_sig
+nal2_20_30.pdf used on input line 246.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal1_20_30.pdf, id=5
+318, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal1_20_30.pdf 
+Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal1_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_signal1_20_30.pdf used on input line 247.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal2_20_30.pdf, id=5
+319, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal2_20_30.pdf 
+Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal2_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_signal2_20_30.pdf used on input line 248.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal1_30_999.pdf, id=5320
+, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal1_30_999.pdf Gra
+phic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal1_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_sig
+nal1_30_999.pdf used on input line 249.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal2_30_999.pdf, id=5321
+, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal2_30_999.pdf Gra
+phic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal2_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_sig
+nal2_30_999.pdf used on input line 250.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal1_30_999.pdf, id=
+5322, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal1_30_999.pdf
+ Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal1_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_signal1_30_999.pdf used on input line 251.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal2_30_999.pdf, id=
+5323, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal2_30_999.pdf
+ Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal2_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_signal2_30_999.pdf used on input line 252.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+[24 <./images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background1_0_20.pdf,
+ page is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/WTA/LEP_
+WTA_background2_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorr
+elation/20180126/WTA/PYTHIA8_WTA_background1_0_20.pdf, page is rotated 90 degre
+es> <./images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background2_0_20.
+pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/WTA/
+LEP_WTA_background1_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticl
+eCorrelation/20180126/WTA/LEP_WTA_background2_20_30.pdf, page is rotated 90 deg
+rees> <./images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background1_20_
+30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/W
+TA/PYTHIA8_WTA_background2_20_30.pdf, page is rotated 90 degrees> <./images/Two
+ParticleCorrelation/20180126/WTA/LEP_WTA_background1_30_999.pdf, page is rotate
+d 90 degrees> <./images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background2
+_30_999.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/20180
+126/WTA/PYTHIA8_WTA_background1_30_999.pdf, page is rotated 90 degrees> <./imag
+es/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background2_30_999.pdf, page
+ is rotated 90 degrees>]
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio1_0_20.pdf, id=5845, 5
+69.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio1_0_20.pdf Graphi
+c file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio1_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_rat
+io1_0_20.pdf used on input line 259.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio2_0_20.pdf, id=5846, 5
+69.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio2_0_20.pdf Graphi
+c file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio2_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_rat
+io2_0_20.pdf used on input line 260.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio1_0_20.pdf, id=584
+7, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio1_0_20.pdf Gr
+aphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio1_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_ratio1_0_20.pdf used on input line 261.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio2_0_20.pdf, id=584
+8, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio2_0_20.pdf Gr
+aphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio2_0_20.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_ratio2_0_20.pdf used on input line 262.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio1_20_30.pdf, id=5849, 
+569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio1_20_30.pdf Graph
+ic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio1_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_rat
+io1_20_30.pdf used on input line 263.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio2_20_30.pdf, id=5850, 
+569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio2_20_30.pdf Graph
+ic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio2_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_rat
+io2_20_30.pdf used on input line 264.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio1_20_30.pdf, id=58
+51, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio1_20_30.pdf G
+raphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio1_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_ratio1_20_30.pdf used on input line 265.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio2_20_30.pdf, id=58
+52, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio2_20_30.pdf G
+raphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio2_20_30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_ratio2_20_30.pdf used on input line 266.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio1_30_999.pdf, id=5853,
+ 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio1_30_999.pdf Grap
+hic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio1_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_rat
+io1_30_999.pdf used on input line 267.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio2_30_999.pdf, id=5854,
+ 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio2_30_999.pdf Grap
+hic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio2_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_rat
+io2_30_999.pdf used on input line 268.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio1_30_999.pdf, id=5
+855, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio1_30_999.pdf 
+Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio1_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_ratio1_30_999.pdf used on input line 269.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio2_30_999.pdf, id=5
+856, 569.12625pt x 520.94624pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio2_30_999.pdf 
+Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio2_30_999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_ratio2_30_999.pdf used on input line 270.
+(pdftex.def)             Requested size: 117.0pt x 107.08878pt.
+
+[25 <./images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal1_0_20.pdf, pag
+e is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_
+signal2_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/
+20180126/WTA/PYTHIA8_WTA_signal1_0_20.pdf, page is rotated 90 degrees> <./image
+s/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal2_0_20.pdf, page is rot
+ated 90 degrees> <./images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal1_
+20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/2018012
+6/WTA/LEP_WTA_signal2_20_30.pdf, page is rotated 90 degrees> <./images/TwoParti
+cleCorrelation/20180126/WTA/PYTHIA8_WTA_signal1_20_30.pdf, page is rotated 90 d
+egrees> <./images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal2_20_30
+.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/WTA
+/LEP_WTA_signal1_30_999.pdf, page is rotated 90 degrees> <./images/TwoParticleC
+orrelation/20180126/WTA/LEP_WTA_signal2_30_999.pdf, page is rotated 90 degrees>
+ <./images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal1_30_999.pdf, 
+page is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/WTA/PYTHI
+A8_WTA_signal2_30_999.pdf, page is rotated 90 degrees>]
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield1_0_20.pdf, i
+d=6380, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield1_0_20.p
+df Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield1_0_20.pd
+f>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_lon
+gRangeYield1_0_20.pdf used on input line 277.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield2_0_20.pdf, i
+d=6381, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield2_0_20.p
+df Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield2_0_20.pd
+f>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_lon
+gRangeYield2_0_20.pdf used on input line 278.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield1_0_20.pd
+f, id=6382, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield1_0_
+20.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield1_0_2
+0.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_longRangeYield1_0_20.pdf used on input line 279.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield2_0_20.pd
+f, id=6383, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield2_0_
+20.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield2_0_2
+0.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_longRangeYield2_0_20.pdf used on input line 280.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield1_20_30.pdf, 
+id=6384, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield1_20_30.
+pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield1_20_30.p
+df>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_lon
+gRangeYield1_20_30.pdf used on input line 281.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield2_20_30.pdf, 
+id=6385, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield2_20_30.
+pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield2_20_30.p
+df>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_lon
+gRangeYield2_20_30.pdf used on input line 282.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield1_20_30.p
+df, id=6386, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield1_20
+_30.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield1_20_
+30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_longRangeYield1_20_30.pdf used on input line 283.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield2_20_30.p
+df, id=6387, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield2_20
+_30.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield2_20_
+30.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_longRangeYield2_20_30.pdf used on input line 284.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield1_30_999.pdf,
+ id=6388, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield1_30_999
+.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield1_30_999.
+pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_lon
+gRangeYield1_30_999.pdf used on input line 285.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield2_30_999.pdf,
+ id=6389, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield2_30_999
+.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield2_30_999.
+pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_lon
+gRangeYield2_30_999.pdf used on input line 286.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield1_30_999.
+pdf, id=6390, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield1_30
+_999.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield1_30_
+999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_longRangeYield1_30_999.pdf used on input line 287.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+
+<images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield2_30_999.
+pdf, id=6391, 569.12625pt x 547.04375pt>
+File: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield2_30
+_999.pdf Graphic file (type pdf)
+
+<use images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield2_30_
+999.pdf>
+Package pdftex.def Info: images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA
+_longRangeYield2_30_999.pdf used on input line 288.
+(pdftex.def)             Requested size: 117.0pt x 112.45354pt.
+ [26 <./images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio1_0_20.pdf, pag
+e is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_
+ratio2_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/2
+0180126/WTA/PYTHIA8_WTA_ratio1_0_20.pdf, page is rotated 90 degrees> <./images/
+TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio2_0_20.pdf, page is rotate
+d 90 degrees> <./images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio1_20_3
+0.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/WT
+A/LEP_WTA_ratio2_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCo
+rrelation/20180126/WTA/PYTHIA8_WTA_ratio1_20_30.pdf, page is rotated 90 degrees
+> <./images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio2_20_30.pdf, p
+age is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/WTA/LEP_WT
+A_ratio1_30_999.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelati
+on/20180126/WTA/LEP_WTA_ratio2_30_999.pdf, page is rotated 90 degrees> <./image
+s/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio1_30_999.pdf, page is ro
+tated 90 degrees> <./images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_rat
+io2_30_999.pdf, page is rotated 90 degrees>]
+<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_0_20.pdf, id=6913, 56
 9.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_0_20.pdf Graphic
  file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_rati
-o2_0_20.pdf used on input line 72.
+o2_0_20.pdf used on input line 296.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_0_20.pdf, id=1037, 56
+<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_0_20.pdf, id=6914, 56
 9.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_0_20.pdf Graphic
  file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_rati
-o1_0_20.pdf used on input line 73.
+o1_0_20.pdf used on input line 297.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_0_20.pdf, id=1038, 5
+<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_0_20.pdf, id=6915, 5
 69.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_0_20.pdf Graphi
 c file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ra
-tio_0_20.pdf used on input line 74.
+tio_0_20.pdf used on input line 298.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_20_30.pdf, id=1039, 5
+<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_20_30.pdf, id=6916, 5
 69.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_20_30.pdf Graphi
 c file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_rati
-o2_20_30.pdf used on input line 75.
+o2_20_30.pdf used on input line 299.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_20_30.pdf, id=1040, 5
+<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_20_30.pdf, id=6917, 5
 69.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_20_30.pdf Graphi
 c file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_rati
-o1_20_30.pdf used on input line 76.
+o1_20_30.pdf used on input line 300.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_20_30.pdf, id=1041, 
+<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_20_30.pdf, id=6918, 
 569.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_20_30.pdf Graph
 ic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ra
-tio_20_30.pdf used on input line 77.
+tio_20_30.pdf used on input line 301.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_30_999.pdf, id=1042, 
+<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_30_999.pdf, id=6919, 
 569.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_30_999.pdf Graph
 ic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_rati
-o2_30_999.pdf used on input line 78.
+o2_30_999.pdf used on input line 302.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_30_999.pdf, id=1043, 
+<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_30_999.pdf, id=6920, 
 569.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_30_999.pdf Graph
 ic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_rati
-o1_30_999.pdf used on input line 79.
+o1_30_999.pdf used on input line 303.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_30_999.pdf, id=1044,
+<images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_30_999.pdf, id=6921,
  569.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_30_999.pdf Grap
 hic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ra
-tio_30_999.pdf used on input line 80.
+tio_30_999.pdf used on input line 304.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_0_20.pdf, id=1045
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_0_20.pdf, id=6922
 , 569.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_0_20.pdf Gra
 phic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_
-ratio2_0_20.pdf used on input line 87.
+ratio2_0_20.pdf used on input line 311.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_0_20.pdf, id=1046
+<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_0_20.pdf, id=6923
 , 569.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_0_20.pdf Gra
 phic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_
-ratio1_0_20.pdf used on input line 88.
+ratio1_0_20.pdf used on input line 312.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_r_ratio_0_20.pdf, id=104
-7, 569.12625pt x 520.94624pt>
+<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_r_ratio_0_20.pdf, id=692
+4, 569.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_r_ratio_0_20.pdf Gr
 aphic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_r_ratio_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_
-r_ratio_0_20.pdf used on input line 89.
+r_ratio_0_20.pdf used on input line 313.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_20_30.pdf, id=104
-8, 569.12625pt x 520.94624pt>
+<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_20_30.pdf, id=692
+5, 569.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_20_30.pdf Gr
 aphic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_
-ratio2_20_30.pdf used on input line 90.
+ratio2_20_30.pdf used on input line 314.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_20_30.pdf, id=104
-9, 569.12625pt x 520.94624pt>
+<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_20_30.pdf, id=692
+6, 569.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_20_30.pdf Gr
 aphic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_
-ratio1_20_30.pdf used on input line 91.
+ratio1_20_30.pdf used on input line 315.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_r_ratio_20_30.pdf, id=10
-50, 569.12625pt x 520.94624pt>
+<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_r_ratio_20_30.pdf, id=69
+27, 569.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_r_ratio_20_30.pdf G
 raphic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_r_ratio_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_
-r_ratio_20_30.pdf used on input line 92.
+r_ratio_20_30.pdf used on input line 316.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_30_999.pdf, id=10
-51, 569.12625pt x 553.06625pt>
+<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_30_999.pdf, id=69
+28, 569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_30_999.pdf G
 raphic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_
-ratio2_30_999.pdf used on input line 93.
+ratio2_30_999.pdf used on input line 317.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_30_999.pdf, id=10
-52, 569.12625pt x 553.06625pt>
+<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_30_999.pdf, id=69
+29, 569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_30_999.pdf G
 raphic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_
-ratio1_30_999.pdf used on input line 94.
+ratio1_30_999.pdf used on input line 318.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_r_ratio_30_999.pdf, id=1
-053, 569.12625pt x 553.06625pt>
+<images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_r_ratio_30_999.pdf, id=6
+930, 569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_r_ratio_30_999.pdf 
 Graphic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_r_ratio_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_
-r_ratio_30_999.pdf used on input line 95.
+r_ratio_30_999.pdf used on input line 319.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
-<images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio2_0_20.pdf, id=1054, 569.
+<images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio2_0_20.pdf, id=6931, 569.
 12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio2_0_20.pdf Graphic f
 ile (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio2_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio2
-_0_20.pdf used on input line 102.
+_0_20.pdf used on input line 326.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio1_0_20.pdf, id=1055, 569.
+<images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio1_0_20.pdf, id=6932, 569.
 12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio1_0_20.pdf Graphic f
 ile (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio1_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio1
-_0_20.pdf used on input line 103.
+_0_20.pdf used on input line 327.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_r_ratio_0_20.pdf, id=1056, 569
+<images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_r_ratio_0_20.pdf, id=6933, 569
 .12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_r_ratio_0_20.pdf Graphic 
 file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_r_ratio_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_r_rati
-o_0_20.pdf used on input line 104.
+o_0_20.pdf used on input line 328.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio2_20_30.pdf, id=1057, 569
+<images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio2_20_30.pdf, id=6934, 569
 .12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio2_20_30.pdf Graphic 
 file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio2_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio2
-_20_30.pdf used on input line 105.
+_20_30.pdf used on input line 329.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio1_20_30.pdf, id=1058, 569
+<images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio1_20_30.pdf, id=6935, 569
 .12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio1_20_30.pdf Graphic 
 file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio1_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio1
-_20_30.pdf used on input line 106.
+_20_30.pdf used on input line 330.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_r_ratio_20_30.pdf, id=1059, 56
+<images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_r_ratio_20_30.pdf, id=6936, 56
 9.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_r_ratio_20_30.pdf Graphic
  file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_r_ratio_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_r_rati
-o_20_30.pdf used on input line 107.
+o_20_30.pdf used on input line 331.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio2_30_999.pdf, id=1060, 56
+<images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio2_30_999.pdf, id=6937, 56
 9.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio2_30_999.pdf Graphic
  file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio2_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio2
-_30_999.pdf used on input line 108.
+_30_999.pdf used on input line 332.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio1_30_999.pdf, id=1061, 56
+<images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio1_30_999.pdf, id=6938, 56
 9.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio1_30_999.pdf Graphic
  file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio1_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio1
-_30_999.pdf used on input line 109.
+_30_999.pdf used on input line 333.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_r_ratio_30_999.pdf, id=1062, 5
+<images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_r_ratio_30_999.pdf, id=6939, 5
 69.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_r_ratio_30_999.pdf Graphi
 c file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_r_ratio_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_r_rati
-o_30_999.pdf used on input line 110.
+o_30_999.pdf used on input line 334.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
-<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_0_20.pdf, id=1063, 56
+<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_0_20.pdf, id=6940, 56
 9.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_0_20.pdf Graphic
  file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_rati
-o2_0_20.pdf used on input line 118.
+o2_0_20.pdf used on input line 342.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_0_20.pdf, id=1064, 56
+<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_0_20.pdf, id=6941, 56
 9.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_0_20.pdf Graphic
  file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_rati
-o1_0_20.pdf used on input line 119.
+o1_0_20.pdf used on input line 343.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio_0_20.pdf, id=1065, 5
+<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio_0_20.pdf, id=6942, 5
 69.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio_0_20.pdf Graphi
 c file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ra
-tio_0_20.pdf used on input line 120.
+tio_0_20.pdf used on input line 344.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_20_30.pdf, id=1066, 5
+<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_20_30.pdf, id=6943, 5
 69.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_20_30.pdf Graphi
 c file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_rati
-o2_20_30.pdf used on input line 121.
+o2_20_30.pdf used on input line 345.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_20_30.pdf, id=1067, 5
+<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_20_30.pdf, id=6944, 5
 69.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_20_30.pdf Graphi
 c file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_rati
-o1_20_30.pdf used on input line 122.
+o1_20_30.pdf used on input line 346.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio_20_30.pdf, id=1068, 
+<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio_20_30.pdf, id=6945, 
 569.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio_20_30.pdf Graph
 ic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ra
-tio_20_30.pdf used on input line 123.
+tio_20_30.pdf used on input line 347.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_30_999.pdf, id=1069, 
+<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_30_999.pdf, id=6946, 
 569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_30_999.pdf Graph
 ic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_rati
-o2_30_999.pdf used on input line 124.
+o2_30_999.pdf used on input line 348.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_30_999.pdf, id=1070, 
+<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_30_999.pdf, id=6947, 
 569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_30_999.pdf Graph
 ic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_rati
-o1_30_999.pdf used on input line 125.
+o1_30_999.pdf used on input line 349.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio_30_999.pdf, id=1071,
+<images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio_30_999.pdf, id=6948,
  569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio_30_999.pdf Grap
 hic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ra
-tio_30_999.pdf used on input line 126.
+tio_30_999.pdf used on input line 350.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
-<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_0_20.pdf, id=1072
+<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_0_20.pdf, id=6949
 , 569.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_0_20.pdf Gra
 phic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_
-ratio2_0_20.pdf used on input line 133.
+ratio2_0_20.pdf used on input line 357.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio1_0_20.pdf, id=1073
+<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio1_0_20.pdf, id=6950
 , 569.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio1_0_20.pdf Gra
 phic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio1_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_
-ratio1_0_20.pdf used on input line 134.
+ratio1_0_20.pdf used on input line 358.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_0_20.pdf, id=107
-4, 569.12625pt x 520.94624pt>
+<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_0_20.pdf, id=695
+1, 569.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_0_20.pdf Gr
 aphic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_
-r_ratio_0_20.pdf used on input line 135.
+r_ratio_0_20.pdf used on input line 359.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_20_30.pdf, id=107
-5, 569.12625pt x 520.94624pt>
+<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_20_30.pdf, id=695
+2, 569.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_20_30.pdf Gr
 aphic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_
-ratio2_20_30.pdf used on input line 136.
+ratio2_20_30.pdf used on input line 360.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio1_20_30.pdf, id=107
-6, 569.12625pt x 520.94624pt>
+<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio1_20_30.pdf, id=695
+3, 569.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio1_20_30.pdf Gr
 aphic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio1_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_
-ratio1_20_30.pdf used on input line 137.
+ratio1_20_30.pdf used on input line 361.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_20_30.pdf, id=10
-77, 569.12625pt x 520.94624pt>
+<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_20_30.pdf, id=69
+54, 569.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_20_30.pdf G
 raphic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_
-r_ratio_20_30.pdf used on input line 138.
+r_ratio_20_30.pdf used on input line 362.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
-<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_30_999.pdf, id=10
-78, 569.12625pt x 553.06625pt>
+<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_30_999.pdf, id=69
+55, 569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_30_999.pdf G
 raphic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_
-ratio2_30_999.pdf used on input line 139.
+ratio2_30_999.pdf used on input line 363.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio1_30_999.pdf, id=10
-79, 569.12625pt x 553.06625pt>
+<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio1_30_999.pdf, id=69
+56, 569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio1_30_999.pdf G
 raphic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio1_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_
-ratio1_30_999.pdf used on input line 140.
+ratio1_30_999.pdf used on input line 364.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_30_999.pdf, id=1
-080, 569.12625pt x 553.06625pt>
+<images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_30_999.pdf, id=6
+957, 569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_30_999.pdf 
 Graphic file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_
-r_ratio_30_999.pdf used on input line 141.
+r_ratio_30_999.pdf used on input line 365.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
-<images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio2_0_20.pdf, id=1081, 569.
+<images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio2_0_20.pdf, id=6958, 569.
 12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio2_0_20.pdf Graphic f
 ile (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio2_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio2
-_0_20.pdf used on input line 148.
+_0_20.pdf used on input line 372.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio1_0_20.pdf, id=1082, 569.
+<images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio1_0_20.pdf, id=6959, 569.
 12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio1_0_20.pdf Graphic f
 ile (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio1_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio1
-_0_20.pdf used on input line 149.
+_0_20.pdf used on input line 373.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_r_ratio_0_20.pdf, id=1083, 569
+<images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_r_ratio_0_20.pdf, id=6960, 569
 .12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_r_ratio_0_20.pdf Graphic 
 file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_r_ratio_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_r_rati
-o_0_20.pdf used on input line 150.
+o_0_20.pdf used on input line 374.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio2_20_30.pdf, id=1084, 569
+<images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio2_20_30.pdf, id=6961, 569
 .12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio2_20_30.pdf Graphic 
 file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio2_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio2
-_20_30.pdf used on input line 151.
+_20_30.pdf used on input line 375.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio1_20_30.pdf, id=1085, 569
+<images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio1_20_30.pdf, id=6962, 569
 .12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio1_20_30.pdf Graphic 
 file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio1_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio1
-_20_30.pdf used on input line 152.
+_20_30.pdf used on input line 376.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_r_ratio_20_30.pdf, id=1086, 56
+<images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_r_ratio_20_30.pdf, id=6963, 56
 9.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_r_ratio_20_30.pdf Graphic
  file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_r_ratio_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_r_rati
-o_20_30.pdf used on input line 153.
+o_20_30.pdf used on input line 377.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio2_30_999.pdf, id=1087, 56
+<images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio2_30_999.pdf, id=6964, 56
 9.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio2_30_999.pdf Graphic
  file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio2_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio2
-_30_999.pdf used on input line 154.
+_30_999.pdf used on input line 378.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio1_30_999.pdf, id=1088, 56
+<images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio1_30_999.pdf, id=6965, 56
 9.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio1_30_999.pdf Graphic
  file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio1_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio1
-_30_999.pdf used on input line 155.
+_30_999.pdf used on input line 379.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_r_ratio_30_999.pdf, id=1089, 5
+<images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_r_ratio_30_999.pdf, id=6966, 5
 69.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_r_ratio_30_999.pdf Graphi
 c file (type pdf)
 
 <use images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_r_ratio_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_r_rati
-o_30_999.pdf used on input line 156.
+o_30_999.pdf used on input line 380.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
-<images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio2_0_20.pdf, id=1090
+<images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio2_0_20.pdf, id=6967
 , 569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio2_0_20.pdf Gra
 phic file (type pdf)
 
 <use images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio2_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_
-ratio2_0_20.pdf used on input line 164.
+ratio2_0_20.pdf used on input line 388.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio1_0_20.pdf, id=1091
+<images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio1_0_20.pdf, id=6968
 , 569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio1_0_20.pdf Gra
 phic file (type pdf)
 
 <use images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio1_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_
-ratio1_0_20.pdf used on input line 165.
+ratio1_0_20.pdf used on input line 389.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_r_ratio_0_20.pdf, id=109
-2, 569.12625pt x 553.06625pt>
+<images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_r_ratio_0_20.pdf, id=696
+9, 569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_r_ratio_0_20.pdf Gr
 aphic file (type pdf)
 
 <use images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_r_ratio_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_
-r_ratio_0_20.pdf used on input line 166.
+r_ratio_0_20.pdf used on input line 390.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio2_20_30.pdf, id=109
-3, 569.12625pt x 553.06625pt>
+<images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio2_20_30.pdf, id=697
+0, 569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio2_20_30.pdf Gr
 aphic file (type pdf)
 
 <use images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio2_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_
-ratio2_20_30.pdf used on input line 167.
+ratio2_20_30.pdf used on input line 391.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio1_20_30.pdf, id=109
-4, 569.12625pt x 553.06625pt>
+<images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio1_20_30.pdf, id=697
+1, 569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio1_20_30.pdf Gr
 aphic file (type pdf)
 
 <use images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio1_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_
-ratio1_20_30.pdf used on input line 168.
+ratio1_20_30.pdf used on input line 392.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_r_ratio_20_30.pdf, id=10
-95, 569.12625pt x 553.06625pt>
+<images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_r_ratio_20_30.pdf, id=69
+72, 569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_r_ratio_20_30.pdf G
 raphic file (type pdf)
 
 <use images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_r_ratio_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_
-r_ratio_20_30.pdf used on input line 169.
+r_ratio_20_30.pdf used on input line 393.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio2_30_999.pdf, id=10
-96, 569.12625pt x 553.06625pt>
+<images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio2_30_999.pdf, id=69
+73, 569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio2_30_999.pdf G
 raphic file (type pdf)
 
 <use images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio2_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_
-ratio2_30_999.pdf used on input line 170.
+ratio2_30_999.pdf used on input line 394.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio1_30_999.pdf, id=10
-97, 569.12625pt x 553.06625pt>
+<images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio1_30_999.pdf, id=69
+74, 569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio1_30_999.pdf G
 raphic file (type pdf)
 
 <use images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio1_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_
-ratio1_30_999.pdf used on input line 171.
+ratio1_30_999.pdf used on input line 395.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
-<images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_r_ratio_30_999.pdf, id=1
-098, 569.12625pt x 553.06625pt>
+<images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_r_ratio_30_999.pdf, id=6
+975, 569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_r_ratio_30_999.pdf 
 Graphic file (type pdf)
 
 <use images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_r_ratio_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_
-r_ratio_30_999.pdf used on input line 172.
+r_ratio_30_999.pdf used on input line 396.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
 
@@ -1873,215 +4494,232 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
 <images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_ratio2
-_0_20.pdf, id=1099, 569.12625pt x 553.06625pt>
+_0_20.pdf, id=6976, 569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_r
 atio2_0_20.pdf Graphic file (type pdf)
 
 <use images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_ra
 tio2_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYT
-HIA8_RopeWalk_WTA_ratio2_0_20.pdf used on input line 181.
+HIA8_RopeWalk_WTA_ratio2_0_20.pdf used on input line 405.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
 <images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_ratio1
-_0_20.pdf, id=1100, 569.12625pt x 553.06625pt>
+_0_20.pdf, id=6977, 569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_r
 atio1_0_20.pdf Graphic file (type pdf)
 
 <use images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_ra
 tio1_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYT
-HIA8_RopeWalk_WTA_ratio1_0_20.pdf used on input line 182.
+HIA8_RopeWalk_WTA_ratio1_0_20.pdf used on input line 406.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
 <images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_r_rati
-o_0_20.pdf, id=1101, 569.12625pt x 553.06625pt>
+o_0_20.pdf, id=6978, 569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_r
 _ratio_0_20.pdf Graphic file (type pdf)
 
 <use images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_r_
 ratio_0_20.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYT
-HIA8_RopeWalk_WTA_r_ratio_0_20.pdf used on input line 183.
+HIA8_RopeWalk_WTA_r_ratio_0_20.pdf used on input line 407.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
 <images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_ratio2
-_20_30.pdf, id=1102, 569.12625pt x 520.94624pt>
+_20_30.pdf, id=6979, 569.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_r
 atio2_20_30.pdf Graphic file (type pdf)
 
 <use images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_ra
 tio2_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYT
-HIA8_RopeWalk_WTA_ratio2_20_30.pdf used on input line 184.
+HIA8_RopeWalk_WTA_ratio2_20_30.pdf used on input line 408.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
 <images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_ratio1
-_20_30.pdf, id=1103, 569.12625pt x 520.94624pt>
+_20_30.pdf, id=6980, 569.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_r
 atio1_20_30.pdf Graphic file (type pdf)
 
 <use images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_ra
 tio1_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYT
-HIA8_RopeWalk_WTA_ratio1_20_30.pdf used on input line 185.
+HIA8_RopeWalk_WTA_ratio1_20_30.pdf used on input line 409.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
 <images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_r_rati
-o_20_30.pdf, id=1104, 569.12625pt x 520.94624pt>
+o_20_30.pdf, id=6981, 569.12625pt x 520.94624pt>
 File: images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_r
 _ratio_20_30.pdf Graphic file (type pdf)
 
 <use images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_r_
 ratio_20_30.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYT
-HIA8_RopeWalk_WTA_r_ratio_20_30.pdf used on input line 186.
+HIA8_RopeWalk_WTA_r_ratio_20_30.pdf used on input line 410.
 (pdftex.def)             Requested size: 149.76343pt x 137.08827pt.
 
 <images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_ratio2
-_30_999.pdf, id=1105, 569.12625pt x 553.06625pt>
+_30_999.pdf, id=6982, 569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_r
 atio2_30_999.pdf Graphic file (type pdf)
 
 <use images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_ra
 tio2_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYT
-HIA8_RopeWalk_WTA_ratio2_30_999.pdf used on input line 187.
+HIA8_RopeWalk_WTA_ratio2_30_999.pdf used on input line 411.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
 <images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_ratio1
-_30_999.pdf, id=1106, 569.12625pt x 553.06625pt>
+_30_999.pdf, id=6983, 569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_r
 atio1_30_999.pdf Graphic file (type pdf)
 
 <use images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_ra
 tio1_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYT
-HIA8_RopeWalk_WTA_ratio1_30_999.pdf used on input line 188.
+HIA8_RopeWalk_WTA_ratio1_30_999.pdf used on input line 412.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 
 <images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_r_rati
-o_30_999.pdf, id=1107, 569.12625pt x 553.06625pt>
+o_30_999.pdf, id=6984, 569.12625pt x 553.06625pt>
 File: images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_r
 _ratio_30_999.pdf Graphic file (type pdf)
 
 <use images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_r_
 ratio_30_999.pdf>
 Package pdftex.def Info: images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYT
-HIA8_RopeWalk_WTA_r_ratio_30_999.pdf used on input line 189.
+HIA8_RopeWalk_WTA_r_ratio_30_999.pdf used on input line 413.
 (pdftex.def)             Requested size: 149.76343pt x 145.54073pt.
 )
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-) (./systematics.tex) (./result.tex [16 <./images/TwoParticleCorrelation/LEP1_B
-EAM/LEP1_BEAM_ratio2_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticl
-eCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_0_20.pdf, page is rotated 90 degrees> <
-./images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_0_20.pdf, page is r
-otated 90 degrees> <./images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_
-20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP1_BE
-AM/LEP1_BEAM_ratio1_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticl
-eCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_20_30.pdf, page is rotated 90 degrees>
- <./images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_30_999.pdf, page i
-s rotated 90 degrees> <./images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_rati
-o1_30_999.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP
-1_BEAM/LEP1_BEAM_r_ratio_30_999.pdf, page is rotated 90 degrees>] [17 <./images
-/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_0_20.pdf, page is rotate
-d 90 degrees> <./images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_0
-_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP1_THRU
-ST/LEP1_THRUST_r_ratio_0_20.pdf, page is rotated 90 degrees> <./images/TwoParti
-cleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_20_30.pdf, page is rotated 90 deg
-rees> <./images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_20_30.pdf
-, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP1_THRUST/LEP1
-_THRUST_r_ratio_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCor
-relation/LEP1_THRUST/LEP1_THRUST_ratio2_30_999.pdf, page is rotated 90 degrees>
- <./images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_30_999.pdf, pa
-ge is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THR
-UST_r_ratio_30_999.pdf, page is rotated 90 degrees>] [18 <./images/TwoParticleC
-orrelation/LEP1_WTA/LEP1_WTA_ratio2_0_20.pdf, page is rotated 90 degrees> <./im
-ages/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio1_0_20.pdf, page is rotated 
-90 degrees> <./images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_r_ratio_0_20.pdf
-, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP1_WTA/LEP1_WT
-A_ratio2_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelatio
-n/LEP1_WTA/LEP1_WTA_ratio1_20_30.pdf, page is rotated 90 degrees> <./images/Two
-ParticleCorrelation/LEP1_WTA/LEP1_WTA_r_ratio_20_30.pdf, page is rotated 90 deg
-rees> <./images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio2_30_999.pdf, pag
-e is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_rat
-io1_30_999.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LE
-P1_WTA/LEP1_WTA_r_ratio_30_999.pdf, page is rotated 90 degrees>] [19 <./images/
-TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_0_20.pdf, page is rotated 90 
-degrees> <./images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_0_20.pdf, 
-page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEA
-M_r_ratio_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelatio
-n/LEP2_BEAM/LEP2_BEAM_ratio2_20_30.pdf, page is rotated 90 degrees> <./images/T
-woParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_20_30.pdf, page is rotated 90 
-degrees> <./images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio_20_30.pdf
-, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP2_BEAM/LEP2_B
-EAM_ratio2_30_999.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrela
-tion/LEP2_BEAM/LEP2_BEAM_ratio1_30_999.pdf, page is rotated 90 degrees> <./imag
-es/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio_30_999.pdf, page is rotat
-ed 90 degrees>] [20 <./images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ra
-tio2_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP
-2_THRUST/LEP2_THRUST_ratio1_0_20.pdf, page is rotated 90 degrees> <./images/Two
-ParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_0_20.pdf, page is rotated 9
-0 degrees> <./images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_20_3
-0.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP2_THRUST
-/LEP2_THRUST_ratio1_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticl
-eCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_20_30.pdf, page is rotated 90 degr
-ees> <./images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio2_30_999.pdf
-, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP2_THRUST/LEP2
-_THRUST_ratio1_30_999.pdf, page is rotated 90 degrees> <./images/TwoParticleCor
-relation/LEP2_THRUST/LEP2_THRUST_r_ratio_30_999.pdf, page is rotated 90 degrees
->]) (./summary.tex) (./main.bbl [21 <./images/TwoParticleCorrelation/LEP2_WTA/L
-EP2_WTA_ratio2_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorre
-lation/LEP2_WTA/LEP2_WTA_ratio1_0_20.pdf, page is rotated 90 degrees> <./images
-/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_r_ratio_0_20.pdf, page is rotated 90 
-degrees> <./images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio2_20_30.pdf, p
-age is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_r
-atio1_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/L
-EP2_WTA/LEP2_WTA_r_ratio_20_30.pdf, page is rotated 90 degrees> <./images/TwoPa
-rticleCorrelation/LEP2_WTA/LEP2_WTA_ratio2_30_999.pdf, page is rotated 90 degre
-es> <./images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio1_30_999.pdf, page 
-is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_r_rat
-io_30_999.pdf, page is rotated 90 degrees>] [22 <./images/TwoParticleCorrelatio
-n/PYTHIA8_WTA/PYTHIA8_WTA_ratio2_0_20.pdf, page is rotated 90 degrees> <./image
-s/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio1_0_20.pdf, page is rotat
-ed 90 degrees> <./images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_r_ratio
-_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/PYTHIA8
-_WTA/PYTHIA8_WTA_ratio2_20_30.pdf, page is rotated 90 degrees> <./images/TwoPar
-ticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio1_20_30.pdf, page is rotated 90 d
-egrees> <./images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_r_ratio_20_30.
-pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/PYTHIA8_WTA/P
-YTHIA8_WTA_ratio2_30_999.pdf, page is rotated 90 degrees> <./images/TwoParticle
-Correlation/PYTHIA8_WTA/PYTHIA8_WTA_ratio1_30_999.pdf, page is rotated 90 degre
-es> <./images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_r_ratio_30_999.pdf
-, page is rotated 90 degrees>] [23 <./images/TwoParticleCorrelation/PYTHIA8_Rop
-eWalk_WTA/PYTHIA8_RopeWalk_WTA_ratio2_0_20.pdf, page is rotated 90 degrees> <./
-images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_ratio1_
-0_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/PYTHIA8_
-RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_r_ratio_0_20.pdf, page is rotated 90 degrees>
- <./images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_rat
-io2_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/PYT
-HIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_ratio1_20_30.pdf, page is rotated 90 deg
-rees> <./images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WT
-A_r_ratio_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelati
-on/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_ratio2_30_999.pdf, page is rotated
- 90 degrees> <./images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_Rope
-Walk_WTA_ratio1_30_999.pdf, page is rotated 90 degrees> <./images/TwoParticleCo
-rrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_r_ratio_30_999.pdf, page is
- rotated 90 degrees>] [24] [25]) [26] (./main.aux)
+) (./systematics.tex) (./result.tex [27 <./images/TwoParticleCorrelation/201801
+26/WTA/LEP_WTA_longRangeYield1_0_20.pdf, page is rotated 90 degrees> <./images/
+TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield2_0_20.pdf, page is r
+otated 90 degrees> <./images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_lo
+ngRangeYield1_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrel
+ation/20180126/WTA/PYTHIA8_WTA_longRangeYield2_0_20.pdf, page is rotated 90 deg
+rees> <./images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield1_20_
+30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/W
+TA/LEP_WTA_longRangeYield2_20_30.pdf, page is rotated 90 degrees> <./images/Two
+ParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield1_20_30.pdf, page is
+ rotated 90 degrees> <./images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_
+longRangeYield2_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCor
+relation/20180126/WTA/LEP_WTA_longRangeYield1_30_999.pdf, page is rotated 90 de
+grees> <./images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield2_30
+_999.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/20180126
+/WTA/PYTHIA8_WTA_longRangeYield1_30_999.pdf, page is rotated 90 degrees> <./ima
+ges/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield2_30_999.pdf,
+ page is rotated 90 degrees>] [28 <./images/TwoParticleCorrelation/LEP1_BEAM/LE
+P1_BEAM_ratio2_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorre
+lation/LEP1_BEAM/LEP1_BEAM_ratio1_0_20.pdf, page is rotated 90 degrees> <./imag
+es/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_r_ratio_0_20.pdf, page is rotated
+ 90 degrees> <./images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_20_30.
+pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP1_BEAM/LEP
+1_BEAM_ratio1_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorre
+lation/LEP1_BEAM/LEP1_BEAM_r_ratio_20_30.pdf, page is rotated 90 degrees> <./im
+ages/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio2_30_999.pdf, page is rota
+ted 90 degrees> <./images/TwoParticleCorrelation/LEP1_BEAM/LEP1_BEAM_ratio1_30_
+999.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP1_BEAM
+/LEP1_BEAM_r_ratio_30_999.pdf, page is rotated 90 degrees>] [29 <./images/TwoPa
+rticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio2_0_20.pdf, page is rotated 90 d
+egrees> <./images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_0_20.pd
+f, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP1_THRUST/LEP
+1_THRUST_r_ratio_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCor
+relation/LEP1_THRUST/LEP1_THRUST_ratio2_20_30.pdf, page is rotated 90 degrees> 
+<./images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_20_30.pdf, page
+ is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUS
+T_r_ratio_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelati
+on/LEP1_THRUST/LEP1_THRUST_ratio2_30_999.pdf, page is rotated 90 degrees> <./im
+ages/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_ratio1_30_999.pdf, page is 
+rotated 90 degrees> <./images/TwoParticleCorrelation/LEP1_THRUST/LEP1_THRUST_r_
+ratio_30_999.pdf, page is rotated 90 degrees>] [30 <./images/TwoParticleCorrela
+tion/LEP1_WTA/LEP1_WTA_ratio2_0_20.pdf, page is rotated 90 degrees> <./images/T
+woParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio1_0_20.pdf, page is rotated 90 deg
+rees> <./images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_r_ratio_0_20.pdf, page
+ is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_rati
+o2_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP1
+_WTA/LEP1_WTA_ratio1_20_30.pdf, page is rotated 90 degrees> <./images/TwoPartic
+leCorrelation/LEP1_WTA/LEP1_WTA_r_ratio_20_30.pdf, page is rotated 90 degrees> 
+<./images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio2_30_999.pdf, page is r
+otated 90 degrees> <./images/TwoParticleCorrelation/LEP1_WTA/LEP1_WTA_ratio1_30
+_999.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP1_WTA
+/LEP1_WTA_r_ratio_30_999.pdf, page is rotated 90 degrees>]) (./summary.tex)
+(./main.bbl [31 <./images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_0_2
+0.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP2_BEAM/L
+EP2_BEAM_ratio1_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorr
+elation/LEP2_BEAM/LEP2_BEAM_r_ratio_0_20.pdf, page is rotated 90 degrees> <./im
+ages/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio2_20_30.pdf, page is rotat
+ed 90 degrees> <./images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_20_3
+0.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP2_BEAM/L
+EP2_BEAM_r_ratio_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCo
+rrelation/LEP2_BEAM/LEP2_BEAM_ratio2_30_999.pdf, page is rotated 90 degrees> <.
+/images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_ratio1_30_999.pdf, page is r
+otated 90 degrees> <./images/TwoParticleCorrelation/LEP2_BEAM/LEP2_BEAM_r_ratio
+_30_999.pdf, page is rotated 90 degrees>] [32 <./images/TwoParticleCorrelation/
+LEP2_THRUST/LEP2_THRUST_ratio2_0_20.pdf, page is rotated 90 degrees> <./images/
+TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio1_0_20.pdf, page is rotated
+ 90 degrees> <./images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_0
+_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP2_THRU
+ST/LEP2_THRUST_ratio2_20_30.pdf, page is rotated 90 degrees> <./images/TwoParti
+cleCorrelation/LEP2_THRUST/LEP2_THRUST_ratio1_20_30.pdf, page is rotated 90 deg
+rees> <./images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_20_30.pd
+f, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP2_THRUST/LEP
+2_THRUST_ratio2_30_999.pdf, page is rotated 90 degrees> <./images/TwoParticleCo
+rrelation/LEP2_THRUST/LEP2_THRUST_ratio1_30_999.pdf, page is rotated 90 degrees
+> <./images/TwoParticleCorrelation/LEP2_THRUST/LEP2_THRUST_r_ratio_30_999.pdf, 
+page is rotated 90 degrees>] [33 <./images/TwoParticleCorrelation/LEP2_WTA/LEP2
+_WTA_ratio2_0_20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelat
+ion/LEP2_WTA/LEP2_WTA_ratio1_0_20.pdf, page is rotated 90 degrees> <./images/Tw
+oParticleCorrelation/LEP2_WTA/LEP2_WTA_r_ratio_0_20.pdf, page is rotated 90 deg
+rees> <./images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio2_20_30.pdf, page
+ is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_rati
+o1_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/LEP2
+_WTA/LEP2_WTA_r_ratio_20_30.pdf, page is rotated 90 degrees> <./images/TwoParti
+cleCorrelation/LEP2_WTA/LEP2_WTA_ratio2_30_999.pdf, page is rotated 90 degrees>
+ <./images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_ratio1_30_999.pdf, page is 
+rotated 90 degrees> <./images/TwoParticleCorrelation/LEP2_WTA/LEP2_WTA_r_ratio_
+30_999.pdf, page is rotated 90 degrees>] [34 <./images/TwoParticleCorrelation/P
+YTHIA8_WTA/PYTHIA8_WTA_ratio2_0_20.pdf, page is rotated 90 degrees> <./images/T
+woParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio1_0_20.pdf, page is rotated 
+90 degrees> <./images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_r_ratio_0_
+20.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/PYTHIA8_WT
+A/PYTHIA8_WTA_ratio2_20_30.pdf, page is rotated 90 degrees> <./images/TwoPartic
+leCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_ratio1_20_30.pdf, page is rotated 90 degr
+ees> <./images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_r_ratio_20_30.pdf
+, page is rotated 90 degrees> <./images/TwoParticleCorrelation/PYTHIA8_WTA/PYTH
+IA8_WTA_ratio2_30_999.pdf, page is rotated 90 degrees> <./images/TwoParticleCor
+relation/PYTHIA8_WTA/PYTHIA8_WTA_ratio1_30_999.pdf, page is rotated 90 degrees>
+ <./images/TwoParticleCorrelation/PYTHIA8_WTA/PYTHIA8_WTA_r_ratio_30_999.pdf, p
+age is rotated 90 degrees>] [35 <./images/TwoParticleCorrelation/PYTHIA8_RopeWa
+lk_WTA/PYTHIA8_RopeWalk_WTA_ratio2_0_20.pdf, page is rotated 90 degrees> <./ima
+ges/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_ratio1_0_2
+0.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/PYTHIA8_Rop
+eWalk_WTA/PYTHIA8_RopeWalk_WTA_r_ratio_0_20.pdf, page is rotated 90 degrees> <.
+/images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_ratio2
+_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/PYTHIA
+8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_ratio1_20_30.pdf, page is rotated 90 degree
+s> <./images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_r
+_ratio_20_30.pdf, page is rotated 90 degrees> <./images/TwoParticleCorrelation/
+PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_ratio2_30_999.pdf, page is rotated 90
+ degrees> <./images/TwoParticleCorrelation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWal
+k_WTA_ratio1_30_999.pdf, page is rotated 90 degrees> <./images/TwoParticleCorre
+lation/PYTHIA8_RopeWalk_WTA/PYTHIA8_RopeWalk_WTA_r_ratio_30_999.pdf, page is ro
+tated 90 degrees>] [36]) [37] (./main.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 14218 strings out of 492995
- 277504 string characters out of 6132704
- 310451 words of memory out of 5000000
- 17518 multiletter control sequences out of 15000+600000
- 15869 words of font info for 54 fonts, out of 8000000 for 9000
+ 14973 strings out of 492995
+ 328703 string characters out of 6132704
+ 316439 words of memory out of 5000000
+ 18129 multiletter control sequences out of 15000+600000
+ 15517 words of font info for 53 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 44i,12n,42p,10374b,377s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 44i,11n,42p,10374b,381s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
@@ -2094,12 +4732,11 @@ cal/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local
 texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/te
 xlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/tex
 live/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texl
-ive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti8.pfb></usr/local/texliv
-e/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on main.pdf (26 pages, 4183114 bytes).
+ive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on main.pdf (37 pages, 10450909 bytes).
 PDF statistics:
- 4298 PDF objects out of 5155 (max. 8388607)
- 1793 compressed objects within 18 object streams
+ 10694 PDF objects out of 12825 (max. 8388607)
+ 4408 compressed objects within 45 object streams
  0 named destinations out of 1000 (max. 500000)
- 476 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1196 words of extra memory for PDF output out of 10000 (max. 10000000)
 

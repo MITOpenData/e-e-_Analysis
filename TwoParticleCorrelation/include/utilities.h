@@ -157,5 +157,5 @@ void getLongRangeYield(Selection s, TH2F * h, TH1F * g){
         g->SetBinError(i+1,TMath::Power(err2,0.5));
     }
     //scale by bin area to get yield
-    g->Scale(2*binArea);//scale by 2 because we only integrated the positive side, adn there is also yield in the negative eta side
+    g->Scale(2*s.getDifferential());//scale by 2 because we only integrated the positive side, adn there is also yield in the negative eta side
 }

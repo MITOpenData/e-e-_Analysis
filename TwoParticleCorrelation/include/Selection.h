@@ -29,11 +29,11 @@ class Selection
         // Initial Setup
         int side_tree = 0;  // 0 t, 1 BoostedWTAR8Evt,
         int jttree = 0; // 0 ak4ESchemeJetTree, 1 ak4WTAmodpSchemeJetTree, 2 ak8ESchemeJetTree, 3 ak8WTAmodpSchemeJetTree
-        bool doThrust = false;  // used for determining thrust/beam angles to use in filling histograms
+        bool doThrust = true;  // used for determining thrust/beam angles to use in filling histograms
         bool donTrkThrust = false; // used for calculation of nTrk (true = Beam)
         bool doBelle = false;
         bool doTheta = false;
-        bool doPP = true;
+        bool doPP = false;
         bool doParallel = true;
         // for testing purposes
         bool doOneEvent = false;     int numEvents = 50000;

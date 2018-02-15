@@ -90,6 +90,8 @@ void TPCPlots(const std::string inFileName1, const std::string inFileName2, cons
   TH1D * nEvtBkgHist2 = (TH1D*)f2->Get("nEvtSigHisto"); 
 
   Float_t etaPlotRange = s.getEtaPlotRange();
+  double etaranges[8]={2,10,2.2,10,2.4,10,2.6,10};
+  Int_t minbin,maxbin;
   for(int i = 0; i<s.nMultBins; i++)
   {
     //if(i>1) continue;
@@ -97,24 +99,57 @@ void TPCPlots(const std::string inFileName1, const std::string inFileName2, cons
     sig1[i]->Scale(1./nEvtSigHist1->GetBinContent(i+1)); // plus 1 because 0 is the underflow bin
     bkg1[i] = (TH2F*)f1->Get(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
     bkg1[i]->Scale(1./nEvtBkgHist1->GetBinContent(i+1));
-    ratio1[i] = new TH2F(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+    ratio1[i] = new TH2F(Form("ratio2PC1_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
     ratio1[i]->Sumw2();
-    longRangeYield1[i] = new TH1F(Form("longRangeYield_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#phi;Y(#Delta#Phi)",s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+    longRangeYield1[i] = new TH1F(Form("longRangeYield1_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#phi;Y(#Delta#Phi)",s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
     longRangeYield1[i]->Sumw2();
     calculateRatio(sig1[i],bkg1[i],ratio1[i]);
-    getLongRangeYield(s,ratio1[i],longRangeYield1[i]);
+    //getLongRangeYield(s,ratio1[i],longRangeYield1[i]);
 
+      // For performing 1D projection
+    TH1D*h_deltaphi1[7];
+  
+    for (Int_t j=0;j<7;j =j+2)
+    {
+        // if (i==0) h_deltaphi[i]->SetFillColor(kRed);
+        minbin =  ratio1[i]->GetXaxis()->FindBin(etaranges[j]);
+        maxbin =  ratio1[i]->GetXaxis()->FindBin(etaranges[j+1]);
+        h_deltaphi1[j]  = (TH1D*) ratio1[i]->ProjectionY(Form("h_deltaphi%d",j),minbin,maxbin);
+        //h_deltaphi[i]->Sumw2();
+        h_deltaphi1[j]->SetName(Form("h_deltaphi_%d",j));
+        h_deltaphi1[j]->GetXaxis()->SetTitle("#Delta#phi");
+        if (s.doTheta)  h_deltaphi1[j]->SetTitle(Form("#Delta#phi, #Delta#theta (%f, %f), Multipliplicity (%d, %d)",etaranges[j],etaranges[j+1], s.multBinsLow[i],s.multBinsHigh[i]));
+        else          h_deltaphi1[j]->SetTitle(Form("#Delta#phi, #Delta#eta (%f, %f), Multipliplicity (%d, %d)",etaranges[j],etaranges[j+1], s.multBinsLow[i],s.multBinsHigh[i]));
+        h_deltaphi1[j]->GetYaxis()->SetTitle("Y(#Delta#phi)");
+        h_deltaphi1[j]->Scale(1./(maxbin-minbin+1));
+    }
     sig2[i] = (TH2F*)f2->Get(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
     sig2[i]->Scale(1./nEvtSigHist2->GetBinContent(i+1));
     bkg2[i] = (TH2F*)f2->Get(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
     bkg2[i]->Scale(1./nEvtBkgHist2->GetBinContent(i+1));
-    ratio2[i] = new TH2F(Form("ratio2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+    ratio2[i] = new TH2F(Form("ratio2PC2_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
     ratio2[i]->Sumw2();
-    longRangeYield2[i] = new TH1F(Form("longRangeYield_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#phi;Y(#Delta#Phi)",s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+    longRangeYield2[i] = new TH1F(Form("longRangeYield2_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#phi;Y(#Delta#Phi)",s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
     longRangeYield2[i]->Sumw2();
     calculateRatio(sig2[i],bkg2[i],ratio2[i]);
-    getLongRangeYield(s,ratio2[i],longRangeYield2[i]);
+    //getLongRangeYield(s,ratio2[i],longRangeYield2[i]);
 
+     // For performing 1D projection
+    TH1D*h_deltaphi2[7];
+    for (Int_t j=0;j<7;j =j+2)
+    {
+        // if (i==0) h_deltaphi[i]->SetFillColor(kRed);
+        minbin =  ratio2[i]->GetXaxis()->FindBin(etaranges[j]);
+        maxbin =  ratio2[i]->GetXaxis()->FindBin(etaranges[j+1]);
+        h_deltaphi2[j]  = (TH1D*) ratio2[i]->ProjectionY(Form("h_deltaphi%d",j),minbin,maxbin);
+        //h_deltaphi[i]->Sumw2();
+        h_deltaphi2[j]->SetName(Form("h_deltaphi_%d",j));
+        h_deltaphi2[j]->GetXaxis()->SetTitle("#Delta#phi");
+        if (s.doTheta)  h_deltaphi2[j]->SetTitle(Form("#Delta#phi, #Delta#theta (%f, %f), Multipliplicity (%d, %d)",etaranges[j],etaranges[j+1], s.multBinsLow[i],s.multBinsHigh[i]));
+        else          h_deltaphi2[j]->SetTitle(Form("#Delta#phi, #Delta#eta (%f, %f), Multipliplicity (%d, %d)",etaranges[j],etaranges[j+1], s.multBinsLow[i],s.multBinsHigh[i]));
+        h_deltaphi2[j]->GetYaxis()->SetTitle("Y(#Delta#phi)");
+        h_deltaphi2[j]->Scale(1./(maxbin-minbin+1));
+    }
     r_sig[i] = (TH2F*)sig1[i]->Clone(Form("%s_r_signal2PC_%d_%d",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));    r_sig[i]->Divide(sig2[i]);
     r_bkg[i] = (TH2F*)bkg1[i]->Clone(Form("%s_r_bkgrnd2PC_%d_%d",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));    r_bkg[i]->Divide(bkg2[i]);
     r_ratio[i] = (TH2F*)ratio1[i]->Clone(Form("%s_r_ratio2PC_%d_%d",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));   r_ratio[i]->Divide(ratio2[i]);
@@ -215,24 +250,68 @@ void TPCPlots(const std::string inFileName1, const std::string inFileName2, cons
     c1->SaveAs(Form("../pdfDir/%s_r_ratio_%d_%d.pdf",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
     c1->SaveAs(Form("../pdfDir/%s_r_ratio_%d_%d.C",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
       
+    TCanvas * c2 = new TCanvas("c2","dphi",600,600);
+    c2->Divide(2,2);
+    
+    // Fourier decomposition
+    TF1 *f1 = new TF1("f1","[0]*(1+2*([1]*cos(1*x)+[2]*cos(2*x)+[3]*cos(3*x)+[4]*cos(4*x)+[5]*cos(5*x)+[6]*cos(6*x)))");
+    for (Int_t i=0;i<4;i++) {
+      c2->cd(i+1);
+      h_deltaphi1[i*2]->Draw();
+      if (i==0){
+         h_deltaphi1[0]->Fit("f1");
+         h_deltaphi1[0]->Fit("f1");
+      h_deltaphi1[0]->SetStats(0);
+        }
+      }
+      c2->SaveAs(Form("../pdfDir/%s_longRangeYield1_%d_%d.png",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+      c2->SaveAs(Form("../pdfDir/%s_longRangeYield1_%d_%d.pdf",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+      c2->SaveAs(Form("../pdfDir/%s_longRangeYield1_%d_%d.C",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+
+      TF1 *f2 = new TF1("f2","[0]*(1+2*([1]*cos(1*x)+[2]*cos(2*x)+[3]*cos(3*x)+[4]*cos(4*x)+[5]*cos(5*x)+[6]*cos(6*x)))");
+      for (Int_t i=0;i<4;i++) {
+      c2->cd(i+1);
+      h_deltaphi1[i*2]->Draw();
+      if (i==0){
+         h_deltaphi2[0]->Fit("f1");
+         h_deltaphi2[0]->Fit("f1");
+      h_deltaphi2[0]->SetStats(0);
+        }
+      }
+      c2->SaveAs(Form("../pdfDir/%s_longRangeYield2_%d_%d.png",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+      c2->SaveAs(Form("../pdfDir/%s_longRangeYield2_%d_%d.pdf",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+      c2->SaveAs(Form("../pdfDir/%s_longRangeYield2_%d_%d.C",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+/*
     formatTH1F(longRangeYield1[i],1.5,1.5);
     longRangeYield1[i]->Draw();
     l->Draw("same");
-    c1->SaveAs(Form("../pdfDir/%s_r_longRangeYield1_%d_%d.png",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
-    c1->SaveAs(Form("../pdfDir/%s_r_longRangeYield1_%d_%d.pdf",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
-    c1->SaveAs(Form("../pdfDir/%s_r_longRangeYield1_%d_%d.C",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_longRangeYield1_%d_%d.png",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_longRangeYield1_%d_%d.pdf",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_longRangeYield1_%d_%d.C",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
 
     formatTH1F(longRangeYield2[i],1.5,1.5);
     longRangeYield2[i]->Draw();
     l->Draw("same");
-    c1->SaveAs(Form("../pdfDir/%s_r_longRangeYield2_%d_%d.png",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
-    c1->SaveAs(Form("../pdfDir/%s_r_longRangeYield2_%d_%d.pdf",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
-    c1->SaveAs(Form("../pdfDir/%s_r_longRangeYield2_%d_%d.C",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
-
-
-
+    c1->SaveAs(Form("../pdfDir/%s_longRangeYield2_%d_%d.png",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_longRangeYield2_%d_%d.pdf",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+    c1->SaveAs(Form("../pdfDir/%s_longRangeYield2_%d_%d.C",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
+*/
     delete c1;
     delete l;
+
+    delete sig1[i];
+    delete sig2[i];
+    delete bkg1[i];
+    delete bkg2[i];
+    delete ratio1[i];
+    delete ratio2[i];
+    delete r_sig[i];
+    delete r_bkg[i];
+    delete r_ratio[i];
+    delete longRangeYield1[i];
+    delete longRangeYield2[i];
+    delete r_longRangeYield[i];
+    delete c2;
   }
 
   TH1F *eta1, *theta1, *pt1, *phi1, *TTheta1, *TPhi1;
