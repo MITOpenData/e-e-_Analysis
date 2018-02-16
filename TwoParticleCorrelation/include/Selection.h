@@ -24,70 +24,100 @@ class Selection
 {
     public:
     
-        Int_t experiment = 0; // 0 ALEPH , 1 DELPHI, 2 BELLE, 3 CMS pp
-    
         // Initial Setup
-        int side_tree = 0;  // 0 t, 1 BoostedWTAR8Evt,
-        int jttree = 0; // 0 ak4ESchemeJetTree, 1 ak4WTAmodpSchemeJetTree, 2 ak8ESchemeJetTree, 3 ak8WTAmodpSchemeJetTree
-        bool doThrust = true;  // used for determining thrust/beam angles to use in filling histograms
-        bool donTrkThrust = false; // used for calculation of nTrk (true = Beam)
-        bool doBelle = false;
-        bool doTheta = false;
-        bool doPP = false;
         bool doParallel = true;
-        // for testing purposes
         bool doOneEvent = false;     int numEvents = 50000;
-    
-        // event cuts
+        bool doBelle = false;
+        Int_t experiment = 0; // 0 ALEPH , 1 DELPHI, 2 BELLE, 3 CMS pp
+        Int_t jttree = 0; // 0 ak4ESchemeJetTree, 1 ak4WTAmodpSchemeJetTree, 2 ak8ESchemeJetTree, 3 ak8WTAmodpSchemeJetTree
+        Int_t nbin = 20;
+        Int_t bkgrd_runs = 1;
+        enum SIMPLEPID {BELLE_PHOTON, BELLE_ELECTRON, BELLE_PION, BELLE_MUON, BELLE_KAON, BELLE_PROTON};    // BELLE Particle Definition
+        enum SIMPLEPWFLAG {ALEPH_CHARGED_TRACK, ALEPH_CHARGED_LEPTONS1, ALEPH_CHARGED_LEPTONS2, ALEPH_V0, ALEPH_PHOTON, ALEPH_NEUTRAL_HADRON};  // ALEPH Particle Flow Classification
+
+        /* Detector Specific Cuts */
+        
+        // From 1990 "Properties of Hadronic Events in e+e- Annihilation at sqrt(s) = 91 GeV" ALEPH Collaboration paper
+            // Track Cuts
+        bool doNTPC = 0;    Int_t nTPCMin = 4;  Int_t nTPCMax = 999;
+        bool doTheta = false;   Float_t thetaMin = 20;  Float_t thetaMax = 160;  // measured in degrees 
+        Float_t pMin = 0.2; // measured in GeV
+        Float_t dxyCut = 3;     Float_t dzCut = 5;  // measured in cm
+            // Event Cuts
+        Float_t TotalChrgEnergyMin = 15; // measured in GeV
+        Float_t nTrkMin = 5;
+        Float_t SThetaMin = 35;  Float_t SThetaMax = 145;  // measured in degrees
+
+        /* Frame Dependent Cuts */
+
+        bool domissPCut = false;    // measured in GeV
+        bool doWW = false;  // impose WW cut
+        bool doMixedMultCut = false; // cut on |nTrk - nTrkMix|
+        // jet cuts
+        bool doAjCut = false;   Float_t AjCut = 0.1;
+        bool do3jetEvtCut = false;  Float_t thirdJetCut = 0.03;
+        bool doMixedJetCut = false;
+        Float_t fillAj = 0.0; // used for plotting h_Aj
+
+        // Beam Axis
+        static const Int_t nptBins = 2;
+        Float_t ptBinsLow[nptBins]  = {0.4, 1.0};  // measured in GeV
+        Float_t ptBinsHigh[nptBins] = {100, 3.0};
+        static const Int_t netaBins = 2;
+        Float_t etaBinsLow[netaBins]  = {1.6, 1.8};
         Float_t missPCut = 20;
-        bool domissPCut = false;
-        bool doWW = false;
+        Float_t etaPlotRange = 3.2;
+
+        Float_t ptMin = 0.4; Float_t ptMax = 100.0;
+        Float_t etaCut = 1.8;
+    
+        // Thrust Axis
+        bool doThrust = false;  bool donTrkThrust = false; // false = use beam axis for nTrk calculation
+        static const Int_t nptBins_wrtThr = 2;
+        Float_t ptBinsLow_wrtThr[nptBins_wrtThr]  = {0.4, 1.0};  // measured in GeV
+        Float_t ptBinsHigh_wrtThr[nptBins_wrtThr] = {100, 3.0};
+        static const Int_t netaBins_wrtThr = 2;
+        Float_t etaBinsLow_wrtThr[netaBins_wrtThr]  = {4.5,5.0};
+        Float_t missPCut_wrtThr = 20;
+        Float_t etaPlotRange_wrtThr = 6.0;
+
+        Float_t ptMin_wrtThr = 0.4; Float_t ptMax_wrtThr = 100.0; // measured in GeV
+        Float_t etaCut_wrtThr = 5.0;
+
+        // WTA Axis
+        bool doWTA = false;
+        static const Int_t nptBins_wrtWTA = 2;
+        Float_t ptBinsLow_wrtWTA[nptBins_wrtWTA]  = {0.4, 1.0};  // measured in GeV
+        Float_t ptBinsHigh_wrtWTA[nptBins_wrtWTA] = {100, 3.0};
+        static const Int_t netaBins_wrtWTA = 2;
+        Float_t etaBinsLow_wrtWTA[netaBins_wrtWTA]  = {4.5,5.0};
+        Float_t missPCut_wrtWTA = 20;
+        Float_t etaPlotRange_wrtWTA = 6.0;
+
+        /* Independent Cuts */
         static const Int_t nMultBins = 3;
         Int_t multBinsLow[nMultBins]  = {0 , 20, 30};
         Int_t multBinsHigh[nMultBins] = {20, 30, 999};
-        bool doMixedMultCut = false;
-    
-        // particle cuts
-        Float_t ptMin = 0.4;    Float_t ptMin_wrtThr = 0.4;
-        Float_t ptMax = 100.0;  Float_t ptMax_wrtThr = 100.0;
-        Float_t etaCut = 1.8;   Float_t etaCut_wrtThr = 5.0;
-        Float_t thetaMin = 20;
-        Float_t thetaMax = 160;
-        Float_t pMin = 0.2;
-        Float_t dxyCut = 3;
-        Float_t dzCut = 5;
-        Int_t nTPCMin = 4; // completely inclusive, maybe tighten this
-        Int_t nTPCMax = 100;
-        bool doNTPC = 0;
-    
-        // jet cuts
-        Float_t AjCut = 0.1;
-        Float_t thirdJetCut = 0.03;
-        bool doAjCut = false;
-        bool do3jetEvtCut = false;
-        bool doMixedJetCut = false;
-    
-        // plotting
-        Float_t etaPlotRange = 3.2;     Float_t etaPlotRange_wrtThr = 6.0; //this gets multiplied by 2
-        Float_t dEtaBins = 20;//keep even
-        Float_t dPhiBins = 20;//keep factor of 4
-        Float_t differential = (2*etaPlotRange/(float)dEtaBins)*(2*TMath::Pi()/(float)dPhiBins);
-        Float_t fillAj = 0.0; // used for plotting h_Aj
-        Float_t dEtaRangeToIntegrate[2] = {2.0,3.6}; //try to make this correspond with bin edges based on above parameters
-    
-        //Int_t maxevt = ;
-        Int_t nbin = 20;
-        Int_t bkgrd_runs = 1; // decide if we should actually be using this
+
+        /* Plotting */
+        Float_t dEtaBins = 20; //keep even
+        Float_t dPhiBins = 20; //keep factor of 4
+        Float_t dEtaRangeToIntegrate[2] = {2.0,3.6}; //used for Austin's implementation of getLongRangeYield(.) in utilities.h
     
         //kinematics (if trig != assoc cuts, make sure doExcludeNTrigLT2 is set to false)
-        float trigPt[2] = {0.4,100};
-        float assocPt[2] = {0.4,100};
-        float nTrkPt[2] = {0.4,100};
+        //float trigPt[2] = {0.4,100};
+        //float assocPt[2] = {0.4,100};
+        //float nTrkPt[2] = {0.4,100};
     
-        // BELLE Particle Definition
-        enum SIMPLEPID {BELLE_PHOTON, BELLE_ELECTRON, BELLE_PION, BELLE_MUON, BELLE_KAON, BELLE_PROTON};
-        // ALEPH Particle Flow Classification
-        enum SIMPLEPWFLAG {ALEPH_CHARGED_TRACK, ALEPH_CHARGED_LEPTONS1, ALEPH_CHARGED_LEPTONS2, ALEPH_V0, ALEPH_PHOTON, ALEPH_NEUTRAL_HADRON};
+        /* pp Cross-Check */
+        bool doPP = false;
+        static const Int_t nptBins_pp = 2;
+        Float_t ptBinsLow_pp[nptBins_wrtWTA]  = {0.4, 1.0};  // measured in GeV
+        Float_t ptBinsHigh_pp[nptBins_wrtWTA] = {100, 3.0};
+        static const Int_t netaBins_pp = 2;
+        Float_t etaBinsLow_pp[netaBins_wrtWTA]  = {4.5,5.0};
+        Float_t missPCut_pp = 20;
+        Float_t etaPlotRange_pp = 6.0;
     
         Selection();
         Float_t getEtaPlotRange();
@@ -108,23 +138,26 @@ Selection::Selection()
         multBinsLow[2] = 110;
         multBinsHigh[1] = 110;
         ptMax = 3.0;
-        side_tree = 0;  // 0 t, 1 BoostedWTAR8Evt,
+        doWTA = false;  // 0 t, 1 BoostedWTAR8Evt,
         jttree = 0; // 0 ak4ESchemeJetTree, 1 ak4WTAmodpSchemeJetTree, 2 ak8ESchemeJetTree, 3 ak8WTAmodpSchemeJetTree
         doThrust = false;  // used for determining thrust/beam angles to use in filling histograms
         donTrkThrust = false; // used for calculation of nTrk (true = Beam)
     }
+    if(doWTA) doThrust = true;
     return;
 }
 
 Float_t Selection::getEtaPlotRange()
 {
     if(doThrust) return etaPlotRange_wrtThr;
+    if(doWTA) return etaPlotRange_wrtWTA;
     return etaPlotRange;
 }
 
 Float_t Selection::getDifferential()
 {
     if(doThrust) return (2*etaPlotRange_wrtThr/(float)dEtaBins)*(2*TMath::Pi()/(float)dPhiBins);
+    if(doWTA) return (2*etaPlotRange_wrtWTA/(float)dEtaBins)*(2*TMath::Pi()/(float)dPhiBins);
     return (2*etaPlotRange/(float)dEtaBins)*(2*TMath::Pi()/(float)dPhiBins);
 }
 // return 1 if the track passes the selection

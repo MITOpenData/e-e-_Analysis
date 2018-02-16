@@ -118,19 +118,19 @@ int ridge_check_parallel
     // files and variables for input
     // get the correct tree for the analysis
     std::string sideTree = "t";
-    if (s.side_tree == 1) sideTree = "BoostedWTAR8Evt";
+    if (s.doWTA) sideTree = "BoostedWTAR8Evt";
     
     TChain * t = new TChain("t");       t->Add(inFileName.c_str());
     TChain * side_t = new TChain(sideTree.c_str());       side_t->Add(inFileName.c_str());
     TChain * jt = new TChain(jtTreeName.c_str());       jt->Add(inFileName.c_str());
 
-    TPCNtupleData data(s.doBelle, s.doThrust, s.side_tree);      setupTPCTree(t,side_t,jt,data);       data.setTPCTreeStatus(t,side_t);
+    TPCNtupleData data(s.doBelle, s.doThrust, s.doWTA);      setupTPCTree(t,side_t,jt,data);       data.setTPCTreeStatus(t,side_t);
     
     TChain * t_mix = new TChain("t");       t_mix->Add(inFileName.c_str());
     TChain * side_t_mix = new TChain(sideTree.c_str());       side_t_mix->Add(inFileName.c_str());
     TChain * jt_mix = new TChain(jtTreeName.c_str());       jt_mix->Add(inFileName.c_str());
     
-    TPCNtupleData mix(s.doBelle, s.doThrust, s.side_tree);       setupTPCTree(t_mix,side_t_mix,jt_mix,mix);        mix.setTPCTreeStatus(t_mix,side_t_mix);
+    TPCNtupleData mix(s.doBelle, s.doThrust, s.doWTA);       setupTPCTree(t_mix,side_t_mix,jt_mix,mix);        mix.setTPCTreeStatus(t_mix,side_t_mix);
     
     // analysis
     Int_t nevent = (Int_t)t->GetEntries();
