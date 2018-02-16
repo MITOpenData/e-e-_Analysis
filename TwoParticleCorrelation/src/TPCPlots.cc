@@ -96,8 +96,10 @@ void TPCPlots(const std::string inFileName1, const std::string inFileName2, cons
   {
     //if(i>1) continue;
     sig1[i] = (TH2F*)f1->Get(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
+    sig1[i]->Sumw2();
     sig1[i]->Scale(1./nEvtSigHist1->GetBinContent(i+1)); // plus 1 because 0 is the underflow bin
     bkg1[i] = (TH2F*)f1->Get(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
+    bkg1[i]->Sumw2();
     bkg1[i]->Scale(1./nEvtBkgHist1->GetBinContent(i+1));
     ratio1[i] = new TH2F(Form("ratio2PC1_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
     ratio1[i]->Sumw2();
@@ -115,17 +117,19 @@ void TPCPlots(const std::string inFileName1, const std::string inFileName2, cons
         minbin =  ratio1[i]->GetXaxis()->FindBin(etaranges[j]);
         maxbin =  ratio1[i]->GetXaxis()->FindBin(etaranges[j+1]);
         h_deltaphi1[j]  = (TH1D*) ratio1[i]->ProjectionY(Form("h_deltaphi%d",j),minbin,maxbin);
-        //h_deltaphi[i]->Sumw2();
+        h_deltaphi1[j]->Sumw2();
         h_deltaphi1[j]->SetName(Form("h_deltaphi_%d",j));
         h_deltaphi1[j]->GetXaxis()->SetTitle("#Delta#phi");
         if (s.doTheta)  h_deltaphi1[j]->SetTitle(Form("#Delta#phi, #Delta#theta (%f, %f), Multipliplicity (%d, %d)",etaranges[j],etaranges[j+1], s.multBinsLow[i],s.multBinsHigh[i]));
-        else          h_deltaphi1[j]->SetTitle(Form("#Delta#phi, #Delta#eta (%f, %f), Multipliplicity (%d, %d)",etaranges[j],etaranges[j+1], s.multBinsLow[i],s.multBinsHigh[i]));
+        else            h_deltaphi1[j]->SetTitle(Form("#Delta#phi, #Delta#eta (%f, %f), Multipliplicity (%d, %d)",etaranges[j],etaranges[j+1], s.multBinsLow[i],s.multBinsHigh[i]));
         h_deltaphi1[j]->GetYaxis()->SetTitle("Y(#Delta#phi)");
         h_deltaphi1[j]->Scale(1./(maxbin-minbin+1));
     }
     sig2[i] = (TH2F*)f2->Get(Form("signal2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
+    sig2[i]->Sumw2();
     sig2[i]->Scale(1./nEvtSigHist2->GetBinContent(i+1));
     bkg2[i] = (TH2F*)f2->Get(Form("bkgrnd2PC_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]));
+    bkg2[i]->Sumw2();
     bkg2[i]->Scale(1./nEvtBkgHist2->GetBinContent(i+1));
     ratio2[i] = new TH2F(Form("ratio2PC2_%d_%d",s.multBinsLow[i],s.multBinsHigh[i]),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
     ratio2[i]->Sumw2();
@@ -142,11 +146,11 @@ void TPCPlots(const std::string inFileName1, const std::string inFileName2, cons
         minbin =  ratio2[i]->GetXaxis()->FindBin(etaranges[j]);
         maxbin =  ratio2[i]->GetXaxis()->FindBin(etaranges[j+1]);
         h_deltaphi2[j]  = (TH1D*) ratio2[i]->ProjectionY(Form("h_deltaphi%d",j),minbin,maxbin);
-        //h_deltaphi[i]->Sumw2();
+        h_deltaphi2[j]->Sumw2();
         h_deltaphi2[j]->SetName(Form("h_deltaphi_%d",j));
         h_deltaphi2[j]->GetXaxis()->SetTitle("#Delta#phi");
         if (s.doTheta)  h_deltaphi2[j]->SetTitle(Form("#Delta#phi, #Delta#theta (%f, %f), Multipliplicity (%d, %d)",etaranges[j],etaranges[j+1], s.multBinsLow[i],s.multBinsHigh[i]));
-        else          h_deltaphi2[j]->SetTitle(Form("#Delta#phi, #Delta#eta (%f, %f), Multipliplicity (%d, %d)",etaranges[j],etaranges[j+1], s.multBinsLow[i],s.multBinsHigh[i]));
+        else            h_deltaphi2[j]->SetTitle(Form("#Delta#phi, #Delta#eta (%f, %f), Multipliplicity (%d, %d)",etaranges[j],etaranges[j+1], s.multBinsLow[i],s.multBinsHigh[i]));
         h_deltaphi2[j]->GetYaxis()->SetTitle("Y(#Delta#phi)");
         h_deltaphi2[j]->Scale(1./(maxbin-minbin+1));
     }
@@ -255,27 +259,35 @@ void TPCPlots(const std::string inFileName1, const std::string inFileName2, cons
     
     // Fourier decomposition
     TF1 *f1 = new TF1("f1","[0]*(1+2*([1]*cos(1*x)+[2]*cos(2*x)+[3]*cos(3*x)+[4]*cos(4*x)+[5]*cos(5*x)+[6]*cos(6*x)))");
-    for (Int_t i=0;i<4;i++) {
-      c2->cd(i+1);
-      h_deltaphi1[i*2]->Draw();
-      if (i==0){
+    for (Int_t j=0;j<4;j++) {
+      c2->cd(j+1);
+      if(i==2) h_deltaphi1[i]->Print("all");
+      //if (i ==2) for(Int_t k = 0; k<h_deltaphi1[j*2]->GetNbinsX();k++)std::cout<<h_deltaphi1[j*2]->GetBinContent(k)<<std::endl;
+      for(Int_t k = 0; k<h_deltaphi1[j*2]->GetNbinsX();k++)if(std::isnan(h_deltaphi1[j*2]->GetBinError(k+1))) {std::cout<<"hi"<<std::endl;h_deltaphi1[j*2]->SetBinError(k+1,0);}
+      if(i==2) h_deltaphi1[j*2]->Print("all");
+      h_deltaphi1[j*2]->Draw();
+      if (j==0){
          h_deltaphi1[0]->Fit("f1");
          h_deltaphi1[0]->Fit("f1");
-      h_deltaphi1[0]->SetStats(0);
+         h_deltaphi1[0]->SetStats(0);
         }
       }
       c2->SaveAs(Form("../pdfDir/%s_longRangeYield1_%d_%d.png",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
       c2->SaveAs(Form("../pdfDir/%s_longRangeYield1_%d_%d.pdf",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
       c2->SaveAs(Form("../pdfDir/%s_longRangeYield1_%d_%d.C",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
 
+      std::cout<<"THIS IS THE SECOND ITERATION"<<std::endl;
       TF1 *f2 = new TF1("f2","[0]*(1+2*([1]*cos(1*x)+[2]*cos(2*x)+[3]*cos(3*x)+[4]*cos(4*x)+[5]*cos(5*x)+[6]*cos(6*x)))");
-      for (Int_t i=0;i<4;i++) {
-      c2->cd(i+1);
-      h_deltaphi1[i*2]->Draw();
-      if (i==0){
+      for (Int_t j=0;j<4;j++) {
+      c2->cd(j+1);
+      //if (i ==2) for(Int_t k = 0; k<h_deltaphi1[j*2]->GetNbinsX();k++)std::cout<<h_deltaphi1[j*2]->GetBinContent(k)<<std::endl;
+      for(Int_t k = 0; k<h_deltaphi2[j*2]->GetNbinsX();k++)if(std::isnan(h_deltaphi2[j*2]->GetBinError(k+1))) {std::cout<<"hi"<<std::endl;h_deltaphi2[j*2]->SetBinError(k+1,0);}
+      if(i==2) h_deltaphi2[j*2]->Print("all");
+      h_deltaphi2[j*2]->Draw();
+      if (j==0){
          h_deltaphi2[0]->Fit("f1");
          h_deltaphi2[0]->Fit("f1");
-      h_deltaphi2[0]->SetStats(0);
+         h_deltaphi2[0]->SetStats(0);
         }
       }
       c2->SaveAs(Form("../pdfDir/%s_longRangeYield2_%d_%d.png",dataName.c_str(),s.multBinsLow[i],s.multBinsHigh[i]));
@@ -311,7 +323,14 @@ void TPCPlots(const std::string inFileName1, const std::string inFileName2, cons
     delete longRangeYield1[i];
     delete longRangeYield2[i];
     delete r_longRangeYield[i];
+    for (Int_t i=0;i<4;i++) 
+    {
+      delete h_deltaphi1[i*2];
+      delete h_deltaphi2[i*2];
+      }
     delete c2;
+
+
   }
 
   TH1F *eta1, *theta1, *pt1, *phi1, *TTheta1, *TPhi1;
