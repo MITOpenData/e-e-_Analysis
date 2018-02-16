@@ -17,6 +17,9 @@ class Sphericity{
     void setTree(eventData *e);
 
     inline TVector3 sphericityAxis();
+    inline TVector3 getV1();
+    inline TVector3 getV2();
+    inline TVector3 getV3();
     inline TVector3 linSphericityAxis();
     inline float sphericity(); 
     inline float aplanarity(); 
@@ -44,6 +47,18 @@ inline float Sphericity::p2(float px,float py,float pz){
 
 inline TVector3 Sphericity::sphericityAxis(){
   return v1;
+}
+
+inline TVector3 Sphericity::getV1(){
+  return v1;
+}
+
+inline TVector3 Sphericity::getV2(){
+  return v2;
+}
+
+inline TVector3 Sphericity::getV3(){
+  return v3;
 }
 
 inline TVector3 Sphericity::linSphericityAxis(){
@@ -117,17 +132,17 @@ void Sphericity::calculateSphericity(int n, float *px, float *py, float *pz, int
     l1 = eigenValues(0);
     l2 = eigenValues(1);
     l3 = eigenValues(2);
-    v1 = TVector3(eigenVectors(0,0),eigenVectors(0,1), eigenVectors(0,2));
-    v2 = TVector3(eigenVectors(1,0),eigenVectors(1,1), eigenVectors(1,2));
-    v3 = TVector3(eigenVectors(2,0),eigenVectors(2,1), eigenVectors(2,2));
+    v1 = TVector3(eigenVectors(0,0),eigenVectors(1,0), eigenVectors(2,0));
+    v2 = TVector3(eigenVectors(0,1),eigenVectors(1,1), eigenVectors(2,1));
+    v3 = TVector3(eigenVectors(0,2),eigenVectors(1,2), eigenVectors(2,2));
   }
   if(r==1){
     linl1 = eigenValues(0);
     linl2 = eigenValues(1);
     linl3 = eigenValues(2);
-    linv1 = TVector3(eigenVectors(0,0),eigenVectors(0,1), eigenVectors(0,2));
-    linv2 = TVector3(eigenVectors(1,0),eigenVectors(1,1), eigenVectors(1,2));
-    linv3 = TVector3(eigenVectors(2,0),eigenVectors(2,1), eigenVectors(2,2));
+    linv1 = TVector3(eigenVectors(0,0),eigenVectors(1,0), eigenVectors(2,0));
+    linv2 = TVector3(eigenVectors(0,1),eigenVectors(1,1), eigenVectors(2,1));
+    linv3 = TVector3(eigenVectors(0,2),eigenVectors(1,2), eigenVectors(2,2));
   }
 }
 
