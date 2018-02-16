@@ -46,7 +46,8 @@ inline float Sphericity::p2(float px,float py,float pz){
 }
 
 inline TVector3 Sphericity::sphericityAxis(){
-  return v1;
+  if(v1.Phi()>=0) return v1;
+  else return -v1;
 }
 
 inline TVector3 Sphericity::getV1(){
@@ -135,6 +136,7 @@ void Sphericity::calculateSphericity(int n, float *px, float *py, float *pz, int
     v1 = TVector3(eigenVectors(0,0),eigenVectors(1,0), eigenVectors(2,0));
     v2 = TVector3(eigenVectors(0,1),eigenVectors(1,1), eigenVectors(2,1));
     v3 = TVector3(eigenVectors(0,2),eigenVectors(1,2), eigenVectors(2,2));
+ 
   }
   if(r==1){
     linl1 = eigenValues(0);
