@@ -115,7 +115,10 @@ bool checkGeneral(std::string inStr, std::string checkStr)
 bool check999(std::string inStr){return checkGeneral(inStr, "-999.");}
 bool check998(std::string inStr){return checkGeneral(inStr, "-998.");}
 
-int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="")
+//isNewInfo was originally for introduction of ntpc, etc.
+//isNewInfo2 is for nitc, nvdet
+
+int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, std::string outFileName="")
 {
   if(!checkFile(inFileName)){
     std::cout << "Given inFileName \'" << inFileName << "\' is invalid, return 1." << std::endl;
@@ -412,8 +415,10 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
       bool assumePID = false;
       if(num.size() == 6 && !isNewInfo) assumePID = false; 
       else if(num.size() == 9 && isNewInfo) assumePID = false; 
+      else if(num.size() == 11 && isNewInfo2) assumePID = false; 
       else if(!isNewInfo && (num.size() == 7 || num.size() == 8)) assumePID = true; 
       else if(isNewInfo && (num.size() == 10 || num.size() == 11)) assumePID = true; 
+      else if(isNewInfo2 && (num.size() == 12 || num.size() == 13)) assumePID = true; 
       else{//return, this is an invalid format (or fix code here if format valid
 	std::cout << "Number of columns for line \'" << getStr << "\' is invalid, size \'" << num.size() << "\'. return 1" << std::endl;
 	//gotta cleanup before return
@@ -464,18 +469,29 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
       if(assumePID) pData.pid[counterParticles]=std::stoi(num.at(6));
       else pData.pid[counterParticles]=-999;
      
-      if(isNewInfo && _pwflag < 4){
+      if((isNewInfo || isNewInfo2) && _pwflag < 4){
 	int posOffset = 0;
 	if(assumePID) posOffset = 1;
 
 	pData.d0[counterParticles] = std::stof(num.at(6 + posOffset));
 	pData.z0[counterParticles] = std::stof(num.at(7 + posOffset));
 	pData.ntpc[counterParticles] =  std::stoi(num.at(8 + posOffset));	
+
+	if(isNewInfo2){
+	  pData.nitc[counterParticles] =  std::stoi(num.at(9 + posOffset));	
+	  pData.nvdet[counterParticles] =  std::stoi(num.at(10 + posOffset));	
+	}
+	else{
+	  pData.nitc[counterParticles] = -999;
+	  pData.nvdet[counterParticles] = -999;
+	}
       }
       else{
 	pData.d0[counterParticles] = -999.;
 	pData.z0[counterParticles] = -999.;
 	pData.ntpc[counterParticles] = -999;
+	pData.nitc[counterParticles] = -999;
+	pData.nvdet[counterParticles] = -999;
       }
 
       if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
@@ -736,8 +752,10 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	bool assumePID = false;
 	if(!isNewInfo && num.size() == 6) assumePID = false; 
 	else if(isNewInfo && num.size() == 9) assumePID = false; 
+	else if(isNewInfo2 && num.size() == 11) assumePID = false; 
 	else if(!isNewInfo && (num.size() == 7 || num.size() == 8)) assumePID = true; 
 	else if(isNewInfo && (num.size() == 10 || num.size() == 11)) assumePID = true; 
+	else if(isNewInfo2 && (num.size() == 12 || num.size() == 13)) assumePID = true; 
 	else{//return, this is an invalid format (or fix code here if format valid
 	  std::cout << "Number of columns for line \'" << getStr << "\' is invalid, size \'" << num.size() << "\'. return 1" << std::endl;
 	  //gotta cleanup before return
@@ -798,18 +816,29 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 	if(assumePID) pgData.pid[counterParticles]=std::stoi(num.at(6));
 	else pgData.pid[counterParticles]=-999;
 
-	if(isNewInfo && _pwflag < 4){
+	if((isNewInfo || isNewInfo2) && _pwflag < 4){
 	  int posOffset = 0;
 	  if(assumePID) posOffset += 1;
 	  
 	  pgData.d0[counterParticles] = std::stof(num.at(6 + posOffset));
 	  pgData.z0[counterParticles] = std::stof(num.at(7 + posOffset));
 	  pgData.ntpc[counterParticles] =  std::stoi(num.at(8 + posOffset));	
+
+	  if(isNewInfo2){
+	    pgData.nitc[counterParticles] =  std::stoi(num.at(9 + posOffset));	
+	    pgData.nvdet[counterParticles] =  std::stoi(num.at(10 + posOffset));	
+	  }
+	  else{
+	    pgData.nitc[counterParticles] = -999;
+	    pgData.nvdet[counterParticles] = -999;
+	  }
 	}
 	else{
 	  pgData.d0[counterParticles] = -999.;
 	  pgData.z0[counterParticles] = -999.;
 	  pgData.ntpc[counterParticles] = -999;
+	  pgData.nitc[counterParticles] = -999;
+	  pgData.nvdet[counterParticles] = -999;
 	}
 	
 	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
@@ -918,14 +947,14 @@ int scan(std::string inFileName, const bool isNewInfo, std::string outFileName="
 
 int main(int argc, char *argv[])
 {
-  if(argc != 3 && argc != 4){
-    std::cout << "Usage: ./bin/scan.exe <inFileName> <isNewInfo> <OPT-outFileName>" << std::endl;
+  if(argc != 4 && argc != 5){
+    std::cout << "Usage: ./bin/scan.exe <inFileName> <isNewInfo> <isNewInfo2> <OPT-outFileName>" << std::endl;
     return 1;
   }
 
   std::cout << "Begin processing..." << std::endl;
   int retVal = 0;
-  if(argc == 3) retVal += scan(argv[1], std::stoi(argv[2]));
-  else if(argc == 4) retVal += scan(argv[1], std::stoi(argv[2]), argv[3]);
+  if(argc == 4) retVal += scan(argv[1], std::stoi(argv[2]), std::stoi(argv[3]));
+  else if(argc == 5) retVal += scan(argv[1], std::stoi(argv[2]), std::stoi(argv[3]), argv[4]);
   return retVal;
 }
