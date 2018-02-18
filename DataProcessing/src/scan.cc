@@ -338,7 +338,7 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 
 	eSelection.setEventSelection(&pData);
 	eData.passesWW = eSelection.getPassesWW();
-
+      
 	if(counterEntries>0) tout->Fill(); 
 	
 	//Processing particles->jets
@@ -568,6 +568,8 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
     if(isRecons && isMC){
       std::string genFileStr = fileList.at(fI);
       genFileStr.replace(genFileStr.find("_recons_"), 8, "_mctrue_");
+
+      if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
       std::ifstream fileGen(genFileStr.c_str());
       counterEntries=0;

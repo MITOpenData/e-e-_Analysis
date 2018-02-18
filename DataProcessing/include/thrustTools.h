@@ -25,21 +25,24 @@ inline double thetaFromThrust(TVector3 thrust, TVector3 p){
   return p.Angle(thrust);
 }
 
-//this is actually rapidity w/ pion mass assumption
-inline double rapFromThrust(TVector3 thrust, TVector3 p, float mass){
-  float pl = p*(thrust.Unit());//logitudinal momentum component
-  float E = TMath::Power(p.Mag2()+mass*mass,0.5);//energy
-  return 0.5*TMath::Log((E+pl)/(E-pl));//rapidity
-}
-
 inline bool checkEtaThrustPIs1(TVector3 thrust, TVector3 p)
 {
-  Double_t minDel = 0.000001;
+  Double_t minDel = 0.01;
   Double_t thrust0 = thrust[0]/p[0];
   Double_t thrust1 = thrust[1]/p[1];
   Double_t thrust2 = thrust[2]/p[2];
 
   return TMath::Abs(thrust0 - thrust1) < minDel && TMath::Abs(thrust0 - thrust2) < minDel && TMath::Abs(thrust1 - thrust2) < minDel;
+}
+
+//this is actually rapidity w/ pion mass assumption
+inline double rapFromThrust(TVector3 thrust, TVector3 p, float mass){
+  Double_t minDel = 0.01;
+  if(mass < minDel && checkEtaThrustPIs1(thrust, p)) return 99.;
+  float pl = p*(thrust.Unit());//logitudinal momentum component
+  float E = TMath::Power(p.Mag2()+mass*mass,0.5);//energy
+  double rap = 0.5*TMath::Log((E+pl)/(E-pl));
+  return rap;//rapidity
 }
 
 inline double etaFromThrust(TVector3 thrust, TVector3 p){
