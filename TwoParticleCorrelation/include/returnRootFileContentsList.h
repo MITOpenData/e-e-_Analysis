@@ -89,5 +89,21 @@ std::vector<std::string> returnTDirContentsList(TFile* inFile_p, const std::stri
     return returnList;
 }
 
+std::vector<std::string> getUniqueStrings(std::vector< std::string > inVect)
+{
+  unsigned int pos = 0;
+  while(inVect.size() > pos){
+    bool isUnique = true;
+    for(unsigned int pI = pos+1; pI < inVect.size(); ++pI){
+      if(inVect.at(pos).size() == inVect.at(pI).size() && inVect.at(pos).find(inVect.at(pI)) != std::string::npos){
+        inVect.erase(inVect.begin()+pI);
+        isUnique = false;
+        break;
+      }
+    }
+    if(isUnique) ++pos;
+  }
 
+  return inVect;
+}
 #endif
