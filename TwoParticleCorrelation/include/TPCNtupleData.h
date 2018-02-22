@@ -13,6 +13,7 @@ class TPCNtupleData{
     bool passesWW;
     Float_t missP;
     Float_t pthatWeight;
+    Float_t STheta;
 
     Float_t pt[nMaxPart];
     Float_t eta[nMaxPart];
@@ -26,10 +27,15 @@ class TPCNtupleData{
     Float_t px[nMaxPart];
     Float_t py[nMaxPart];
     Float_t pz[nMaxPart];
-    
+    Float_t pmag[nMaxPart];
+    Float_t pmag_wrtWTA[nMaxPart];
+
     Float_t N;
     Float_t N_TP;
     
+    Float_t d0[nMaxPart];
+    Float_t z0[nMaxPart];
+
     // Jet Tree
     Int_t nref;
     Float_t jtpt[nMaxPart];
@@ -53,17 +59,17 @@ class TPCNtupleData{
     Float_t boost;
     
     bool isBelle;
-    int sideTree;
+    int doWTA;
     int doThrust;
     Float_t memory;
     TVector3 thrust;
     TVector3 p;
     
-    TPCNtupleData(bool ana=0, int thrustAna=0, int tree=0)
+    TPCNtupleData(bool ana=0, int thrustAna=0, int WTA=0)
     {
        isBelle = ana;
        doThrust = thrustAna;
-       sideTree = tree;
+       doWTA = WTA;
        thrust.SetXYZ(1,0,0);
        p.SetXYZ(1,0,0);
     }
@@ -90,7 +96,7 @@ class TPCNtupleData{
     Float_t getPt(int j)
     {
      selfCheck();
-     if (doThrust>0)
+     if (doThrust>0 || doWTA>0)
      {
          return pt_wrtThr[j];
          //p.SetXYZ(px[j],py[j],pz[j]);
@@ -103,7 +109,7 @@ class TPCNtupleData{
     Float_t getEta(int j)
     {
      selfCheck();
-     if (doThrust>0)
+     if (doThrust>0 || doWTA>0)
      {
          return eta_wrtThr[j];
          //p.SetXYZ(px[j],py[j],pz[j]);
@@ -116,7 +122,7 @@ class TPCNtupleData{
     Float_t getPhi(int j)
     {
      selfCheck();
-     if (doThrust>0)
+     if (doThrust>0 || doWTA>0)
      {
          return phi_wrtThr[j];
          //p.SetXYZ(px[j],py[j],pz[j]);
@@ -129,13 +135,21 @@ class TPCNtupleData{
     Float_t getTheta(int j)
     {
      selfCheck();
-     if (doThrust>0)
+     if (doThrust>0 || doWTA>0)
      {
          return theta_wrtThr[j];
          //p.SetXYZ(px[j],py[j],pz[j]);
          //return thetaFromThrust(thrust,p);
      }
      return theta[j];
+    }
+
+    // return pmag
+    Float_t getPmag(int j)
+    {
+     selfCheck();
+     if (doWTA>0) return pmag_wrtWTA[j];
+     return pmag[j];
     }
 
     // 
@@ -178,7 +192,10 @@ class TPCNtupleData{
       t1->SetBranchStatus("ntpc",1);
       t1->SetBranchStatus("passesWW",1);
       t1->SetBranchStatus("missP",1);
-        
+      t1->SetBranchStatus("pmag",1);
+      t1->SetBranchStatus("d0",1);
+      t1->SetBranchStatus("z0",1);
+      t1->SetBranchStatus("STheta",1);
       if(s.doPP)
       {
         t1->SetBranchStatus("pthatWeight",1);
@@ -193,7 +210,7 @@ class TPCNtupleData{
         t1->SetBranchStatus("TPhi", 1);
       }
     
-      if (sideTree == 1)
+      if (doWTA == 1)
       {
           t2->SetBranchStatus("WTAAxis_Theta",1);
           t2->SetBranchStatus("WTAAxis_Phi",1);
@@ -201,6 +218,7 @@ class TPCNtupleData{
           t2->SetBranchStatus("eta", 1);
           t2->SetBranchStatus("theta", 1);
           t2->SetBranchStatus("phi", 1);
+          t2->SetBranchStatus("pmag",1);
       }
     }
 };
@@ -215,7 +233,9 @@ void setupTPCTree(TTree *t1, TTree *t2, TTree *t3, TPCNtupleData &data)
     t1->SetBranchAddress("nParticle",&data.nParticle);
     t1->SetBranchAddress("passesWW",&data.passesWW);
     t1->SetBranchAddress("missP",&data.missP);
+    t1->SetBranchAddress("STheta",&data.STheta);
     t1->SetBranchAddress("pt",data.pt);
+    t1->SetBranchAddress("pmag",data.pmag);
     t1->SetBranchAddress("eta",data.eta);
     t1->SetBranchAddress("theta",data.theta);
     t1->SetBranchAddress("pid",data.pid);
@@ -226,6 +246,8 @@ void setupTPCTree(TTree *t1, TTree *t2, TTree *t3, TPCNtupleData &data)
     t1->SetBranchAddress("theta_wrtThr",data.theta_wrtThr);
     t1->SetBranchAddress("phi_wrtThr",data.phi_wrtThr);
     t1->SetBranchAddress("ntpc",data.nTPC);
+    t1->SetBranchAddress("d0",data.d0);
+    t1->SetBranchAddress("z0",data.z0);
     
     t3->SetBranchAddress("jtpt",data.jtpt);
     t3->SetBranchAddress("jteta",data.jteta);
@@ -247,7 +269,7 @@ void setupTPCTree(TTree *t1, TTree *t2, TTree *t3, TPCNtupleData &data)
         t1->SetBranchAddress("TPhi", &data.TPhi);
     }
     
-    if(data.sideTree == 1) // WTA Axis
+    if(data.doWTA == 1) // WTA Axis
     {
         t2->SetBranchAddress("WTAAxis_Theta",&data.WTAAxis_Theta);
         t2->SetBranchAddress("WTAAxis_Phi",&data.WTAAxis_Phi);
@@ -256,6 +278,7 @@ void setupTPCTree(TTree *t1, TTree *t2, TTree *t3, TPCNtupleData &data)
         t2->SetBranchAddress("eta",data.eta_wrtThr);
         t2->SetBranchAddress("theta",data.theta_wrtThr);
         t2->SetBranchAddress("phi",data.phi_wrtThr);
+        t2->SetBranchAddress("pmag",data.pmag_wrtWTA);
     }
 }
 
