@@ -39,7 +39,7 @@ namespace xjjroot
 void xjjroot::setgstyle()
 {
   gStyle->SetOptTitle(0);
-  gStyle->SetOptStat(0);
+  gStyle->SetOptStat(1);
   gStyle->SetEndErrorSize(0);
   gStyle->SetTextSize(0.05);
   gStyle->SetTextFont(42);
@@ -63,9 +63,10 @@ void xjjroot::sethempty(T* hempty, Float_t xoffset/*=0*/, Float_t yoffset/*=0*/)
   hempty->GetYaxis()->SetTitleFont(42);
   hempty->GetXaxis()->SetLabelFont(42);
   hempty->GetYaxis()->SetLabelFont(42);
-  hempty->GetXaxis()->SetLabelSize(0.045);
+  hempty->GetXaxis()->SetLabelSize(0.03);
   hempty->GetYaxis()->SetLabelSize(0.045);
   hempty->SetStats(0);
+  hempty->GetXaxis()->SetNdivisions(404);
 }
 
 template <class T>
@@ -81,9 +82,9 @@ void xjjroot::setthgr(T* hempty, Float_t xoffset/*=0*/, Float_t yoffset/*=0*/)
   hempty->GetYaxis()->SetTitleFont(42);
   hempty->GetXaxis()->SetLabelFont(42);
   hempty->GetYaxis()->SetLabelFont(42);
-  hempty->GetXaxis()->SetLabelSize(0.045);
-  hempty->GetYaxis()->SetLabelSize(0.045);
-  hempty->SetStats(0);
+  hempty->GetXaxis()->SetLabelSize(0.03);
+  hempty->GetYaxis()->SetLabelSize(0.03);
+  hempty->SetStats(1);
   hempty->SetMarkerStyle(20);
   hempty->SetMarkerSize(1.1);
   hempty->SetMarkerColor(kBlack);
