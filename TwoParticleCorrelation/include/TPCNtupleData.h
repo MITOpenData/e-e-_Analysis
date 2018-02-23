@@ -9,6 +9,7 @@ class TPCNtupleData{
     
     Selection s;
 
+    Float_t Energy;
     Int_t nParticle;
     bool passesWW;
     Float_t missP;
@@ -152,6 +153,20 @@ class TPCNtupleData{
      return pmag[j];
     }
 
+    // return TTheta
+    Float_t getTTheta()
+    {
+     if (doWTA>0) return WTAAxis_Theta;
+     return TTheta;
+    }
+
+    // return TPhi
+    Float_t getTPhi()
+    {
+     if (doWTA>0) return WTAAxis_Phi;
+     return TPhi;
+    }
+
     // 
     void update()
     {
@@ -178,6 +193,7 @@ class TPCNtupleData{
     void setTPCTreeStatus(TTree *t1, TTree *t2)
     {
       t1->SetBranchStatus("*", 0);
+      t1->SetBranchStatus("Energy",1);
       t1->SetBranchStatus("nParticle", 1);
       t1->SetBranchStatus("pt", 1);
       t1->SetBranchStatus("eta", 1);
@@ -230,6 +246,7 @@ void setupTPCTree(TTree *t1, TTree *t2, TTree *t3, TPCNtupleData &data)
 {
     Selection s;
 
+    t1->SetBranchAddress("Energy",&data.Energy);
     t1->SetBranchAddress("nParticle",&data.nParticle);
     t1->SetBranchAddress("passesWW",&data.passesWW);
     t1->SetBranchAddress("missP",&data.missP);

@@ -73,14 +73,16 @@ int ridge_check_parallel
 
     /// Initialize the histograms
     std::cout<<"Initializing histograms..."<<std::endl;
+    static const Int_t nEnergyBins = s.nEnergyBins;
     static const Int_t nMultBins = s.nMultBins;
     static const Int_t nptBins = s.nptBins;
     static const Int_t netaBins = s.netaBins;
+
     
-    TH2F * signal2PC[nMultBins][nptBins][netaBins];
-    TH2F * bkgrnd2PC[nMultBins][nptBins][netaBins];
-    TH2F * ratio2PC[nMultBins][nptBins][netaBins];
-    TH1F * longRangeYield[nMultBins][nptBins][netaBins];
+    TH2F * signal2PC[nEnergyBins][nMultBins][nptBins][netaBins];
+    TH2F * bkgrnd2PC[nEnergyBins][nMultBins][nptBins][netaBins];
+    TH2F * ratio2PC[nEnergyBins][nMultBins][nptBins][netaBins];
+    TH1F * longRangeYield[nEnergyBins][nMultBins][nptBins][netaBins];
     float nSignalEvts[nMultBins] = {0};
     float nBkgrndEvts[nMultBins] = {0};
     
@@ -96,62 +98,65 @@ int ridge_check_parallel
     TH1D * nEvtBkgHist = new TH1D("nEvtBkgHisto","nEvtBkgHisto",10,0,10);
     
     Float_t etaPlotRange = s.getEtaPlotRange();
-    for(int i = 0; i<nMultBins; i++)
+    for(int e = 0; e<nEnergyBins; e++)
     {
-        for(int j = 0; j<nptBins; j++)
+        for(int i = 0; i<nMultBins; i++)
         {
-            for(int k = 0; k<netaBins; k++)
+            for(int j = 0; j<nptBins; j++)
             {
-                if(s.doThrust)
+                for(int k = 0; k<netaBins; k++)
                 {
-                    signal2PC[i][j][k] = new TH2F(Form("signal2PC_%d_%d_%d_%d",s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
-                    signal2PC[i][j][k]->Sumw2();
-                    bkgrnd2PC[i][j][k] = new TH2F(Form("bkgrnd2PC_%d_%d_%d_%d",s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
-                    bkgrnd2PC[i][j][k]->Sumw2();
-                    //nEvtSigHist[i][j][k] = new TH1D(Form("nEvtSigHisto_%d_%d_%d_%d_%d",s.multBinsLow[i],s.multBinsHigh[i], j,k),"nEvtSigHisto",1,0,1);
-                    //nEvtBkgHist[i][j][k] = new TH1D(Form("nEvtBkgHisto_%d_%d_%d_%d_%d",s.multBinsLow[i],s.multBinsHigh[i], j,k),"nEvtBkgHisto",1,0,1);
-                    if(!s.doParallel)
+                    if(s.doThrust)
                     {
-                        ratio2PC[i][j][k] = new TH2F(Form("ratio2PC_%d_%d_%d_%d",s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
-                        ratio2PC[i][j][k]->Sumw2();
-                        longRangeYield[i][j][k] = new TH1F(Form("longRangeYield_%d_%d_%d_%d",s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#phi;Y(#Delta#Phi)",s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
-                        longRangeYield[i][j][k]->Sumw2();
-                    } 
+                        signal2PC[e][i][j][k] = new TH2F(Form("signal2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+                        signal2PC[e][i][j][k]->Sumw2();
+                        bkgrnd2PC[e][i][j][k] = new TH2F(Form("bkgrnd2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+                        bkgrnd2PC[e][i][j][k]->Sumw2();
+                        //nEvtSigHist[i][j][k] = new TH1D(Form("nEvtSigHisto_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),"nEvtSigHisto",1,0,1);
+                        //nEvtBkgHist[i][j][k] = new TH1D(Form("nEvtBkgHisto_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),"nEvtBkgHisto",1,0,1);
+                        if(!s.doParallel)
+                        {
+                            ratio2PC[e][i][j][k] = new TH2F(Form("ratio2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+                            ratio2PC[e][i][j][k]->Sumw2();
+                            longRangeYield[e][i][j][k] = new TH1F(Form("longRangeYield_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#phi;Y(#Delta#Phi)",s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+                            longRangeYield[e][i][j][k]->Sumw2();
+                        } 
+                    }
+                    else if (s.doWTA)
+                    {
+                        signal2PC[e][i][j][k] = new TH2F(Form("signal2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+                        signal2PC[e][i][j][k]->Sumw2();
+                        bkgrnd2PC[e][i][j][k] = new TH2F(Form("bkgrnd2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+                        bkgrnd2PC[e][i][j][k]->Sumw2();
+                        //nEvtSigHist[i][j][k] = new TH1D(Form("nEvtSigHisto_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], s.ptBinsLow_wrtWTA[j],s.ptBinsHigh_wrtWTA[j],s.etaBinsLow_wrtWTA[k]),"nEvtSigHisto",1,0,1);
+                        //nEvtBkgHist[i][j][k] = new TH1D(Form("nEvtBkgHisto_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], s.ptBinsLow_wrtWTA[j],s.ptBinsHigh_wrtWTA[j],s.etaBinsLow_wrtWTA[k]),"nEvtBkgHisto",1,0,1);
+                        if(!s.doParallel)
+                        {
+                            ratio2PC[e][i][j][k] = new TH2F(Form("ratio2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+                            ratio2PC[e][i][j][k]->Sumw2();
+                            longRangeYield[e][i][j][k] = new TH1F(Form("longRangeYield_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#phi;Y(#Delta#Phi)",s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+                            longRangeYield[e][i][j][k]->Sumw2();
+                        }  
+                    }
+                    else /* Beam */
+                    {
+                        signal2PC[e][i][j][k] = new TH2F(Form("signal2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+                        signal2PC[e][i][j][k]->Sumw2();
+                        bkgrnd2PC[e][i][j][k] = new TH2F(Form("bkgrnd2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+                        bkgrnd2PC[e][i][j][k]->Sumw2();
+                        //nEvtSigHist[i][j][k] = new TH1D(Form("nEvtSigHisto_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], s.ptBinsLow_wrtWTA[j],s.ptBinsHigh_wrtWTA[j],s.etaBinsLow_wrtWTA[k]),"nEvtSigHisto",1,0,1);
+                        //nEvtBkgHist[i][j][k] = new TH1D(Form("nEvtBkgHisto_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], s.ptBinsLow_wrtWTA[j],s.ptBinsHigh_wrtWTA[j],s.etaBinsLow_wrtWTA[k]),"nEvtBkgHisto",1,0,1);
+                        if(!s.doParallel)
+                        {
+                            ratio2PC[e][i][j][k] = new TH2F(Form("ratio2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+                            ratio2PC[e][i][j][k]->Sumw2();
+                            longRangeYield[e][i][j][k] = new TH1F(Form("longRangeYield_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#phi;Y(#Delta#Phi)",s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
+                            longRangeYield[e][i][j][k]->Sumw2();
+                        }  
+                    }   
                 }
-                else if (s.doWTA)
-                {
-                    signal2PC[i][j][k] = new TH2F(Form("signal2PC_%d_%d_%d_%d",s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
-                    signal2PC[i][j][k]->Sumw2();
-                    bkgrnd2PC[i][j][k] = new TH2F(Form("bkgrnd2PC_%d_%d_%d_%d",s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
-                    bkgrnd2PC[i][j][k]->Sumw2();
-                    //nEvtSigHist[i][j][k] = new TH1D(Form("nEvtSigHisto_%d_%d_%d_%d_%d",s.multBinsLow[i],s.multBinsHigh[i], s.ptBinsLow_wrtWTA[j],s.ptBinsHigh_wrtWTA[j],s.etaBinsLow_wrtWTA[k]),"nEvtSigHisto",1,0,1);
-                    //nEvtBkgHist[i][j][k] = new TH1D(Form("nEvtBkgHisto_%d_%d_%d_%d_%d",s.multBinsLow[i],s.multBinsHigh[i], s.ptBinsLow_wrtWTA[j],s.ptBinsHigh_wrtWTA[j],s.etaBinsLow_wrtWTA[k]),"nEvtBkgHisto",1,0,1);
-                    if(!s.doParallel)
-                    {
-                        ratio2PC[i][j][k] = new TH2F(Form("ratio2PC_%d_%d_%d_%d",s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
-                        ratio2PC[i][j][k]->Sumw2();
-                        longRangeYield[i][j][k] = new TH1F(Form("longRangeYield_%d_%d_%d_%d",s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#phi;Y(#Delta#Phi)",s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
-                        longRangeYield[i][j][k]->Sumw2();
-                    }  
-                }
-                else /* Beam */
-                {
-                    signal2PC[i][j][k] = new TH2F(Form("signal2PC_%d_%d_%d_%d",s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
-                    signal2PC[i][j][k]->Sumw2();
-                    bkgrnd2PC[i][j][k] = new TH2F(Form("bkgrnd2PC_%d_%d_%d_%d",s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
-                    bkgrnd2PC[i][j][k]->Sumw2();
-                    //nEvtSigHist[i][j][k] = new TH1D(Form("nEvtSigHisto_%d_%d_%d_%d_%d",s.multBinsLow[i],s.multBinsHigh[i], s.ptBinsLow_wrtWTA[j],s.ptBinsHigh_wrtWTA[j],s.etaBinsLow_wrtWTA[k]),"nEvtSigHisto",1,0,1);
-                    //nEvtBkgHist[i][j][k] = new TH1D(Form("nEvtBkgHisto_%d_%d_%d_%d_%d",s.multBinsLow[i],s.multBinsHigh[i], s.ptBinsLow_wrtWTA[j],s.ptBinsHigh_wrtWTA[j],s.etaBinsLow_wrtWTA[k]),"nEvtBkgHisto",1,0,1);
-                    if(!s.doParallel)
-                    {
-                        ratio2PC[i][j][k] = new TH2F(Form("ratio2PC_%d_%d_%d_%d",s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
-                        ratio2PC[i][j][k]->Sumw2();
-                        longRangeYield[i][j][k] = new TH1F(Form("longRangeYield_%d_%d_%d_%d",s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#phi;Y(#Delta#Phi)",s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
-                        longRangeYield[i][j][k]->Sumw2();
-                    }  
-                }   
-            }
-        }   
+            }   
+        }
     }
 
     TH1F * multiplicity = new TH1F("multiplicity",";nTrk;nEvents",200,0,200);
@@ -202,6 +207,8 @@ int ridge_check_parallel
         data.update();
         if (i%10000==0) std::cout <<i<<"/"<<nevent<<std::endl;
         
+        Int_t histE = s.histEnergy(data.Energy);
+        if(histE < 0) continue;
         // nTrk calculation
         Int_t nTrk = 0;
         //
@@ -257,10 +264,10 @@ int ridge_check_parallel
                 // fill for each eta range 
                 for (Int_t l = 0; l<=histEta1;++l)
                 {
-                    signal2PC[histNtrk][histPt1][l]->Fill(angle1-angle2,dphi(phi1,phi2),fillNumerator/(s.getDifferential())/nTrk);
-                    signal2PC[histNtrk][histPt1][l]->Fill(angle1-angle2,dphi(phi2,phi1),fillNumerator/(s.getDifferential())/nTrk);
-                    signal2PC[histNtrk][histPt1][l]->Fill(angle2-angle1,dphi(phi1,phi2),fillNumerator/(s.getDifferential())/nTrk);
-                    signal2PC[histNtrk][histPt1][l]->Fill(angle2-angle1,dphi(phi2,phi1),fillNumerator/(s.getDifferential())/nTrk);
+                    signal2PC[histE][histNtrk][histPt1][l]->Fill(angle1-angle2,dphi(phi1,phi2),fillNumerator/(s.getDifferential())/nTrk);
+                    signal2PC[histE][histNtrk][histPt1][l]->Fill(angle1-angle2,dphi(phi2,phi1),fillNumerator/(s.getDifferential())/nTrk);
+                    signal2PC[histE][histNtrk][histPt1][l]->Fill(angle2-angle1,dphi(phi1,phi2),fillNumerator/(s.getDifferential())/nTrk);
+                    signal2PC[histE][histNtrk][histPt1][l]->Fill(angle2-angle1,dphi(phi2,phi1),fillNumerator/(s.getDifferential())/nTrk);
                 }
             }
         }
@@ -281,7 +288,7 @@ int ridge_check_parallel
             Int_t histNtrk_mix = s.histNtrk(nTrk_mix);
             
             // Select a mixed event
-            while (histNtrk_mix != histNtrk && s.isMixedEvent(nTrk, nTrk_mix, data.jteta[0], mix.jteta[0]))
+            while (histNtrk_mix != histNtrk && s.isMixedEvent(nTrk, nTrk_mix, data.jteta[0], mix.jteta[0], data.getTTheta(), mix.getTTheta(), data.getTPhi(), mix.getTPhi()))
             {
                 selected++;
                 if (selected >= t->GetEntries()) selected = 0;
@@ -295,8 +302,8 @@ int ridge_check_parallel
             }
             
             // Use the Thrust axis from the signal event instead of mixed event
-            mix.TTheta=data.TTheta;
-            mix.TPhi=data.TPhi;
+            //mix.TTheta=data.TTheta;
+            //mix.TPhi=data.TPhi;
             mix.update();
             
             if (i==selected)
@@ -331,10 +338,10 @@ int ridge_check_parallel
                     Float_t phi_mix = mix.getPhi(k);
                     for (Int_t l = 0; l<=histEta_bkg1;++l)
                     {
-                        bkgrnd2PC[histNtrk][histPt_bkg1][l]->Fill(angle-angle_mix,dphi(phi,phi_mix),fillNumerator/(s.getDifferential())/nTrk);
-                        bkgrnd2PC[histNtrk][histPt_bkg1][l]->Fill(angle-angle_mix,dphi(phi_mix,phi),fillNumerator/(s.getDifferential())/nTrk);
-                        bkgrnd2PC[histNtrk][histPt_bkg1][l]->Fill(angle_mix-angle,dphi(phi,phi_mix),fillNumerator/(s.getDifferential())/nTrk);
-                        bkgrnd2PC[histNtrk][histPt_bkg1][l]->Fill(angle_mix-angle,dphi(phi_mix,phi),fillNumerator/(s.getDifferential())/nTrk);
+                        bkgrnd2PC[histE][histNtrk][histPt_bkg1][l]->Fill(angle-angle_mix,dphi(phi,phi_mix),fillNumerator/(s.getDifferential())/nTrk);
+                        bkgrnd2PC[histE][histNtrk][histPt_bkg1][l]->Fill(angle-angle_mix,dphi(phi_mix,phi),fillNumerator/(s.getDifferential())/nTrk);
+                        bkgrnd2PC[histE][histNtrk][histPt_bkg1][l]->Fill(angle_mix-angle,dphi(phi,phi_mix),fillNumerator/(s.getDifferential())/nTrk);
+                        bkgrnd2PC[histE][histNtrk][histPt_bkg1][l]->Fill(angle_mix-angle,dphi(phi_mix,phi),fillNumerator/(s.getDifferential())/nTrk);
                     }
                 } //end of mixed event loop
             } // end of working event loop
@@ -344,25 +351,28 @@ int ridge_check_parallel
     
     output->cd();
     // write the histograms
-    for(int i = 0; i<nMultBins; i++)
+    for(int e = 0; e<nEnergyBins;e++)
     {
-        for(int j = 0; j<nptBins; j++)
+        for(int i = 0; i<nMultBins; i++)
         {
-            for(int k = 0; k<netaBins; k++)
+            for(int j = 0; j<nptBins; j++)
             {
-                signal2PC[i][j][k]->Write();
-                bkgrnd2PC[i][j][k]->Write();
-                if(!s.doParallel)
+                for(int k = 0; k<netaBins; k++)
                 {
-                    signal2PC[i][j][k]->Scale(1.0/(float)nSignalEvts[i]);
-                    bkgrnd2PC[i][j][k]->Scale(1.0/(float)nBkgrndEvts[i]);
-                    calculateRatio(signal2PC[i][j][k],bkgrnd2PC[i][j][k],ratio2PC[i][j][k]);
-                    getLongRangeYield(s,ratio2PC[i][j][k],longRangeYield[i][j][k]);
+                    signal2PC[e][i][j][k]->Write();
+                    bkgrnd2PC[e][i][j][k]->Write();
+                    if(!s.doParallel)
+                    {
+                        signal2PC[e][i][j][k]->Scale(1.0/(float)nSignalEvts[i]);
+                        bkgrnd2PC[e][i][j][k]->Scale(1.0/(float)nBkgrndEvts[i]);
+                        calculateRatio(signal2PC[e][i][j][k],bkgrnd2PC[e][i][j][k],ratio2PC[e][i][j][k]);
+                        getLongRangeYield(s,ratio2PC[e][i][j][k],longRangeYield[e][i][j][k]);
+                    }
                 }
             }
+            nEvtSigHist->Fill(i,nSignalEvts[i]);
+            nEvtBkgHist->Fill(i,nBkgrndEvts[i]);
         }
-        nEvtSigHist->Fill(i,nSignalEvts[i]);
-        nEvtBkgHist->Fill(i,nBkgrndEvts[i]);
     }
 
     nEvtSigHist->Write();
@@ -388,22 +398,26 @@ int ridge_check_parallel
     delete h_eff;
     delete multiplicity;
 
-    for(int i = 0; i<nMultBins; i++)
+    for(int e = 0; e<nEnergyBins; e++)
     {
-        for(int j = 0; j<nptBins; j++)
+        for(int i = 0; i<nMultBins; i++)
         {
-            for(int k = 0; k<netaBins; k++)
+            for(int j = 0; j<nptBins; j++)
             {
-                delete signal2PC[i][j][k];
-                delete bkgrnd2PC[i][j][k];
-                if(!s.doParallel)
+                for(int k = 0; k<netaBins; k++)
                 {
-                   delete ratio2PC[i][j][k];
-                   delete longRangeYield[i][j][k]; 
-                } 
+                    delete signal2PC[e][i][j][k];
+                    delete bkgrnd2PC[e][i][j][k];
+                    if(!s.doParallel)
+                    {
+                       delete ratio2PC[e][i][j][k];
+                       delete longRangeYield[e][i][j][k]; 
+                    } 
+                }
             }
         }
     }
+
     delete jt_mix;
     delete t_mix;
     delete jt;

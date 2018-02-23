@@ -60,6 +60,8 @@ class Selection
         bool doAjCut = false;   Float_t AjCut = 0.1;
         bool do3jetEvtCut = false;  Float_t thirdJetCut = 0.03;
         bool doMixedJetCut = false;
+
+        bool doMixedThrustAxisCut = false; Float_t maxTTheta_TPhi_Cut = 0.3;
         Float_t fillAj = 0.0; // used for plotting h_Aj
         Int_t nptBins = 0;
         Int_t netaBins = 0;
@@ -101,6 +103,10 @@ class Selection
         Float_t etaPlotRange_wrtWTA = 6.0;
 
         /* Independent Cuts */
+        static const Int_t nEnergyBins = 2;
+        Float_t energyBinsLow[nEnergyBins] = {0,100};
+        Float_t energyBinsHigh[nEnergyBins] = {100,999};
+
         static const Int_t nMultBins = 3;
         Int_t multBinsLow[nMultBins]  = {0 , 20, 30};
         Int_t multBinsHigh[nMultBins] = {20, 30, 999};
@@ -130,10 +136,11 @@ class Selection
         Float_t getDifferential();
         int ridge_trackSelection(Int_t nTPC, Float_t theta, Float_t p, Float_t d0, Float_t z0, Int_t pwflag);
         int ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticle, Int_t nref, Float_t jtpt[], Float_t jteta[], Float_t STheta, Float_t mass[], Int_t nTPC[], Float_t theta[], Float_t pmag[], Float_t d0[], Float_t z0[], Int_t pwflag[]);
-        bool isMixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta, Float_t jteta_mix);
+        bool isMixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta, Float_t jteta_mix, Float_t TTheta, Float_t TTheta_mix, Float_t TPhi, Float_t TPhi_mix);
         int histNtrk(Int_t N);
         int histPt(Float_t pt);
         int histEta(Float_t eta);
+        int histEnergy(Float_t Energy);
     
     private:
 };
@@ -243,13 +250,14 @@ int Selection::ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticl
 
 // return true if the event passes the criteria for a mixed event
 // Currently matching the total multiplicity in the event and leading jet eta
-bool Selection::isMixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta, Float_t jteta_mix)
+bool Selection::isMixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta, Float_t jteta_mix, Float_t TTheta, Float_t TTheta_mix, Float_t TPhi, Float_t TPhi_mix)
 {
     // Original matched event criteria
     // (fabs(mix.nParticle-data.nParticle)>4&&data.nParticle<1000&&fabs(mix.jteta[0]-data.jteta[0])>0.2)
     
     if (doMixedMultCut && TMath::Abs(nParticle - nParticle_mix) > 4) return false;
     if (doMixedJetCut && TMath::Abs(jteta - jteta_mix) > 0.2) return false;
+    if (doMixedThrustAxisCut && ( sqrt( pow(TMath::Abs(TTheta - TTheta_mix),2) +  pow(TMath::Abs(TPhi - TPhi_mix),2) ) >= maxTTheta_TPhi_Cut)) return false;
     
     return true;
 }
@@ -263,6 +271,16 @@ int Selection::histNtrk(Int_t N)
     
     return -1;
 }
+
+int Selection::histEnergy(Float_t Energy)
+{
+    for (Int_t i = 0; i < nEnergyBins; ++i)
+    {
+        if (Energy >= energyBinsLow[i] && Energy < energyBinsHigh[i]) return i;
+    }
+    return -1;
+}
+
 // return histogram number of the histogram corresponding to the pt range
 int Selection::histPt(Float_t pt)
 {
