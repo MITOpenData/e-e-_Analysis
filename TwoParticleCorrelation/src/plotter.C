@@ -92,7 +92,6 @@ int plotAllTH1F(const std::string inFileName, const std::string dataName)
     	xjjroot::sethempty(hempty,0,0);
     	hempty->Draw();
     	xjjroot::setthgrstyle(inTH1F_p[iter], kBlack, 21, 1.2, kBlack, 1, 1, -1, -1, -1);
-
    		inTH1F_p[iter]->Draw("pe sames");
         
         // save the normal plot

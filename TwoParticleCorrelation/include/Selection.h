@@ -108,8 +108,8 @@ class Selection
         Float_t energyBinsHigh[nEnergyBins] = {100,999};
 
         static const Int_t nMultBins = 3;
-        Int_t multBinsLow[nMultBins]  = {0 , 20, 30};
-        Int_t multBinsHigh[nMultBins] = {20, 30, 999};
+        Int_t multBinsLow[nMultBins]  = {0 , 20, 35};
+        Int_t multBinsHigh[nMultBins] = {20, 35, 999};
 
         /* Plotting */
         Float_t dEtaBins = 20; //keep even
@@ -265,10 +265,10 @@ bool Selection::isMixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta
 int Selection::histNtrk(Int_t N)
 {
     // inclusive on low end to help statistics in higher multiplicity bins
-    if (N >= multBinsLow[0] && N < multBinsHigh[0]) return 0;
-    if (N >= multBinsLow[1] && N < multBinsHigh[1]) return 1;
-    if (N >= multBinsLow[2] && N < multBinsHigh[2]) return 2;
-    
+    for (Int_t i = 0; i < nMultBins; ++i)
+    {
+        if (N >= multBinsLow[i] && N < multBinsHigh[i]) return i;
+    }
     return -1;
 }
 
