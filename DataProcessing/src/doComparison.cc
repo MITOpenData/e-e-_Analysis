@@ -503,6 +503,16 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
       else if(tempS.find("Thrust_charged") != std::string::npos && tempS.size() == std::string("Thrust_charged").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], eData1.Thrust_charged, eData2.Thrust_charged);
       else if(tempS.find("TTheta_charged") != std::string::npos && tempS.size() == std::string("TTheta_charged").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], eData1.TTheta_charged, eData2.TTheta_charged);
       else if(tempS.find("TPhi_charged") != std::string::npos && tempS.size() == std::string("TPhi_charged").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], eData1.TPhi_charged, eData2.TPhi_charged);
+      else if(tempS.find("Sphericity") != std::string::npos && tempS.size() == std::string("Sphericity").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], eData1.Sphericity, eData2.Sphericity);
+      else if(tempS.find("STheta") != std::string::npos && tempS.size() == std::string("STheta").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], eData1.STheta, eData2.STheta);
+      else if(tempS.find("SPhi") != std::string::npos && tempS.size() == std::string("SPhi").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], eData1.SPhi, eData2.SPhi);
+      else if(tempS.find("Aplanarity") != std::string::npos && tempS.size() == std::string("Aplanarity").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], eData1.Aplanarity, eData2.Aplanarity);
+      else if(tempS.find("Sphericity_linearized") != std::string::npos && tempS.size() == std::string("Sphericity_linearized").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], eData1.Sphericity_linearized, eData2.Sphericity_linearized);
+      else if(tempS.find("STheta_linearized") != std::string::npos && tempS.size() == std::string("STheta_linearized").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], eData1.STheta_linearized, eData2.STheta_linearized);
+      else if(tempS.find("SPhi_linearized") != std::string::npos && tempS.size() == std::string("SPhi_linearized").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], eData1.SPhi_linearized, eData2.SPhi_linearized);
+      else if(tempS.find("Aplanarity_linearized") != std::string::npos && tempS.size() == std::string("Aplanarity_linearized").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], eData1.Aplanarity_linearized, eData2.Aplanarity_linearized);
+      else if(tempS.find("C_linearized") != std::string::npos && tempS.size() == std::string("C_linearized").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], eData1.C_linearized, eData2.C_linearized);
+      else if(tempS.find("D_linearized") != std::string::npos && tempS.size() == std::string("D_linearized").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], eData1.D_linearized, eData2.D_linearized);
     }
 
     for(Int_t jI = 0; jI < nJetTrees; ++jI){
