@@ -71,6 +71,8 @@ std::vector<std::string> processAlephString(std::string inStr)
   bool addDummy = false;
   bool addDummy2 = false;
   if(inStr.find("ALEPH_DATA") != std::string::npos) addDummy = true;
+  if(inStr.find("MC_RECO") != std::string::npos) addDummy = true;
+  if(inStr.find("MC_TRUE_AFTER_CUT") != std::string::npos) addDummy = true;
   if(inStr.find("Primary vertex info") != std::string::npos) addDummy2 = true;
 
   const Int_t nSpecialRemoveStr = 2;
@@ -493,6 +495,10 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	pData.nitc[counterParticles] = -999;
 	pData.nvdet[counterParticles] = -999;
       }
+    
+      pData.vx[counterParticles] = -999.;
+      pData.vy[counterParticles] = -999.;
+      pData.vz[counterParticles] = -999.;
 
       if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
@@ -817,11 +823,22 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	//check before assigning PID
 	if(assumePID) pgData.pid[counterParticles]=std::stoi(num.at(6));
 	else pgData.pid[counterParticles]=-999;
-
+      
 	if((isNewInfo || isNewInfo2) && _pwflag < 4){
 	  int posOffset = 0;
 	  if(assumePID) posOffset += 1;
 	  
+	  pgData.vx[counterParticles] = std::stof(num.at(6+posOffset));
+	  pgData.vy[counterParticles] = std::stof(num.at(7+posOffset));
+	  pgData.vz[counterParticles] = std::stof(num.at(8+posOffset));
+
+	  pgData.d0[counterParticles] = -999.;
+          pgData.z0[counterParticles] = -999.;
+          pgData.ntpc[counterParticles] = -999;
+          pgData.nitc[counterParticles] = -999;
+          pgData.nvdet[counterParticles] = -999;
+
+	  /*
 	  pgData.d0[counterParticles] = std::stof(num.at(6 + posOffset));
 	  pgData.z0[counterParticles] = std::stof(num.at(7 + posOffset));
 	  pgData.ntpc[counterParticles] =  std::stoi(num.at(8 + posOffset));	
@@ -834,8 +851,13 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	    pgData.nitc[counterParticles] = -999;
 	    pgData.nvdet[counterParticles] = -999;
 	  }
+	  */
 	}
 	else{
+	  pgData.vx[counterParticles] = -999.;
+          pgData.vy[counterParticles] = -999.;
+          pgData.vz[counterParticles] = -999.;
+
 	  pgData.d0[counterParticles] = -999.;
 	  pgData.z0[counterParticles] = -999.;
 	  pgData.ntpc[counterParticles] = -999;
