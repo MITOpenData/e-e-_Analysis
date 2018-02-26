@@ -135,6 +135,7 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
     ULong64_t key = pData1.RunNo*10000000 + pData1.EventNo;
     if(f1RunEvtToEntry.find(key) != f1RunEvtToEntry.end()){
       std::cout << "Uhoh key duplication \'" << key << "\'..." << std::endl;
+      std::cout << " " << pData1.RunNo << ", " << pData1.EventNo << std::endl;
     }
     f1RunEvtToEntry[key] = entry;
   }
@@ -437,6 +438,7 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
     ULong64_t key = pData2.RunNo*10000000 + pData2.EventNo;
     if(f1RunEvtToEntry.find(key) == f1RunEvtToEntry.end()){
       std::cout << "Uhoh missing key \'" << key << "\'..." << std::endl;
+      std::cout << " " << pData2.RunNo << ", " << pData2.EventNo << std::endl;
       continue;
     }
     
