@@ -13,6 +13,9 @@
 #include "TVector3.h"
 #include "TNamed.h"
 
+#include <time.h>
+#include <sys/time.h>
+
 //fastjet dependencies
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/PseudoJet.hh"
@@ -27,10 +30,21 @@
 #include "include/doGlobalDebug.h"
 #include "include/processJets.h"
 
+double get_wall_time(){
+  struct timeval time;
+  if (gettimeofday(&time,NULL)){
+    //  Handle error
+    return 0;
+  }
+  return (double)time.tv_sec + (double)time.tv_usec * .000001;
+}
+
 int main(int argc, char* argv[])
 {
-  if(argc != 4 && argc != 5 && argc != 6 && argc != 7){
-    std::cout << "Usage: ./mainCustom.exe <outFileName> <isSysPP> <jobNum> <maxEvt> <nMinPartChgCut> <doRopeWalk>" << std::endl;
+  double startTime = get_wall_time();
+
+  if(argc != 4 && argc != 5 && argc != 6 && argc != 7 && argc != 8){
+    std::cout << "Usage: ./mainCustom.exe <outFileName> <isSysPP> <jobNum> <maxEvt> <nMinPartChgCut> <doRopeWalk> <doBiasPthat>" << std::endl;
     return 1;
   }
 
@@ -49,6 +63,11 @@ int main(int argc, char* argv[])
   bool tempRopeWalk = false;
   if(argc >= 7) tempRopeWalk = std::stoi(argv[6]);
   const bool doRopeWalk = tempRopeWalk;
+
+  bool tempDoBiasPthat = false;
+  if(argc >= 8) tempDoBiasPthat = std::stoi(argv[7]);
+  const bool doBiasPthat = tempDoBiasPthat;
+
 
   const double jtPtCut = .01;
   const int nJtAlgo = 8;
@@ -92,7 +111,7 @@ int main(int argc, char* argv[])
   
   std::string outFileName = argv[1];
   if(outFileName.find(".root") != std::string::npos) outFileName.replace(outFileName.find(".root"), 5, "");
-  outFileName = outFileName + "_" + isSysPPStr + "_JobNum" + argv[3] + "_nEvt" + std::to_string(maxEvent) + "_nMinChgPart" + std::to_string(nMinPartChgCut_) + "_RopeWalk" + std::to_string(doRopeWalk) + ".root";
+  outFileName = outFileName + "_" + isSysPPStr + "_JobNum" + argv[3] + "_nEvt" + std::to_string(maxEvent) + "_nMinChgPart" + std::to_string(nMinPartChgCut_) + "_RopeWalk" + std::to_string(doRopeWalk) + "_PthatBias" + std::to_string(doBiasPthat) + ".root";
   
   if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
@@ -132,13 +151,23 @@ int main(int argc, char* argv[])
 
   Pythia8::Pythia pythia;
   double mZ = pythia.particleData.m0(23);
-  pythia.settings.parm("Beams:eCM", mZ);
   if(isSysPP){
     pythia.readString("Beams:idA = 2212");
     pythia.readString("Beams:idB = 2212");
     pythia.readString("HardQCD:all = on");
-    pythia.readString("PhaseSpace:pTHatMin = 1.0");
     pythia.readString("PhaseSpace:pTHatMax = -1");
+    if(!doBiasPthat){
+      pythia.readString("PhaseSpace:pTHatMin = 1.0");
+      pythia.settings.parm("Beams:eCM", mZ);
+    }
+    else if(doBiasPthat){
+      std::cout << "pthatbias is on" << std::endl;
+      pythia.readString("PhaseSpace:pTHatMin = 1.0");
+      //      pythia.readString("PhaseSpace:bias2Selection = on");
+      //      pythia.readString("PhaseSpace:bias2SelectionPow = 3");
+      //      pythia.readString("PhaseSpace:bias2SelectionRef  = 1.0");
+      pythia.readString("Beams:eCM = 7000.0");
+    }
   }
   else{
     pythia.readString("Beams:idA = 11");
@@ -147,6 +176,7 @@ int main(int argc, char* argv[])
     pythia.readString("WeakSingleBoson:ffbar2gmZ = on");
     pythia.readString("PhaseSpace:pTHatMin = 0.0");
     pythia.readString("PhaseSpace:pTHatMax = -1");
+    pythia.settings.parm("Beams:eCM", mZ);
   }
 
   const Int_t seedStart = 55217;//Chosen by drawing cards from a deck, will be used to do versioning validation from now on
@@ -183,6 +213,19 @@ int main(int argc, char* argv[])
   while(genTree_p->GetEntries() < maxEvent){
     if(!pythia.next()) continue;
     if(pythia.event.size() < nMinPartChgCut_) continue;
+
+    Int_t tempCount = pythia.event.size();
+    for(int i = 0; i < pythia.event.size(); ++i){
+      TLorentzVector temp(pythia.event[i].px(), pythia.event[i].py(), pythia.event[i].pz(), pythia.event[i].e());
+
+      if(!pythia.event[i].isFinal()) --tempCount;
+      else if(pythia.event[i].charge() == 0) --tempCount;
+      else if(temp.Pt() < .4) --tempCount;
+      else if(TMath::Abs(temp.Eta()) > 2.4) --tempCount;
+
+      if(tempCount < nMinPartChgCut_) break;
+    }
+    if(tempCount < nMinPartChgCut_) continue;
 
     if(genTree_p->GetEntries()%(maxEvent/100) == 0 && genTree_p->GetEntries() != currTreeFills){
       std::cout << "GenTree fills: " << genTree_p->GetEntries() << std::endl;
@@ -263,13 +306,13 @@ int main(int argc, char* argv[])
 
 	++(pDataCh.nParticle);
 	++(eData.nChargedHadrons);
-	if(temp.Pt() > 0.40) ++eData.nChargedHadrons_GT0p4;
-	if(temp.Pt() > 0.40) ++eData.nChargedHadrons_GT0p4Thrust;
+	if(temp.Pt() > 0.40 && TMath::Abs(temp.Eta()) < 2.4) ++eData.nChargedHadrons_GT0p4;
+	if(temp.Pt() > 0.40 && TMath::Abs(temp.Eta()) < 2.4) ++eData.nChargedHadrons_GT0p4Thrust;
       }
 
       ++(pData.nParticle);
     }
-
+  
     if(eData.nChargedHadrons_GT0p4 < nMinPartChgCut_) continue;
 
     if(pData.nParticle > 0){
@@ -352,6 +395,10 @@ int main(int argc, char* argv[])
   delete outFile_p;
 
   std::cout << "Job Complete" << std::endl;
+
+  double endTime = get_wall_time();
+
+  std::cout << "Start to end: " << startTime << ", " << endTime << std::endl;
 
   return 0;
 }
