@@ -25,7 +25,7 @@ void doFill(TH1F* hist1_p, TH1F* hist2_p, TH1F* histDelta_p, Bool_t val1, Bool_t
 {
   Float_t val1Out, val2Out;
   val1 ? val1Out = 1 : val1Out = 0;
-  val2 ? val2Out = 2 : val1Out = 0;
+  val2 ? val2Out = 1 : val2Out = 0;
 
   hist1_p->Fill(val1Out);
   hist2_p->Fill(val2Out);
@@ -125,14 +125,19 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
   inTree1_p->SetBranchStatus("*", 0);
   inTree1_p->SetBranchStatus("RunNo", 1);
   inTree1_p->SetBranchStatus("EventNo", 1);
+  inTree1_p->SetBranchStatus("process", 1);
 
   inTree1_p->SetBranchAddress("RunNo", &pData1.RunNo);
   inTree1_p->SetBranchAddress("EventNo", &pData1.EventNo);
+  inTree1_p->SetBranchAddress("process", &pData1.process);
+
+  bool doProcess = inTree1_p->GetMaximum("process") >= 0;
 
   for(Int_t entry = 0; entry < inTree1_p->GetEntries(); ++entry){
     inTree1_p->GetEntry(entry);
 
     ULong64_t key = pData1.RunNo*10000000 + pData1.EventNo;
+    if(doProcess) key += pData1.process*10000000000000;
     if(f1RunEvtToEntry.find(key) != f1RunEvtToEntry.end()){
       std::cout << "Uhoh key duplication \'" << key << "\'..." << std::endl;
       std::cout << " " << pData1.RunNo << ", " << pData1.EventNo << std::endl;
@@ -429,6 +434,8 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
 
   if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
+
+
   for(Int_t entry = 0; entry < nEntries; ++entry){
     if(entry%1000 == 0) std::cout << " Entry: " << entry << "/" << nEntries << std::endl;
     inTree2_p->GetEntry(entry);
@@ -436,6 +443,7 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
     for(Int_t jI = 0; jI < nJetTrees; ++jI){jetTree2_p[jI]->GetEntry(entry);}
 
     ULong64_t key = pData2.RunNo*10000000 + pData2.EventNo;
+    if(doProcess) key += pData2.process*10000000000000;
     if(f1RunEvtToEntry.find(key) == f1RunEvtToEntry.end()){
       std::cout << "Uhoh missing key \'" << key << "\'..." << std::endl;
       std::cout << " " << pData2.RunNo << ", " << pData2.EventNo << std::endl;
