@@ -55,6 +55,18 @@ int yearFromPath(std::string inStr)
   return -1;
 }
 
+int subDirFromPath(std::string inStr, bool isMC)
+{
+  if(!isMC) return -999;
+  const int nSubDir = 8;
+  const int subDir[nSubDir] = {183, 189, 192, 196, 200, 202, 205, 207};
+  for(int i = 0; i < nSubDir; ++i){
+    if(inStr.find("/"+ std::to_string(subDir[i]) + "/") != std::string::npos) return subDir[i];
+  }
+  std::cout << "Given string \'" << inStr << "\' does not contain valid subdir. return -1" << std::endl;
+  return -1;
+}
+
 //implemented as according to here https://www.dropbox.com/s/zujvnpftoqb7w6k/MC_alephstatus.pdf?dl=0, s3, with mod for GGTT and GGUS
 int processFromPath(std::string inStr)
 {
@@ -263,6 +275,7 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
   for(unsigned int fI = 0; fI < fileList.size(); ++fI){
     std::cout << "Processing " << fI << "/" << fileList.size() << ", \'" << fileList.at(fI) << "\'" << std::endl;
     const int year = yearFromPath(fileList.at(fI));
+    const int subDir = subDirFromPath(fileList.at(fI), isMC);
     const int process = processFromPath(fileList.at(fI));
 
     std::ifstream file(Form("%s",fileList.at(fI).c_str()));

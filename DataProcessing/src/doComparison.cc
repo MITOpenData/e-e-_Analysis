@@ -29,8 +29,8 @@ void doFill(TH1F* hist1_p, TH1F* hist2_p, TH1F* histDelta_p, Bool_t val1, Bool_t
 
   hist1_p->Fill(val1Out);
   hist2_p->Fill(val2Out);
-  if(val1-val2 > histDelta_p->GetBinLowEdge(histDelta_p->GetNbinsX()+1)) histDelta_p->Fill(histDelta_p->GetBinCenter(histDelta_p->GetNbinsX()));
-  else if(val1-val2 < histDelta_p->GetBinLowEdge(1)) histDelta_p->Fill(histDelta_p->GetBinCenter(1));
+  if(val1-val2 > histDelta_p->GetBinLowEdge(histDelta_p->GetNbinsX())) histDelta_p->Fill(histDelta_p->GetBinCenter(histDelta_p->GetNbinsX()-1));
+  else if(val1-val2 < histDelta_p->GetBinLowEdge(2)) histDelta_p->Fill(histDelta_p->GetBinCenter(2));
   else histDelta_p->Fill(val1-val2);
 	  
   return;
@@ -40,8 +40,8 @@ void doFill(TH1F* hist1_p, TH1F* hist2_p, TH1F* histDelta_p, Int_t val1, Int_t v
 {
   hist1_p->Fill(val1);
   hist2_p->Fill(val2);
-  if(val1-val2 > histDelta_p->GetBinLowEdge(histDelta_p->GetNbinsX()+1)) histDelta_p->Fill(histDelta_p->GetBinCenter(histDelta_p->GetNbinsX()));
-  else if(val1-val2 < histDelta_p->GetBinLowEdge(1)) histDelta_p->Fill(histDelta_p->GetBinCenter(1));
+  if(val1-val2 > histDelta_p->GetBinLowEdge(histDelta_p->GetNbinsX())) histDelta_p->Fill(histDelta_p->GetBinCenter(histDelta_p->GetNbinsX()-1));
+  else if(val1-val2 < histDelta_p->GetBinLowEdge(2)) histDelta_p->Fill(histDelta_p->GetBinCenter(2));
   else histDelta_p->Fill(val1-val2);
 	  
   return;
@@ -51,8 +51,8 @@ void doFill(TH1F* hist1_p, TH1F* hist2_p, TH1F* histDelta_p, Float_t val1, Float
 {
   hist1_p->Fill(val1);
   hist2_p->Fill(val2);
-  if(val1-val2 > histDelta_p->GetBinLowEdge(histDelta_p->GetNbinsX()+1)) histDelta_p->Fill(histDelta_p->GetBinCenter(histDelta_p->GetNbinsX()));
-  else if(val1-val2 < histDelta_p->GetBinLowEdge(1)) histDelta_p->Fill(histDelta_p->GetBinCenter(1));
+  if(val1-val2 > histDelta_p->GetBinLowEdge(histDelta_p->GetNbinsX())) histDelta_p->Fill(histDelta_p->GetBinCenter(histDelta_p->GetNbinsX()-1));
+  else if(val1-val2 < histDelta_p->GetBinLowEdge(2)) histDelta_p->Fill(histDelta_p->GetBinCenter(2));
   else histDelta_p->Fill(val1-val2);
 	  
   return;
@@ -64,8 +64,8 @@ void doFillArr(TH1F* hist1_p, TH1F* hist2_p, TH1F* histDelta_p, Int_t size1, Int
   for(Int_t pI = 0; pI < size2; ++pI){hist2_p->Fill(val2[pI]);}
   if(size1 == size2){
     for(Int_t pI = 0; pI < size1; ++pI){
-      if(val1[pI]-val2[pI] > histDelta_p->GetBinLowEdge(histDelta_p->GetNbinsX()+1)) histDelta_p->Fill(histDelta_p->GetBinCenter(histDelta_p->GetNbinsX()));
-      else if(val1[pI]-val2[pI] < histDelta_p->GetBinLowEdge(1)) histDelta_p->Fill(histDelta_p->GetBinCenter(1));
+      if(val1[pI]-val2[pI] > histDelta_p->GetBinLowEdge(histDelta_p->GetNbinsX())) histDelta_p->Fill(histDelta_p->GetBinCenter(histDelta_p->GetNbinsX()-1));
+      else if(val1[pI]-val2[pI] < histDelta_p->GetBinLowEdge(2)) histDelta_p->Fill(histDelta_p->GetBinCenter(2));
       else histDelta_p->Fill(val1[pI]-val2[pI]);
     }
   }
@@ -78,8 +78,8 @@ void doFillArr(TH1F* hist1_p, TH1F* hist2_p, TH1F* histDelta_p, Int_t size1, Int
   for(Int_t pI = 0; pI < size2; ++pI){hist2_p->Fill(val2[pI]);}
   if(size1 == size2){
     for(Int_t pI = 0; pI < size1; ++pI){
-      if(val1[pI]-val2[pI] > histDelta_p->GetBinLowEdge(histDelta_p->GetNbinsX()+1)) histDelta_p->Fill(histDelta_p->GetBinCenter(histDelta_p->GetNbinsX()));
-      else if(val1[pI]-val2[pI] < histDelta_p->GetBinLowEdge(1)) histDelta_p->Fill(histDelta_p->GetBinCenter(1));
+      if(val1[pI]-val2[pI] > histDelta_p->GetBinLowEdge(histDelta_p->GetNbinsX())) histDelta_p->Fill(histDelta_p->GetBinCenter(histDelta_p->GetNbinsX()-1));
+      else if(val1[pI]-val2[pI] < histDelta_p->GetBinLowEdge(2)) histDelta_p->Fill(histDelta_p->GetBinCenter(2));
       else histDelta_p->Fill(val1[pI]-val2[pI]);      
     }
   }
@@ -460,6 +460,7 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
       else if(tempS.find("EventNo") != std::string::npos && tempS.size() == std::string("EventNo").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.EventNo, pData2.EventNo);
       else if(tempS.find("RunNo") != std::string::npos && tempS.size() == std::string("RunNo").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.RunNo, pData2.RunNo);
       else if(tempS.find("year") != std::string::npos && tempS.size() == std::string("year").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.year, pData2.year);
+      else if(tempS.find("subDir") != std::string::npos && tempS.size() == std::string("subDir").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.subDir, pData2.subDir);
       else if(tempS.find("process") != std::string::npos && tempS.size() == std::string("process").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.process, pData2.process);
       else if(tempS.find("Energy") != std::string::npos && tempS.size() == std::string("Energy").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.Energy, pData2.Energy);
       else if(tempS.find("bFlag") != std::string::npos && tempS.size() == std::string("bFlag").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.bFlag, pData2.bFlag);
