@@ -87,7 +87,7 @@ void doFillArr(TH1F* hist1_p, TH1F* hist2_p, TH1F* histDelta_p, Int_t size1, Int
 }
 
 
-int doComparison(const std::string inFileName1, const std::string inFileName2, std::string outFileName = "")
+int doComparison(const std::string inFileName1, const std::string inFileName2, const bool isMC, std::string outFileName = "")
 {
   TDatime* date = new TDatime();
   std::string inFileNameCombo = inFileName1;
@@ -119,30 +119,69 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
   if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
   std::map<ULong64_t, Int_t> f1RunEvtToEntry;
+  std::map<ULong64_t, Int_t> f1RunEvtToDupEntry;
+
+  std::map<ULong64_t, Int_t> f2RunEvtToEntry;
+  std::map<ULong64_t, Int_t> f2RunEvtToDupEntry;
 
   TFile* inFile1_p = new TFile(inFileName1.c_str(), "READ");
   TTree* inTree1_p = (TTree*)inFile1_p->Get("t");
+
   inTree1_p->SetBranchStatus("*", 0);
   inTree1_p->SetBranchStatus("RunNo", 1);
   inTree1_p->SetBranchStatus("EventNo", 1);
   inTree1_p->SetBranchStatus("process", 1);
 
-  inTree1_p->SetBranchAddress("RunNo", &pData1.RunNo);
-  inTree1_p->SetBranchAddress("EventNo", &pData1.EventNo);
-  inTree1_p->SetBranchAddress("process", &pData1.process);
+  inTree1_p->SetBranchAddress("RunNo", &(pData1.RunNo));
+  inTree1_p->SetBranchAddress("EventNo", &(pData1.EventNo));
+  inTree1_p->SetBranchAddress("process", &(pData1.process));
 
   bool doProcess = inTree1_p->GetMaximum("process") >= 0;
+  bool doSubDir = isMC;
+  if(inTree1_p->GetListOfBranches()->FindObject("subDir") != 0){
+    TFile* tempFile_p = new TFile(inFileName2.c_str(), "READ");
+    TTree* inTree2_p = (TTree*)tempFile_p->Get("t");
+    if(inTree2_p->GetListOfBranches()->FindObject("subDir") != 0) doSubDir = doSubDir && true;
+    tempFile_p->Close();
+    delete tempFile_p;
+    inFile1_p->cd();
+  }
+  else doSubDir = false;
+
+  if(doSubDir){
+    inTree1_p->SetBranchStatus("subDir", 1);
+    inTree1_p->SetBranchAddress("subDir", &(pData1.subDir));
+  }
+  
+  int dup100 = 0;
+  int missing100 = 0;
 
   for(Int_t entry = 0; entry < inTree1_p->GetEntries(); ++entry){
     inTree1_p->GetEntry(entry);
 
-    ULong64_t key = pData1.RunNo*10000000 + pData1.EventNo;
-    if(doProcess) key += pData1.process*10000000000000;
-    if(f1RunEvtToEntry.find(key) != f1RunEvtToEntry.end()){
-      std::cout << "Uhoh key duplication \'" << key << "\'..." << std::endl;
-      std::cout << " " << pData1.RunNo << ", " << pData1.EventNo << std::endl;
+    if(entry < 10){
+      std::cout << pData1.RunNo << ", " << pData1.EventNo << std::endl;
     }
-    f1RunEvtToEntry[key] = entry;
+
+    ULong64_t key = (pData1.RunNo)*10000000 + pData1.EventNo;
+    if(doProcess) key += (pData1.process)*10000000000000;
+    if(doSubDir) key += (pData1.subDir)*10000000000000000;
+
+    if(f1RunEvtToEntry.find(key) != f1RunEvtToEntry.end() && f1RunEvtToDupEntry.find(key) == f1RunEvtToDupEntry.end()){
+      if(dup100 <= 100){
+	std::cout << "Uhoh key duplication \'" << key << "\'..." << std::endl;
+	if(doProcess) std::cout << " Entry,run,evt,process: " << entry << ", " << pData1.RunNo << ", " << pData1.EventNo << ", " << pData1.process << std::endl;
+	else if(doSubDir) std::cout << " Entry,run,evt,subDir: " << entry << ", " << pData1.RunNo << ", " << pData1.EventNo << ", " << pData1.subDir << std::endl;
+	else if(doSubDir && doProcess) std::cout << " Entry,run,evt,process,subDir: " << entry << ", " << pData1.RunNo << ", " << pData1.EventNo << ", " << pData1.process << ", " << pData1.subDir << std::endl;
+	else std::cout << " Entry,run,evt: " << entry << ", " << pData1.RunNo << ", " << pData1.EventNo << std::endl;
+      }
+      if(dup100 == 100) std::cout << "Duplicated 100 keys, terminating error messages. Please Check" << std::endl;
+      f1RunEvtToDupEntry[key] = 1;
+      f1RunEvtToEntry.erase(key);
+      ++dup100;
+    }
+    else if(f1RunEvtToDupEntry.find(key) != f1RunEvtToDupEntry.end()) f1RunEvtToDupEntry[key] += 1;
+    else f1RunEvtToEntry[key] = entry;
   }
 
   TObjArray* list1_p = (TObjArray*)inTree1_p->GetListOfBranches();
@@ -182,6 +221,49 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
 
   TFile* inFile2_p = new TFile(inFileName2.c_str(), "READ");
   TTree* inTree2_p = (TTree*)inFile2_p->Get("t");
+
+  inTree2_p->SetBranchStatus("*", 0);
+  inTree2_p->SetBranchStatus("RunNo", 1);
+  inTree2_p->SetBranchStatus("EventNo", 1);
+  inTree2_p->SetBranchStatus("process", 1);
+
+  inTree2_p->SetBranchAddress("RunNo", &(pData2.RunNo));
+  inTree2_p->SetBranchAddress("EventNo", &(pData2.EventNo));
+  inTree2_p->SetBranchAddress("process", &(pData2.process));
+  
+  if(doSubDir){
+    inTree2_p->SetBranchStatus("subDir", 1);
+    inTree2_p->SetBranchAddress("subDir", &(pData2.subDir));
+  }
+
+  dup100 = 0;
+  for(Int_t entry = 0; entry < inTree2_p->GetEntries(); ++entry){
+    inTree2_p->GetEntry(entry);
+
+    ULong64_t key = (pData2.RunNo)*10000000 + pData2.EventNo;
+    if(doProcess) key += (pData2.process)*10000000000000;
+    if(doSubDir) key += (pData2.subDir)*10000000000000000;
+
+    if(f2RunEvtToEntry.find(key) != f2RunEvtToEntry.end() && f2RunEvtToDupEntry.find(key) == f2RunEvtToDupEntry.end()){
+      if(dup100 <= 100){
+	std::cout << "Uhoh key duplication \'" << key << "\'..." << std::endl;
+        if(doProcess) std::cout << " Entry,run,evt,process: " << entry << ", " << pData2.RunNo << ", " << pData2.EventNo << ", " << pData2.process << std::endl;
+        else if(doSubDir) std::cout << " Entry,run,evt,subDir: " << entry << ", " << pData2.RunNo << ", " << pData2.EventNo << ", " << pData2.subDir << std::endl;
+        else if(doSubDir && doProcess) std::cout << " Entry,run,evt,process,subDir: " << entry << ", " << pData2.RunNo << ", " << pData2.EventNo << ", " << pData2.process << ", " << pData2.subDir << std::endl;
+        else std::cout << " Entry,run,evt: " << entry << ", " << pData2.RunNo << ", " << pData2.EventNo << std::endl;
+      }
+      if(dup100 == 100) std::cout << "Duplicated 100 keys, terminating error messages. Please Check" << std::endl;
+      f2RunEvtToDupEntry[key] = 1;
+      f2RunEvtToEntry.erase(key);
+      ++dup100;
+    }
+    else if(f2RunEvtToDupEntry.find(key) != f2RunEvtToDupEntry.end()) f2RunEvtToDupEntry[key] += 1;
+    else f2RunEvtToEntry[key] = entry;
+  }
+
+
+  inTree2_p->SetBranchStatus("*", 1);
+
   TObjArray* list2_p = (TObjArray*)inTree2_p->GetListOfBranches();
   std::vector<bool> inTreeBools;
 
@@ -434,7 +516,7 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
 
   if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
-
+  dup100 = 0;
 
   for(Int_t entry = 0; entry < nEntries; ++entry){
     if(entry%1000 == 0) std::cout << " Entry: " << entry << "/" << nEntries << std::endl;
@@ -442,11 +524,33 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
 
     for(Int_t jI = 0; jI < nJetTrees; ++jI){jetTree2_p[jI]->GetEntry(entry);}
 
-    ULong64_t key = pData2.RunNo*10000000 + pData2.EventNo;
-    if(doProcess) key += pData2.process*10000000000000;
+    ULong64_t key = (pData2.RunNo)*10000000 + pData2.EventNo;
+    if(doProcess) key += (pData2.process)*10000000000000;
+    if(doSubDir) key += (pData2.subDir)*10000000000000000;
     if(f1RunEvtToEntry.find(key) == f1RunEvtToEntry.end()){
-      std::cout << "Uhoh missing key \'" << key << "\'..." << std::endl;
-      std::cout << " " << pData2.RunNo << ", " << pData2.EventNo << std::endl;
+      if(missing100 <= 100){
+	std::cout << "Uhoh missing key \'" << key << "\'..." << std::endl;
+	if(doProcess) std::cout << " Entry,run,evt,process: " << entry << ", " << pData2.RunNo << ", " << pData2.EventNo << ", " << pData2.process << std::endl;
+	else if(doSubDir) std::cout << " Entry,run,evt,subDir: " << entry << ", " << pData2.RunNo << ", " << pData2.EventNo << ", " << pData2.subDir << std::endl;
+	else if(doSubDir && doProcess) std::cout << " Entry,run,evt,process,subDir: " << entry << ", " << pData2.RunNo << ", " << pData2.EventNo << ", " << pData2.process << ", " << pData2.subDir << std::endl;
+	else std::cout << " Entry,run,evt: " << entry << ", " << pData2.RunNo << ", " << pData2.EventNo << std::endl;
+      }
+      if(missing100 == 100) std::cout << "Exceeded 100 missing keys, terminating error messages. Please check" << std::endl;
+
+      ++missing100;
+      continue;
+    }
+    else if(f2RunEvtToDupEntry.find(key) != f2RunEvtToDupEntry.end()){
+      if(dup100 <= 100){
+	std::cout << "Uhoh, key \'" << key << "\' is duplicated in sample..." << std::endl;
+	if(doProcess) std::cout << " Entry,run,evt,process: " << entry << ", " << pData2.RunNo << ", " << pData2.EventNo << ", " << pData2.process << std::endl;
+        else if(doSubDir) std::cout << " Entry,run,evt,subDir: " << entry << ", " << pData2.RunNo << ", " << pData2.EventNo << ", " << pData2.subDir <<std::endl;
+        else if(doSubDir && doProcess) std::cout << " Entry,run,evt,process,subDir: " << entry << ", " << pData2.RunNo << ", " << pData2.EventNo << ", " << pData2.process << ", " << pData2.subDir << std::endl;
+        else std::cout << " Entry,run,evt: " << entry << ", " << pData2.RunNo << ", " << pData2.EventNo << std::endl;
+      }
+      if(dup100 == 100) std::cout << "Exceeded 100 duplicate warnings, terminating error messages. Please check." << std::endl;;
+
+      ++dup100;
       continue;
     }
     
@@ -653,7 +757,7 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
 
     pad3_p->cd();
     hist_Delta1From2_EvtByEvt_p[i]->DrawCopy("HIST E1");
-
+    gPad->SetLogy();
     std::string pdfStr = listOfCompBranches.at(i) + "_" + inFileNameCombo + "_" + std::to_string(date->GetDate()) + ".pdf";
     canv_p->SaveAs(("pdfDir/" + pdfStr).c_str());
     listOfPdf.push_back(pdfStr);
@@ -770,7 +874,8 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
       
       pad3_p->cd();
       hist_Delta1From2_EvtByEvt_Jet_p.at(jI).at(i)->DrawCopy("HIST E1");
-      
+      gPad->SetLogy();
+
       std::string pdfStr = listOfJetTreeBranches.at(jI).at(i) + "_" + jetStr+ "_" + inFileNameCombo + "_" + std::to_string(date->GetDate()) + ".pdf";
       canv_p->SaveAs(("pdfDir/" + pdfStr).c_str());
       listOfPdf.push_back(pdfStr);
@@ -789,8 +894,6 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
       delete hist_Delta1From2_EvtByEvt_Jet_p.at(jI).at(i);
     }
   }
-
-  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
   TNamed nameFile1("nameFile1", inFileName1.c_str());
   TNamed nameFile2("nameFile2", inFileName2.c_str());
@@ -929,13 +1032,13 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, s
 
 int main(int argc, char* argv[])
 {
-  if(argc != 3 && argc != 4){
-    std::cout << "Usage ./doComparison.exe <inFileName1> <inFileName2> <outFileName-optional>" << std::endl;
+  if(argc != 4 && argc != 5){
+    std::cout << "Usage ./doComparison.exe <inFileName1> <inFileName2> <isMC> <outFileName-optional>" << std::endl;
     return 1;
   }
 
   int retVal = 0;
-  if(argc == 3) retVal += doComparison(argv[1], argv[2]);
-  else if(argc == 4) retVal += doComparison(argv[1], argv[2], argv[3]);
+  if(argc == 4) retVal += doComparison(argv[1], argv[2], std::stoi(argv[3]));
+  else if(argc == 5) retVal += doComparison(argv[1], argv[2], std::stoi(argv[3]), argv[4]);
   return retVal;
 }

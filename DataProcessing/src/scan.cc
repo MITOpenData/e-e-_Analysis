@@ -388,6 +388,7 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	if(check999(num.at(3))){runPos++; evtPos++; ePos++;}
 
 	pData.year = year;
+	pData.subDir = subDir;
 	pData.process = process;
 	pData.RunNo = std::stoi(num.at(runPos));
 	pData.EventNo= std::stoi(num.at(evtPos));
@@ -698,6 +699,7 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
 	  pgData.year = year;
+	  pgData.subDir = subDir;
 	  pgData.process = process;
 	  pgData.RunNo = std::stoi(num.at(runPos));
 	  pgData.EventNo= std::stoi(num.at(evtPos));
