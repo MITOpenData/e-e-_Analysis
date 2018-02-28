@@ -3,7 +3,8 @@
 //
 //
 //  Created by Anthony Badea on 10/24/17.
-//
+//  Edit by Yen-Jie Lee
+
 
 //c and c++ dependencies
 #include <iostream>
@@ -17,9 +18,10 @@
 #include <TTree.h>
 #include <TH1D.h>
 #include <TStyle.h>
-#include "TLorentzVector.h"
-#include "TCanvas.h"
+#include <TLorentzVector.h>
+#include <TCanvas.h>
 #include <TLine.h>
+#include <TLegend.h>
 
 //local headers
 #include "../include/getLogBins.h"
@@ -44,12 +46,13 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
                          std::string dataname = "LEP2",
                          Float_t min_Energy = 203, // lower cut on Energy   i.e. Energy>91 to take event
                          Float_t max_Energy = 209, // upper cut on Energy    i.e. Energy<91.5 to take event
-                         Float_t cut_missP = 0.3,   // upper bound on missP/energy
+                         Float_t cut_missP = 0.2,   // upper bound on missP/energy
                          Float_t min_TTheta = 0.0, // lower cut on TTheta
                          Float_t max_TTheta = 3.5, // upper cut on TTheta --> currently full range of TTheta
                          Int_t min_nParticle = 0, // lower cut on multiplicity
                          Int_t max_nParticle = 9999, // upper cut on multiplicity
-                         Int_t isGen = 0    // 1 to use gen level
+                         Int_t 
+			 isGen = 0    // 1 to use gen level
 )
 {
   //declare some binnings first - just get it out of the way
@@ -65,17 +68,51 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
   std::string sysFileName;
   if(dataname == "LEP1")sysFileName = "../inputs/HEPData-ins636645-v1-Table54.root";
   if(dataname == "LEP2")sysFileName = "../inputs/HEPData-ins636645-v1-Table61.root";
-        
+  
+  const int nbin96 = 21;
+  Float_t bins96[nbin96+1]={0,0.005,0.01,0.015,0.02,0.025,0.03,0.035,0.04,0.05,0.06,0.08,0.1,0.12,0.14,0.16,0.18,0.2,0.25,0.3,0.35,0.4};
+  Float_t bins96i[nbin96+1];
+  for (int i=0;i<nbin96+1;i++){
+     bins96i[nbin96-i]=1-bins96[i];
+  }
+  
+  TH1F *hppe96 = new TH1F("hppe96","",nbin96,bins96i);
+  hppe96->SetBinContent(21,1.017);
+  hppe96->SetBinContent(20,6.035);
+  hppe96->SetBinContent(19,12.44);
+  hppe96->SetBinContent(18,16.07);
+  hppe96->SetBinContent(17,16.45);
+  hppe96->SetBinContent(16,15.25);
+  hppe96->SetBinContent(15,13.38);
+  hppe96->SetBinContent(14,11.58);
+  hppe96->SetBinContent(13,9.346);
+  hppe96->SetBinContent(12,7.159);
+  hppe96->SetBinContent(11,5.088);
+  hppe96->SetBinContent(10,3.427);
+  hppe96->SetBinContent(9,2.482);
+  hppe96->SetBinContent(8,1.847);
+  hppe96->SetBinContent(7,1.390);
+  hppe96->SetBinContent(6,1.072);
+  hppe96->SetBinContent(5,0.8465);
+  hppe96->SetBinContent(4,0.5661);
+  hppe96->SetBinContent(3,0.3065);
+  hppe96->SetBinContent(2,0.1248);
+  hppe96->SetBinContent(1,0.0184);
+  
+  hppe96->SetLineColor(kGreen+1);
+  
+       
   TFile* outFile_p = new TFile(Form("outFile_%s_%d_%d.root",dataname.c_str(),min_nParticle,max_nParticle), "RECREATE"); // we will write our th1 to a file for debugging purposes
   TH1D *h_thrust = new TH1D("h_thrust",";Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",43,0.57,1); //moving declarations here for clarity
   h_thrust->Sumw2();
-  TH1D *h_one_minus_thrust = new TH1D("h_one_minus_thrust",";1-Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",40,0.0,0.4);
+  TH1D *h_one_minus_thrust = new
+  TH1D("h_one_minus_thrust",";1-Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",20,0.0,0.4);
   h_one_minus_thrust->Sumw2();
   TH1D *h_ratio_one_minus_thrust = (TH1D*)h_one_minus_thrust->Clone();
   h_one_minus_thrust->Sumw2();
   TH1D *h_one_minus_thrust_log = new TH1D("h_one_minus_thrust_log",";1-Thrust log scale;#frac{1}{#sigma} #frac{d#sigma}{dT}",nBins,bins);
   h_one_minus_thrust_log->Sumw2();
-
+  
   TH1D* h_one_minus_thrust_log_SysUp = new TH1D("h_one_minus_thrust_log_SysUp", "", nBins, bins);
   TH1D* h_one_minus_thrust_log_SysDown = new TH1D("h_one_minus_thrust_log_SysDown", "", nBins, bins);
 
@@ -106,12 +143,18 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
 
   TH1D *h_thrustNoCorr = new TH1D("h_thrustNoCorr",";ThrustNoCorr;#frac{1}{#sigma} #frac{d#sigma}{dT}",43,0.57,1); //moving declarations here for clarity
   h_thrustNoCorr->Sumw2();
-  TH1D *h_one_minus_thrustNoCorr = new TH1D("h_one_minus_thrustNoCorr",";1-ThrustNoCorr;#frac{1}{#sigma} #frac{d#sigma}{dT}",40,0.0,0.4);
+  h_thrustNoCorr->SetMarkerStyle(24);
+  h_thrustNoCorr->SetMarkerColor(2);
+
+  TH1D *h_one_minus_thrustNoCorr = new TH1D("h_one_minus_thrustNoCorr",";1-ThrustNoCorr;#frac{1}{#sigma}  #frac{d#sigma}{dT}",20,0.0,0.4);
   h_one_minus_thrustNoCorr->Sumw2();
+  h_one_minus_thrustNoCorr->SetMarkerStyle(24);
+  h_one_minus_thrustNoCorr->SetMarkerColor(2);
+  
   TH1D *h_one_minus_thrustNoCorr_log = new TH1D("h_one_minus_thrustNoCorr_log",";1-ThrustNoCorr log scale;#frac{1}{#sigma} #frac{d#sigma}{dT}",nBins,bins);
   h_one_minus_thrustNoCorr_log->Sumw2();
 
-  
+  if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
   TFile *f = new TFile(filename, "READ"); //specify reading only - dont want to mod input
   if(f->IsZombie())
   {
@@ -124,22 +167,32 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
         
     Int_t nParticle;
     Float_t px[5000];
+    Float_t pmag[5000];
     Float_t py[5000];
     Float_t pz[5000];
+    Float_t pt[5000];
     Float_t theta[5000];
     Float_t TTheta;
+    Float_t STheta;
     Float_t TPhi;
+    Float_t Thrust_charged;
     Int_t pwflag[5000];
     Float_t Energy;
     Float_t missP;
     bool passesWW;
+    Int_t nChargedHadrons;
     
     t1->SetBranchAddress("nParticle",&nParticle);
     t1->SetBranchAddress("px",px);
     t1->SetBranchAddress("py",py);
     t1->SetBranchAddress("pz",pz);
+    t1->SetBranchAddress("pt",pt);
+    t1->SetBranchAddress("pmag",pmag);
     t1->SetBranchAddress("theta",theta);
+    t1->SetBranchAddress("Thrust",&Thrust_charged);
+    t1->SetBranchAddress("nChargedHadrons",&nChargedHadrons);
     t1->SetBranchAddress("TTheta", &TTheta);
+    t1->SetBranchAddress("STheta", &STheta);
     t1->SetBranchAddress("TPhi", &TPhi);
     t1->SetBranchAddress("pwflag",pwflag);
     t1->SetBranchAddress("Energy", &Energy);
@@ -148,11 +201,11 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
     
     Int_t nevent = (Int_t)t1->GetEntries();
     Int_t nevent_process = nevent;
-    if(doGlobalDebug) nevent_process = 1000;
+//    if(doGlobalDebug) nevent_process = 1000;
     std::vector<float> T;
     
     //for(int i = 0;i<h_one_minus_thrust->GetNbinsX();i++){std::cout<<h_one_minus_thrust->GetBinLowEdge(i)<<std::endl;}
-    for(Int_t i=0;i<nevent_process;i++)
+    for(Int_t i=0;i<nevent_process/10.;i++)
     {
         //std::cout<<"EVENT "<<i<<std::endl;
         
@@ -161,10 +214,12 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
 
         // NUMBER 2: Cut on Energy
         if(Energy<min_Energy || Energy>max_Energy){continue;}
+        // Cut on STheta
+        if(fabs(cos(STheta))>0.9)continue;
         // Cut on TTheta
         if(TTheta<min_TTheta || TTheta>max_TTheta)continue;
         // NUMBER 3: Cut of TTheta
-        if(fabs(cos(TTheta))>0.9)continue;
+//        if(fabs(cos(TTheta))>0.8)continue;
         // NUMBER 4: Cut on missP/Energy
         if(missP/Energy>cut_missP)continue;
         // cut on multiplicity
@@ -179,21 +234,34 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
         Float_t T_sum = 0.0;
         Float_t T_mag = 0.0;
         Int_t pwflag0 = 0;
-        
+        Float_t sumP=0;
+	Int_t nch=0;
+	bool veto=0;
         for (Int_t j=0;j<nParticle;j++)
         {
+	    if (pmag[j]/Energy>0.5) veto=1;  
+	    if (pwflag[j]==0&&theta[j]>0.3490658&&theta[j]<2.79252676&&pt[j]>0.2){
+	       sumP+=fabs(sqrt(pmag[j]*pmag[j]+0.0194797849));
+	       nch++;
+	    }
+/*
             //if(isCharged == 1 && pwflag[j]!=0){continue;}
             if(pwflag[j]==0)pwflag0+=1;
             TVector3 v2(px[j],py[j],pz[j]);
             if(fabs(v1.Dot(v2))>v2.Mag())std::cout<<"DOT = "<<abs(v1.Dot(v2))<<" V2 Magnitude = "<<v2.Mag()<<std::endl;
             T_sum += fabs(v1.Dot(v2));
             T_mag += v2.Mag();
+*/
         }
-        
+        if (veto) continue;
+	if (sumP<15) continue;
+	pwflag0=nChargedHadrons;
         // NUMBER 1: if we get 5 charged particles
-        if(pwflag0>=5 && passesWW)
+        if (nch>=5 && passesWW)
+        //if(nch>=5 )
         {
-            Float_t Thrust = T_sum/T_mag;
+           // Float_t Thrust = T_sum/T_mag;
+            Float_t Thrust = Thrust_charged;
             h_thrust->Fill(Thrust, correct_entry(Thrust));
 	        h_one_minus_thrust->Fill(1-Thrust, correct_entry(Thrust)); //You have unbinned data! Fill here
 	        h_one_minus_thrust_log->Fill(1-Thrust, correct_entry(Thrust)); //You have unbinned data! Fill here
@@ -206,10 +274,17 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
         }
     }
 
-    for(int i=0;i<h_thrust->GetNbinsX();i++) std::cout << h_thrust->GetBinContent(i) << std::endl;
-
+/*
+    for(int i=0;i<=h_thrust->GetNbinsX();i++){
+     std::cout << h_thrust->GetBinContent(i) << std::endl;
+      h_thrust->SetBinContent(i,h_thrust->GetBinContent(i)/h_thrust->GetBinWidth(i));
+      h_thrustNoCorr->SetBinContent(i,h_thrustNoCorr->GetBinContent(i)/h_thrustNoCorr->GetBinWidth(i));
+      h_thrust->SetBinContent(i,h_thrust->GetBinContent(i)/h_thrust->GetBinWidth(i));
+      h_thrustNoCorr->SetBinContent(i,h_thrustNoCorr->GetBinContent(i)/h_thrustNoCorr->GetBinWidth(i));
+    }
+    */
     if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-
+    
     Double_t scale = 1.0/( h_thrust->GetXaxis()->GetBinWidth(1)*h_thrust->Integral());
     h_thrust->Scale(scale);    
 
@@ -220,10 +295,13 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
     gStyle->SetOptStat(0);
     h_thrust->GetXaxis()->CenterTitle();
     h_thrust->GetYaxis()->CenterTitle();
+    h_thrust->SetTitleOffset(1.5,"Y");
     h_thrust->GetYaxis()->SetRangeUser(0,20);
-    h_thrust->SetMarkerStyle(4);
-    h_thrust->SetMarkerSize(0.7);
+    h_thrust->SetMarkerStyle(20);
+    h_thrust->SetMarkerSize(1);
     h_thrust->Draw();
+    //h_thrustNoCorr->Draw("same");
+    
 
     if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
@@ -231,7 +309,6 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
     Double_t binLowEdge = 0;
     Double_t binHiEdge = 0;
     Double_t binval = 0;
-    
     // drawing approximate errors from HEP Table 54 data
     if(dataname=="LEP1")
     {
@@ -240,11 +317,22 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
         hdata->cd("Table 54");
         hep = (TH1F*)gDirectory->Get("Hist1D_y1");
         hep->SetMarkerStyle(5);
-        hep->Draw("hist p SAME");
-
+	hep->SetLineColor(kBlue);
+	hep->SetLineWidth(2);
+        hep->Draw("hist SAME");
+        hppe96->Draw("hist same");
         TLine* line_thrust = new TLine();
         Float_t sys = 0;
         quad_errors = compute_errors(dataname);
+	TLegend *leg = new TLegend(0.3,0.5,0.7,0.9);
+	leg->SetBorderSize(0);
+	leg->SetFillStyle(0);
+	leg->AddEntry(h_thrust,"ALEPH archived data (LEP1)","pl");
+	leg->AddEntry(hppe96,"PR294(1998)1","l");
+	leg->AddEntry(hep,"EPJC35(2004)457","l");
+	leg->Draw();
+	
+/*
         for (int i = 1;i<=h_thrust->GetNbinsX();i++)
         {
             binLowEdge = h_thrust->GetBinLowEdge(i);
@@ -256,8 +344,9 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
             line_thrust->DrawLine(binLowEdge, binval - sys, binHiEdge, binval - sys);
             line_thrust->DrawLine(binLowEdge, binval + sys, binHiEdge, binval + sys);
         }
+*/
     }
-    
+
     c2->SaveAs(Form("mithig_T_%s_%d_%d.pdf",dataname.c_str(),min_nParticle,max_nParticle));
     
     // Fill the 1-T distribution after the correction to T
@@ -281,6 +370,7 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
     h_one_minus_thrust->GetYaxis()->SetRangeUser(0,20);
     h_one_minus_thrust->SetMarkerStyle(4);
     h_one_minus_thrust->Draw();
+    h_one_minus_thrustNoCorr->Draw("same");
 
     //Drawing approximate errors from HEP Table 61 data
     if(dataname=="LEP2")
@@ -290,7 +380,7 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
         hdata->cd("Table 61");
         hep = (TH1F*)gDirectory->Get("Hist1D_y1");
         hep->SetMarkerStyle(5);
-        hep->Draw("hist p SAME");
+        hep->Draw("hist SAME");
 
         TLine* line_thrust = new TLine();
         Float_t sys = 0;
@@ -318,6 +408,8 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
     float error_temp;
     Int_t binx;
     //std::vector<float> one_minus_T_errors;
+
+      return 0;
     
     // ratio of bin value to error
     for (int i = 0;i<h_one_minus_thrust->GetNbinsX();i++)
@@ -388,7 +480,7 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
     h_one_minus_thrustNoCorr_log->Scale(1.0/h_one_minus_thrustNoCorr_log->Integral()); //SCALE BY THE HIST w/ *_LOG AT END
 
     if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-    //*_thrust -> *_thrust_log
+    // *_thrust -> *_thrust_log
      for(int i = 0; i < nBins; ++i)
      {
        std::cout << i <<std::endl;
@@ -403,6 +495,7 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
 
     if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
+   
      for(int i = 0; i < nBins; ++i){
        std::cout << "log" << i << std::endl;
        Double_t sysUp = h_one_minus_thrust_log->GetBinContent(i+1);
