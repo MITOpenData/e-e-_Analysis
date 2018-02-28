@@ -236,10 +236,11 @@ int main(int argc, char* argv[])
     pthat_ = pythia.info.pTHat();
     pthatWeight_ = pythia.info.weight();
     pData.nParticle = 0;
+    bData.nParticle = 0;
     eData.nChargedHadrons = 0;
     eData.nChargedHadrons_GT0p4 = 0;
     eData.nChargedHadrons_GT0p4Thrust = 0;
-
+  
     TVector3 netP(0, 0, 0);
     TVector3 netP_charged(0, 0, 0);
     particleData pDataCh;
@@ -311,6 +312,7 @@ int main(int argc, char* argv[])
       }
 
       ++(pData.nParticle);
+      ++(bData.nParticle);
     }
   
     if(eData.nChargedHadrons_GT0p4 < nMinPartChgCut_) continue;
