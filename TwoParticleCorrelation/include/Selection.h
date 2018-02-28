@@ -35,25 +35,27 @@ class Selection
         Int_t bkgrd_runs = 1;
         enum SIMPLEPID {BELLE_PHOTON, BELLE_ELECTRON, BELLE_PION, BELLE_MUON, BELLE_KAON, BELLE_PROTON};    // BELLE Particle Definition
         enum SIMPLEPWFLAG {ALEPH_CHARGED_TRACK, ALEPH_CHARGED_LEPTONS1, ALEPH_CHARGED_LEPTONS2, ALEPH_V0, ALEPH_PHOTON, ALEPH_NEUTRAL_HADRON};  // ALEPH Particle Flow Classification
-
+        bool doGen = false;
+        
         /* Detector Specific Cuts */
         
         // From 1990 "Properties of Hadronic Events in e+e- Annihilation at sqrt(s) = 91 GeV" ALEPH Collaboration paper
             // Track Cuts
         bool doNTPC = 0;    Int_t nTPCMin = 4;  Int_t nTPCMax = 999;
-        bool doTheta = false;   Float_t thetaMin = 20;  Float_t thetaMax = 160;  // measured in degrees 
-        bool doP = false;   Float_t pMin = 0.2; // measured in GeV
-        bool dod0 = false;     Float_t d0Cut = 3; // measured in cm
-        bool doz0 = false;   Float_t z0Cut = 5;  // measured in cm
+        bool doTheta = true;   Float_t thetaMin = 20*TMath::Pi()/180.;  Float_t thetaMax = 160*TMath::Pi()/180.;  // measured in radians
+        bool doP = true;   Float_t pMin = 0.2; // measured in GeV
+        bool dod0 = true;     Float_t d0Cut = 3; // measured in cm
+        bool doz0 = true;   Float_t z0Cut = 5;  // measured in cm
             // Event Cuts
-        Float_t TotalChrgEnergyMin = 15; // measured in GeV
+        bool doE = true; Float_t TotalChrgEnergyMin = 15; // measured in GeV
         Float_t nTrkMin = 5;
-        bool doSTheta = false; Float_t SThetaMin = 35;  Float_t SThetaMax = 145;  // measured in degrees
-
+        bool doSTheta = true; Float_t SThetaMin = 35;  Float_t SThetaMax = 145;  // measured in degrees
+        // end of 1990 cuts
+        bool domissPCut = true;  Float_t missPCut = 20;  // measured in GeV
         /* Frame Dependent Cuts */
 
         bool doPt = true;
-        bool domissPCut = false;    // measured in GeV
+        
         bool doWW = false;  // impose WW cut
         bool doMixedMultCut = false; // cut on |nTrk - nTrkMix|
         // jet cuts
@@ -164,6 +166,23 @@ Selection::Selection()
     else if(doWTA) { nptBins = nptBins_wrtWTA; netaBins = netaBins_wrtWTA; etaPlotRange = etaPlotRange_wrtWTA;}
     else { nptBins = nptBins_wrtBeam; netaBins = netaBins_wrtBeam; etaPlotRange = etaPlotRange_wrtBeam;}
 
+    if(doGen)
+    {
+        // nTrk is just the number of charged particles
+        doNTPC = false;
+        doTheta = false;
+        doP = false;
+        dod0 = false;
+        doz0 = false;
+        doWW = false;
+        nTrkMin = 0;
+        doE = false;
+        doSTheta = false;
+        domissPCut = false;
+        doAjCut = false;
+        do3jetEvtCut = false;
+    }
+
     return;
 }
 
@@ -222,11 +241,15 @@ int Selection::ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticl
         }
     }
     if (N < nTrkMin) return -1;
-    if (E < TotalChrgEnergyMin) return -1;
+    // this is to ensure that we are able to find a mixed event
+    if( N >= 1000) return -1;
+
+    if (doE && E < TotalChrgEnergyMin) return -1;
     if(doSTheta && (STheta < SThetaMin && STheta > SThetaMax)) return -1;
+    //// End of 1990 cuts ////
 
     ///////// Missing Momentum /////////
-    //if ( domissPCut && missP > missPCut) return -1;
+    if (domissPCut && missP > missPCut) return -1;
     
     ///////// 3-Jet /////////
     Float_t j12 = jtp(jtpt[0],jteta[0])+jtp(jtpt[1],jteta[1]);
@@ -239,11 +262,6 @@ int Selection::ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticl
         // require 3rd jet has low momentum relative to first two jets (take average momentum of jet 1 and 2)
         if(do3jetEvtCut && nref > 2 && (2*jtp(jtpt[2],jteta[2]) / j12) > thirdJetCut ) return -1;
     }
-    
-    ///////// CHARGED PARTICLES /////////
-    
-    // this is to ensure that we are able to find a mixed event
-    if( N > 1000) return -1;
     
     return N;
 }
