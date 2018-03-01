@@ -83,7 +83,7 @@ class Selection
         static const Int_t nptBins_wrtThr = 1;
         Float_t ptBinsLow_wrtThr[nptBins_wrtThr]  = {1.0};  // measured in GeV {1.0,0.4}
         Float_t ptBinsHigh_wrtThr[nptBins_wrtThr] = {3.0}; // {3.0,100.0}
-        static const Int_t netaBins_wrtThr = 1;
+        static const Int_t netaBins_wrtThr = 2;
         Float_t etaBinsLow_wrtThr[netaBins_wrtThr]  = {4.5,5.0}; //{4.5,5.0}
         Float_t missPCut_wrtThr = 20;
         Float_t etaPlotRange_wrtThr = 6.0;
@@ -120,8 +120,8 @@ class Selection
         /* pp Cross-Check */
         bool doPP = false;
         static const Int_t nptBins_pp = 2;
-        Float_t ptBinsLow_pp[nptBins_wrtWTA]  = {0.4, 1.0};  // measured in GeV
-        Float_t ptBinsHigh_pp[nptBins_wrtWTA] = {100, 3.0};
+        Float_t ptBinsLow_pp[nptBins_pp]  = {0.4, 1.0};  // measured in GeV
+        Float_t ptBinsHigh_pp[nptBins_pp] = {100, 3.0};
         static const Int_t netaBins_pp = 2;
         Float_t etaBinsLow_pp[netaBins_wrtWTA]  = {4.5,5.0};
         Float_t missPCut_pp = 20;
@@ -149,7 +149,6 @@ Selection::Selection()
     {
         multBinsLow[2] = 110;
         multBinsHigh[1] = 110;
-        ptMax = 3.0;
         doWTA = false;  // 0 t, 1 BoostedWTAR8Evt,
         jttree = 0; // 0 ak4ESchemeJetTree, 1 ak4WTAmodpSchemeJetTree, 2 ak8ESchemeJetTree, 3 ak8WTAmodpSchemeJetTree
         doThrust = false;  // used for determining thrust/beam angles to use in filling histograms
