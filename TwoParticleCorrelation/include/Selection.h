@@ -105,9 +105,9 @@ class Selection
         Float_t etaPlotRange_wrtWTA = 6.0;
 
         /* Independent Cuts */
-        static const Int_t nEnergyBins = 2;
-        Float_t energyBinsLow[nEnergyBins] = {0,100};
-        Float_t energyBinsHigh[nEnergyBins] = {100,999};
+        static const Int_t nEnergyBins = 1;
+        Float_t energyBinsLow[nEnergyBins] = {0}; // {0,100}
+        Float_t energyBinsHigh[nEnergyBins] = {999}; // {100,999}
 
         static const Int_t nMultBins = 3;
         Int_t multBinsLow[nMultBins]  = {0 , 20, 30};
