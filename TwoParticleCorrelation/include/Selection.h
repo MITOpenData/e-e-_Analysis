@@ -35,7 +35,7 @@ class Selection
         Int_t bkgrd_runs = 1;
         enum SIMPLEPID {BELLE_PHOTON, BELLE_ELECTRON, BELLE_PION, BELLE_MUON, BELLE_KAON, BELLE_PROTON};    // BELLE Particle Definition
         enum SIMPLEPWFLAG {ALEPH_CHARGED_TRACK, ALEPH_CHARGED_LEPTONS1, ALEPH_CHARGED_LEPTONS2, ALEPH_V0, ALEPH_PHOTON, ALEPH_NEUTRAL_HADRON};  // ALEPH Particle Flow Classification
-        bool doGen = false;
+        bool doGen = true; // turn of event and track selections
         
         /* Detector Specific Cuts */
         
@@ -56,7 +56,7 @@ class Selection
 
         bool doPt = true;
         
-        bool doWW = false;  // impose WW cut
+        bool doWW = true;  // impose WW cut
         bool doMixedMultCut = false; // cut on |nTrk - nTrkMix|
         // jet cuts
         bool doAjCut = false;   Float_t AjCut = 0.1;
@@ -83,11 +83,11 @@ class Selection
     
         // Thrust Axis
         bool doThrust = false;  bool donTrkThrust = false; // false = use beam axis for nTrk calculation
-        static const Int_t nptBins_wrtThr = 2;
-        Float_t ptBinsLow_wrtThr[nptBins_wrtThr]  = {1.0,0.4};  // measured in GeV
-        Float_t ptBinsHigh_wrtThr[nptBins_wrtThr] = {3.0,100};
-        static const Int_t netaBins_wrtThr = 2;
-        Float_t etaBinsLow_wrtThr[netaBins_wrtThr]  = {4.5,5.0};
+        static const Int_t nptBins_wrtThr = 1;
+        Float_t ptBinsLow_wrtThr[nptBins_wrtThr]  = {1.0,0.4};  // measured in GeV {1.0,0.4}
+        Float_t ptBinsHigh_wrtThr[nptBins_wrtThr] = {3.0,100}; // {3.0,100.0}
+        static const Int_t netaBins_wrtThr = 1;
+        Float_t etaBinsLow_wrtThr[netaBins_wrtThr]  = {1.8}; //{4.5,5.0}
         Float_t missPCut_wrtThr = 20;
         Float_t etaPlotRange_wrtThr = 6.0;
 
@@ -110,8 +110,8 @@ class Selection
         Float_t energyBinsHigh[nEnergyBins] = {100,999};
 
         static const Int_t nMultBins = 3;
-        Int_t multBinsLow[nMultBins]  = {0 , 20, 35};
-        Int_t multBinsHigh[nMultBins] = {20, 35, 999};
+        Int_t multBinsLow[nMultBins]  = {0 , 20, 30};
+        Int_t multBinsHigh[nMultBins] = {20, 30, 999};
 
         /* Plotting */
         Float_t dEtaBins = 20; //keep even
@@ -175,14 +175,13 @@ Selection::Selection()
         dod0 = false;
         doz0 = false;
         doWW = false;
-        nTrkMin = 0;
+        nTrkMin = 1;
         doE = false;
         doSTheta = false;
         domissPCut = false;
         doAjCut = false;
         do3jetEvtCut = false;
     }
-
     return;
 }
 
