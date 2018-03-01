@@ -69,6 +69,8 @@ int ridge_check_parallel
     
     // set up plots
     Selection s = Selection();
+    if(inFileName.find("JobNum") != std::string::npos){s.doNTPC = false; s.dod0 = false; s.doz0 = false; s.doWW = false;} // for MC
+
     TFile * output = TFile::Open(Form("%s_%d.root",outFileName.c_str(),(Int_t)s.doThrust),"recreate");
 
     /// Initialize the histograms

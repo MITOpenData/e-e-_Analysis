@@ -603,10 +603,14 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
     if(entry%1000 == 0) std::cout << " Entry: " << entry << "/" << nEntries << std::endl;
     
     inTree.at(0)->GetEntry(entry);
+    
+    // apply the event selection criteria
     Int_t nTrk = 0;
     if(!s.donTrkThrust) nTrk = s.ridge_eventSelection(eData.at(0).passesWW, eData.at(0).missP, pData.at(0).nParticle, jData.at(0).at(0).nref, jData.at(0).at(0).jtpt, jData.at(0).at(0).jteta, eData.at(0).STheta, pData.at(0).mass, pData.at(0).ntpc, pData.at(0).theta, pData.at(0).pmag, pData.at(0).d0, pData.at(0).z0, pData.at(0).pwflag);
     if(s.donTrkThrust) nTrk = s.ridge_eventSelection(eData.at(0).passesWW, eData.at(0).missP, pData.at(0).nParticle, jData.at(0).at(0).nref, jData.at(0).at(0).jtpt, jData.at(0).at(0).jteta, eData.at(0).STheta, pData.at(0).mass, pData.at(0).ntpc, pData.at(0).theta, pData.at(0).pmag, pData.at(0).d0, pData.at(0).z0, pData.at(0).pwflag);
     if( nTrk < 0) continue;
+
+
     if(inFileName.find("LEP2") != std::string::npos && eData.at(0).passesWW == 0) continue;
     for(Int_t jI = 0; jI < nJetTrees; ++jI){jetTree.at(0)[jI]->GetEntry(entry);}
     // check if the key is in the list

@@ -41,6 +41,8 @@ int plotAllTH1F(const std::string inFileName, const std::string dataName)
     static const std::string arr[] = {"jtm","jtN","pt","px","py","pz","pmag", "missP","missPt","missChargedP","missChargedPt","mass","ebx","eby"};
     std::vector<std::string> logPlots;
     logPlots.assign(arr, arr + sizeof(arr) / sizeof(arr[0]));
+    // colors for plotting LEP1,LEP2,PYTHIA8
+    Int_t colors[3] = {1,632,600}; // kBlack,kRed,kBlue
 
       ///// check if there are multiple files /////
     std::vector<std::string> fileList = handleMultipleFiles(inFileName);
@@ -49,21 +51,18 @@ int plotAllTH1F(const std::string inFileName, const std::string dataName)
       std::cout << "Given input \'" << inFileName << "\' doesn't produce valid input. return 1" << std::endl;
       return 1;
     }
-
     std::vector< TFile* > inFileList;
-    std::cout<<fileList.at(0).c_str()<<std::endl;
     inFileList.push_back(new TFile(fileList.at(0).c_str(), "READ"));
     std::vector<std::string> inTH1FNames = returnRootFileContentsList(inFileList.at(0), "TH1F");
     removeVectorDuplicates(&inTH1FNames);
     const Int_t nTH1F = (Int_t)inTH1FNames.size();
     /// anthony you are here and are checking that all files have the same list of histograms to plot
-
     for (unsigned int fI = 1; fI < fileList.size() ; ++fI)
     {
-        inFileList.at(fI) = new TFile(fileList.at(fI).c_str(), "READ");
+        inFileList.push_back(new TFile(fileList.at(fI).c_str(), "READ"));
         std::vector<std::string> temp = returnRootFileContentsList(inFileList.at(fI),"TH1F");
         removeVectorDuplicates(&temp);
-        for(unsigned int tI;tI<inTH1FNames.size();tI++)
+        for(unsigned int tI = 0;tI<inTH1FNames.size();tI++)
         {
             if(std::find(temp.begin(),temp.end(),inTH1FNames.at(tI).c_str()) == temp.end())
             {
@@ -75,6 +74,7 @@ int plotAllTH1F(const std::string inFileName, const std::string dataName)
     }
 
     static const int numFiles = fileList.size();
+
     TH1F* inTH1F_p[nTH1F][numFiles];
     TCanvas* inTH1F_c[nTH1F];
 
@@ -88,7 +88,7 @@ int plotAllTH1F(const std::string inFileName, const std::string dataName)
         histName.erase(start_position_to_erase,histName.length());
 
         inTH1F_p[iter][0] = (TH1F*)inFileList.at(0)->Get(inTH1FNames.at(iter).c_str());
-        inTH1F_p[iter][0]->SetName(Form("%s %s", dataName.c_str(),histName.c_str()));
+        inTH1F_p[iter][0]->SetName(Form("%s",histName.c_str()));
 
         // load the histogram min's and max's
         Double_t xMin = inTH1F_p[iter][0]->GetXaxis()->GetBinLowEdge(1); // since first bin is for underflow
@@ -97,9 +97,8 @@ int plotAllTH1F(const std::string inFileName, const std::string dataName)
 
         for(unsigned int fI = 1; fI < fileList.size(); ++fI)
         {
-            std::cout<<"HIIII"<<std::endl;
             inTH1F_p[iter][fI] = (TH1F*)inFileList.at(fI)->Get(inTH1FNames.at(iter).c_str());
-            inTH1F_p[iter][fI]->SetName(Form("%s %s", dataName.c_str(),histName.c_str()));
+            inTH1F_p[iter][fI]->SetName(Form("%s",histName.c_str()));
             // check if xMin,xMax, or yMax needs to be adjusted 
             if( xMin > inTH1F_p[iter][fI]->GetBinLowEdge(1)) xMin = inTH1F_p[iter][fI]->GetBinLowEdge(1);
             if ( xMax < inTH1F_p[iter][fI]->GetBinLowEdge(inTH1F_p[iter][fI]->GetNbinsX()+1)) xMax = inTH1F_p[iter][fI]->GetBinLowEdge(inTH1F_p[iter][fI]->GetNbinsX()+1);
@@ -148,11 +147,11 @@ int plotAllTH1F(const std::string inFileName, const std::string dataName)
 
     	xjjroot::sethempty(hempty,0,0);
     	hempty->Draw();
-        TLegend *l = new TLegend(0.47+0.05,0.7+0.08,0.9+0.05,0.88+0.08);
+        TLegend *l = new TLegend(0.47+0.05,0.7,0.9+0.05,0.88);
         xjjroot::setleg(l);
         for (unsigned int fI = 0; fI < fileList.size(); fI++)
         {
-            xjjroot::setthgrstyle(inTH1F_p[iter][fI], kBlack, 21, 1.2, kBlack, 1, 1, -1, -1, -1);
+            xjjroot::setthgrstyle(inTH1F_p[iter][fI], colors[fI], 21, 1.2, colors[fI], 1, 1, -1, -1, -1);
             inTH1F_p[iter][fI]->Draw("pe sames");
             l->AddEntry(inTH1F_p[iter][fI],getDataName(fileList.at(fI)).c_str(),"p");
         }

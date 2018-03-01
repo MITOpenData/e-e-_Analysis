@@ -197,7 +197,7 @@ void TPCPlots(const std::string inFileName1)
           for (Int_t j=0;j<4;j++) {
             c2->cd(j+1);
             //if (i ==2) for(Int_t k = 0; k<h_deltaphi[j*2]->GetNbinsX();k++)std::cout<<h_deltaphi[j*2]->GetBinContent(k)<<std::endl;
-            for(Int_t k = 0; k<h_deltaphi[j*2]->GetNbinsX();k++)if(std::isnan(h_deltaphi[j*2]->GetBinError(k+1))) {std::cout<<"hi"<<std::endl;h_deltaphi[j*2]->SetBinError(k+1,0);}
+            for(Int_t k = 0; k<h_deltaphi[j*2]->GetNbinsX();k++)if(std::isnan(h_deltaphi[j*2]->GetBinError(k+1))) {h_deltaphi[j*2]->SetBinError(k+1,0);}
             formatTH1F(h_deltaphi[j*2],.8,1.5);
             h_deltaphi[j*2]->Draw();
             xjjroot::drawtex(0.15,0.876,Form("%s",saveName.c_str()));
