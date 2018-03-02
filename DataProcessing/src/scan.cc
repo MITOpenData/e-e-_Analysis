@@ -183,6 +183,8 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
   const double jtPtCut = .01;
   const int nJtAlgo = 8;
   const double rParam[nJtAlgo] = {0.4, 0.4, 0.8, 0.8, -1., -1., -1., -1.};
+  bool rParamIs8[nJtAlgo];
+  for(int i = 0; i < nJtAlgo; ++i){rParamIs8[i] = rParam[i] > .799 && rParam[i] < .801;}
   const int nFinalClust[nJtAlgo] = {-1, -1, -1, -1, 2, 2, 3, 3};
   const double recombScheme[nJtAlgo] = {fastjet::E_scheme, fastjet::WTA_modp_scheme, fastjet::E_scheme, fastjet::WTA_modp_scheme, fastjet::E_scheme, fastjet::WTA_modp_scheme, fastjet::E_scheme, fastjet::WTA_modp_scheme};
   fastjet::JetDefinition jDef[nJtAlgo];
@@ -203,8 +205,11 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
   const std::string genPartTreeName = "tgen";
   std::string jetTreeName[nJtAlgo];
   std::string genJetTreeName[nJtAlgo];
-  const std::string boostedTreeName = "BoostedWTAR8Evt";
-  const std::string genboostedTreeName = "genBoostedWTAR8Evt";
+  std::string boostedTreeName[nJtAlgo];
+  std::string genboostedTreeName[nJtAlgo];
+
+  const std::string boostedWTA8TreeName = "BoostedWTAR8Evt";
+  const std::string genboostedWTA8TreeName = "genBoostedWTAR8Evt";
   for(int i = 0; i < nJtAlgo; ++i){
     std::string recombSchemeStr = "EScheme";
     if(recombScheme[i] == fastjet::WTA_modp_scheme) recombSchemeStr = "WTAmodpScheme";
@@ -214,6 +219,17 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 
     jetTreeName[i] = rOrJetStr + recombSchemeStr + "JetTree";
     genJetTreeName[i] = rOrJetStr + recombSchemeStr + "GenJetTree";
+
+    boostedTreeName[i] = "Boosted" + recombSchemeStr + rOrJetStr + "Evt";
+    genboostedTreeName[i] = "genBoosted" + recombSchemeStr + rOrJetStr + "Evt";
+    if(recombSchemeStr.find("modpScheme") != std::string::npos){
+      boostedTreeName[i].replace(boostedTreeName[i].find("modpScheme"), std::string("modpScheme").size(), "");
+      genboostedTreeName[i].replace(genboostedTreeName[i].find("modpScheme"), std::string("modpScheme").size(), "");
+    }
+    if(rOrJetStr.find("akR") != std::string::npos){
+      boostedTreeName[i].replace(boostedTreeName[i].find("akR"), std::string("akR").size(), "");
+      genboostedTreeName[i].replace(genboostedTreeName[i].find("akR"), std::string("akR").size(), "");
+    }
   }
 
   std::string finalPartTreeName = partTreeName;
@@ -227,18 +243,33 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 
   TFile *hf = new TFile(outFileName.c_str(), "RECREATE");
   TTree *tout = new TTree(finalPartTreeName.c_str(), finalPartTreeName.c_str());
-  TTree *bout = new TTree(boostedTreeName.c_str(), boostedTreeName.c_str());
+  TTree *bout[nJtAlgo];
   TTree *jout[nJtAlgo];
-  for(int i = 0; i < nJtAlgo; ++i){jout[i] = new TTree(finalJetTreeName[i].c_str(), finalJetTreeName[i].c_str());}
+  for(int i = 0; i < nJtAlgo; ++i){
+    jout[i] = NULL;
+    jout[i] = new TTree(finalJetTreeName[i].c_str(), finalJetTreeName[i].c_str());
+    
+    bout[i] = NULL;
+    if(recombScheme[i] == fastjet::WTA_modp_scheme){     
+      if(rParamIs8[i] || nFinalClust[i] == 2) bout[i] = new TTree(boostedTreeName[i].c_str(), boostedTreeName[i].c_str());
+    }
+  }
 
   TTree *tgout = 0;
-  TTree *bgout = 0;
-  TTree *jgout[nJtAlgo] = {0, 0, 0, 0};
+  TTree *bgout[nJtAlgo];
+  TTree *jgout[nJtAlgo];
 
   if(isRecons && isMC){
     tgout = new TTree(genPartTreeName.c_str(), genPartTreeName.c_str());
-    bgout = new TTree(genboostedTreeName.c_str(), genboostedTreeName.c_str()); 
-    for(int i = 0; i < nJtAlgo; ++i){jgout[i] = new TTree(genJetTreeName[i].c_str(), genJetTreeName[i].c_str());}
+    for(int i = 0; i < nJtAlgo; ++i){
+      jgout[i] = NULL;
+      jgout[i] = new TTree(genJetTreeName[i].c_str(), genJetTreeName[i].c_str());
+
+      bgout[i] = NULL;
+      if(recombScheme[i] == fastjet::WTA_modp_scheme){
+	if(rParamIs8[i] || nFinalClust[i] == 2) bgout[i] = new TTree(genboostedTreeName[i].c_str(), genboostedTreeName[i].c_str());
+      }
+    }
   }
 
   eventSelection eSelection;
@@ -246,31 +277,37 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
   particleData pData;
   jetData jData[nJtAlgo];
   eventData eData;
-  boostedEvtData bData;
+  boostedEvtData bData[nJtAlgo];
 
   eventSelection egSelection;
 
   particleData pgData;
   jetData jgData[nJtAlgo];
   eventData egData;
-  boostedEvtData bgData;
+  boostedEvtData bgData[nJtAlgo];
 
   pData.SetBranchWrite(tout);
   eData.SetBranchWrite(tout);
   //thrust quantities
-  bData.SetBranchWrite(bout);
 
-  for(int i = 0; i < nJtAlgo; ++i){jData[i].SetBranchWrite(jout[i]);}
+  for(int i = 0; i < nJtAlgo; ++i){
+    jData[i].SetBranchWrite(jout[i]);
+    if(recombScheme[i] == fastjet::WTA_modp_scheme){
+      if(rParamIs8[i] || nFinalClust[i] == 2) bData[i].SetBranchWrite(bout[i]);
+    }
+  }
 
   if(isRecons && isMC){
     pgData.SetBranchWrite(tgout);
     egData.SetBranchWrite(tgout);
-    bgData.SetBranchWrite(bgout);
 
-    for(int i = 0; i < nJtAlgo; ++i){jgData[i].SetBranchWrite(jgout[i]);}
+    for(int i = 0; i < nJtAlgo; ++i){
+      jgData[i].SetBranchWrite(jgout[i]);
+      if(recombScheme[i] == fastjet::WTA_modp_scheme){
+	if(rParamIs8[i] || nFinalClust[i] == 2) bgData[i].SetBranchWrite(bgout[i]);
+      }
+    }
   }
-
-  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
   for(unsigned int fI = 0; fI < fileList.size(); ++fI){
     std::cout << "Processing " << fI << "/" << fileList.size() << ", \'" << fileList.at(fI) << "\'" << std::endl;
@@ -300,21 +337,28 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
       if(getStr.size() == 0) continue;
       else if(getStr.find("******") != std::string::npos) continue;
       else if(getStr.find("END_EVENT") != std::string::npos) continue; 
-     else if(getStr.find("END_FILE") != std::string::npos) continue;
+      else if(getStr.find("END_FILE") != std::string::npos) continue;
       std::vector<std::string> num = processAlephString(getStr);
       
-
       if(num.size() < 5){
 	std::cout << "Number of columns for line \'" << getStr << "\' is invalid, size \'" << num.size() << "\'. return 1" << std::endl;
 	//gotta cleanup before return
 	delete tout;
-	delete bout;
-	for(int jIter = 0; jIter < nJtAlgo; ++jIter){delete jout[jIter];}
+	for(int jIter = 0; jIter < nJtAlgo; ++jIter){
+	  delete jout[jIter];
+	  if(recombScheme[jIter] == fastjet::WTA_modp_scheme){
+	    if(rParamIs8[jIter] || nFinalClust[jIter] == 2) delete bout[jIter];
+	  }
+	}
 	
 	if(isMC && isRecons){
 	  delete tgout;
-	  delete bgout;
-	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){delete jgout[jIter];}
+	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){
+	    delete jgout[jIter];
+	    if(recombScheme[jIter] == fastjet::WTA_modp_scheme){
+	      if(rParamIs8[jIter] || nFinalClust[jIter] == 2) delete bgout[jIter];
+	    }
+	  }
 	}
 	
 	hf->Close();
@@ -325,8 +369,9 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
     
       if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2))/* not all files do four 999 && check999(num.at(3)*/){
 	pData.nParticle=counterParticles;
-        bData.nParticle=counterParticles;
-        
+
+	for(Int_t jI = 0; jI < nJtAlgo; ++jI){bData[jI].nParticle=counterParticles;}        
+
         thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz, THRUST::OPTIMAL); 
         thrust_charged = getChargedThrust(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag, THRUST::OPTIMAL);
 	eData.nChargedHadrons = nTrk;
@@ -364,15 +409,15 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	if(counterEntries>0){
 	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	    jout[jIter]->Fill();
-            if(rParam[jIter]==0.8 && recombScheme[jIter]==fastjet::WTA_modp_scheme){
-              if(jData[jIter].nref<2){
-                setBoostedVariables(false, &pData, &bData);
-              }
-              else{
-                TVector3 wtaBoost = findBack2BackBoost(jData[jIter].fourJet[0],jData[jIter].fourJet[1]);
-                setBoostedVariables(true, &pData, &bData, jData[jIter].fourJet[0], wtaBoost);
-              }
-              bout->Fill();
+	    if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
+	      if(rParamIs8[jIter] || nFinalClust[jIter] == 2){
+		if(jData[jIter].nref<2) setBoostedVariables(false, &pData, &(bData[jIter]));
+		else{
+		  TVector3 wtaBoost = findBack2BackBoost(jData[jIter].fourJet[0],jData[jIter].fourJet[1]);
+		  setBoostedVariables(true, &pData, &(bData[jIter]), jData[jIter].fourJet[0], wtaBoost);
+		}
+		bout[jIter]->Fill();
+	      }
             }
 	  }
 	}      
@@ -439,13 +484,21 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	std::cout << "Number of columns for line \'" << getStr << "\' is invalid, size \'" << num.size() << "\'. return 1" << std::endl;
 	//gotta cleanup before return
 	delete tout;
-	delete bout;
-	for(int jIter = 0; jIter < nJtAlgo; ++jIter){delete jout[jIter];}
+	for(int jIter = 0; jIter < nJtAlgo; ++jIter){
+	  delete jout[jIter];
+	  if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
+	    if(rParamIs8[jIter] || nFinalClust[jIter] == 2) delete bout[jIter];
+	  }
+	}
 
 	if(isMC && isRecons){
 	  delete tgout;
-	  delete bgout;
-	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){delete jgout[jIter];}
+	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){
+	    delete jgout[jIter];
+	    if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
+	      if(rParamIs8[jIter] || nFinalClust[jIter] == 2) delete bgout[jIter];
+	    }
+	  }
 	}
 	
 	hf->Close();
@@ -569,15 +622,15 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
     if(counterEntries>0){
       for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	jout[jIter]->Fill();
-        if(rParam[jIter]==0.8 && recombScheme[jIter]==fastjet::WTA_modp_scheme){
-          if(jData[jIter].nref<2){
-            setBoostedVariables(false, &pData, &bData);
-          }
-          else{
-            TVector3 wtaBoost = findBack2BackBoost(jData[jIter].fourJet[0],jData[jIter].fourJet[1]);
-            setBoostedVariables(true, &pData, &bData, jData[jIter].fourJet[0], wtaBoost);
-          }
-          bout->Fill();
+	if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
+	  if(rParamIs8[jIter] || nFinalClust[jIter] == 2){
+	    if(jData[jIter].nref<2) setBoostedVariables(false, &pData, &(bData[jIter]));
+	    else{
+	      TVector3 wtaBoost = findBack2BackBoost(jData[jIter].fourJet[0],jData[jIter].fourJet[1]);
+	      setBoostedVariables(true, &pData, &(bData[jIter]), jData[jIter].fourJet[0], wtaBoost);
+	    }
+	    bout[jIter]->Fill();
+	  }
         }
       }
     }
@@ -613,16 +666,20 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	  std::cout << "Number of columns for line \'" << getStr << "\' is invalid, size \'" << num.size() << "\'. return 1" << std::endl;
 	  //gotta cleanup before return
 	  delete tout;
-          delete bout;
 	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	    delete jout[jIter];
+	    if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
+	      if(rParamIs8[jIter] || nFinalClust[jIter] == 2) delete bout[jIter];
+	    }
 	  }
 
 	  if(isMC && isRecons){
 	    delete tgout;
-	    delete bgout;
 	    for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	      delete jgout[jIter];
+	      if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
+		if(rParamIs8[jIter] || nFinalClust[jIter] == 2) delete bgout[jIter];
+	      }
 	    }
 	  }
 
@@ -634,7 +691,8 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 
 	if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2)) /* && check999(num.at(3))*/){ 
 	  pgData.nParticle=counterParticles;
-	  bgData.nParticle=counterParticles;
+
+	  for(Int_t jI = 0; jI < nJtAlgo; ++jI){bgData[jI].nParticle=counterParticles;}
           
           thrust = getThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, THRUST::OPTIMAL); 
           thrust_charged = getChargedThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag, THRUST::OPTIMAL);
@@ -672,16 +730,16 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	    processJets(particles, jDef[jIter], jDefReclust[jIter], &(jgData[jIter]), jtPtCut, rParam[jIter], nFinalClust[jIter]);
 	    if(counterEntries>0){
 	      jgout[jIter]->Fill();
-              if(rParam[jIter]==0.8 && recombScheme[jIter]==fastjet::WTA_modp_scheme){
-                if(jgData[jIter].nref<2){
-                  setBoostedVariables(false, &pgData, &bgData);
-                }
-                else{
-                  TVector3 wtaBoost = findBack2BackBoost(jgData[jIter].fourJet[0],jgData[jIter].fourJet[1]);
-                  setBoostedVariables(true, &pgData, &bgData, jgData[jIter].fourJet[0], wtaBoost);
-                }
-                bgout->Fill();
-              }
+	      if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
+		if(rParamIs8[jIter] || nFinalClust[jIter] == 2){
+		  if(jgData[jIter].nref<2) setBoostedVariables(false, &pgData, &(bgData[jIter]));
+		  else{
+		    TVector3 wtaBoost = findBack2BackBoost(jgData[jIter].fourJet[0],jgData[jIter].fourJet[1]);
+		    setBoostedVariables(true, &pgData, &(bgData[jIter]), jgData[jIter].fourJet[0], wtaBoost);
+		  }
+		  bgout[jIter]->Fill();
+		}
+	      }		
 	    }
 	  }
 	  //clear particles for next iteration clustering
@@ -727,19 +785,24 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	    std::cout << "Gen entries dont match reco for file \'" << genFileStr << "\'. return 1" << std::endl;
 	    //gotta cleanup before return
 	    delete tout;
-	    delete bout;
 
 	    for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	      delete jout[jIter];
+	      
+	      if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
+		if(rParamIs8[jIter] || nFinalClust[jIter] == 2) delete bout[jIter];
+	      }
 	    }
 
 	    if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
 	    if(isMC && isRecons){
 	      delete tgout;
-	      delete bgout;
 	      for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 		delete jgout[jIter];
+		if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
+		  if(rParamIs8[jIter] || nFinalClust[jIter] == 2) delete bgout[jIter];
+		}
 	      }
 	    }
 
@@ -783,16 +846,20 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	  std::cout << "Number of columns for line \'" << getStr << "\' is invalid, size \'" << num.size() << "\'. return 1" << std::endl;
 	  //gotta cleanup before return
 	  delete tout;
-	  delete bout;
 	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	    delete jout[jIter];
+	    if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
+	      if(rParamIs8[jIter] || nFinalClust[jIter] == 2) delete bout[jIter];
+	    }
 	  }
 
 	  if(isMC && isRecons){
 	    delete tgout;
-	    delete bgout;
 	    for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	      delete jgout[jIter];
+              if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
+                if(rParamIs8[jIter] || nFinalClust[jIter] == 2) delete bout[jIter];
+              }
 	    }
 	  }
 
@@ -931,16 +998,16 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	processJets(particles, jDef[jIter], jDefReclust[jIter], &(jgData[jIter]), jtPtCut, rParam[jIter], nFinalClust[jIter]);
 	if(counterEntries>0){
 	  jgout[jIter]->Fill();
-          if(rParam[jIter]==0.8 && recombScheme[jIter]==fastjet::WTA_modp_scheme){
-            if(jgData[jIter].nref<2){
-              setBoostedVariables(false, &pgData, &bgData);
-            }
-            else{
-              TVector3 wtaBoost = findBack2BackBoost(jgData[jIter].fourJet[0],jgData[jIter].fourJet[1]);
-              setBoostedVariables(true, &pgData, &bgData, jgData[jIter].fourJet[0], wtaBoost);
-            }
-            bgout->Fill();
-          }
+	  if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
+	    if(rParamIs8[jIter] || nFinalClust[jIter] == 2){
+	      if(jgData[jIter].nref<2) setBoostedVariables(false, &pgData, &(bgData[jIter]));
+	      else{
+		TVector3 wtaBoost = findBack2BackBoost(jgData[jIter].fourJet[0],jgData[jIter].fourJet[1]);
+		setBoostedVariables(true, &pgData, &(bgData[jIter]), jgData[jIter].fourJet[0], wtaBoost);
+	      }
+	      bgout[jIter]->Fill();
+	    }
+	  }
 	}
       }
       fileGen.close();
@@ -956,23 +1023,32 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
   
   tout->Write("", TObject::kOverwrite);
   delete tout;
-  bout->Write("", TObject::kOverwrite);
-  delete bout;
 
   for(int i = 0; i < nJtAlgo; ++i){
     jout[i]->Write("", TObject::kOverwrite);
     delete jout[i];
+
+    if(recombScheme[i]==fastjet::WTA_modp_scheme){
+      if(rParamIs8[i] || nFinalClust[i] == 2){
+	bout[i]->Write("", TObject::kOverwrite);
+	delete bout[i];
+      }
+    }
   }
 
   if(isMC && isRecons){
     tgout->Write("", TObject::kOverwrite);
     delete tgout;
-    bgout->Write("", TObject::kOverwrite);
-    delete bgout;
 
     for(int jIter = 0; jIter < nJtAlgo; ++jIter){
       jgout[jIter]->Write("", TObject::kOverwrite);
       delete jgout[jIter];
+      if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
+	if(rParamIs8[jIter] || nFinalClust[jIter] == 2){
+	  bgout[jIter]->Write("", TObject::kOverwrite);
+	  delete bgout[jIter];
+	}
+      }    
     }
   }
   
