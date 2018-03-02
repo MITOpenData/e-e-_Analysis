@@ -69,6 +69,8 @@ int ridge_check_parallel
     
     // set up plots
     Selection s = Selection();
+    if(inFileName.find("JobNum") != std::string::npos){s.doNTPC = false; s.dod0 = false; s.doz0 = false; s.doWW = false;} // for MC
+
     TFile * output = TFile::Open(Form("%s_%d.root",outFileName.c_str(),(Int_t)s.doThrust),"recreate");
 
     /// Initialize the histograms
@@ -207,7 +209,9 @@ int ridge_check_parallel
         data.update();
         if (i%10000==0) std::cout <<i<<"/"<<nevent<<std::endl;
         
-        Int_t histE = s.histEnergy(data.Energy);
+        Int_t histE;
+        if(inFileName.find("JobNum") != std::string::npos) histE = 0; // the PYTHIA8 is e+e-→Z on Z pole ~ 91.5 GeV
+        else histE = s.histEnergy(data.Energy);
         if(histE < 0) continue;
         // nTrk calculation
         Int_t nTrk = 0;

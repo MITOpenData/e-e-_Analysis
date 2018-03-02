@@ -35,13 +35,13 @@ class Selection
         Int_t bkgrd_runs = 1;
         enum SIMPLEPID {BELLE_PHOTON, BELLE_ELECTRON, BELLE_PION, BELLE_MUON, BELLE_KAON, BELLE_PROTON};    // BELLE Particle Definition
         enum SIMPLEPWFLAG {ALEPH_CHARGED_TRACK, ALEPH_CHARGED_LEPTONS1, ALEPH_CHARGED_LEPTONS2, ALEPH_V0, ALEPH_PHOTON, ALEPH_NEUTRAL_HADRON};  // ALEPH Particle Flow Classification
-        bool doGen = false;
+        bool doGen = false; // turn of event and track selections
         
         /* Detector Specific Cuts */
         
         // From 1990 "Properties of Hadronic Events in e+e- Annihilation at sqrt(s) = 91 GeV" ALEPH Collaboration paper
             // Track Cuts
-        bool doNTPC = 0;    Int_t nTPCMin = 4;  Int_t nTPCMax = 999;
+        bool doNTPC = true;    Int_t nTPCMin = 4;  Int_t nTPCMax = 999;
         bool doTheta = true;   Float_t thetaMin = 20*TMath::Pi()/180.;  Float_t thetaMax = 160*TMath::Pi()/180.;  // measured in radians
         bool doP = true;   Float_t pMin = 0.2; // measured in GeV
         bool dod0 = true;     Float_t d0Cut = 3; // measured in cm
@@ -56,7 +56,7 @@ class Selection
 
         bool doPt = true;
         
-        bool doWW = false;  // impose WW cut
+        bool doWW = true;  // impose WW cut
         bool doMixedMultCut = false; // cut on |nTrk - nTrkMix|
         // jet cuts
         bool doAjCut = false;   Float_t AjCut = 0.1;
@@ -70,35 +70,29 @@ class Selection
         Float_t etaPlotRange;
 
         // Beam Axis
-        static const Int_t nptBins_wrtBeam = 2;
-        Float_t ptBinsLow_wrtBeam[nptBins_wrtBeam]  = {1.0,0.4};  // measured in GeV
-        Float_t ptBinsHigh_wrtBeam[nptBins_wrtBeam] = {3.0,100};
+        static const Int_t nptBins_wrtBeam = 1;
+        Float_t ptBinsLow_wrtBeam[nptBins_wrtBeam]  = {1.0};  // measured in GeV
+        Float_t ptBinsHigh_wrtBeam[nptBins_wrtBeam] = {3.0};
         static const Int_t netaBins_wrtBeam = 2;
         Float_t etaBinsLow_wrtBeam[netaBins_wrtBeam]  = {1.6, 1.8};
         Float_t missPCut_wrtBeam = 20;
         Float_t etaPlotRange_wrtBeam = 3.2;
 
-        Float_t ptMin = 0.4; Float_t ptMax = 100.0;
-        Float_t etaCut = 1.8;
-    
         // Thrust Axis
         bool doThrust = false;  bool donTrkThrust = false; // false = use beam axis for nTrk calculation
-        static const Int_t nptBins_wrtThr = 2;
-        Float_t ptBinsLow_wrtThr[nptBins_wrtThr]  = {1.0,0.4};  // measured in GeV
-        Float_t ptBinsHigh_wrtThr[nptBins_wrtThr] = {3.0,100};
+        static const Int_t nptBins_wrtThr = 1;
+        Float_t ptBinsLow_wrtThr[nptBins_wrtThr]  = {0.4};  // measured in GeV {1.0,0.4}
+        Float_t ptBinsHigh_wrtThr[nptBins_wrtThr] = {100.0}; // {3.0,100.0}
         static const Int_t netaBins_wrtThr = 2;
-        Float_t etaBinsLow_wrtThr[netaBins_wrtThr]  = {4.5,5.0};
+        Float_t etaBinsLow_wrtThr[netaBins_wrtThr]  = {4.5,5.0}; //{4.5,5.0}
         Float_t missPCut_wrtThr = 20;
         Float_t etaPlotRange_wrtThr = 6.0;
 
-        Float_t ptMin_wrtThr = 0.4; Float_t ptMax_wrtThr = 100.0; // measured in GeV
-        Float_t etaCut_wrtThr = 5.0;
-
         // WTA Axis
         bool doWTA = false;
-        static const Int_t nptBins_wrtWTA = 2;
-        Float_t ptBinsLow_wrtWTA[nptBins_wrtWTA]  = {1.0,0.4};  // measured in GeV
-        Float_t ptBinsHigh_wrtWTA[nptBins_wrtWTA] = {3.0,100};
+        static const Int_t nptBins_wrtWTA = 1;
+        Float_t ptBinsLow_wrtWTA[nptBins_wrtWTA]  = {1.0};  // measured in GeV
+        Float_t ptBinsHigh_wrtWTA[nptBins_wrtWTA] = {3.0};
         static const Int_t netaBins_wrtWTA = 3;
         Float_t etaBinsLow_wrtWTA[netaBins_wrtWTA]  = {10.0,20.0,40.0};
         Float_t missPCut_wrtWTA = 20;
@@ -106,12 +100,12 @@ class Selection
 
         /* Independent Cuts */
         static const Int_t nEnergyBins = 2;
-        Float_t energyBinsLow[nEnergyBins] = {0,100};
-        Float_t energyBinsHigh[nEnergyBins] = {100,999};
+        Float_t energyBinsLow[nEnergyBins] = {0,100}; // {0,100}
+        Float_t energyBinsHigh[nEnergyBins] = {100,999}; // {100,999}
 
         static const Int_t nMultBins = 3;
-        Int_t multBinsLow[nMultBins]  = {0 , 20, 35};
-        Int_t multBinsHigh[nMultBins] = {20, 35, 999};
+        Int_t multBinsLow[nMultBins]  = {0 , 20, 30};
+        Int_t multBinsHigh[nMultBins] = {20, 30, 999};
 
         /* Plotting */
         Float_t dEtaBins = 20; //keep even
@@ -126,8 +120,8 @@ class Selection
         /* pp Cross-Check */
         bool doPP = false;
         static const Int_t nptBins_pp = 2;
-        Float_t ptBinsLow_pp[nptBins_wrtWTA]  = {0.4, 1.0};  // measured in GeV
-        Float_t ptBinsHigh_pp[nptBins_wrtWTA] = {100, 3.0};
+        Float_t ptBinsLow_pp[nptBins_pp]  = {0.4, 1.0};  // measured in GeV
+        Float_t ptBinsHigh_pp[nptBins_pp] = {100, 3.0};
         static const Int_t netaBins_pp = 2;
         Float_t etaBinsLow_pp[netaBins_wrtWTA]  = {4.5,5.0};
         Float_t missPCut_pp = 20;
@@ -155,7 +149,6 @@ Selection::Selection()
     {
         multBinsLow[2] = 110;
         multBinsHigh[1] = 110;
-        ptMax = 3.0;
         doWTA = false;  // 0 t, 1 BoostedWTAR8Evt,
         jttree = 0; // 0 ak4ESchemeJetTree, 1 ak4WTAmodpSchemeJetTree, 2 ak8ESchemeJetTree, 3 ak8WTAmodpSchemeJetTree
         doThrust = false;  // used for determining thrust/beam angles to use in filling histograms
@@ -168,6 +161,7 @@ Selection::Selection()
 
     if(doGen)
     {
+        std::cout<<"Turning of event and track selection criteria..."<<std::endl;
         // nTrk is just the number of charged particles
         doNTPC = false;
         doTheta = false;
@@ -175,14 +169,13 @@ Selection::Selection()
         dod0 = false;
         doz0 = false;
         doWW = false;
-        nTrkMin = 0;
+        nTrkMin = 1;
         doE = false;
         doSTheta = false;
         domissPCut = false;
         doAjCut = false;
         do3jetEvtCut = false;
     }
-
     return;
 }
 
@@ -296,6 +289,7 @@ int Selection::histEnergy(Float_t Energy)
     {
         if (Energy >= energyBinsLow[i] && Energy < energyBinsHigh[i]) return i;
     }
+    std::cout<<"Event energy is messing up..."<<std::endl;
     return -1;
 }
 

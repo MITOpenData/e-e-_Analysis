@@ -19,7 +19,7 @@
 #include "../../DataProcessing/include/removeVectorDuplicates.h"
 #include "../../DataProcessing/include/histDefUtility.h"
 #include "../include/handleMultipleFiles.h"
-
+#include "include/Selection.h"
 // hist_p = {hist1_p,hist2_p, ... , histN_p}
 // histDelta_p[] = {hist_Delta1From2,hist_Delta1From3, ... , hist_Delta1FromN, hist_Delta2From3, ... , hist_Delta2FromN, ... , hist_DeltaN-1FromN}
 // val[] = {val1, val2, ... , valN}
@@ -597,12 +597,21 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
   const Int_t nEntries = inTree.at(0)->GetEntries();
 
   std::cout << "Doing full processing..." << std::endl;
+  Selection s = Selection();
 
   for(Int_t entry = 0; entry < nEntries; ++entry){
     if(entry%1000 == 0) std::cout << " Entry: " << entry << "/" << nEntries << std::endl;
     
     inTree.at(0)->GetEntry(entry);
-      
+    
+    // apply the event selection criteria
+    Int_t nTrk = 0;
+    if(!s.donTrkThrust) nTrk = s.ridge_eventSelection(eData.at(0).passesWW, eData.at(0).missP, pData.at(0).nParticle, jData.at(0).at(0).nref, jData.at(0).at(0).jtpt, jData.at(0).at(0).jteta, eData.at(0).STheta, pData.at(0).mass, pData.at(0).ntpc, pData.at(0).theta, pData.at(0).pmag, pData.at(0).d0, pData.at(0).z0, pData.at(0).pwflag);
+    if(s.donTrkThrust) nTrk = s.ridge_eventSelection(eData.at(0).passesWW, eData.at(0).missP, pData.at(0).nParticle, jData.at(0).at(0).nref, jData.at(0).at(0).jtpt, jData.at(0).at(0).jteta, eData.at(0).STheta, pData.at(0).mass, pData.at(0).ntpc, pData.at(0).theta, pData.at(0).pmag, pData.at(0).d0, pData.at(0).z0, pData.at(0).pwflag);
+    if( nTrk < 0) continue;
+
+
+    if(inFileName.find("LEP2") != std::string::npos && eData.at(0).passesWW == 0) continue;
     for(Int_t jI = 0; jI < nJetTrees; ++jI){jetTree.at(0)[jI]->GetEntry(entry);}
     // check if the key is in the list
     ULong64_t key = pData.at(0).RunNo*10000000 + pData.at(0).EventNo;
@@ -620,13 +629,15 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
     }
     
     if(!keyPasses)continue;
-    // load the remaining trees
+    // load the remaining trees and apply the event selection
     for( unsigned int fI = 1; fI < fileList.size(); ++fI)
     {
         inTree.at(fI)->GetEntry(RunEvtToEntry.at(fI)[key]);
         for(Int_t jI = 0; jI < nJetTrees; ++jI){jetTree.at(fI).at(jI)->GetEntry(RunEvtToEntry.at(fI)[key]);}
     }
     
+    
+
     /////// FILLING THE HISTOGRAMS ////////
     for(unsigned int lI = 0; lI < listOfCompBranches.size(); ++lI){
       std::string tempS = listOfCompBranches.at(lI);
@@ -635,7 +646,7 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
       for(unsigned int hI = 0; hI < hist.size(); ++hI){hist_p.push_back(hist.at(hI).at(lI));}
       std::vector< TH1F* >  histDelta_p = {};
       for(unsigned int hI = 0; hI < histDelta.size(); ++hI){histDelta_p.push_back(histDelta.at(hI).at(lI));}
-      ////////   ANTHONY YOU LEFT OFF HERE AND ARE WAITING ON CHRIS TO COME UP WITH AN IDEA FOR pDATA SO THAT YOU DONT HAVE TO DO ALL OF THESE IF STATEMENTS //////// 
+      
       if(tempS.find("nParticle") != std::string::npos && tempS.size() == std::string("nParticle").size())
       {
           std::vector< Int_t > pData_nParticle;
