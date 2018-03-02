@@ -208,8 +208,6 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
   std::string boostedTreeName[nJtAlgo];
   std::string genboostedTreeName[nJtAlgo];
 
-  const std::string boostedWTA8TreeName = "BoostedWTAR8Evt";
-  const std::string genboostedWTA8TreeName = "genBoostedWTAR8Evt";
   for(int i = 0; i < nJtAlgo; ++i){
     std::string recombSchemeStr = "EScheme";
     if(recombScheme[i] == fastjet::WTA_modp_scheme) recombSchemeStr = "WTAmodpScheme";
