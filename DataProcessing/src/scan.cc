@@ -224,9 +224,9 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
       boostedTreeName[i].replace(boostedTreeName[i].find("modpScheme"), std::string("modpScheme").size(), "");
       genboostedTreeName[i].replace(genboostedTreeName[i].find("modpScheme"), std::string("modpScheme").size(), "");
     }
-    if(rOrJetStr.find("akR") != std::string::npos){
-      boostedTreeName[i].replace(boostedTreeName[i].find("akR"), std::string("akR").size(), "");
-      genboostedTreeName[i].replace(genboostedTreeName[i].find("akR"), std::string("akR").size(), "");
+    if(rOrJetStr.find("ak") != std::string::npos){
+      boostedTreeName[i].replace(boostedTreeName[i].find("ak"), std::string("ak").size(), "");
+      genboostedTreeName[i].replace(genboostedTreeName[i].find("ak"), std::string("ak").size(), "");
     }
   }
 

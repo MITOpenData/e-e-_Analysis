@@ -15,6 +15,7 @@
 #include "include/particleData.h"
 #include "include/eventData.h"
 #include "include/jetData.h"
+#include "include/boostedEvtData.h"
 #include "include/returnRootFileContentsList.h"
 #include "include/removeVectorDuplicates.h"
 #include "include/histDefUtility.h"
@@ -89,6 +90,8 @@ void doFillArr(TH1F* hist1_p, TH1F* hist2_p, TH1F* histDelta_p, Int_t size1, Int
 
 int doComparison(const std::string inFileName1, const std::string inFileName2, const bool isMC, std::string outFileName = "")
 {
+  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
   TDatime* date = new TDatime();
   std::string inFileNameCombo = inFileName1;
   while(inFileNameCombo.find("/") != std::string::npos) inFileNameCombo.replace(0, inFileNameCombo.find("/")+1, "");
@@ -104,6 +107,8 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
   if(outFileName.find(".root") != std::string::npos){outFileName.replace(outFileName.find(".root"), 5, "");}
 
   outFileName = outFileName + "_DOCOMP_" + std::to_string(date->GetDate()) + ".root";
+
+  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
   std::vector<std::string> listOfCompBranches;
   std::vector<std::string> listExcluded;
@@ -216,6 +221,29 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
     listOfJetTreeMaxs.push_back(tempMaxs);
   }
 
+  std::vector<std::string> listOfBoostedTrees1 = returnRootFileContentsList(inFile1_p, "TTree", "Boosted");
+  removeVectorDuplicates(&listOfBoostedTrees1);
+  std::vector< std::vector<std::string> > listOfBoostedTreeBranches;
+  std::vector< std::vector<double> > listOfBoostedTreeMins;
+  std::vector< std::vector<double> > listOfBoostedTreeMaxs;
+  for(unsigned int jI = 0; jI < listOfBoostedTrees1.size(); ++jI){
+    TTree* tempTree_p = (TTree*)inFile1_p->Get(listOfBoostedTrees1.at(jI).c_str());
+    TObjArray* tempList = (TObjArray*)tempTree_p->GetListOfBranches();
+    std::vector<std::string> tempV;
+    std::vector<double> tempMins;
+    std::vector<double> tempMaxs;
+
+    for(Int_t i = 0; i < tempList->GetEntries(); ++i){
+      tempV.push_back(tempList->At(i)->GetName());
+      tempMins.push_back(tempTree_p->GetMinimum(tempList->At(i)->GetName()));
+      tempMaxs.push_back(tempTree_p->GetMaximum(tempList->At(i)->GetName()));
+    }
+
+    listOfBoostedTreeBranches.push_back(tempV);
+    listOfBoostedTreeMins.push_back(tempMins);
+    listOfBoostedTreeMaxs.push_back(tempMaxs);
+  }
+
   inFile1_p->Close();
   delete inFile1_p;
 
@@ -316,14 +344,9 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
 
   std::vector<std::string> listOfJetTrees2 = returnRootFileContentsList(inFile2_p, "TTree", "JetTree");
   removeVectorDuplicates(&listOfJetTrees2);
-
-  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-  
   unsigned int lI = 0;
   while(lI < listOfJetTrees1.size()){
     bool isGood = false;
-
-  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
     for(unsigned int lI2 = 0; lI2 < listOfJetTrees2.size(); ++lI2){
       if(listOfJetTrees1.at(lI).size() == listOfJetTrees2.at(lI2).size() && listOfJetTrees1.at(lI).find(listOfJetTrees2.at(lI2)) != std::string::npos){
@@ -348,8 +371,6 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
 	    break;
 	  }
 	}
-
-	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
 	isGood = true;
 	listOfJetTrees2.at(prevPos) = listOfJetTrees2.at(lI);
@@ -402,7 +423,65 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
     }
   }
 
-  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+  std::vector<std::string> listOfBoostedTrees2 = returnRootFileContentsList(inFile2_p, "TTree", "Boosted");
+  removeVectorDuplicates(&listOfBoostedTrees2);
+  lI = 0;
+  while(lI < listOfBoostedTrees1.size()){
+    bool isGood = false;
+
+    for(unsigned int lI2 = 0; lI2 < listOfBoostedTrees2.size(); ++lI2){
+      if(listOfBoostedTrees1.at(lI).size() == listOfBoostedTrees2.at(lI2).size() && listOfBoostedTrees1.at(lI).find(listOfBoostedTrees2.at(lI2)) != std::string::npos){
+	isGood = true;
+	std::string tempLOJT2 = listOfBoostedTrees2.at(lI);
+	listOfBoostedTrees2.at(lI) = listOfBoostedTrees2.at(lI2);
+	listOfBoostedTrees2.at(lI2) = tempLOJT2;
+	break;
+      }
+    }
+
+    if(!isGood){
+      listOfBoostedTrees1.erase(listOfBoostedTrees1.begin()+lI);
+      listOfBoostedTreeBranches.erase(listOfBoostedTreeBranches.begin()+lI);
+      listOfBoostedTreeMins.erase(listOfBoostedTreeMins.begin()+lI);
+      listOfBoostedTreeMaxs.erase(listOfBoostedTreeMaxs.begin()+lI);
+    }
+    else{
+      TTree* tempTree_p = (TTree*)inFile2_p->Get(listOfBoostedTrees2.at(lI).c_str());
+      TObjArray* tempList_p = (TObjArray*)tempTree_p->GetListOfBranches();
+
+      unsigned int j = 0;
+      while(j < listOfBoostedTreeBranches.at(lI).size()){
+	bool branchIsGood = false;
+
+	for(Int_t i = 0; i < tempList_p->GetEntries(); ++i){
+	  std::string tempBranchName = tempList_p->At(i)->GetName();
+	  if(tempBranchName.size() == listOfBoostedTreeBranches.at(lI).at(j).size() && tempBranchName.find(listOfBoostedTreeBranches.at(lI).at(j)) != std::string::npos){
+	    branchIsGood = true;
+	    break;
+	  }
+	}
+
+	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+	if(!branchIsGood){
+	  listOfBoostedTreeBranches.at(lI).erase(listOfBoostedTreeBranches.at(lI).begin() + j);
+	  listOfBoostedTreeMins.at(lI).erase(listOfBoostedTreeMins.at(lI).begin() + j);
+	  listOfBoostedTreeMaxs.at(lI).erase(listOfBoostedTreeMaxs.at(lI).begin() + j);
+	}
+	else{
+	  if(tempTree_p->GetMinimum(listOfBoostedTreeBranches.at(lI).at(j).c_str()) < listOfBoostedTreeMins.at(lI).at(j))
+	    listOfBoostedTreeMins.at(lI).at(j) = tempTree_p->GetMinimum(listOfBoostedTreeBranches.at(lI).at(j).c_str());
+	  if(tempTree_p->GetMaximum(listOfBoostedTreeBranches.at(lI).at(j).c_str()) > listOfBoostedTreeMaxs.at(lI).at(j))
+	    listOfBoostedTreeMaxs.at(lI).at(j) = tempTree_p->GetMaximum(listOfBoostedTreeBranches.at(lI).at(j).c_str());
+	  
+	  ++j;
+	}
+      }
+
+      ++lI;
+    }
+  }
+
 
   inFile2_p->Close();
   delete inFile2_p;
@@ -411,6 +490,10 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
   const Int_t nJetTrees = listOfJetTrees1.size();
   jetData jData1[nJetTrees];
   jetData jData2[nJetTrees];
+
+  const Int_t nBoostedTrees = listOfBoostedTrees1.size();
+  boostedEvtData bData1[nBoostedTrees];
+  boostedEvtData bData2[nBoostedTrees];
 
   TFile* outFile_p = new TFile(outFileName.c_str(), "RECREATE");
   TH1F* hist1_p[nVarToComp];
@@ -423,6 +506,10 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
   std::vector< std::vector< TH1F* > > hist_Rat1Over2_Jet_p;
   std::vector< std::vector< TH1F* > > hist_Delta1From2_EvtByEvt_Jet_p;
 
+  std::vector< std::vector< TH1F* > > hist1_Boosted_p;
+  std::vector< std::vector< TH1F* > > hist2_Boosted_p;
+  std::vector< std::vector< TH1F* > > hist_Rat1Over2_Boosted_p;
+  std::vector< std::vector< TH1F* > > hist_Delta1From2_EvtByEvt_Boosted_p;
 
   for(Int_t i = 0; i < nVarToComp; ++i){
     double tempInterval = branchMaxs.at(i) - branchMins.at(i);
@@ -482,6 +569,44 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
     }
   }
 
+  for(Int_t jI = 0; jI < nBoostedTrees; ++jI){
+    hist1_Boosted_p.push_back( {} );
+    hist2_Boosted_p.push_back( {} );
+    hist_Rat1Over2_Boosted_p.push_back( {} );
+    hist_Delta1From2_EvtByEvt_Boosted_p.push_back( {} );
+
+    std::string boostedStr = listOfBoostedTrees1.at(jI);
+
+    for(unsigned int bI = 0; bI < listOfBoostedTreeBranches.at(jI).size(); ++bI){
+      std::string brStr = listOfBoostedTreeBranches.at(jI).at(bI);
+      std::string nameStr = brStr + "_" + boostedStr;
+
+      Double_t tempMin = listOfBoostedTreeMins.at(jI).at(bI);
+      Double_t tempMax = listOfBoostedTreeMaxs.at(jI).at(bI);
+      Double_t interval = (tempMax - tempMin)/10.;
+
+      if(interval < 0.0001){
+	tempMax += 1;
+	tempMin -= 1;
+      }
+      else{
+	tempMax += interval;
+	tempMin -= interval;
+      }
+
+      hist1_Boosted_p.at(jI).push_back(0);
+      hist2_Boosted_p.at(jI).push_back(0);
+      hist_Rat1Over2_Boosted_p.at(jI).push_back(0);
+      hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).push_back(0);
+
+      hist1_Boosted_p.at(jI).at(bI) = new TH1F((nameStr + "_file1_h").c_str(), (";" + brStr + " (" + boostedStr + ");Counts").c_str(), 100, tempMin, tempMax);
+      hist2_Boosted_p.at(jI).at(bI) = new TH1F((nameStr + "_file2_h").c_str(), (";" + brStr + " (" + boostedStr + ");Counts").c_str(), 100, tempMin, tempMax);
+      hist_Rat1Over2_Boosted_p.at(jI).at(bI) = new TH1F((nameStr + "_file_Rat1Over2_h").c_str(), (";" + brStr + " (" + boostedStr + ");File1/File2").c_str(), 100, tempMin, tempMax);
+      hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI) = new TH1F((nameStr + "_Delta1From2_EvtByEvt_h").c_str(), (";" + brStr +"_{File 1} - " + brStr + "_{File 2}" + " (" + boostedStr + ");Counts").c_str(), 100, -1, 1);
+      centerTitles({hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Rat1Over2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI)});
+    }
+  }
+
   if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
   inFile1_p = new TFile(inFileName1.c_str(), "READ");
@@ -497,6 +622,13 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
     jData1[jI].SetStatusAndAddressRead(jetTree1_p[jI], listOfJetTreeBranches.at(jI));
   }
 
+  TTree* bTree1_p[nBoostedTrees];
+  for(Int_t jI = 0; jI < nBoostedTrees; ++jI){
+    bTree1_p[jI] = (TTree*)inFile1_p->Get(listOfBoostedTrees1.at(jI).c_str());
+    bTree1_p[jI]->SetBranchStatus("*", 0);
+    bData1[jI].SetStatusAndAddressRead(bTree1_p[jI], listOfBoostedTreeBranches.at(jI));
+  }
+
   inFile2_p = new TFile(inFileName2.c_str(), "READ");
   inTree2_p = (TTree*)inFile2_p->Get("t");
   inTree2_p->SetBranchStatus("*", 0);
@@ -510,11 +642,16 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
     jData2[jI].SetStatusAndAddressRead(jetTree2_p[jI], listOfJetTreeBranches.at(jI));
   }
 
+  TTree* bTree2_p[nBoostedTrees];
+  for(Int_t jI = 0; jI < nBoostedTrees; ++jI){
+    bTree2_p[jI] = (TTree*)inFile2_p->Get(listOfBoostedTrees2.at(jI).c_str());
+    bTree2_p[jI]->SetBranchStatus("*", 0);
+    bData2[jI].SetStatusAndAddressRead(bTree2_p[jI], listOfBoostedTreeBranches.at(jI));
+  }
+
   const Int_t nEntries = inTree2_p->GetEntries();
 
   std::cout << "Doing full processing..." << std::endl;
-
-  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
   dup100 = 0;
 
@@ -523,6 +660,7 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
     inTree2_p->GetEntry(entry);
 
     for(Int_t jI = 0; jI < nJetTrees; ++jI){jetTree2_p[jI]->GetEntry(entry);}
+    for(Int_t jI = 0; jI < nBoostedTrees; ++jI){bTree2_p[jI]->GetEntry(entry);}
 
     ULong64_t key = (pData2.RunNo)*10000000 + pData2.EventNo;
     if(doProcess) key += (pData2.process)*10000000000000;
@@ -557,6 +695,7 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
     inTree1_p->GetEntry(f1RunEvtToEntry[key]);
 
     for(Int_t jI = 0; jI < nJetTrees; ++jI){jetTree1_p[jI]->GetEntry(f1RunEvtToEntry[key]);}
+    for(Int_t jI = 0; jI < nBoostedTrees; ++jI){bTree1_p[jI]->GetEntry(f1RunEvtToEntry[key]);}
 
     for(unsigned int lI = 0; lI < listOfCompBranches.size(); ++lI){
       std::string tempS = listOfCompBranches.at(lI);
@@ -643,6 +782,24 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
 	else if(tempS.find("jtm") != std::string::npos && tempS.size() == std::string("jtm").size()) doFillArr(hist1_Jet_p.at(jI).at(bI), hist2_Jet_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Jet_p.at(jI).at(bI), jData1[jI].nref, jData2[jI].nref, jData1[jI].jtm, jData2[jI].jtm);
 	else if(tempS.find("jtN") != std::string::npos && tempS.size() == std::string("jtN").size()) doFillArr(hist1_Jet_p.at(jI).at(bI), hist2_Jet_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Jet_p.at(jI).at(bI), jData1[jI].nref, jData2[jI].nref, jData1[jI].jtN, jData2[jI].jtN);
 	//Note cant handle 2d arrays proper will add later
+      }
+    }
+
+    for(Int_t jI = 0; jI < nBoostedTrees; ++jI){
+      for(unsigned bI = 0; bI < listOfBoostedTreeBranches.at(jI).size(); ++bI){
+	std::string tempS = listOfBoostedTreeBranches.at(jI).at(bI);
+	if(tempS.find("nParticle") != std::string::npos && tempS.size() == std::string("nParticle").size()) doFill(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].nParticle, bData2[jI].nParticle);
+	else if(tempS.find("WTAAxis_Theta") != std::string::npos && tempS.size() == std::string("WTAAxis_Theta").size()) doFill(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].WTAAxis_Theta, bData2[jI].WTAAxis_Theta);
+	else if(tempS.find("WTAAxis_Phi") != std::string::npos && tempS.size() == std::string("WTAAxis_Phi").size()) doFill(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].WTAAxis_Phi, bData2[jI].WTAAxis_Phi);
+	else if(tempS.find("pt") != std::string::npos && tempS.size() == std::string("pt").size()) doFillArr(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].nParticle, bData2[jI].nParticle, bData1[jI].pt, bData2[jI].pt);
+	else if(tempS.find("pmag") != std::string::npos && tempS.size() == std::string("pmag").size()) doFillArr(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].nParticle, bData2[jI].nParticle, bData1[jI].pmag, bData2[jI].pmag);
+	else if(tempS.find("eta") != std::string::npos && tempS.size() == std::string("eta").size()) doFillArr(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].nParticle, bData2[jI].nParticle, bData1[jI].eta, bData2[jI].eta);
+	else if(tempS.find("theta") != std::string::npos && tempS.size() == std::string("theta").size()) doFillArr(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].nParticle, bData2[jI].nParticle, bData1[jI].theta, bData2[jI].theta);
+	else if(tempS.find("phi") != std::string::npos && tempS.size() == std::string("phi").size()) doFillArr(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].nParticle, bData2[jI].nParticle, bData1[jI].phi, bData2[jI].phi);
+	else if(tempS.find("boostx") != std::string::npos && tempS.size() == std::string("boostx").size()) doFill(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].boostx, bData2[jI].boostx);
+	else if(tempS.find("boosty") != std::string::npos && tempS.size() == std::string("boosty").size()) doFill(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].boosty, bData2[jI].boosty);
+	else if(tempS.find("boostz") != std::string::npos && tempS.size() == std::string("boostz").size()) doFill(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].boostz, bData2[jI].boostz);
+	else if(tempS.find("boost") != std::string::npos && tempS.size() == std::string("boost").size()) doFill(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].boost, bData2[jI].boost);
       }
     }
   }
@@ -892,6 +1049,124 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
       delete hist_Rat1Over2_Jet_p.at(jI).at(i);
       
       delete hist_Delta1From2_EvtByEvt_Jet_p.at(jI).at(i);
+    }
+  }
+
+
+  for(Int_t jI = 0; jI < nBoostedTrees; ++jI){
+    const std::string jetStr = listOfBoostedTrees1.at(jI);
+    
+    for(unsigned int i = 0; i < listOfBoostedTreeBranches.at(jI).size(); ++i){
+      hist1_Boosted_p.at(jI).at(i)->Write("", TObject::kOverwrite);
+      hist2_Boosted_p.at(jI).at(i)->Write("", TObject::kOverwrite);
+      
+      hist1_Boosted_p.at(jI).at(i)->Sumw2();
+      hist2_Boosted_p.at(jI).at(i)->Sumw2();
+      hist_Rat1Over2_Boosted_p.at(jI).at(i)->Sumw2();
+      
+      hist_Rat1Over2_Boosted_p.at(jI).at(i)->Divide(hist1_Boosted_p.at(jI).at(i), hist2_Boosted_p.at(jI).at(i));
+      hist_Rat1Over2_Boosted_p.at(jI).at(i)->Write("", TObject::kOverwrite);
+      
+      hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(i)->Write("", TObject::kOverwrite);
+      
+      TCanvas* canv_p = new TCanvas("canv_c", "canv_c", 1000, 500);
+      canv_p->SetTopMargin(0.01);
+      canv_p->SetRightMargin(0.01);
+      canv_p->SetLeftMargin(0.01);
+      canv_p->SetBottomMargin(0.01);
+      
+      TPad* pad1_p = new TPad("pad1", "pad1", 0.0, splitPoint, 0.5, 1.0);
+      pad1_p->Draw();
+      pad1_p->SetTopMargin(0.01);
+      pad1_p->SetRightMargin(0.01);
+      pad1_p->SetBottomMargin(0.01);
+      pad1_p->SetLeftMargin(pad1_p->GetLeftMargin()*1.3);
+      
+      TPad* pad2_p = new TPad("pad2", "pad2", 0.0, 0.0, 0.5, splitPoint);
+      pad2_p->Draw();
+      pad2_p->SetTopMargin(0.01);
+      pad2_p->SetRightMargin(0.01);
+      pad2_p->SetBottomMargin(pad1_p->GetLeftMargin()*1./splitPoint);
+      pad2_p->SetLeftMargin(pad1_p->GetLeftMargin());
+      
+      TPad* pad3_p = new TPad("pad3", "pad3", 0.5, 0.0, 1.0, 1.0);
+      pad3_p->Draw();
+      pad3_p->SetTopMargin(0.01);
+      pad3_p->SetRightMargin(0.01);
+      pad3_p->SetLeftMargin(pad1_p->GetLeftMargin());
+      pad3_p->SetBottomMargin(pad1_p->GetLeftMargin());
+      
+      pad1_p->cd();
+      
+      hist1_Boosted_p.at(jI).at(i)->GetXaxis()->SetTitleFont(43);
+      hist2_Boosted_p.at(jI).at(i)->GetXaxis()->SetTitleFont(43);
+      hist_Rat1Over2_Boosted_p.at(jI).at(i)->GetXaxis()->SetTitleFont(43);
+      hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(i)->GetXaxis()->SetTitleFont(43);
+      hist1_Boosted_p.at(jI).at(i)->GetXaxis()->SetTitleSize(20);
+      hist2_Boosted_p.at(jI).at(i)->GetXaxis()->SetTitleSize(20);
+      hist_Rat1Over2_Boosted_p.at(jI).at(i)->GetXaxis()->SetTitleSize(20);
+      hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(i)->GetXaxis()->SetTitleSize(20);
+      
+      hist1_Boosted_p.at(jI).at(i)->GetYaxis()->SetTitleFont(43);
+      hist2_Boosted_p.at(jI).at(i)->GetYaxis()->SetTitleFont(43);
+      hist_Rat1Over2_Boosted_p.at(jI).at(i)->GetYaxis()->SetTitleFont(43);
+      hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(i)->GetYaxis()->SetTitleFont(43);
+      hist1_Boosted_p.at(jI).at(i)->GetYaxis()->SetTitleSize(20);
+      hist2_Boosted_p.at(jI).at(i)->GetYaxis()->SetTitleSize(20);
+      hist_Rat1Over2_Boosted_p.at(jI).at(i)->GetYaxis()->SetTitleSize(20);
+      hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(i)->GetYaxis()->SetTitleSize(20);
+      
+      
+      hist1_Boosted_p.at(jI).at(i)->GetXaxis()->SetLabelFont(43);
+      hist2_Boosted_p.at(jI).at(i)->GetXaxis()->SetLabelFont(43);
+      hist_Rat1Over2_Boosted_p.at(jI).at(i)->GetXaxis()->SetLabelFont(43);
+      hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(i)->GetXaxis()->SetLabelFont(43);
+      hist1_Boosted_p.at(jI).at(i)->GetXaxis()->SetLabelSize(20);
+      hist2_Boosted_p.at(jI).at(i)->GetXaxis()->SetLabelSize(20);
+      hist_Rat1Over2_Boosted_p.at(jI).at(i)->GetXaxis()->SetLabelSize(20);
+      hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(i)->GetXaxis()->SetLabelSize(20);
+      
+      hist1_Boosted_p.at(jI).at(i)->GetYaxis()->SetLabelFont(43);
+      hist2_Boosted_p.at(jI).at(i)->GetYaxis()->SetLabelFont(43);
+      hist_Rat1Over2_Boosted_p.at(jI).at(i)->GetYaxis()->SetLabelFont(43);
+      hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(i)->GetYaxis()->SetLabelFont(43);
+      hist1_Boosted_p.at(jI).at(i)->GetYaxis()->SetLabelSize(20);
+      hist2_Boosted_p.at(jI).at(i)->GetYaxis()->SetLabelSize(20);
+      hist_Rat1Over2_Boosted_p.at(jI).at(i)->GetYaxis()->SetLabelSize(20);
+      hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(i)->GetYaxis()->SetLabelSize(20);
+      
+      hist1_Boosted_p.at(jI).at(i)->GetYaxis()->SetTitleOffset(hist1_Boosted_p.at(jI).at(i)->GetYaxis()->GetTitleOffset()*3.);
+      hist_Rat1Over2_Boosted_p.at(jI).at(i)->GetYaxis()->SetTitleOffset(hist1_Boosted_p.at(jI).at(i)->GetYaxis()->GetTitleOffset());
+      hist_Rat1Over2_Boosted_p.at(jI).at(i)->GetXaxis()->SetTitleOffset(hist_Rat1Over2_Boosted_p.at(jI).at(i)->GetXaxis()->GetTitleOffset()*3.);
+      
+      hist1_Boosted_p.at(jI).at(i)->DrawCopy("HIST E1");
+      hist2_Boosted_p.at(jI).at(i)->DrawCopy("SAME *HIST E1");
+      
+      pad2_p->cd();
+      hist_Rat1Over2_Boosted_p.at(jI).at(i)->SetMaximum(1.3);
+      hist_Rat1Over2_Boosted_p.at(jI).at(i)->SetMinimum(0.7);
+      hist_Rat1Over2_Boosted_p.at(jI).at(i)->DrawCopy("P E1");
+      
+      pad3_p->cd();
+      hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(i)->DrawCopy("HIST E1");
+      gPad->SetLogy();
+
+      std::string pdfStr = listOfBoostedTreeBranches.at(jI).at(i) + "_" + jetStr+ "_" + inFileNameCombo + "_" + std::to_string(date->GetDate()) + ".pdf";
+      canv_p->SaveAs(("pdfDir/" + pdfStr).c_str());
+      listOfPdf.push_back(pdfStr);
+      listOfVar.push_back((jetStr + "_" + listOfBoostedTreeBranches.at(jI).at(i)).c_str());
+      
+      delete pad1_p;
+      delete pad2_p;
+      delete pad3_p;
+      
+      delete canv_p;
+
+      delete hist1_Boosted_p.at(jI).at(i);
+      delete hist2_Boosted_p.at(jI).at(i);
+      delete hist_Rat1Over2_Boosted_p.at(jI).at(i);
+      
+      delete hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(i);
     }
   }
 
