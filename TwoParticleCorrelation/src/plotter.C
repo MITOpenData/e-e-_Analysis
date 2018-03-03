@@ -33,16 +33,16 @@ std::string getDataName(std::string fileName)
 
 int plotAllTH1F(const std::string inFileName, const std::string dataName)
 {
-    xjjroot::setgstyle();
+    //xjjroot::setgstyle();
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
-
     // List of plots to draw in log scale
-    static const std::string arr[] = {"jtm","jtN","pt","px","py","pz","pmag", "missP","missPt","missChargedP","missChargedPt","mass","ebx","eby"};
+    static const std::string arr[] = {"jtm","jtN","pt","px","py","pz","pmag", "missP","missPt","missChargedP","missChargedPt","mass","ebx","eby","nTrk"};
     std::vector<std::string> logPlots;
     logPlots.assign(arr, arr + sizeof(arr) / sizeof(arr[0]));
     // colors for plotting LEP1,LEP2,PYTHIA8
     Int_t colors[3] = {1,632,600}; // kBlack,kRed,kBlue
+    Int_t markerStyles[3] = {20,21,22}; // circle, square, triangle
 
       ///// check if there are multiple files /////
     std::vector<std::string> fileList = handleMultipleFiles(inFileName);
@@ -78,54 +78,70 @@ int plotAllTH1F(const std::string inFileName, const std::string dataName)
     TH1F* inTH1F_p[nTH1F][numFiles];
     TCanvas* inTH1F_c[nTH1F];
 
-    const Int_t nBinsX = 10;
-    const Int_t nBinsY = 10;
+    const Int_t nBinsX = 20;
+    const Int_t nBinsY = 20;
 
     for(Int_t iter = 0; iter < nTH1F; iter++)
     {
         std::string histName = inTH1FNames.at(iter);
         int start_position_to_erase = histName.find("_file");
         histName.erase(start_position_to_erase,histName.length());
-
+        if(histName.find("nParticle") != std::string::npos) histName = "nTrk";
+        std::cout<<histName<<std::endl;
+        // the default # bins of the input files is 100. Reduce by factor of 5 to 20 bins 
         inTH1F_p[iter][0] = (TH1F*)inFileList.at(0)->Get(inTH1FNames.at(iter).c_str());
+        inTH1F_p[iter][0]->Rebin(5);
         inTH1F_p[iter][0]->SetName(Form("%s",histName.c_str()));
+        inTH1F_p[iter][0]->Scale(1.0/inTH1F_p[iter][0]->Integral()); // scale to probability distribution
 
         // load the histogram min's and max's
         Double_t xMin = inTH1F_p[iter][0]->GetXaxis()->GetBinLowEdge(1); // since first bin is for underflow
         Double_t xMax = inTH1F_p[iter][0]->GetXaxis()->GetBinLowEdge(inTH1F_p[iter][0]->GetXaxis()->GetNbins()+1); // since last bin is overflow
         Double_t yMax = inTH1F_p[iter][0]->GetMaximum();
 
+        if (histName.find("eta") != std::string::npos && xMin < -10.0) xMin = -10;
+        if (histName.find("eta") != std::string::npos && xMax > 10.0) xMax = 10;
+
         for(unsigned int fI = 1; fI < fileList.size(); ++fI)
         {
             inTH1F_p[iter][fI] = (TH1F*)inFileList.at(fI)->Get(inTH1FNames.at(iter).c_str());
-            inTH1F_p[iter][fI]->SetName(Form("%s",histName.c_str()));
+            inTH1F_p[iter][fI]->Rebin(5);
+            inTH1F_p[iter][fI]->SetName(Form("%s HI",histName.c_str()));
+            inTH1F_p[iter][fI]->Scale(1.0/inTH1F_p[iter][fI]->Integral()); // scale to probability distribution
+
             // check if xMin,xMax, or yMax needs to be adjusted 
-            if( xMin > inTH1F_p[iter][fI]->GetBinLowEdge(1)) xMin = inTH1F_p[iter][fI]->GetBinLowEdge(1);
-            if ( xMax < inTH1F_p[iter][fI]->GetBinLowEdge(inTH1F_p[iter][fI]->GetNbinsX()+1)) xMax = inTH1F_p[iter][fI]->GetBinLowEdge(inTH1F_p[iter][fI]->GetNbinsX()+1);
+            if( xMin > inTH1F_p[iter][fI]->GetBinLowEdge(1) && inTH1F_p[iter][fI]->GetBinLowEdge(1) > -999.0 /* check for -999 */) 
+            {
+                if (histName.find("eta") != std::string::npos && inTH1F_p[iter][fI]->GetBinLowEdge(1) < -10.0) xMin = xMin;
+                else xMin = inTH1F_p[iter][fI]->GetBinLowEdge(1);
+                
+            }
+            if ( xMax < inTH1F_p[iter][fI]->GetBinLowEdge(inTH1F_p[iter][fI]->GetNbinsX()+1)) 
+            {
+                if (histName.find("eta") != std::string::npos && inTH1F_p[iter][fI]->GetBinLowEdge(inTH1F_p[iter][fI]->GetNbinsX()+1) > 10.0) xMax = xMax;
+                else xMax = inTH1F_p[iter][fI]->GetBinLowEdge(inTH1F_p[iter][fI]->GetNbinsX()+1);
+            }
             if ( yMax < inTH1F_p[iter][fI]->GetMaximum()) yMax = inTH1F_p[iter][fI]->GetMaximum();
         }
 
         // std::cout<<"xMin = "<<xMin<<" xMax = "<<xMax<<" yMax = "<<yMax<<std::endl;
         inTH1F_c[iter] = new TCanvas(histName.c_str(), histName.c_str(), 1000, 1000);
-        gPad->SetLeftMargin(gPad->GetLeftMargin()*1.25);
+        gPad->SetLeftMargin(gPad->GetLeftMargin()*1.5);
         gPad->SetRightMargin(gPad->GetLeftMargin());
         gPad->SetBottomMargin(gPad->GetLeftMargin());
-        gPad->SetTopMargin(.1);
-
+        gPad->SetTopMargin(gPad->GetLeftMargin());
         std::string searchName = histName;
         if(histName.find("pt") != std::string::npos ) searchName = "pt";
         if(histName.find("jtm") != std::string::npos ) searchName = "jtm";
         if(histName.find("jtN") != std::string::npos ) searchName = "jtN";
 
         TH2F *hempty;
-
         // Declare binning for hempty histogram
         if(histName.find("phi") != std::string::npos ) {xMin = -TMath::Pi(); xMax = TMath::Pi();}
         Double_t binsX[nBinsX+1];
         const Double_t xLow = xMin;
         const Double_t xHi = xMax;
         getLinBins(xLow,xHi,nBinsX,binsX);
-
         if (std::find(logPlots.begin(), logPlots.end(), searchName) != logPlots.end())
         {
             gPad->SetLogy();
@@ -134,7 +150,7 @@ int plotAllTH1F(const std::string inFileName, const std::string dataName)
             const Double_t logLow = .000000005;
             const Double_t logHi = 5.0*yMax;
             getLogBins(logLow, logHi, nBinsY, binsYLog);
-            hempty = new TH2F(histName.c_str(),Form(";%s;Counts",histName.c_str()),nBinsX, binsX, nBinsY, binsYLog);
+            hempty = new TH2F("hempty",Form(";%s;Probability",histName.c_str()),nBinsX, binsX, nBinsY, binsYLog);
         }
         else 
         {   
@@ -142,28 +158,31 @@ int plotAllTH1F(const std::string inFileName, const std::string dataName)
             const Double_t yLow = 0;
             const Double_t yHi = 1.2*yMax;
             getLinBins(yLow,yHi,nBinsY,binsY);
-            hempty = new TH2F(histName.c_str(),Form(";%s;Counts",histName.c_str()),nBinsX, binsX, nBinsY, binsY);
+            hempty = new TH2F("hempty",Form(";%s;Probability",histName.c_str()),nBinsX, binsX, nBinsY, binsY);
         }
-
     	xjjroot::sethempty(hempty,0,0);
     	hempty->Draw();
-        TLegend *l = new TLegend(0.47+0.05,0.7,0.9+0.05,0.88);
+        TLegend *l;
+        if(histName.find("phi") != std::string::npos) l = new TLegend(0.56,0.7-0.15,0.96,0.83-0.15);
+        else l = new TLegend(0.56,0.7,0.96,0.83);
         xjjroot::setleg(l);
+        // ANTHONY YOU ARE HERE ADDRESSING THE LEGEND ISSUE if the legend is causing a problem then just change to using tlatex probably easiest 
         for (unsigned int fI = 0; fI < fileList.size(); fI++)
         {
             xjjroot::setthgrstyle(inTH1F_p[iter][fI], colors[fI], 21, 1.2, colors[fI], 1, 1, -1, -1, -1);
-            inTH1F_p[iter][fI]->Draw("pe sames");
+            inTH1F_p[iter][fI]->SetMarkerStyle(markerStyles[fI]);
+            inTH1F_p[iter][fI]->Draw("pe same");
             l->AddEntry(inTH1F_p[iter][fI],getDataName(fileList.at(fI)).c_str(),"p");
         }
         l->Draw("SAME");
-
         // save the normal plot
         std::string saveNamePDF = "../../AnalysisNote/ALEPH/images/DQC/" + dataName + "/" + histName;
         saveNamePDF = saveNamePDF + ".pdf";
         inTH1F_c[iter]->SaveAs(saveNamePDF.c_str());
-
+        delete l;
         delete hempty;
         delete inTH1F_c[iter];
+        for(unsigned int fI = 1; fI < fileList.size(); ++fI) delete inTH1F_p[iter][fI];
     }
 
     return 0;

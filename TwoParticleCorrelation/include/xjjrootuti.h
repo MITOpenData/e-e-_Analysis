@@ -140,7 +140,7 @@ void xjjroot::setleg(TLegend* leg, Float_t tsize/*=0.04*/)
 {
   leg->SetBorderSize(0);
   leg->SetFillStyle(0);
-  leg->SetTextFont(42);
+  leg->SetTextFont(40);
   leg->SetTextSize(tsize);
 }
 

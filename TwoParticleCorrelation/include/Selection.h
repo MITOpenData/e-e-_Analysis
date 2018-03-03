@@ -56,7 +56,7 @@ class Selection
 
         bool doPt = true;
         
-        bool doWW = true;  // impose WW cut
+        bool doWW = false;  // impose WW cut
         bool doMixedMultCut = false; // cut on |nTrk - nTrkMix|
         // jet cuts
         bool doAjCut = false;   Float_t AjCut = 0.1;
