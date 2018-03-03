@@ -891,6 +891,61 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
           }
           doFillArr(hist_p,histDelta_p,pData_temp);
       }
+      else if(tempS.find("nitc") != std::string::npos && tempS.size() == std::string("nitc").size())
+      {
+          std::vector< std::vector<Int_t> > pData_temp;
+          for(unsigned int pI = 0; pI < pData.size(); ++pI)
+          {
+              std::vector<Int_t> temp;
+              temp.assign(pData.at(pI).nitc,pData.at(pI).nitc+pData.at(pI).nParticle);
+              pData_temp.push_back(temp);
+          }
+          doFillArr(hist_p,histDelta_p,pData_temp);
+      }
+      else if(tempS.find("nvdet") != std::string::npos && tempS.size() == std::string("nvdet").size())
+      {
+          std::vector< std::vector<Int_t> > pData_temp;
+          for(unsigned int pI = 0; pI < pData.size(); ++pI)
+          {
+              std::vector<Int_t> temp;
+              temp.assign(pData.at(pI).nvdet,pData.at(pI).nvdet+pData.at(pI).nParticle);
+              pData_temp.push_back(temp);
+          }
+          doFillArr(hist_p,histDelta_p,pData_temp);
+      }
+      else if(tempS.find("vx") != std::string::npos && tempS.size() == std::string("vx").size())
+      {
+          std::vector< std::vector<Int_t> > pData_temp;
+          for(unsigned int pI = 0; pI < pData.size(); ++pI)
+          {
+              std::vector<Int_t> temp;
+              temp.assign(pData.at(pI).vx,pData.at(pI).vx+pData.at(pI).nParticle);
+              pData_temp.push_back(temp);
+          }
+          doFillArr(hist_p,histDelta_p,pData_temp);
+      }
+      else if(tempS.find("vy") != std::string::npos && tempS.size() == std::string("vy").size())
+      {
+          std::vector< std::vector<Int_t> > pData_temp;
+          for(unsigned int pI = 0; pI < pData.size(); ++pI)
+          {
+              std::vector<Int_t> temp;
+              temp.assign(pData.at(pI).vy,pData.at(pI).vy+pData.at(pI).nParticle);
+              pData_temp.push_back(temp);
+          }
+          doFillArr(hist_p,histDelta_p,pData_temp);
+      }
+      else if(tempS.find("vz") != std::string::npos && tempS.size() == std::string("vz").size())
+      {
+          std::vector< std::vector<Int_t> > pData_temp;
+          for(unsigned int pI = 0; pI < pData.size(); ++pI)
+          {
+              std::vector<Int_t> temp;
+              temp.assign(pData.at(pI).vz,pData.at(pI).vz+pData.at(pI).nParticle);
+              pData_temp.push_back(temp);
+          }
+          doFillArr(hist_p,histDelta_p,pData_temp);
+      }
       else if(tempS.find("pt_wrtThr") != std::string::npos && tempS.size() == std::string("pt_wrtThr").size())
       {
           std::vector< std::vector<Float_t> > pData_process;
@@ -1001,6 +1056,8 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
           }
           doFillArr(hist_p,histDelta_p,pData_process);
       }
+
+      // start of eData plotting
       else if(tempS.find("passesWW") != std::string::npos && tempS.size() == std::string("passesWW").size())
       {
           std::vector< Int_t > eData_temp;
@@ -1108,7 +1165,62 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
           std::vector< Float_t > eData_temp;
           for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).TPhi_charged);}
           doFill(hist_p,histDelta_p,eData_temp);
-      }     
+      }
+      else if(tempS.find("Sphericity") != std::string::npos && tempS.size() == std::string("Sphericity").size())
+      {
+          std::vector< Float_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).Sphericity);}
+          doFill(hist_p,histDelta_p,eData_temp);
+      }   
+      else if(tempS.find("STheta") != std::string::npos && tempS.size() == std::string("STheta").size())
+      {
+          std::vector< Float_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).STheta);}
+          doFill(hist_p,histDelta_p,eData_temp);
+      }  
+      else if(tempS.find("SPhi") != std::string::npos && tempS.size() == std::string("SPhi").size())
+      {
+          std::vector< Float_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).SPhi);}
+          doFill(hist_p,histDelta_p,eData_temp);
+      } 
+      else if(tempS.find("Aplanarity") != std::string::npos && tempS.size() == std::string("Aplanarity").size())
+      {
+          std::vector< Float_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).Aplanarity);}
+          doFill(hist_p,histDelta_p,eData_temp);
+      }    
+      else if(tempS.find("Sphericity_linearized") != std::string::npos && tempS.size() == std::string("Sphericity_linearized").size())
+      {
+          std::vector< Float_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).Sphericity_linearized);}
+          doFill(hist_p,histDelta_p,eData_temp);
+      } 
+      else if(tempS.find("SPhi_linearized") != std::string::npos && tempS.size() == std::string("SPhi_linearized").size())
+      {
+          std::vector< Float_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).SPhi_linearized);}
+          doFill(hist_p,histDelta_p,eData_temp);
+      } 
+      else if(tempS.find("Aplanarity_linearized") != std::string::npos && tempS.size() == std::string("Aplanarity_linearized").size())
+      {
+          std::vector< Float_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).Aplanarity_linearized);}
+          doFill(hist_p,histDelta_p,eData_temp);
+      }
+      else if(tempS.find("C_linearized") != std::string::npos && tempS.size() == std::string("C_linearized").size())
+      {
+          std::vector< Float_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).C_linearized);}
+          doFill(hist_p,histDelta_p,eData_temp);
+      }
+      else if(tempS.find("D_linearized") != std::string::npos && tempS.size() == std::string("D_linearized").size())
+      {
+          std::vector< Float_t > eData_temp;
+          for(unsigned int eI = 0; eI < eData.size(); ++eI){eData_temp.push_back(eData.at(eI).D_linearized);}
+          doFill(hist_p,histDelta_p,eData_temp);
+      }
+
     }
       
     
@@ -1186,6 +1298,7 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
               }
               doFillArr(hist_Jet_p,histDelta_Jet_p,jData_temp);
           }
+          // not yet plotting jtNPW, jtptFracPW
           //Note cant handle 2d arrays proper will add later
       }
     }
