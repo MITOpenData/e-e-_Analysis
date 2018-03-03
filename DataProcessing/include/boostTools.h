@@ -61,7 +61,10 @@ void setBoostedVariables(bool doBoost, particleData *p, boostedEvtData *b, TLore
 
       b->pt[i] = ptFromThrust(mainAxis.Vect().Unit(), part.Vect());
       b->pmag[i] = part.Vect().Mag();
-      b->eta[i] = -TMath::Log(TMath::Tan(thetaFromThrust(mainAxis.Vect().Unit(), part.Vect())/2.0));//true defition of eta
+      Double_t minDel = 0.000001;
+      if(TMath::Abs(mainAxis.Vect().Unit()[0]) < minDel && TMath::Abs(mainAxis.Vect().Unit()[1]) < minDel && TMath::Abs(mainAxis.Vect().Unit()[2]) < minDel) b->eta[i] = 99.;
+      else if(checkEtaThrustPIs1(mainAxis.Vect().Unit(), part.Vect())) b->eta[i] = 99.;
+      else b->eta[i] = -TMath::Log(TMath::Tan(thetaFromThrust(mainAxis.Vect().Unit(), part.Vect())/2.0));//true defition of eta
       b->theta[i] = thetaFromThrust(mainAxis.Vect().Unit(), part.Vect());
       b->phi[i] = phiFromThrust(mainAxis.Vect().Unit(), part.Vect());
     }
