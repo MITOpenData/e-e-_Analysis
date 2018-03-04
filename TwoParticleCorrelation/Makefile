@@ -13,7 +13,7 @@ EVENTPARTICLEDATA=$(PWD)/../DataProcessing/
 MKDIR_BIN=mkdir -p $(PWD)/bin
 MKDIR_PDFDIR=mkdir -p $(PWD)/pdfDir
 
-all: mkdirBin mkdirPdfdir eeplots plotDataQualityChecks ridge_check
+all: mkdirBin mkdirPdfdir plotDQC
 
 mkdirBin:
 	$(MKDIR_BIN)
@@ -21,15 +21,8 @@ mkdirBin:
 mkdirPdfdir:
 	$(MKDIR_PDFDIR)
 
-eeplots: src/eeplots.C
-	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -o bin/eeplots.exe src/eeplots.C
-
-plotDataQualityChecks: src/plotDataQualityChecks.C
-	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -o bin/plotDataQualityChecks.exe src/plotDataQualityChecks.C
-
-ridge_check: src/ridge_check.C
-	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -o bin/ridge_check.exe src/ridge_check.C
-
+plotDQC: src/plotDQC.cc
+	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -o bin/plotDQC.exe src/plotDQC.cc
 
 clean:
 	rm *~ || true

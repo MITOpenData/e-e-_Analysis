@@ -184,8 +184,6 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
       inTree.push_back(inTree_p);
   }
     
-   
-  std::vector< std::map<ULong64_t, Int_t> > RunEvtToEntry;
 
   ///////// LOADING THE VARIABLES TO PLOT FROM THE FILES /////////
     
@@ -201,19 +199,6 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
   inTree.at(0)->SetBranchAddress("RunNo", &pData.at(0).RunNo);
   inTree.at(0)->SetBranchAddress("EventNo", &pData.at(0).EventNo);
 
-    // matching an event between files
-  std::map<ULong64_t, Int_t> f1RunEvtToEntry;
-  for(Int_t entry = 0; entry < inTree.at(0)->GetEntries(); ++entry){
-    inTree.at(0)->GetEntry(entry);
-
-    ULong64_t key = pData.at(0).RunNo*10000000 + pData.at(0).EventNo;
-    if(f1RunEvtToEntry.find(key) != f1RunEvtToEntry.end()){
-      std::cout << "Uhoh key duplication \'" << key << "\'..." << std::endl;
-    }
-    f1RunEvtToEntry[key] = entry;
-  }
-  RunEvtToEntry.push_back(f1RunEvtToEntry);
-    
     // load the master branch list from the first tree from file 1
   std::cout<<"Initializing Mins and Maxs..."<<std::endl;
   TObjArray* list1_p = (TObjArray*)inTree.at(0)->GetListOfBranches();
@@ -264,7 +249,6 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
     
   for (unsigned int fI = 1; fI < fileList.size(); ++fI)
   {
-      std::map<ULong64_t, Int_t> f2RunEvtToEntry;
       inFile.at(fI) = new TFile(fileList.at(fI).c_str(), "READ");
       inTree.at(fI) = (TTree*)inFile.at(fI)->Get("t");
       TObjArray* list2_p = (TObjArray*)inTree.at(fI)->GetListOfBranches();
@@ -274,17 +258,6 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
       inTree.at(fI)->SetBranchStatus("EventNo", 1);
       inTree.at(fI)->SetBranchAddress("RunNo", &pData.at(fI).RunNo);
       inTree.at(fI)->SetBranchAddress("EventNo", &pData.at(fI).EventNo);
-      
-      for(Int_t entry = 0; entry < inTree.at(fI)->GetEntries(); ++entry){
-          inTree.at(fI)->GetEntry(entry);
-          
-          ULong64_t key = pData.at(fI).RunNo*10000000 + pData.at(fI).EventNo;
-          if(f2RunEvtToEntry.find(key) != f2RunEvtToEntry.end()){
-              std::cout << "Uhoh key duplication \'" << key << "\'..." << std::endl;
-          }
-          f2RunEvtToEntry[key] = entry;
-      }
-      RunEvtToEntry.push_back(f2RunEvtToEntry);
       
       unsigned int pos = 0;
       while(pos < listOfCompBranches.size()){
@@ -614,30 +587,12 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
     if(inFileName.find("LEP2") != std::string::npos && eData.at(0).passesWW == 0) continue;
     for(Int_t jI = 0; jI < nJetTrees; ++jI){jetTree.at(0)[jI]->GetEntry(entry);}
     // check if the key is in the list
-    ULong64_t key = pData.at(0).RunNo*10000000 + pData.at(0).EventNo;
-    bool keyPasses = true;
-    
-    for( unsigned int fI = 0; fI < fileList.size(); ++fI)
-    {
-          if(RunEvtToEntry.at(fI).find(key) == RunEvtToEntry.at(fI).end())
-          {
-              std::cout << Form("Uhoh missing key in file %d\'",fI) << key << "\'..." << std::endl;
-              keyPasses = false;
-              continue;
-          }
-          if(!keyPasses)break;
-    }
-    
-    if(!keyPasses)continue;
+
     // load the remaining trees and apply the event selection
     for( unsigned int fI = 1; fI < fileList.size(); ++fI)
     {
-        inTree.at(fI)->GetEntry(RunEvtToEntry.at(fI)[key]);
-        for(Int_t jI = 0; jI < nJetTrees; ++jI){jetTree.at(fI).at(jI)->GetEntry(RunEvtToEntry.at(fI)[key]);}
+        inTree.at(fI)->GetEntry(entry);
     }
-    
-    
-
     /////// FILLING THE HISTOGRAMS ////////
     for(unsigned int lI = 0; lI < listOfCompBranches.size(); ++lI){
       std::string tempS = listOfCompBranches.at(lI);
@@ -1541,16 +1496,16 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
   return 0;
 }
 
-                           /*
+                           
 int main(int argc, char* argv[])
 {
-  if(argc != 4 && argc != 5){
-    std::cout << "Usage ./doComparison.exe <inFileName1> <inFileName2> <inFileName3> <outFileName-optional>" << std::endl;
+  if(argc != 2 && argc != 3 && argc != 4){
+    std::cout << "Usage ./plotDQC.exe <inFileName1> <outFileName>" << std::endl;
     return 1;
   }
 
   int retVal = 0;
-  if(argc == 4) retVal += doComparison(argv[1], argv[2], argv[3]);
-  else if(argc == 5) retVal += doComparison(argv[1], argv[2], argv[3], argv[4]);
+  if(argc == 2) retVal += plotDQC(argv[1]);
+  else if(argc == 3) retVal += plotDQC(argv[1], argv[2]);
   return retVal;
-} */
+}
