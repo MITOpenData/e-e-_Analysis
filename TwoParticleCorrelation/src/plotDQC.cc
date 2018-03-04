@@ -594,8 +594,8 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
   }
         //// DONE TURNING ON THE BRANCHES THAT WE WILL BE PLOTTING ////
 
-  const Int_t nEntries = inTree.at(0)->GetEntries();
-
+  Int_t nEntries = inTree.at(0)->GetEntries();
+  if (nEntries > 1000000) nEntries = 1000000;
   std::cout << "Doing full processing..." << std::endl;
   Selection s = Selection();
 
