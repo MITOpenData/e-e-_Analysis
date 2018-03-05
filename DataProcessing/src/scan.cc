@@ -396,7 +396,37 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 
 	eSelection.setEventSelection(&pData);
 	eData.passesWW = eSelection.getPassesWW();
-      
+	eData.passesD2 = eSelection.getPassesD2();
+	eData.passesCW = eSelection.getPassesCW();
+	eData.d2 = eSelection.getD2();
+	eData.cW = eSelection.getCW();
+
+	eData.wwInitFourJetSumPx = eSelection.getInitFourJetSumPx();
+	eData.wwInitFourJetSumPy = eSelection.getInitFourJetSumPy();
+	eData.wwInitFourJetSumPz = eSelection.getInitFourJetSumPz();
+	eData.wwInitFourJetSumE = eSelection.getInitFourJetSumE();
+
+	std::vector<TLorentzVector> tempJets = eSelection.getInitFourJet();
+	for(unsigned int jI = 0; jI < tempJets.size(); ++jI){
+	  eData.wwInitFourJetPx[jI] = tempJets.at(jI).Px();
+	  eData.wwInitFourJetPy[jI] = tempJets.at(jI).Py();
+	  eData.wwInitFourJetPz[jI] = tempJets.at(jI).Pz();
+	  eData.wwInitFourJetE[jI] = tempJets.at(jI).E();
+	}
+
+	eData.wwFinalFourJetSumPx = eSelection.getFinalFourJetSumPx();
+	eData.wwFinalFourJetSumPy = eSelection.getFinalFourJetSumPy();
+	eData.wwFinalFourJetSumPz = eSelection.getFinalFourJetSumPz();
+	eData.wwFinalFourJetSumE = eSelection.getFinalFourJetSumE();
+
+	tempJets = eSelection.getFinalFourJet();
+	for(unsigned int jI = 0; jI < tempJets.size(); ++jI){
+	  eData.wwFinalFourJetPx[jI] = tempJets.at(jI).Px();
+	  eData.wwFinalFourJetPy[jI] = tempJets.at(jI).Py();
+	  eData.wwFinalFourJetPz[jI] = tempJets.at(jI).Pz();
+	  eData.wwFinalFourJetE[jI] = tempJets.at(jI).E();
+	}
+
 	if(counterEntries>0) tout->Fill(); 
 	
 	//Processing particles->jets
@@ -610,6 +640,36 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	
     eSelection.setEventSelection(&pData);
     eData.passesWW = eSelection.getPassesWW();
+    eData.passesD2 = eSelection.getPassesD2();
+    eData.passesCW = eSelection.getPassesCW();
+    eData.d2 = eSelection.getD2();
+    eData.cW = eSelection.getCW();
+
+    eData.wwInitFourJetSumPx = eSelection.getInitFourJetSumPx();
+    eData.wwInitFourJetSumPy = eSelection.getInitFourJetSumPy();
+    eData.wwInitFourJetSumPz = eSelection.getInitFourJetSumPz();
+    eData.wwInitFourJetSumE = eSelection.getInitFourJetSumE();
+
+    std::vector<TLorentzVector> tempJets = eSelection.getInitFourJet();
+    for(unsigned int jI = 0; jI < tempJets.size(); ++jI){
+      eData.wwInitFourJetPx[jI] = tempJets.at(jI).Px();
+      eData.wwInitFourJetPy[jI] = tempJets.at(jI).Py();
+      eData.wwInitFourJetPz[jI] = tempJets.at(jI).Pz();
+      eData.wwInitFourJetE[jI] = tempJets.at(jI).E();
+    }
+
+    eData.wwFinalFourJetSumPx = eSelection.getFinalFourJetSumPx();
+    eData.wwFinalFourJetSumPy = eSelection.getFinalFourJetSumPy();
+    eData.wwFinalFourJetSumPz = eSelection.getFinalFourJetSumPz();
+    eData.wwFinalFourJetSumE = eSelection.getFinalFourJetSumE();
+    
+    tempJets = eSelection.getFinalFourJet();
+    for(unsigned int jI = 0; jI < tempJets.size(); ++jI){
+      eData.wwFinalFourJetPx[jI] = tempJets.at(jI).Px();
+      eData.wwFinalFourJetPy[jI] = tempJets.at(jI).Py();
+      eData.wwFinalFourJetPz[jI] = tempJets.at(jI).Pz();
+      eData.wwFinalFourJetE[jI] = tempJets.at(jI).E();
+    }
 
     if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
     
@@ -718,6 +778,36 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 
 	  egSelection.setEventSelection(&pgData);
 	  egData.passesWW = egSelection.getPassesWW();
+	  egData.passesD2 = egSelection.getPassesD2();
+	  egData.passesCW = egSelection.getPassesCW();
+	  egData.d2 = egSelection.getD2();
+	  egData.cW = egSelection.getCW();
+
+	  egData.wwInitFourJetSumPx = egSelection.getInitFourJetSumPx();
+	  egData.wwInitFourJetSumPy = egSelection.getInitFourJetSumPy();
+	  egData.wwInitFourJetSumPz = egSelection.getInitFourJetSumPz();
+	  egData.wwInitFourJetSumE = egSelection.getInitFourJetSumE();
+
+	  std::vector<TLorentzVector> tempJets = egSelection.getInitFourJet();
+	  for(unsigned int jI = 0; jI < tempJets.size(); ++jI){
+	    egData.wwInitFourJetPx[jI] = tempJets.at(jI).Px();
+	    egData.wwInitFourJetPy[jI] = tempJets.at(jI).Py();
+	    egData.wwInitFourJetPz[jI] = tempJets.at(jI).Pz();
+	    egData.wwInitFourJetE[jI] = tempJets.at(jI).E();
+	  }
+
+	  egData.wwFinalFourJetSumPx = egSelection.getFinalFourJetSumPx();
+	  egData.wwFinalFourJetSumPy = egSelection.getFinalFourJetSumPy();
+	  egData.wwFinalFourJetSumPz = egSelection.getFinalFourJetSumPz();
+	  egData.wwFinalFourJetSumE = egSelection.getFinalFourJetSumE();
+
+	  tempJets = egSelection.getFinalFourJet();
+	  for(unsigned int jI = 0; jI < tempJets.size(); ++jI){
+	    egData.wwFinalFourJetPx[jI] = tempJets.at(jI).Px();
+	    egData.wwFinalFourJetPy[jI] = tempJets.at(jI).Py();
+	    egData.wwFinalFourJetPz[jI] = tempJets.at(jI).Pz();
+	    egData.wwFinalFourJetE[jI] = tempJets.at(jI).E();
+	  }
 
 	  if(counterEntries>0) tgout->Fill(); 
 
@@ -990,7 +1080,37 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 
       egSelection.setEventSelection(&pgData);
       egData.passesWW = egSelection.getPassesWW();
+      egData.passesD2 = egSelection.getPassesD2();
+      egData.passesCW = egSelection.getPassesCW();
+      egData.d2 = egSelection.getD2();
+      egData.cW = egSelection.getCW();
 
+      egData.wwInitFourJetSumPx = egSelection.getInitFourJetSumPx();
+      egData.wwInitFourJetSumPy = egSelection.getInitFourJetSumPy();
+      egData.wwInitFourJetSumPz = egSelection.getInitFourJetSumPz();
+      egData.wwInitFourJetSumE = egSelection.getInitFourJetSumE();
+
+      std::vector<TLorentzVector> tempJets = egSelection.getInitFourJet();
+      for(unsigned int jI = 0; jI < tempJets.size(); ++jI){
+	egData.wwInitFourJetPx[jI] = tempJets.at(jI).Px();
+	egData.wwInitFourJetPy[jI] = tempJets.at(jI).Py();
+	egData.wwInitFourJetPz[jI] = tempJets.at(jI).Pz();
+	egData.wwInitFourJetE[jI] = tempJets.at(jI).E();
+      }
+
+      egData.wwFinalFourJetSumPx = egSelection.getFinalFourJetSumPx();
+      egData.wwFinalFourJetSumPy = egSelection.getFinalFourJetSumPy();
+      egData.wwFinalFourJetSumPz = egSelection.getFinalFourJetSumPz();
+      egData.wwFinalFourJetSumE = egSelection.getFinalFourJetSumE();
+      
+      tempJets = egSelection.getFinalFourJet();
+      for(unsigned int jI = 0; jI < tempJets.size(); ++jI){
+	egData.wwFinalFourJetPx[jI] = tempJets.at(jI).Px();
+	egData.wwFinalFourJetPy[jI] = tempJets.at(jI).Py();
+	egData.wwFinalFourJetPz[jI] = tempJets.at(jI).Pz();
+	egData.wwFinalFourJetE[jI] = tempJets.at(jI).E();
+      }
+      
       if(counterEntries>0) tgout->Fill(); 
       for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	processJets(particles, jDef[jIter], jDefReclust[jIter], &(jgData[jIter]), jtPtCut, rParam[jIter], nFinalClust[jIter]);

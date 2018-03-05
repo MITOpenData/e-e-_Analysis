@@ -6,6 +6,31 @@
 class eventData{
  public:
   Bool_t passesWW;
+  Bool_t passesD2;
+  Bool_t passesCW;
+  Float_t d2;
+  Float_t cW;
+
+  Float_t wwInitFourJetSumPx;
+  Float_t wwInitFourJetSumPy;
+  Float_t wwInitFourJetSumPz;
+  Float_t wwInitFourJetSumE;
+
+  Float_t wwFinalFourJetSumPx;
+  Float_t wwFinalFourJetSumPy;
+  Float_t wwFinalFourJetSumPz;
+  Float_t wwFinalFourJetSumE;
+
+  Float_t wwInitFourJetPx[4];
+  Float_t wwInitFourJetPy[4];
+  Float_t wwInitFourJetPz[4];
+  Float_t wwInitFourJetE[4];
+
+  Float_t wwFinalFourJetPx[4];
+  Float_t wwFinalFourJetPy[4];
+  Float_t wwFinalFourJetPz[4];
+  Float_t wwFinalFourJetE[4];
+
   Float_t missP;
   Float_t missPt;
   Float_t missTheta;
@@ -38,8 +63,28 @@ class eventData{
   Float_t C_linearized;
   Float_t D_linearized;
 
-  static const int nVar = 28;
+  static const int nVar = 48;
   std::string varStr[nVar] = {"passesWW",
+			      "passesD2",
+			      "passesCw",
+			      "d2",
+			      "cW",
+			      "wwInitFourJetSumPx",
+			      "wwInitFourJetSumPy",
+			      "wwInitFourJetSumPz",
+			      "wwInitFourJetSumE",
+			      "wwFinalFourJetSumPx",
+			      "wwFinalFourJetSumPy",
+			      "wwFinalFourJetSumPz",
+			      "wwFinalFourJetSumE",
+			      "wwInitFourJetPx",
+			      "wwInitFourJetPy",
+			      "wwInitFourJetPz",
+			      "wwInitFourJetE",
+			      "wwFinalFourJetPx",
+			      "wwFinalFourJetPy",
+			      "wwFinalFourJetPz",
+			      "wwFinalFourJetE",
 			      "missP",
 			      "missPt",
 			      "missTheta",
@@ -79,6 +124,18 @@ class eventData{
 eventData::eventData()
 {
   passesWW = false;
+  passesD2 = false;
+  passesCW = false;
+  d2 = -999.;
+  cW = -999.;
+  wwInitFourJetSumPx = -999.;
+  wwInitFourJetSumPy = -999.;
+  wwInitFourJetSumPz = -999.;
+  wwInitFourJetSumE = -999.;
+  wwFinalFourJetSumPx = -999.;
+  wwFinalFourJetSumPy = -999.;
+  wwFinalFourJetSumPz = -999.;
+  wwFinalFourJetSumE = -999.;
   missP = -999;
   missPt = -999;
   missTheta = -999;
@@ -107,6 +164,18 @@ eventData::eventData()
   C_linearized = -999;
   D_linearized = -999;
 
+  for(Int_t i = 0; i < 4; ++ i){
+    wwInitFourJetPx[i] = -999.;
+    wwInitFourJetPy[i] = -999.;
+    wwInitFourJetPz[i] = -999.;
+    wwInitFourJetE[i] = -999.;
+
+    wwFinalFourJetPx[i] = -999.;
+    wwFinalFourJetPy[i] = -999.;
+    wwFinalFourJetPz[i] = -999.;
+    wwFinalFourJetE[i] = -999.;
+  }
+
   for(int i = 0; i < nVar; ++i){varIsGood[i] = true;}
   return;
 }
@@ -132,33 +201,53 @@ void eventData::SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::string
   }
 
   if(varIsGood[0]) inTree_p->SetBranchAddress("passesWW", &passesWW);
-  if(varIsGood[1]) inTree_p->SetBranchAddress("missP", &missP);
-  if(varIsGood[2]) inTree_p->SetBranchAddress("missPt", &missPt);
-  if(varIsGood[3]) inTree_p->SetBranchAddress("missTheta", &missTheta);
-  if(varIsGood[4]) inTree_p->SetBranchAddress("missPhi", &missPhi);
-  if(varIsGood[5]) inTree_p->SetBranchAddress("missChargedP", &missChargedP);
-  if(varIsGood[6]) inTree_p->SetBranchAddress("missChargedPt", &missChargedPt);
-  if(varIsGood[7]) inTree_p->SetBranchAddress("missChargedTheta", &missChargedTheta);
-  if(varIsGood[8]) inTree_p->SetBranchAddress("missChargedPhi", &missChargedPhi);
-  if(varIsGood[9]) inTree_p->SetBranchAddress("nChargedHadrons", &nChargedHadrons);
-  if(varIsGood[10]) inTree_p->SetBranchAddress("nChargedHadrons_GT0p4", &nChargedHadrons_GT0p4);
-  if(varIsGood[11]) inTree_p->SetBranchAddress("nChargedHadrons_GT0p4Thrust", &nChargedHadrons_GT0p4Thrust);
-  if(varIsGood[12]) inTree_p->SetBranchAddress("Thrust", &Thrust);
-  if(varIsGood[13]) inTree_p->SetBranchAddress("TTheta", &TTheta);
-  if(varIsGood[14]) inTree_p->SetBranchAddress("TPhi", &TPhi);
-  if(varIsGood[15]) inTree_p->SetBranchAddress("Thrust_charged", &Thrust_charged);
-  if(varIsGood[16]) inTree_p->SetBranchAddress("TTheta_charged", &TTheta_charged);
-  if(varIsGood[17]) inTree_p->SetBranchAddress("TPhi_charged", &TPhi_charged);
-  if(varIsGood[18]) inTree_p->SetBranchAddress("Sphericity", &Sphericity);
-  if(varIsGood[19]) inTree_p->SetBranchAddress("STheta", &STheta);
-  if(varIsGood[20]) inTree_p->SetBranchAddress("SPhi", &SPhi);
-  if(varIsGood[21]) inTree_p->SetBranchAddress("Aplanarity", &Aplanarity);
-  if(varIsGood[22]) inTree_p->SetBranchAddress("Sphericity_linearized", &Sphericity_linearized);
-  if(varIsGood[23]) inTree_p->SetBranchAddress("STheta_linearized", &STheta_linearized);
-  if(varIsGood[24]) inTree_p->SetBranchAddress("SPhi_linearized", &SPhi_linearized);
-  if(varIsGood[25]) inTree_p->SetBranchAddress("Aplanarity_linearized", &Aplanarity_linearized);
-  if(varIsGood[26]) inTree_p->SetBranchAddress("C_linearized", &C_linearized);
-  if(varIsGood[27]) inTree_p->SetBranchAddress("D_linearized", &D_linearized);
+  if(varIsGood[1]) inTree_p->SetBranchAddress("passesD2", &passesD2);
+  if(varIsGood[2]) inTree_p->SetBranchAddress("passesCW", &passesCW);
+  if(varIsGood[3]) inTree_p->SetBranchAddress("d2", &d2);
+  if(varIsGood[4]) inTree_p->SetBranchAddress("cW", &cW);
+  if(varIsGood[5]) inTree_p->SetBranchAddress("wwInitFourJetSumPx", &wwInitFourJetSumPx);
+  if(varIsGood[6]) inTree_p->SetBranchAddress("wwInitFourJetSumPy", &wwInitFourJetSumPy);
+  if(varIsGood[7]) inTree_p->SetBranchAddress("wwInitFourJetSumPz", &wwInitFourJetSumPz);
+  if(varIsGood[8]) inTree_p->SetBranchAddress("wwInitFourJetSumE", &wwInitFourJetSumE);
+  if(varIsGood[9]) inTree_p->SetBranchAddress("wwFinalFourJetSumPx", &wwFinalFourJetSumPx);
+  if(varIsGood[10]) inTree_p->SetBranchAddress("wwFinalFourJetSumPy", &wwFinalFourJetSumPy);
+  if(varIsGood[11]) inTree_p->SetBranchAddress("wwFinalFourJetSumPz", &wwFinalFourJetSumPz);
+  if(varIsGood[12]) inTree_p->SetBranchAddress("wwFinalFourJetSumE", &wwFinalFourJetSumE);
+  if(varIsGood[13]) inTree_p->SetBranchAddress("wwInitFourJetPx", wwInitFourJetPx);
+  if(varIsGood[14]) inTree_p->SetBranchAddress("wwInitFourJetPy", wwInitFourJetPy);
+  if(varIsGood[15]) inTree_p->SetBranchAddress("wwInitFourJetPz", wwInitFourJetPz);
+  if(varIsGood[16]) inTree_p->SetBranchAddress("wwInitFourJetE", wwInitFourJetE);
+  if(varIsGood[17]) inTree_p->SetBranchAddress("wwFinalFourJetPx", wwFinalFourJetPx);
+  if(varIsGood[18]) inTree_p->SetBranchAddress("wwFinalFourJetPy", wwFinalFourJetPy);
+  if(varIsGood[19]) inTree_p->SetBranchAddress("wwFinalFourJetPz", wwFinalFourJetPz);
+  if(varIsGood[20]) inTree_p->SetBranchAddress("wwFinalFourJetE", wwFinalFourJetE);
+  if(varIsGood[21]) inTree_p->SetBranchAddress("missP", &missP);
+  if(varIsGood[22]) inTree_p->SetBranchAddress("missPt", &missPt);
+  if(varIsGood[23]) inTree_p->SetBranchAddress("missTheta", &missTheta);
+  if(varIsGood[24]) inTree_p->SetBranchAddress("missPhi", &missPhi);
+  if(varIsGood[25]) inTree_p->SetBranchAddress("missChargedP", &missChargedP);
+  if(varIsGood[26]) inTree_p->SetBranchAddress("missChargedPt", &missChargedPt);
+  if(varIsGood[27]) inTree_p->SetBranchAddress("missChargedTheta", &missChargedTheta);
+  if(varIsGood[28]) inTree_p->SetBranchAddress("missChargedPhi", &missChargedPhi);
+  if(varIsGood[29]) inTree_p->SetBranchAddress("nChargedHadrons", &nChargedHadrons);
+  if(varIsGood[30]) inTree_p->SetBranchAddress("nChargedHadrons_GT0p4", &nChargedHadrons_GT0p4);
+  if(varIsGood[31]) inTree_p->SetBranchAddress("nChargedHadrons_GT0p4Thrust", &nChargedHadrons_GT0p4Thrust);
+  if(varIsGood[32]) inTree_p->SetBranchAddress("Thrust", &Thrust);
+  if(varIsGood[33]) inTree_p->SetBranchAddress("TTheta", &TTheta);
+  if(varIsGood[34]) inTree_p->SetBranchAddress("TPhi", &TPhi);
+  if(varIsGood[35]) inTree_p->SetBranchAddress("Thrust_charged", &Thrust_charged);
+  if(varIsGood[36]) inTree_p->SetBranchAddress("TTheta_charged", &TTheta_charged);
+  if(varIsGood[37]) inTree_p->SetBranchAddress("TPhi_charged", &TPhi_charged);
+  if(varIsGood[38]) inTree_p->SetBranchAddress("Sphericity", &Sphericity);
+  if(varIsGood[39]) inTree_p->SetBranchAddress("STheta", &STheta);
+  if(varIsGood[40]) inTree_p->SetBranchAddress("SPhi", &SPhi);
+  if(varIsGood[41]) inTree_p->SetBranchAddress("Aplanarity", &Aplanarity);
+  if(varIsGood[42]) inTree_p->SetBranchAddress("Sphericity_linearized", &Sphericity_linearized);
+  if(varIsGood[43]) inTree_p->SetBranchAddress("STheta_linearized", &STheta_linearized);
+  if(varIsGood[44]) inTree_p->SetBranchAddress("SPhi_linearized", &SPhi_linearized);
+  if(varIsGood[45]) inTree_p->SetBranchAddress("Aplanarity_linearized", &Aplanarity_linearized);
+  if(varIsGood[46]) inTree_p->SetBranchAddress("C_linearized", &C_linearized);
+  if(varIsGood[47]) inTree_p->SetBranchAddress("D_linearized", &D_linearized);
 
   return;
 }
@@ -166,6 +255,26 @@ void eventData::SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::string
 void eventData::SetBranchWrite(TTree* inTree_p)
 {
   inTree_p->Branch("passesWW", &passesWW, "passesWW/O");
+  inTree_p->Branch("passesD2", &passesD2, "passesD2/O");
+  inTree_p->Branch("passesCW", &passesCW, "passesCW/O");
+  inTree_p->Branch("d2", &d2, "d2/F");
+  inTree_p->Branch("cW", &cW, "cW/F");
+  inTree_p->Branch("wwInitFourJetSumPx", &wwInitFourJetSumPx, "wwInitFourJetSumPx/F");
+  inTree_p->Branch("wwInitFourJetSumPy", &wwInitFourJetSumPy, "wwInitFourJetSumPy/F");
+  inTree_p->Branch("wwInitFourJetSumPz", &wwInitFourJetSumPz, "wwInitFourJetSumPz/F");
+  inTree_p->Branch("wwInitFourJetSumE", &wwInitFourJetSumE, "wwInitFourJetSumE/F");
+  inTree_p->Branch("wwFinalFourJetSumPx", &wwFinalFourJetSumPx, "wwFinalFourJetSumPx/F");
+  inTree_p->Branch("wwFinalFourJetSumPy", &wwFinalFourJetSumPy, "wwFinalFourJetSumPy/F");
+  inTree_p->Branch("wwFinalFourJetSumPz", &wwFinalFourJetSumPz, "wwFinalFourJetSumPz/F");
+  inTree_p->Branch("wwFinalFourJetSumE", &wwFinalFourJetSumE, "wwFinalFourJetSumE/F");
+  inTree_p->Branch("wwInitFourJetPx", wwInitFourJetPx, "wwInitFourJetPx[4]/F");
+  inTree_p->Branch("wwInitFourJetPy", wwInitFourJetPy, "wwInitFourJetPy[4]/F");
+  inTree_p->Branch("wwInitFourJetPz", wwInitFourJetPz, "wwInitFourJetPz[4]/F");
+  inTree_p->Branch("wwInitFourJetE", wwInitFourJetE, "wwInitFourJetE[4]/F");
+  inTree_p->Branch("wwFinalFourJetPx", wwFinalFourJetPx, "wwFinalFourJetPx[4]/F");
+  inTree_p->Branch("wwFinalFourJetPy", wwFinalFourJetPy, "wwFinalFourJetPy[4]/F");
+  inTree_p->Branch("wwFinalFourJetPz", wwFinalFourJetPz, "wwFinalFourJetPz[4]/F");
+  inTree_p->Branch("wwFinalFourJetE", wwFinalFourJetE, "wwFinalFourJetE[4]/F");
   inTree_p->Branch("missP", &missP, "missP/F");
   inTree_p->Branch("missPt", &missPt, "missPt/F");
   inTree_p->Branch("missTheta", &missTheta, "missTheta/F");
