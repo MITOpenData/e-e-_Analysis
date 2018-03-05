@@ -139,7 +139,7 @@ void formatTH1F(TH1F * h)
     h->GetXaxis()->SetTitleOffset(h->GetXaxis()->GetTitleOffset()*3.);
 }
 
-int plotDQC(const std::string inFileName, std::string outFileName = "", int drawHist = 0)
+int plotDQC(const std::string inFileName, std::string outFileName = "", int doECut = 0, int drawHist = 0)
 {
     
   ///// check if there are multiple files /////
@@ -577,6 +577,9 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
     
     inTree.at(0)->GetEntry(entry);
     
+    // look at around the 91.5 GeV range for LEP2
+    if (doECut & (pData.at(0).Energy > 100.0)) continue; 
+
     // apply the event selection criteria
     Int_t nTrk = 0;
     if(!s.donTrkThrust) nTrk = s.ridge_eventSelection(eData.at(0).passesWW, eData.at(0).missP, pData.at(0).nParticle, jData.at(0).at(0).nref, jData.at(0).at(0).jtpt, jData.at(0).at(0).jteta, eData.at(0).STheta, pData.at(0).mass, pData.at(0).ntpc, pData.at(0).theta, pData.at(0).pmag, pData.at(0).d0, pData.at(0).z0, pData.at(0).pwflag);
@@ -1507,5 +1510,7 @@ int main(int argc, char* argv[])
   int retVal = 0;
   if(argc == 2) retVal += plotDQC(argv[1]);
   else if(argc == 3) retVal += plotDQC(argv[1], argv[2]);
+  else if(argc == 4) retVal += plotDQC(argv[1], argv[2], atoi(argv[3]));
+  else if(argc == 5) retVal += plotDQC(argv[1], argv[2], atoi(argv[3]), atoi(argv[4]));
   return retVal;
 }

@@ -10,6 +10,7 @@
 
 inFileLoc=$1
 outFileName=$2
+energyCut=$3
 
 find $inFileLoc -type f -name "*.root" >inFileList.txt
 i=0
@@ -17,7 +18,7 @@ mkdir tempLoc_$outFileName
 
 while read line
 do
-    root -b -q plotDQC.cc\(\"$line\",\"tempLoc_$outFileName/out_$i\"\) &
+    root -b -q plotDQC.cc\(\"$line\",\"tempLoc_$outFileName/out_$i\",$energyCut\) &
     let i=i+1
 done <inFileList.txt
 wait
