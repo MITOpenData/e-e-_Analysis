@@ -93,8 +93,8 @@ class Selection
         static const Int_t nptBins_wrtWTA = 1;
         Float_t ptBinsLow_wrtWTA[nptBins_wrtWTA]  = {1.0};  // measured in GeV
         Float_t ptBinsHigh_wrtWTA[nptBins_wrtWTA] = {3.0};
-        static const Int_t netaBins_wrtWTA = 3;
-        Float_t etaBinsLow_wrtWTA[netaBins_wrtWTA]  = {10.0,20.0,40.0};
+        static const Int_t netaBins_wrtWTA = 1;
+        Float_t etaBinsLow_wrtWTA[netaBins_wrtWTA]  = {5.0};
         Float_t missPCut_wrtWTA = 20;
         Float_t etaPlotRange_wrtWTA = 6.0;
 

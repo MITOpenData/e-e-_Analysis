@@ -23,9 +23,12 @@
 
 std::string getDataName(std::string fileName)
 {
-
-    if(fileName.find("LEP1") != std::string::npos) return "LEP1";
-    if(fileName.find("LEP2") != std::string::npos) return "LEP2";
+    std::string dataName = "";
+    if(fileName.find("LEP1") != std::string::npos && fileName.find("MC") == std::string::npos) return "LEP1";
+    if(fileName.find("LEP1MC") != std::string::npos) return "LEP1 MC";
+    if(fileName.find("LEP2") != std::string::npos && fileName.find("MC") == std::string::npos) return "LEP2";
+    if(fileName.find("LEP2MC") != std::string::npos) return "LEP2 MC";
+    if(fileName.find("LEP2") != std::string::npos && fileName.find("ECUT") != std::string::npos) return "LEP2 (91.5)";
     if(fileName.find("PYTHIA8") != std::string::npos) return "PYTHIA8";
 
     return "";
@@ -37,7 +40,7 @@ int plotAllTH1F(const std::string inFileName, const std::string dataName)
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
     // List of plots to draw in log scale
-    static const std::string arr[] = {"jtm","jtN","pt","px","py","pz","pmag", "missP","missPt","missChargedP","missChargedPt","mass","ebx","eby","nTrk"};
+    static const std::string arr[] = {"jtm","jtN","pt","px","py","pz","pmag", "missP","missPt","missChargedP","missChargedPt","mass","ebx","eby","nTrk","aplanarity"};
     std::vector<std::string> logPlots;
     logPlots.assign(arr, arr + sizeof(arr) / sizeof(arr[0]));
     // colors for plotting LEP1,LEP2,PYTHIA8
