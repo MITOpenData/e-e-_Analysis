@@ -49,7 +49,7 @@ class Selection
             // Event Cuts
         bool doE = true; Float_t TotalChrgEnergyMin = 15; // measured in GeV
         Float_t nTrkMin = 5;
-        bool doSTheta = true; Float_t SThetaMin = 35;  Float_t SThetaMax = 145;  // measured in degrees
+        bool doSTheta = true; Float_t SThetaMax = 0.8;  
         // end of 1990 cuts
         bool domissPCut = true;  Float_t missPCut = 20;  // measured in GeV
         /* Frame Dependent Cuts */
@@ -238,11 +238,11 @@ int Selection::ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticl
     if( N >= 1000) return -1;
 
     if (doE && E < TotalChrgEnergyMin) return -1;
-    if(doSTheta && (STheta < SThetaMin && STheta > SThetaMax)) return -1;
+    if(doSTheta && TMath::Abs(cos(STheta))>=0.8) return -1;
     //// End of 1990 cuts ////
 
     ///////// Missing Momentum /////////
-    if (domissPCut && missP > missPCut) return -1;
+    //if (domissPCut && missP > missPCut) return -1;
     
     ///////// 3-Jet /////////
     Float_t j12 = jtp(jtpt[0],jteta[0])+jtp(jtpt[1],jteta[1]);
