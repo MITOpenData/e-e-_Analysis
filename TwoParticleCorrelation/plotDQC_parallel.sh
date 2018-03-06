@@ -5,7 +5,7 @@
 #
 #  Created by Anthony Badea on 1/18/18.
 #  
-#how to run ./ridge.sh inFileName outFileName fileEvents
+#
 #!/bin/bash
 
 if [ "$#" -ne 3 ]; 

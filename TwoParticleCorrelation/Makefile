@@ -25,6 +25,9 @@ mkdirPdfdir:
 plotDQC: src/plotDQC.cc
 	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -o bin/plotDQC.exe src/plotDQC.cc
 
+ridge_check: src/ridge_check.c
+	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -o bin/ridge_check.exe src/ridge_check.cc
+
 histoHadd_TH1F: src/histoHadd_TH1F.C
 	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -o bin/histoHadd_TH1F.exe src/histoHadd_TH1F.C
 

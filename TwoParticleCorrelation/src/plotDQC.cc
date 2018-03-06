@@ -1291,7 +1291,7 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int doEC
         canv_p->SetLeftMargin(0.01);
         canv_p->SetBottomMargin(0.01);
         
-        TPad* pad1 = new TPad("pad1", "pad1", 0.0, splitPoint, 0.5, 1.0);
+        pad1 = new TPad("pad1", "pad1", 0.0, splitPoint, 0.5, 1.0);
         pad1->Draw();
         pad1->SetTopMargin(0.01);
         pad1->SetRightMargin(0.01);

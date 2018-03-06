@@ -51,7 +51,7 @@ class Selection
         Float_t nTrkMin = 5;
         bool doSTheta = true; Float_t SThetaMax = 0.8;  
         // end of 1990 cuts
-        bool domissPCut = true;  Float_t missPCut = 20;  // measured in GeV
+        bool domissPCut = false;  Float_t missPCut = 20;  // measured in GeV
         /* Frame Dependent Cuts */
 
         bool doPt = true;
@@ -70,9 +70,9 @@ class Selection
         Float_t etaPlotRange;
 
         // Beam Axis
-        static const Int_t nptBins_wrtBeam = 1;
-        Float_t ptBinsLow_wrtBeam[nptBins_wrtBeam]  = {1.0};  // measured in GeV
-        Float_t ptBinsHigh_wrtBeam[nptBins_wrtBeam] = {3.0};
+        static const Int_t nptBins_wrtBeam = 3;
+        Float_t ptBinsLow_wrtBeam[nptBins_wrtBeam]  = {0.4,0.4,1.0};  // measured in GeV
+        Float_t ptBinsHigh_wrtBeam[nptBins_wrtBeam] = {50.0,4.0,3.0};
         static const Int_t netaBins_wrtBeam = 2;
         Float_t etaBinsLow_wrtBeam[netaBins_wrtBeam]  = {1.6, 1.8};
         Float_t missPCut_wrtBeam = 20;
@@ -80,9 +80,9 @@ class Selection
 
         // Thrust Axis
         bool doThrust = false;  bool donTrkThrust = false; // false = use beam axis for nTrk calculation
-        static const Int_t nptBins_wrtThr = 1;
-        Float_t ptBinsLow_wrtThr[nptBins_wrtThr]  = {0.4};  // measured in GeV {1.0,0.4}
-        Float_t ptBinsHigh_wrtThr[nptBins_wrtThr] = {100.0}; // {3.0,100.0}
+        static const Int_t nptBins_wrtThr = 3;
+        Float_t ptBinsLow_wrtThr[nptBins_wrtThr]  = {0.4,0.4,1.0};  // measured in GeV {1.0,0.4}
+        Float_t ptBinsHigh_wrtThr[nptBins_wrtThr] = {0.4,0.4,1.0}; // {3.0,100.0}
         static const Int_t netaBins_wrtThr = 2;
         Float_t etaBinsLow_wrtThr[netaBins_wrtThr]  = {4.5,5.0}; //{4.5,5.0}
         Float_t missPCut_wrtThr = 20;
@@ -90,9 +90,9 @@ class Selection
 
         // WTA Axis
         bool doWTA = false;
-        static const Int_t nptBins_wrtWTA = 1;
-        Float_t ptBinsLow_wrtWTA[nptBins_wrtWTA]  = {1.0};  // measured in GeV
-        Float_t ptBinsHigh_wrtWTA[nptBins_wrtWTA] = {3.0};
+        static const Int_t nptBins_wrtWTA = 3;
+        Float_t ptBinsLow_wrtWTA[nptBins_wrtWTA]  = {0.4,0.4,1.0};  // measured in GeV
+        Float_t ptBinsHigh_wrtWTA[nptBins_wrtWTA] = {0.4,0.4,1.0};
         static const Int_t netaBins_wrtWTA = 1;
         Float_t etaBinsLow_wrtWTA[netaBins_wrtWTA]  = {5.0};
         Float_t missPCut_wrtWTA = 20;
@@ -103,9 +103,9 @@ class Selection
         Float_t energyBinsLow[nEnergyBins] = {0,100}; // {0,100}
         Float_t energyBinsHigh[nEnergyBins] = {100,999}; // {100,999}
 
-        static const Int_t nMultBins = 3;
-        Int_t multBinsLow[nMultBins]  = {0 , 20, 30};
-        Int_t multBinsHigh[nMultBins] = {20, 30, 999};
+        static const Int_t nMultBins = 4;
+        Int_t multBinsLow[nMultBins]  = {0 , 20, 30, 35};
+        Int_t multBinsHigh[nMultBins] = {20, 30, 999, 999};
 
         /* Plotting */
         Float_t dEtaBins = 20; //keep even
@@ -133,11 +133,11 @@ class Selection
         int ridge_trackSelection(Int_t nTPC, Float_t theta, Float_t p, Float_t d0, Float_t z0, Int_t pwflag);
         int ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticle, Int_t nref, Float_t jtpt[], Float_t jteta[], Float_t STheta, Float_t mass[], Int_t nTPC[], Float_t theta[], Float_t pmag[], Float_t d0[], Float_t z0[], Int_t pwflag[]);
         bool isMixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta, Float_t jteta_mix, Float_t TTheta, Float_t TTheta_mix, Float_t TPhi, Float_t TPhi_mix);
-        int histNtrk(Int_t N);
-        int histPt(Float_t pt);
-        int histEta(Float_t eta);
-        int histEnergy(Float_t Energy);
-    
+        std::vector<Int_t> histEnergy(Float_t Energy);
+        std::vector<Int_t> histNtrk(Int_t N);
+        std::vector<Int_t> histPt(Float_t pt);
+        std::vector<Int_t> histEta(Float_t eta);
+        
     private:
 };
 
@@ -161,7 +161,7 @@ Selection::Selection()
 
     if(doGen)
     {
-        std::cout<<"Turning of event and track selection criteria..."<<std::endl;
+        std::cout<<"Turning off event and track selection criteria..."<<std::endl;
         // nTrk is just the number of charged particles
         doNTPC = false;
         doTheta = false;
@@ -242,7 +242,7 @@ int Selection::ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticl
     //// End of 1990 cuts ////
 
     ///////// Missing Momentum /////////
-    //if (domissPCut && missP > missPCut) return -1;
+    if (domissPCut && missP > missPCut) return -1;
     
     ///////// 3-Jet /////////
     Float_t j12 = jtp(jtpt[0],jteta[0])+jtp(jtpt[1],jteta[1]);
@@ -272,49 +272,55 @@ bool Selection::isMixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta
     
     return true;
 }
-// return histogram number of the histogram corresponding to the multiplicity range
-int Selection::histNtrk(Int_t N)
+
+// return int of histogram for event energy
+std::vector<Int_t> Selection::histEnergy(Float_t Energy)
 {
+    std::vector<Int_t> hists;
+    for (Int_t i = 0; i < nEnergyBins; ++i)
+    {
+        if (Energy >= energyBinsLow[i] && Energy < energyBinsHigh[i]) hists.push_back(i);
+    }
+    return hists;
+}
+
+// return histogram number of the histogram corresponding to the multiplicity range
+std::vector<Int_t> Selection::histNtrk(Int_t N)
+{
+    std::vector<Int_t> hists;
     // inclusive on low end to help statistics in higher multiplicity bins
     for (Int_t i = 0; i < nMultBins; ++i)
     {
-        if (N >= multBinsLow[i] && N < multBinsHigh[i]) return i;
+        if (N >= multBinsLow[i] && N < multBinsHigh[i]) hists.push_back(i);
     }
-    return -1;
+    return hists;
 }
 
-int Selection::histEnergy(Float_t Energy)
+// return vector containing the histogram numbers to fill for pt
+std::vector<Int_t> Selection::histPt(Float_t pt)
 {
-    for (Int_t i = 0; i < nEnergyBins; ++i)
-    {
-        if (Energy >= energyBinsLow[i] && Energy < energyBinsHigh[i]) return i;
-    }
-    std::cout<<"Event energy is messing up..."<<std::endl;
-    return -1;
-}
-
-// return histogram number of the histogram corresponding to the pt range
-int Selection::histPt(Float_t pt)
-{
+    std::vector<Int_t> hists;
     for (Int_t i = 0; i < nptBins; ++i)
     {
-        if (doThrust && (pt >= ptBinsLow_wrtThr[i] && pt < ptBinsHigh_wrtThr[i])) return i;
-        else if (doWTA && (pt >= ptBinsLow_wrtThr[i] && pt < ptBinsHigh_wrtThr[i])) return i;
-        else if (pt >= ptBinsLow_wrtBeam[i] && pt < ptBinsHigh_wrtBeam[i]) return i;
+        if (doThrust && (pt >= ptBinsLow_wrtThr[i] && pt < ptBinsHigh_wrtThr[i])) hists.push_back(i);
+        else if (doWTA && (pt >= ptBinsLow_wrtThr[i] && pt < ptBinsHigh_wrtThr[i])) hists.push_back(i);
+        else if (pt >= ptBinsLow_wrtBeam[i] && pt < ptBinsHigh_wrtBeam[i]) hists.push_back(i);
     }
-    return -1;
+
+    return hists;
 }
-// return histogram number of the histogram corresponding to the pt range
-int Selection::histEta(Float_t eta)
+
+// return vector containing the histogram numbers to fill for eta
+std::vector<Int_t> Selection::histEta(Float_t eta)
 {
-    int numEta = 0;
+    std::vector<Int_t> hists;
     // we iterate backwards because we want to fill all of the bins with an eta fill less than or equal to the min 
-    for (Int_t i = netaBins-1; i >=0; --i)
+    for (Int_t i = 0; i < netaBins; ++i)
     {
-        if (doThrust && (eta < etaBinsLow_wrtThr[i])) return i;
-        else if (doWTA && (eta < etaBinsLow_wrtThr[i])) return i;
-        else if (eta < etaBinsLow_wrtBeam[i]) return i;
+        if (doThrust && (eta < etaBinsLow_wrtThr[i])) hists.push_back(i);
+        else if (doWTA && (eta < etaBinsLow_wrtThr[i])) hists.push_back(i);
+        else if (eta < etaBinsLow_wrtBeam[i]) hists.push_back(i);
     }
-    return -1;
+    return hists;
 }
 #endif /* Selection.h */

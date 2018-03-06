@@ -1,2 +1,0 @@
-rootFiles/LEP2MC1996YDATAEMINI_recons_aftercut-MERGED.root
-rootFiles/LEP2MC1996YDATAEMINI_recons_aftercut-MERGED.root
