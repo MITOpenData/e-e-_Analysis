@@ -62,7 +62,8 @@ int ridge_check
     Selection s = Selection();
     if(inFileName.find("JobNum") != std::string::npos){s.doNTPC = false; s.dod0 = false; s.doz0 = false; s.doWW = false;} // for MC
 
-    TFile * output = TFile::Open(Form("%s.root",outFileName.c_str()),"recreate");
+    if(outFileName.find(".root") == std::string::npos) outFileName = outFileName + ".root";
+    TFile * output = TFile::Open(outFileName.c_str(),"recreate");
 
     /// Initialize the histograms
     std::cout<<"Initializing histograms..."<<std::endl;
