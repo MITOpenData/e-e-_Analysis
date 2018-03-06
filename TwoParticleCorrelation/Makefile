@@ -14,7 +14,7 @@ EVENTPARTICLEDATA=$(PWD)/../
 MKDIR_BIN=mkdir -p $(PWD)/bin
 MKDIR_PDFDIR=mkdir -p $(PWD)/pdfDir
 
-all: mkdirBin mkdirPdfdir plotDQC histoHadd_TH1F
+all: mkdirBin mkdirPdfdir plotDQC ridge_check histoHadd_TH1F
 
 mkdirBin:
 	$(MKDIR_BIN)
