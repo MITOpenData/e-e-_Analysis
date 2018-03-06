@@ -14,7 +14,7 @@ EVENTPARTICLEDATA=$(PWD)/../
 MKDIR_BIN=mkdir -p $(PWD)/bin
 MKDIR_PDFDIR=mkdir -p $(PWD)/pdfDir
 
-all: mkdirBin mkdirPdfdir plotDQC
+all: mkdirBin mkdirPdfdir plotDQC histoHadd_TH1F
 
 mkdirBin:
 	$(MKDIR_BIN)
@@ -24,6 +24,9 @@ mkdirPdfdir:
 
 plotDQC: src/plotDQC.cc
 	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -o bin/plotDQC.exe src/plotDQC.cc
+
+histoHadd_TH1F: src/histoHadd_TH1F.C
+	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -o bin/histoHadd_TH1F.exe src/histoHadd_TH1F.C
 
 clean:
 	rm *~ || true

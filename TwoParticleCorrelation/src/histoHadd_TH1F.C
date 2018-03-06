@@ -69,7 +69,10 @@ int histoHadd_TH1F(const std::string inFileName, const std::string outFileName)
     TH1F * mergedHist[nTH1F];
 
     TList * list;
-    TFile * outFile_p = new TFile(Form("%s.root",outFileName.c_str()),"RECREATE");
+
+    std::string newOutFileName = outFileName;
+    if(outFileName.find(".root") == std::string::npos) newOutFileName = newOutFileName + ".root";
+    TFile * outFile_p = new TFile(newOutFileName.c_str(),"RECREATE");
     for(Int_t iter = 0; iter < nTH1F; iter++)
     {
         list = new TList;
@@ -104,6 +107,18 @@ int histoHadd_TH1F(const std::string inFileName, const std::string outFileName)
     delete outFile_p;
 
     return 0;
+}
+
+int main(int argc, char* argv[])
+{
+  if(argc != 3){
+    std::cout << "Usage: ./histoHadd_TH1F.exe <inFileName> <outFileName>" << std::endl;
+    return 1;
+  }
+
+  int retVal = 0;
+  retVal += histoHadd_TH1F(argv[1], argv[2]);
+  return 0;
 }
 
 

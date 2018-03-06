@@ -188,67 +188,67 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int doEC
   ///////// LOADING THE VARIABLES TO PLOT FROM THE FILES /////////
     
   /////// LOADING THE INITIAL BRANCHES/RANGES FROM FILE 1 ///////
-    for(unsigned int i = 0; i<fileList.size();++i)std::cout<<fileList.at(i).c_str()<<std::endl;
-    
+  for(unsigned int i = 0; i<fileList.size();++i)std::cout<<fileList.at(i).c_str()<<std::endl;
+  
   inFile.at(0) = new TFile(fileList.at(0).c_str(), "READ");
   inTree.at(0) = (TTree*)inFile.at(0)->Get("t");
-    // turn on only the runNo and EventNo branches
+  // turn on only the runNo and EventNo branches
   //inTree.at(0)->SetBranchStatus("*", 0);
   //inTree.at(0)->SetBranchStatus("RunNo", 1);
   //inTree.at(0)->SetBranchStatus("EventNo", 1);
   inTree.at(0)->SetBranchAddress("RunNo", &pData.at(0).RunNo);
   inTree.at(0)->SetBranchAddress("EventNo", &pData.at(0).EventNo);
-
-    // load the master branch list from the first tree from file 1
+  
+  // load the master branch list from the first tree from file 1
   std::cout<<"Initializing Mins and Maxs..."<<std::endl;
   TObjArray* list1_p = (TObjArray*)inTree.at(0)->GetListOfBranches();
   for(Int_t i = 0; i < list1_p->GetEntries(); ++i){
     listOfCompBranches.push_back(list1_p->At(i)->GetName());
-      // load in the minimum and maximums from the branches
+    // load in the minimum and maximums from the branches
     branchMins.push_back(inTree.at(0)->GetMinimum(list1_p->At(i)->GetName()));
     branchMaxs.push_back(inTree.at(0)->GetMaximum(list1_p->At(i)->GetName()));
     //std::cout << listOfCompBranches.at(i)<<" "<< branchMins.at(i) << " "<< inTree.at(0)->GetMinimum(list1_p->At(i)->GetName()) << ", " << branchMaxs.at(i) << " "<<inTree.at(0)->GetMaximum(list1_p->At(i)->GetName()) <<std::endl;
   }
-
-    // get the list of jet trees in the file
-    
+  
+  // get the list of jet trees in the file
+  
   std::vector<std::string> listOfJetTrees1 = returnRootFileContentsList(inFile.at(0), "TTree", "JetTree");
   removeVectorDuplicates(&listOfJetTrees1);
   std::vector< std::vector<std::string> > listOfJetTreeBranches;
-    // for the minimum and maximum of the jet trees
+  // for the minimum and maximum of the jet trees
   std::vector< std::vector<double> > listOfJetTreeMins;
   std::vector< std::vector<double> > listOfJetTreeMaxs;
   for(unsigned int jI = 0; jI < listOfJetTrees1.size(); ++jI){
-      // load the temporary jet tree
+    // load the temporary jet tree
     TTree* tempTree_p = (TTree*)inFile.at(0)->Get(listOfJetTrees1.at(jI).c_str());
     TObjArray* tempList = (TObjArray*)tempTree_p->GetListOfBranches();
     std::vector<std::string> tempV;
     std::vector<double> tempMins;
     std::vector<double> tempMaxs;
-
-      // load the mins and maxs from that tree
+    
+    // load the mins and maxs from that tree
     for(Int_t i = 0; i < tempList->GetEntries(); ++i){
       tempV.push_back(tempList->At(i)->GetName());
       tempMins.push_back(tempTree_p->GetMinimum(tempList->At(i)->GetName()));
       tempMaxs.push_back(tempTree_p->GetMaximum(tempList->At(i)->GetName()));
     }
-
+    
     listOfJetTreeBranches.push_back(tempV);
     listOfJetTreeMins.push_back(tempMins);
     listOfJetTreeMaxs.push_back(tempMaxs);
   }
-
-    // clean up
+  
+  // clean up
   inFile.at(0)->Close();
   delete inFile.at(0);
-
+  
   ////////////////////// DONE LOADING FROM FILE 1 //////////////////////
-    
-    
+  
+  
   ////////////////////// LOOP OVER OTHER FILES //////////////////////
-    
+  
   for (unsigned int fI = 1; fI < fileList.size(); ++fI)
-  {
+    {
       inFile.at(fI) = new TFile(fileList.at(fI).c_str(), "READ");
       inTree.at(fI) = (TTree*)inFile.at(fI)->Get("t");
       TObjArray* list2_p = (TObjArray*)inTree.at(fI)->GetListOfBranches();
