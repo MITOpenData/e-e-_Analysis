@@ -123,7 +123,7 @@ class Selection
         Float_t ptBinsLow_pp[nptBins_pp]  = {0.4, 1.0};  // measured in GeV
         Float_t ptBinsHigh_pp[nptBins_pp] = {100, 3.0};
         static const Int_t netaBins_pp = 2;
-        Float_t etaBinsLow_pp[netaBins_wrtWTA]  = {4.5,5.0};
+        Float_t etaBinsLow_pp[netaBins_pp]  = {4.5,5.0};
         Float_t missPCut_pp = 20;
         Float_t etaPlotRange_pp = 6.0;
     
@@ -224,7 +224,7 @@ int Selection::ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticl
     // From 1990 "Properties of Hadronic Events in e+e- Annihilation at sqrt(s) = 91 GeV" ALEPH Collaboration paper
     Int_t N = 0;
     Float_t E = 0;
-    int i = 0;
+
     for (Int_t j=0;j<nParticle;j++)
     {
         if (ridge_trackSelection(nTPC[j],theta[j],pmag[j], d0[j], z0[j], pwflag[j]))

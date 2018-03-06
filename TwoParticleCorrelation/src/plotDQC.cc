@@ -12,13 +12,13 @@
 #include "TCanvas.h"
 #include "TPad.h"
 
-#include "../../DataProcessing/include/particleData.h"
-#include "../../DataProcessing/include/eventData.h"
-#include "../../DataProcessing/include/jetData.h"
-#include "../../DataProcessing/include/returnRootFileContentsList.h"
-#include "../../DataProcessing/include/removeVectorDuplicates.h"
-#include "../../DataProcessing/include/histDefUtility.h"
-#include "../include/handleMultipleFiles.h"
+#include "DataProcessing/include/particleData.h"
+#include "DataProcessing/include/eventData.h"
+#include "DataProcessing/include/jetData.h"
+#include "DataProcessing/include/returnRootFileContentsList.h"
+#include "DataProcessing/include/removeVectorDuplicates.h"
+#include "DataProcessing/include/histDefUtility.h"
+#include "include/handleMultipleFiles.h"
 #include "include/Selection.h"
 // hist_p = {hist1_p,hist2_p, ... , histN_p}
 // histDelta_p[] = {hist_Delta1From2,hist_Delta1From3, ... , hist_Delta1FromN, hist_Delta2From3, ... , hist_Delta2FromN, ... , hist_DeltaN-1FromN}
