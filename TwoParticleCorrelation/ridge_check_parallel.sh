@@ -8,7 +8,7 @@
 #how to run ./ridge.sh inFileName outFileName fileEvents
 #!/bin/bash
 
-if [ "$#" -ne 3 ]; 
+if [ "$#" -ne 2 ]; 
 then
     echo "Usage: sh ridge_check_parallel.sh <inDir> <outDir>"
     exit
