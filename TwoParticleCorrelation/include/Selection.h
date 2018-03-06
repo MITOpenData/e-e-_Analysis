@@ -35,7 +35,7 @@ class Selection
         Int_t bkgrd_runs = 1;
         enum SIMPLEPID {BELLE_PHOTON, BELLE_ELECTRON, BELLE_PION, BELLE_MUON, BELLE_KAON, BELLE_PROTON};    // BELLE Particle Definition
         enum SIMPLEPWFLAG {ALEPH_CHARGED_TRACK, ALEPH_CHARGED_LEPTONS1, ALEPH_CHARGED_LEPTONS2, ALEPH_V0, ALEPH_PHOTON, ALEPH_NEUTRAL_HADRON};  // ALEPH Particle Flow Classification
-        bool doGen = false; // turn of event and track selections
+        bool doGen = true; // turn of event and track selections
         
         /* Detector Specific Cuts */
         
