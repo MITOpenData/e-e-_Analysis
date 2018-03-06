@@ -30,7 +30,7 @@
 #include "include/fourier.h"
 #include "include/TPCNtupleData.h"
 #include "include/Selection.h"
-#include "include/smartJetName.h"
+#include "DataProcessing/include/smartJetName.h"
 
 /********************************************************************************************************************/
 // Two particle correlation analysis
