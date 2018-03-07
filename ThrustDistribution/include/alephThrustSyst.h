@@ -25,6 +25,7 @@ alephThrustSyst::alephThrustSyst(const std::string inSysName)
   if(inSysName=="../inputs/HEPData-ins636645-v1-Table54.root")
   {
     TFile* inFile_p = new TFile(inSysName.c_str(), "READ");
+    cout <<"LEP1"<<endl;
     inFile_p->cd("Table 54");
     TH1D* centralVal_p = (TH1D*)gDirectory->Get("Hist1D_y1");
     TH1D* sysTemp1_p = (TH1D*)gDirectory->Get("Hist1D_y1_e2"); 
@@ -36,8 +37,8 @@ alephThrustSyst::alephThrustSyst(const std::string inSysName)
       bins[i] = sysTemp1_p->GetBinLowEdge(i+1);
     }
 
-    inFile_p->Close();
-    delete inFile_p;
+//    inFile_p->Close();
+//    delete inFile_p;
   
     sysRel_0_p = new TH1D("sys_0_h", "", nBins, bins);
     sysRel_1_p = new TH1D("sys_1_h", "", nBins, bins);
@@ -94,8 +95,8 @@ alephThrustSyst::alephThrustSyst(const std::string inSysName)
 
     sysRel_2_p->Print("ALL");
 
-    inFile_p->Close();
-    delete inFile_p;
+//    inFile_p->Close();
+//    delete inFile_p;
 
     return;
   }
