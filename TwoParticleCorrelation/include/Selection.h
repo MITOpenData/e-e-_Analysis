@@ -53,8 +53,6 @@ class Selection
         // end of 1990 cuts
         bool domissPCut = false;  Float_t missPCut = 20;  // measured in GeV
         /* Frame Dependent Cuts */
-
-        bool doPt = true;
         
         bool doWW = false;  // impose WW cut
         bool doMixedMultCut = false; // cut on |nTrk - nTrkMix|
