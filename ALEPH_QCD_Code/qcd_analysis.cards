@@ -1,0 +1,48 @@
+***********************************************************
+* ALPHA cards for standard QCD analysis
+***********************************************************
+*
+*** stop job if time left =  
+TIME 10
+*
+*** number of events to analyse
+NEVT 1000
+*
+*** filicards
+READ 'da94_mini.filicards'
+READ 'da94_mini.sruncards'
+*READ 'mc94_qqbar_mini.filicards'
+*
+*** histogram file for output
+HIST 'qcd_analysis.hbook'
+*
+*** to not print histos in ascii output
+NOPH
+*
+*** event class preselection
+CLAS  16
+*
+*** fill energy flow section
+EFLW
+*
+*** minimal debugging output
+DEBU  0
+*
+*
+***** these are additional cards (not default in ALPHA)
+***** which are used for track and event selection
+***** the second number shows the default
+*
+SCUT 'CECH'  15.   15.     ! min charged energy
+SCUT 'CNCH'  5.    5.      ! min number of good charged tracks
+SCUT 'CCTS'  0.82  0.82    ! max cos(theta(sphericity axis))
+SCUT 'CNTR'  0.   15.      ! min number of good ch+neu tracks
+SCUT 'CTD0'  2.    2.      ! max D0
+SCUT 'CTZ0'  10.   5.      ! max Z0
+SCUT 'CTNT'  4.    4.      ! min number of TPC-hits/track
+SCUT 'CTCT'  0.94  0.94    ! max cos(theta(ch. track))
+SCUT 'CTPT'  0.20  0.20    ! min pt of a track
+SCUT 'CCCT'  0.98  0.98    ! max cos(theta(cal-object))
+SCUT 'CCEB'  0.80  0.80    ! min energy of cal-object
+*
+ENDQ

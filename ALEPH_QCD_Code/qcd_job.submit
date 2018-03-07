@@ -1,0 +1,140 @@
+#!/usr/local/bin/tcsh
+#BSUB -J QCD_ANALYSIS
+#BSUB -q 8nh
+
+#############################################
+###########################################
+# script for job submission of qcd analysis
+###########################################
+#############################################
+
+############
+# put your directory here
+############
+#eg  (uncomment after correct setting)
+set ORIDIR=/afs/cern.ch/user/d/disserto/analysis/alpha/examples/qcd_analysis
+
+############
+# choose between data=DA or Monte Carlo=MC, and set year and number of events 
+############
+set DATA=MC
+set YEAR=94
+set NEVT=10000
+#set NEVT='2000001 -3000000'
+
+############
+# define name of output files
+############
+set OUT=qcdana_$DATA\_$YEAR\_1
+
+
+############
+# here the cards are set according to choices made above
+############
+if ( $YEAR == 94 ) then
+  if ( $DATA == DA ) then
+    setenv CARD1 \'da94_mini.filicards\' 
+    setenv CARD2 \'da94_mini.sruncards\'
+    set READ2=READ
+    set CLAS='CLAS 16'
+  else
+    setenv CARD1 \'mc94_qqbar_mini.filicards\'
+    setenv CARD2 '***'
+    set READ2='***'      
+    set CLAS='****'
+  endif
+endif
+
+############
+# copy the relevant files to current working directory
+############
+cp $ORIDIR/qcd_analysis.F .
+cp $ORIDIR/qcd_utilities.F .
+cp $ORIDIR/histonaming.h .
+cp $ORIDIR/qcd_analysis.mk .
+cp $ORIDIR/*filicards .
+cp $ORIDIR/*sruncards .
+
+
+############
+# generate the ALPHA cards on the fly
+############
+cat <<EOF > alpha.cards
+*
+**** the filicards
+READ $CARD1
+$READ2 $CARD2
+*
+*** stop job if time left =
+TIME 10
+*
+*** event class preselection
+$CLAS
+*
+*** number of events to analyse
+NEVT $NEVT
+*
+*** fill energy flow section
+EFLW
+*
+*** minimal debugging output
+DEBU  0
+*
+*** to not print histos in ascii output
+NOPH
+*
+*** histogram file for output
+HIST '$OUT.hbook'
+* 
+*
+***** these are additional cards (not default in ALPHA)
+***** which are used for track and event selection
+***** the second number shows the default
+*
+SCUT 'CECH'  15.   15.     ! min charged energy
+SCUT 'CNCH'  5.    5.      ! min number of good charged tracks
+SCUT 'CCTS'  0.82  0.82    ! max cos(theta(sphericity axis))
+SCUT 'CNTR'  0.   15.      ! min number of good ch+neu tracks
+SCUT 'CTD0'  2.    2.      ! max D0
+SCUT 'CTZ0'  10.   5.      ! max Z0
+SCUT 'CTNT'  4.    4.      ! min number of TPC-hits/track
+SCUT 'CTCT'  0.94  0.94    ! max cos(theta(ch. track))
+SCUT 'CTPT'  0.20  0.20    ! min pt of a track
+SCUT 'CCCT'  0.98  0.98    ! max cos(theta(cal-object))
+SCUT 'CCEB'  0.80   0.80   ! min energy of cal-object
+*
+********************************************************
+ENDQ
+
+EOF
+
+#######
+# show the settings
+#######
+echo $ALPHACARDS 
+echo $OUT.out
+echo $OUT.hbook
+
+setenv ALPHACARDS alpha.cards
+
+cat $ALPHACARDS
+
+#########
+# create the executable and launch it
+#########
+gmake -f qcd_analysis.mk
+time qcd_analysis > $OUT.out
+
+#########
+# copy back the relevant output files
+#########
+cp $OUT* $ORIDIR
+cp *.hbook $ORIDIR
+cp fort.*  $ORIDIR
+
+########
+# that's it....
+########
+exit 0 
+ 
+

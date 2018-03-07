@@ -1,0 +1,159 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Guenther DISSERTORI">
+   <meta name="GENERATOR" content="Mozilla/4.7 [en] (WinNT; I) [Netscape]">
+   <title>qcd_codes</title>
+</head>
+<body bgcolor="#FFFFF0">
+
+<h1>
+
+<hr WIDTH="100%"></h1>
+
+<center>
+<h1>
+<i><font color="#CC0000"><font size=+4>QCD Example Codes</font></font></i></h1></center>
+
+<hr WIDTH="100%">
+<blockquote>
+<blockquote><b><font color="#000000"><font size=+2>Below you can find fortran
+routines, card files and scripts in order</font></font></b>
+<br><b><font size=+2><font color="#000000">to do a </font><i><font color="#3333FF">standard
+QCD analysis of event shape distributions </font></i><font color="#000000">and</font></font></b>
+<br><b><font size=+2><i><font color="#3333FF">inclusive charged particle
+distributions</font></i><font color="#000000"> on ALEPH data and full</font></font></b>
+<br><b><font color="#000000"><font size=+2>MC (LEP1), as well as with some
+Monte Carlo generator.</font></font></b>
+<p><b><font color="#CC0000"><font size=+3>Note</font></font><font color="#000000"><font size=+2>
+: the analysis is histogram and not Ntuple based.</font></font></b>
+<br>&nbsp;
+<br>&nbsp;
+<p>
+<ol>
+
+<li>
+<b><font color="#CC33CC"><font size=+3><A HREF="#data">Analysis of ALEPH data or full
+MC</A></font></font></b></li>
+
+<li>
+<b><font color="#CC33CC"><font size=+3><A HREF="#pythia">same analysis with PYTHIA</A></font></font></b></li>
+
+</ol>
+
+<br>&nbsp;
+<hr WIDTH="100%">
+<br>&nbsp;
+<ol>
+<li>
+<A NAME="data"></A>
+<b><font color="#CC33CC"><font size=+3>Analysis of ALEPH data or full
+MC:</font></font></b></li>
+</ol>
+
+<ul>
+<li>
+<font size=+2><font color="#000000">source code for ALPHA analysis :&nbsp;&nbsp;
+</font><a href="qcd_analysis.F">qcd_analysis.F</a></font></li>
+
+<li>
+<font size=+2><font color="#000000">definition of histogram identifiers :&nbsp;
+</font><a href="histonaming.h">histonaming.h</a></font></li>
+
+<li>
+<font size=+2><font color="#000000">package of utility routines  :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+</font><a href="qcd_utilities.F">qcd_utilities.F</a></font></li>
+
+<li>
+<font size=+2><font color="#000000">cards file for ALPHA analysis :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+</font><a href="qcd_analysis.cards">qcd_analysis.cards</a></font></li>
+
+<li>
+<font color="#000000"><font size=+2>example FILI cards for LEP1&nbsp; :</font></font></li>
+
+<ul>
+<ul>
+<ul>
+<ul>
+<ul>
+<ul>
+<ul>
+<li>
+<font color="#000000"><font size=+2><a href="da94_mini.filicards">da94_mini.filicards</a></font></font></li>
+
+<li>
+<font color="#000000"><font size=+2><a href="da94_mini.sruncards">da94_mini.sruncards</a></font></font></li>
+
+<li>
+<font color="#000000"><font size=+2><a href="mc94_qqbar_mini.filicards">mc94_qqbar_mini.filicards</a></font></font></font</li></li>
+</ul>
+</ul>
+</ul>
+</ul>
+</ul>
+</ul>
+</ul>
+
+<p>
+<li>
+<font size=+2><font color="#000000">option file for ALPHARUN :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+</font><a href="qcd_analysis.optx">qcd_analysis.optx</a></font></li>
+
+<ul>
+<ul>
+<li>
+<font size=+2><font color="#000000">To be used as </font><i><font color="#CC0000">alpharun
+-F qcd_analysis.optx</font></i></font></li>
+</ul>
+</ul>
+
+<p>
+<li>
+<font size=+2><font color="#000000">alternatively use this script :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+</font><a href="qcd_job.submit">qcd_job.submit</a></font></li>
+
+<li>
+<font size=+2><font color="#000000">together with this makefile :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+</font><a href="qcd_analysis.mk">qcd_analysis.mk</a></font></li>
+
+<ul>
+<ul>
+<li>
+<font size=+2><font color="#000000">To be used as </font><i><font color="#CC0000">bsub
+&lt; qcd_job.submit</font></i></font></li>
+</ul>
+</ul>
+</ul>
+
+<p>
+<br>&nbsp;
+<hr WIDTH="100%">
+<br>&nbsp;
+<p>
+
+</blockquote>
+</blockquote>
+
+<hr WIDTH="100%">
+
+<P>
+<H3>
+Comments to 
+<ADDRESS><A HREF="mailto:guenther.dissertori@cern.ch" NAME="Mail"><I>Guenther Dissertori (guenther.dissertori@cern.ch)</I></A></H3>
+<BR><P>
+Tuesday, May 29, 18:00:00 MET DST 2001</I> </ADDRESS>
+
+<p>
+<H3>
+Back to the <A HREF="http://alephwww.cern.ch/LEP2ANALYSIS/
+QCD/Welcome.html">QCD page</A></H3>
+
+<hr WIDTH="100%">
+</body>
+</html>

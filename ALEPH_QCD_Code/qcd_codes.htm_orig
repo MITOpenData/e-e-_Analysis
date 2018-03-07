@@ -1,0 +1,119 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Guenther DISSERTORI">
+   <meta name="GENERATOR" content="Mozilla/4.7 [en] (WinNT; I) [Netscape]">
+   <title>qcd_codes</title>
+</head>
+<body>
+<BODY BGCOLOR="#FFFFF">
+<h1>
+
+<hr WIDTH="100%"></h1>
+
+<center>
+<h1>
+<i><font color="#CC0000"><font size=+5>QCD Example Codes</font></font></i></h1></center>
+
+<hr WIDTH="100%">
+<blockquote>
+<blockquote><b><font color="#000000"><font size=+2>Below you can find fortran
+routines, card files and scripts in order</font></font></b>
+<br><b><font size=+2><font color="#000000">to do a </font><i><font color="#3333FF">standard
+QCD analysis of event shape distributions </font></i><font color="#000000">and</font></font></b>
+<br><b><font size=+2><i><font color="#3333FF">inclusive charged particle
+distributions</font></i><font color="#000000"> on ALEPH data and full</font></font></b>
+<br><b><font color="#000000"><font size=+2>MC (LEP1), as well as with some
+Monte Carlo generator.</font></font></b>
+<p><b><font color="#CC0000"><font size=+3>Note</font></font><font color="#000000"><font size=+2>
+: the analysis is histogram and not Ntuple based.</font></font></b>
+<br>&nbsp;
+<br>&nbsp;
+<p>
+<hr WIDTH="100%">
+<br>&nbsp;
+<ol>
+<li>
+<b><u><font color="#CC33CC"><font size=+3>Analysis of ALEPH data or full
+MC:</font></font></u></b></li>
+</ol>
+
+<ul>
+<li>
+<font size=+2><font color="#000000">source code for ALPHA analysis :&nbsp;&nbsp;&nbsp;
+</font><a href="qcd_analysis.F">qcd_analysis.F</a></font></li>
+</ul>
+<ul>
+
+<li>
+<font size=+2><font color="#000000">package of utility routines :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><a href="qcd_utilities.F">qcd_utilities.F</a></font></li>
+
+<li>
+<font size=+2><font color="#000000">cards file for ALPHA analysis :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><a href="qcd_analysis.cards">qcd_analysis.cards</a></font></li>
+
+<li>
+<font color="#000000"><font size=+2>example FILI cards for LEP1&nbsp; :</font></font></li>
+
+<ul>
+<ul>
+<ul>
+<ul>
+<ul>
+<ul>
+<ul>
+<li>
+<font color="#000000"><font size=+2>
+<a href="da94_mini.filicards">da94_mini.filicards</a></font></font></li>
+
+<li>
+<font size=+2><font color="#000000">
+<a href="da94_mini.sruncards">da94_mini.sruncards</a></font></font></li>
+
+<li>
+<font size=+2><font color="#000000">
+<a href="mc94_qqbar_mini.filicards">mc94_qqbar_mini.filicards</a></font></font</li>
+</ul>
+</ul>
+</ul>
+</ul>
+</ul>
+</ul>
+</ul>
+
+<p>
+<li>
+<font size=+2><font color="#000000">option file for ALPHARUN :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><a href="qcd_analysis.optx">qcd_analysis.optx</a></font></li>
+<ul>
+<ul>
+<li>
+<font color="#000000"><font size=+2>To be used as  
+      <i><font color="#CC0000">alpharun -F qcd_analysis.optx</i></font></font></font></li>
+</ul>
+</ul>
+
+<p>
+<li>
+<font size=+2><font color="#000000">alternatively use this script :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><a href="qcd_job.submit">qcd_job.submit</a></font></li>
+<li>
+<font size=+2><font color="#000000">together with this makefile :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><a href="qcd_analysis.mk">qcd_analysis.mk</a></font></li>
+<ul>
+<ul>
+<li>
+<font color="#000000"><font size=+2>To be used as  
+      <i><font color="#CC0000">bsub < qcd_job.submit</i></font></font></font></li>
+</ul>
+</ul>
+
+</ul>
+
+</blockquote>
+</blockquote>
+
+</body>
+</html>
