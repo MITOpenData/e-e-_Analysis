@@ -43,7 +43,7 @@ std::vector<float> compute_errors(std::string dataname);
 void relative_error();
 int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.root", //file used
                          std::string dataname = "LEP2",
-                         Float_t cut_missP = 0.3,   // upper bound on missP/energy
+                         Float_t cut_missP = 100,   // upper bound on missP/energy
                          Float_t min_TTheta = 0.0, // lower cut on TTheta
                          Float_t max_TTheta = 3.5, // upper cut on TTheta --> currently full range of TTheta
                          Int_t min_nParticle = 0, // lower cut on multiplicity
@@ -129,8 +129,8 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
   hppe96->SetLineColor(kGreen+1);
        
   TFile* outFile_p = new TFile(Form("outFile_%s_%d_%d.root",dataname.c_str(),min_nParticle,max_nParticle), "RECREATE"); // we will write our th1 to a file for debugging purposes
-  TNtuple *nt = new TNtuple("nt","","Thrust:GenThrust:T:sumP:nch");
-  TNtuple *ntGen = new TNtuple("ntGen","","GenThrust");
+  TNtuple *nt = new TNtuple("nt","","Thrust:GenThrust:GenThrust_charged:T:T_charged:sumP:nch");
+  TNtuple *ntGen = new TNtuple("ntGen","","GenThrust:GenThrust_charged:GenThrust_Selection");
 
   TH1D *h_thrust = new TH1D("h_thrust",";Thrust;#frac{1}{#sigma} #frac{d#sigma}{dT}",42,0.58,1); //moving declarations here for clarity
   h_thrust->Sumw2();
@@ -205,7 +205,9 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
     Float_t STheta;
     Float_t TPhi;
     Float_t T_Thrust;
+    Float_t T_Thrust_charged;
     Float_t GenThrust;
+    Float_t GenThrust_charged;
     Int_t pwflag[5000];
     Float_t Energy;
     Float_t missP;
@@ -222,6 +224,7 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
     t1->SetBranchAddress("mass",mass);
     t1->SetBranchAddress("theta",theta);
     t1->SetBranchAddress("Thrust",&T_Thrust);
+    t1->SetBranchAddress("Thrust_charged",&T_Thrust_charged);
     t1->SetBranchAddress("nChargedHadrons",&nChargedHadrons);
     t1->SetBranchAddress("TTheta", &TTheta);
     t1->SetBranchAddress("STheta", &STheta);
@@ -232,9 +235,10 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
     t1->SetBranchAddress("missTheta", &missTheta);
     t1->SetBranchAddress("passesWW", &passesWW);
 
-    if(dataname == "LEP1MC") {
+    if(dataname == "LEP1MC" || dataname == "LEP1MCGen") {
        tgen = (TTree*) f->Get("tgen");
        tgen->SetBranchAddress("Thrust",&GenThrust);
+       tgen->SetBranchAddress("Thrust_charged",&GenThrust_charged);
     }
 
     
@@ -250,21 +254,14 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
     {
         t1->GetEntry(i);
         if(dataname == "LEP1MC") tgen->GetEntry(i);
-     
+        if(fabs(cos(missTheta))>0.75) continue; 
         if (i%100000==0) std::cout <<i<<"/"<<nevent_process<<std::endl;
 
-        if(Energy<min_Energy || Energy>max_Energy){continue;}
-        if(fabs(cos(STheta))>0.82)continue;
-        if(missP/Energy>cut_missP)continue;
-//	if(fabs(cos(missTheta))>0.8) continue;
-        // cut on multiplicity
-        //if(nParticle < min_nParticle || nParticle > max_nParticle) continue;
-        
         TVector3 v1(1,0,0);
         v1.SetPhi(TPhi);   // keeping rho and theta
         v1.SetTheta(TTheta); // keeping rho and phi
         v1.SetMag(1.0);  // keeping theta and phi
-        
+
         Float_t T_sum = 0.0;
         Float_t T_mag = 0.0;
         Int_t pwflag0 = 0;
@@ -272,7 +269,8 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
 	Int_t nch=0;
 	bool veto=0;
 	Int_t nobj=0;
-        for (Int_t j=0;j<nParticle;j++)
+
+	for (Int_t j=0;j<nParticle;j++)
         {
 	    //if (pmag[j]/Energy>0.5) veto=1;  
 	    if (pwflag[j]==0&&fabs(cos(theta[j]))<0.94&&pt[j]>0.2){
@@ -296,8 +294,18 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
             if(pwflag[j]==0)pwflag0+=1;
             
         }
-        ntGen->Fill(T_Thrust);	
+        ntGen->Fill(GenThrust,GenThrust_charged,T_sum/T_mag);	
+     
+       
+        if(Energy<min_Energy || Energy>max_Energy){continue;}
+        if(fabs(cos(STheta))>0.82)continue;
+        if(missP/Energy>cut_missP)continue;
 
+        // cut on multiplicity
+        //if(nParticle < min_nParticle || nParticle > max_nParticle) continue;
+        
+       
+      
         if (veto) continue;
 	if (sumP<15) continue;
 	if (nobj<13) continue;
@@ -313,7 +321,7 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
             h_thrustNoCorr->Fill(Thrust);
 	        h_one_minus_thrustNoCorr->Fill(1-Thrust); //You have unbinned data! Fill here
 	        h_one_minus_thrustNoCorr_log->Fill(1-Thrust); //You have unbinned data! Fill here
-	    nt->Fill(Thrust,GenThrust,T_Thrust,sumP,nch);	
+	    nt->Fill(Thrust,GenThrust,GenThrust_charged,T_Thrust,T_Thrust_charged,sumP,nch);	
         }
     }
 
