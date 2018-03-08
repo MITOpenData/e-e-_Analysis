@@ -132,6 +132,83 @@ bool check998(std::string inStr){return checkGeneral(inStr, "-998.");}
 //isNewInfo was originally for introduction of ntpc, etc.
 //isNewInfo2 is for nitc, nvdet
 
+void doEndEvent(particleData* pData_p, eventData* eData_p, std::vector<boostedEvtData*> bData_p, Int_t counterParticles, Int_t nTrk, Int_t nTrk_GT0p4, Int_t nTrk_GT0p4Thrust, TVector3 netP, TVector3 netP_charged)
+{
+  pData_p->nParticle=counterParticles;
+  
+  for(unsigned int jI = 0; jI < bData_p.size(); ++jI){bData_p.at(jI)->nParticle = counterParticles;}
+
+  TVector3 thrust = TVector3(0,0,0);
+  TVector3 thrust_charged = TVector3(0,0,0);
+  
+  thrust = getThrust(pData_p->nParticle, pData_p->px, pData_p->py, pData_p->pz, THRUST::OPTIMAL);
+  thrust_charged = getChargedThrust(pData_p->nParticle, pData_p->px, pData_p->py, pData_p->pz, pData_p->pwflag, THRUST::OPTIMAL);
+  eData_p->nChargedHadrons = nTrk;
+  eData_p->nChargedHadrons_GT0p4 = nTrk_GT0p4;
+  eData_p->nChargedHadrons_GT0p4Thrust = nTrk_GT0p4Thrust;
+  setThrustVariables(pData_p, eData_p, thrust, thrust_charged);
+  eData_p->Thrust = thrust.Mag();
+  eData_p->TTheta = thrust.Theta();
+  eData_p->TPhi = thrust.Phi();
+  eData_p->Thrust_charged = thrust_charged.Mag();
+  eData_p->TTheta_charged = thrust_charged.Theta();
+  eData_p->TPhi_charged = thrust_charged.Phi();
+  eData_p->missP = netP.Mag();
+  eData_p->missPt = netP.Perp();
+  eData_p->missTheta = netP.Theta();
+  eData_p->missPhi = netP.Phi();
+  eData_p->missChargedP = netP_charged.Mag();
+  eData_p->missChargedPt = netP_charged.Perp();
+  eData_p->missChargedTheta = netP_charged.Theta();
+  eData_p->missChargedPhi = netP_charged.Phi();
+
+  Sphericity spher = Sphericity(pData_p->nParticle, pData_p->px, pData_p->py, pData_p->pz, pData_p->pwflag, true);
+  spher.setTree(eData_p);
+
+  eventSelection eSelection;
+  eSelection.setEventSelection(pData_p);
+
+  eData_p->passesISR = eSelection.getPassesISR();
+  eData_p->passesWW = eSelection.getPassesWW();
+  eData_p->passesD2 = eSelection.getPassesD2();
+  eData_p->passesCW = eSelection.getPassesCW();
+  eData_p->d2 = eSelection.getD2();
+  eData_p->cW = eSelection.getCW();
+
+  eData_p->wwInitFourJetSumPx = eSelection.getInitFourJetSumPx();
+  eData_p->wwInitFourJetSumPy = eSelection.getInitFourJetSumPy();
+  eData_p->wwInitFourJetSumPz = eSelection.getInitFourJetSumPz();
+  eData_p->wwInitFourJetSumE = eSelection.getInitFourJetSumE();
+
+  std::vector<TLorentzVector> tempJets = eSelection.getInitFourJet();
+  for(unsigned int jI = 0; jI < tempJets.size(); ++jI){
+    eData_p->wwInitFourJetPx[jI] = tempJets.at(jI).Px();
+    eData_p->wwInitFourJetPy[jI] = tempJets.at(jI).Py();
+    eData_p->wwInitFourJetPz[jI] = tempJets.at(jI).Pz();
+    eData_p->wwInitFourJetE[jI] = tempJets.at(jI).E();
+  }
+
+  eData_p->wwFinalFourJetSumPx = eSelection.getFinalFourJetSumPx();
+  eData_p->wwFinalFourJetSumPy = eSelection.getFinalFourJetSumPy();
+  eData_p->wwFinalFourJetSumPz = eSelection.getFinalFourJetSumPz();
+  eData_p->wwFinalFourJetSumE = eSelection.getFinalFourJetSumE();
+
+  tempJets = eSelection.getFinalFourJet();
+  for(unsigned int jI = 0; jI < tempJets.size(); ++jI){
+    eData_p->wwFinalFourJetPx[jI] = tempJets.at(jI).Px();
+    eData_p->wwFinalFourJetPy[jI] = tempJets.at(jI).Py();
+    eData_p->wwFinalFourJetPz[jI] = tempJets.at(jI).Pz();
+    eData_p->wwFinalFourJetE[jI] = tempJets.at(jI).E();
+  }
+
+  eData_p->wwFactorA = eSelection.getFactorA();
+  eData_p->wwFactorB = eSelection.getFactorB();
+  eData_p->wwFactorC = eSelection.getFactorC();
+  eData_p->wwFactorD = eSelection.getFactorD();
+
+  return;
+}
+
 int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, std::string outFileName="")
 {
   if(!checkFile(inFileName)){
@@ -366,69 +443,12 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
       }
     
       if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2))/* not all files do four 999 && check999(num.at(3)*/){
-	pData.nParticle=counterParticles;
+	std::vector<boostedEvtData*> bDataTempVect;
+	for(Int_t jI = 0; jI < nJtAlgo; ++jI){bDataTempVect.push_back(&(bData[jI]));}
+	doEndEvent(&pData, &eData, bDataTempVect, counterParticles, nTrk, nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
+	bDataTempVect.clear();
 
-	for(Int_t jI = 0; jI < nJtAlgo; ++jI){bData[jI].nParticle=counterParticles;}        
-
-        thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz, THRUST::OPTIMAL); 
-        thrust_charged = getChargedThrust(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag, THRUST::OPTIMAL);
-	eData.nChargedHadrons = nTrk;
-	eData.nChargedHadrons_GT0p4 = nTrk_GT0p4; 
-	eData.nChargedHadrons_GT0p4Thrust = nTrk_GT0p4Thrust; 
-        setThrustVariables(&pData, &eData, thrust, thrust_charged);
-        eData.Thrust = thrust.Mag();
-        eData.TTheta = thrust.Theta();
-        eData.TPhi = thrust.Phi();
-        eData.Thrust_charged = thrust_charged.Mag();
-        eData.TTheta_charged = thrust_charged.Theta();
-        eData.TPhi_charged = thrust_charged.Phi();
-	eData.missP = netP.Mag();
-	eData.missPt = netP.Perp();
-	eData.missTheta = netP.Theta();
-	eData.missPhi = netP.Phi();
-	eData.missChargedP = netP_charged.Mag();
-	eData.missChargedPt = netP_charged.Perp();
-	eData.missChargedTheta = netP_charged.Theta();
-	eData.missChargedPhi = netP_charged.Phi();
-
-        Sphericity spher = Sphericity(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag, true);
-        spher.setTree(&eData);
-
-	eSelection.setEventSelection(&pData);
-	eData.passesWW = eSelection.getPassesWW();
-	eData.passesD2 = eSelection.getPassesD2();
-	eData.passesCW = eSelection.getPassesCW();
-	eData.d2 = eSelection.getD2();
-	eData.cW = eSelection.getCW();
-
-	eData.wwInitFourJetSumPx = eSelection.getInitFourJetSumPx();
-	eData.wwInitFourJetSumPy = eSelection.getInitFourJetSumPy();
-	eData.wwInitFourJetSumPz = eSelection.getInitFourJetSumPz();
-	eData.wwInitFourJetSumE = eSelection.getInitFourJetSumE();
-
-	std::vector<TLorentzVector> tempJets = eSelection.getInitFourJet();
-	for(unsigned int jI = 0; jI < tempJets.size(); ++jI){
-	  eData.wwInitFourJetPx[jI] = tempJets.at(jI).Px();
-	  eData.wwInitFourJetPy[jI] = tempJets.at(jI).Py();
-	  eData.wwInitFourJetPz[jI] = tempJets.at(jI).Pz();
-	  eData.wwInitFourJetE[jI] = tempJets.at(jI).E();
-	}
-
-	eData.wwFinalFourJetSumPx = eSelection.getFinalFourJetSumPx();
-	eData.wwFinalFourJetSumPy = eSelection.getFinalFourJetSumPy();
-	eData.wwFinalFourJetSumPz = eSelection.getFinalFourJetSumPz();
-	eData.wwFinalFourJetSumE = eSelection.getFinalFourJetSumE();
-
-	tempJets = eSelection.getFinalFourJet();
-	for(unsigned int jI = 0; jI < tempJets.size(); ++jI){
-	  eData.wwFinalFourJetPx[jI] = tempJets.at(jI).Px();
-	  eData.wwFinalFourJetPy[jI] = tempJets.at(jI).Py();
-	  eData.wwFinalFourJetPz[jI] = tempJets.at(jI).Pz();
-	  eData.wwFinalFourJetE[jI] = tempJets.at(jI).E();
-	}
-
-	if(counterEntries>0) tout->Fill(); 
-	
+	if(counterEntries>0) tout->Fill(); 	
 	//Processing particles->jets
 	for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	  processJets(particles, jDef[jIter], jDefReclust[jIter], &(jData[jIter]), jtPtCut, rParam[jIter], nFinalClust[jIter]);
@@ -612,66 +632,10 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
     if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
   
     //Have to fill one last time since the condition for fill is dependent on NEXT EVENT existing, else we would lose last event per file
-    pData.nParticle=counterParticles;
-    thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz, THRUST::OPTIMAL); 
-    thrust_charged = getChargedThrust(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag, THRUST::OPTIMAL);
-
-    eData.nChargedHadrons = nTrk;
-    eData.nChargedHadrons_GT0p4 = nTrk_GT0p4; 
-    eData.nChargedHadrons_GT0p4Thrust = nTrk_GT0p4Thrust; 
-    setThrustVariables(&pData, &eData, thrust, thrust_charged);
-    eData.Thrust = thrust.Mag();
-    eData.TTheta = thrust.Theta();
-    eData.TPhi = thrust.Phi();
-    eData.Thrust_charged = thrust_charged.Mag();
-    eData.TTheta_charged = thrust_charged.Theta();
-    eData.TPhi_charged = thrust_charged.Phi();
-    eData.missP = netP.Mag();
-    eData.missPt = netP.Perp();
-    eData.missTheta = netP.Theta();
-    eData.missPhi = netP.Phi();
-    eData.missChargedP = netP_charged.Mag();
-    eData.missChargedPt = netP_charged.Perp();
-    eData.missChargedTheta = netP_charged.Theta();
-    eData.missChargedPhi = netP_charged.Phi();
-        
-    Sphericity spher = Sphericity(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag, true);
-    spher.setTree(&eData);
-	
-    eSelection.setEventSelection(&pData);
-    eData.passesWW = eSelection.getPassesWW();
-    eData.passesD2 = eSelection.getPassesD2();
-    eData.passesCW = eSelection.getPassesCW();
-    eData.d2 = eSelection.getD2();
-    eData.cW = eSelection.getCW();
-
-    eData.wwInitFourJetSumPx = eSelection.getInitFourJetSumPx();
-    eData.wwInitFourJetSumPy = eSelection.getInitFourJetSumPy();
-    eData.wwInitFourJetSumPz = eSelection.getInitFourJetSumPz();
-    eData.wwInitFourJetSumE = eSelection.getInitFourJetSumE();
-
-    std::vector<TLorentzVector> tempJets = eSelection.getInitFourJet();
-    for(unsigned int jI = 0; jI < tempJets.size(); ++jI){
-      eData.wwInitFourJetPx[jI] = tempJets.at(jI).Px();
-      eData.wwInitFourJetPy[jI] = tempJets.at(jI).Py();
-      eData.wwInitFourJetPz[jI] = tempJets.at(jI).Pz();
-      eData.wwInitFourJetE[jI] = tempJets.at(jI).E();
-    }
-
-    eData.wwFinalFourJetSumPx = eSelection.getFinalFourJetSumPx();
-    eData.wwFinalFourJetSumPy = eSelection.getFinalFourJetSumPy();
-    eData.wwFinalFourJetSumPz = eSelection.getFinalFourJetSumPz();
-    eData.wwFinalFourJetSumE = eSelection.getFinalFourJetSumE();
-    
-    tempJets = eSelection.getFinalFourJet();
-    for(unsigned int jI = 0; jI < tempJets.size(); ++jI){
-      eData.wwFinalFourJetPx[jI] = tempJets.at(jI).Px();
-      eData.wwFinalFourJetPy[jI] = tempJets.at(jI).Py();
-      eData.wwFinalFourJetPz[jI] = tempJets.at(jI).Pz();
-      eData.wwFinalFourJetE[jI] = tempJets.at(jI).E();
-    }
-
-    if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+    std::vector<boostedEvtData*> bDataTempVect;
+    for(Int_t jI = 0; jI < nJtAlgo; ++jI){bDataTempVect.push_back(&(bData[jI]));}
+    doEndEvent(&pData, &eData, bDataTempVect, counterParticles, nTrk, nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
+    bDataTempVect.clear();
     
     if(counterEntries>0) tout->Fill(); 
     for(int jIter = 0; jIter < nJtAlgo; ++jIter){
@@ -748,70 +712,12 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	}
 
 	if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2)) /* && check999(num.at(3))*/){ 
-	  pgData.nParticle=counterParticles;
-
-	  for(Int_t jI = 0; jI < nJtAlgo; ++jI){bgData[jI].nParticle=counterParticles;}
-          
-          thrust = getThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, THRUST::OPTIMAL); 
-          thrust_charged = getChargedThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag, THRUST::OPTIMAL);
-	  egData.nChargedHadrons = nTrk;
-	  egData.nChargedHadrons_GT0p4 = nTrk_GT0p4; 
-	  egData.nChargedHadrons_GT0p4Thrust = nTrk_GT0p4Thrust; 
-          setThrustVariables(&pgData, &egData, thrust, thrust_charged);
-          egData.Thrust = thrust.Mag();
-          egData.TTheta = thrust.Theta();
-          egData.TPhi = thrust.Phi();
-          egData.Thrust_charged = thrust_charged.Mag();
-          egData.TTheta_charged = thrust_charged.Theta();
-          egData.TPhi_charged = thrust_charged.Phi();
-	  egData.missP = netP.Mag();
-	  egData.missPt = netP.Perp();
-	  egData.missTheta = netP.Theta();
-	  egData.missPhi = netP.Phi();
-	  egData.missChargedP = netP_charged.Mag();
-	  egData.missChargedPt = netP_charged.Perp();
-	  egData.missChargedTheta = netP_charged.Theta();
-	  egData.missChargedPhi = netP_charged.Phi();
-        
-          Sphericity spher = Sphericity(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag, true);
-          spher.setTree(&egData);
-
-	  egSelection.setEventSelection(&pgData);
-	  egData.passesWW = egSelection.getPassesWW();
-	  egData.passesD2 = egSelection.getPassesD2();
-	  egData.passesCW = egSelection.getPassesCW();
-	  egData.d2 = egSelection.getD2();
-	  egData.cW = egSelection.getCW();
-
-	  egData.wwInitFourJetSumPx = egSelection.getInitFourJetSumPx();
-	  egData.wwInitFourJetSumPy = egSelection.getInitFourJetSumPy();
-	  egData.wwInitFourJetSumPz = egSelection.getInitFourJetSumPz();
-	  egData.wwInitFourJetSumE = egSelection.getInitFourJetSumE();
-
-	  std::vector<TLorentzVector> tempJets = egSelection.getInitFourJet();
-	  for(unsigned int jI = 0; jI < tempJets.size(); ++jI){
-	    egData.wwInitFourJetPx[jI] = tempJets.at(jI).Px();
-	    egData.wwInitFourJetPy[jI] = tempJets.at(jI).Py();
-	    egData.wwInitFourJetPz[jI] = tempJets.at(jI).Pz();
-	    egData.wwInitFourJetE[jI] = tempJets.at(jI).E();
-	  }
-
-	  egData.wwFinalFourJetSumPx = egSelection.getFinalFourJetSumPx();
-	  egData.wwFinalFourJetSumPy = egSelection.getFinalFourJetSumPy();
-	  egData.wwFinalFourJetSumPz = egSelection.getFinalFourJetSumPz();
-	  egData.wwFinalFourJetSumE = egSelection.getFinalFourJetSumE();
-
-	  tempJets = egSelection.getFinalFourJet();
-	  for(unsigned int jI = 0; jI < tempJets.size(); ++jI){
-	    egData.wwFinalFourJetPx[jI] = tempJets.at(jI).Px();
-	    egData.wwFinalFourJetPy[jI] = tempJets.at(jI).Py();
-	    egData.wwFinalFourJetPz[jI] = tempJets.at(jI).Pz();
-	    egData.wwFinalFourJetE[jI] = tempJets.at(jI).E();
-	  }
+	  std::vector<boostedEvtData*> bgDataTempVect;
+	  for(Int_t jI = 0; jI < nJtAlgo; ++jI){bgDataTempVect.push_back(&(bgData[jI]));}
+	  doEndEvent(&pgData, &egData, bgDataTempVect, counterParticles, nTrk, nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
+	  bgDataTempVect.clear();
 
 	  if(counterEntries>0) tgout->Fill(); 
-
-	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;	
 
 	  //Processing particles->jets
 	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){
@@ -1051,65 +957,10 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
       }
       //Have to fill one last time since the condition for fill is dependent on NEXT EVENT existing, else we would lose last event per file
-      if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-
-      pgData.nParticle=counterParticles;
-      thrust = getThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, THRUST::OPTIMAL); 
-      thrust_charged = getChargedThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag, THRUST::OPTIMAL );
-      egData.nChargedHadrons = nTrk;
-      egData.nChargedHadrons_GT0p4 = nTrk_GT0p4; 
-      egData.nChargedHadrons_GT0p4Thrust = nTrk_GT0p4Thrust; 
-      setThrustVariables(&pgData, &egData, thrust, thrust_charged);
-      egData.Thrust = thrust.Mag();
-      egData.TTheta = thrust.Theta();
-      egData.TPhi = thrust.Phi();
-      egData.Thrust_charged = thrust_charged.Mag();
-      egData.TTheta_charged = thrust_charged.Theta();
-      egData.TPhi_charged = thrust_charged.Phi();
-      egData.missP = netP.Mag();
-      egData.missPt = netP.Perp();
-      egData.missTheta = netP.Theta();
-      egData.missPhi = netP.Phi();
-      egData.missChargedP = netP_charged.Mag();
-      egData.missChargedPt = netP_charged.Perp();
-      egData.missChargedTheta = netP_charged.Theta();
-      egData.missChargedPhi = netP_charged.Phi();
-        
-      Sphericity spher = Sphericity(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag, true);
-      spher.setTree(&egData);
-
-      egSelection.setEventSelection(&pgData);
-      egData.passesWW = egSelection.getPassesWW();
-      egData.passesD2 = egSelection.getPassesD2();
-      egData.passesCW = egSelection.getPassesCW();
-      egData.d2 = egSelection.getD2();
-      egData.cW = egSelection.getCW();
-
-      egData.wwInitFourJetSumPx = egSelection.getInitFourJetSumPx();
-      egData.wwInitFourJetSumPy = egSelection.getInitFourJetSumPy();
-      egData.wwInitFourJetSumPz = egSelection.getInitFourJetSumPz();
-      egData.wwInitFourJetSumE = egSelection.getInitFourJetSumE();
-
-      std::vector<TLorentzVector> tempJets = egSelection.getInitFourJet();
-      for(unsigned int jI = 0; jI < tempJets.size(); ++jI){
-	egData.wwInitFourJetPx[jI] = tempJets.at(jI).Px();
-	egData.wwInitFourJetPy[jI] = tempJets.at(jI).Py();
-	egData.wwInitFourJetPz[jI] = tempJets.at(jI).Pz();
-	egData.wwInitFourJetE[jI] = tempJets.at(jI).E();
-      }
-
-      egData.wwFinalFourJetSumPx = egSelection.getFinalFourJetSumPx();
-      egData.wwFinalFourJetSumPy = egSelection.getFinalFourJetSumPy();
-      egData.wwFinalFourJetSumPz = egSelection.getFinalFourJetSumPz();
-      egData.wwFinalFourJetSumE = egSelection.getFinalFourJetSumE();
-      
-      tempJets = egSelection.getFinalFourJet();
-      for(unsigned int jI = 0; jI < tempJets.size(); ++jI){
-	egData.wwFinalFourJetPx[jI] = tempJets.at(jI).Px();
-	egData.wwFinalFourJetPy[jI] = tempJets.at(jI).Py();
-	egData.wwFinalFourJetPz[jI] = tempJets.at(jI).Pz();
-	egData.wwFinalFourJetE[jI] = tempJets.at(jI).E();
-      }
+      std::vector<boostedEvtData*> bgDataTempVect;
+      for(Int_t jI = 0; jI < nJtAlgo; ++jI){bgDataTempVect.push_back(&(bgData[jI]));}
+      doEndEvent(&pgData, &egData, bgDataTempVect, counterParticles, nTrk, nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
+      bgDataTempVect.clear();
       
       if(counterEntries>0) tgout->Fill(); 
       for(int jIter = 0; jIter < nJtAlgo; ++jIter){
@@ -1128,6 +979,8 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	  }
 	}
       }
+
+
       fileGen.close();
     }
 
