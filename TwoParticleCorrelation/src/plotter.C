@@ -26,11 +26,13 @@ std::string getDataName(std::string fileName)
     std::string dataName = "";
     if(fileName.find("LEP1") != std::string::npos && fileName.find("MC") == std::string::npos) return "LEP1";
     if(fileName.find("LEP1MC") != std::string::npos) return "LEP1 MC";
-    if(fileName.find("LEP2") != std::string::npos && fileName.find("MC") == std::string::npos) return "LEP2";
+    if(fileName.find("LEP2") != std::string::npos && fileName.find("MC") == std::string::npos && fileName.find("ECUT") == std::string::npos) return "LEP2";
     if(fileName.find("LEP2MC") != std::string::npos) return "LEP2 MC";
-    if(fileName.find("LEP2") != std::string::npos && fileName.find("ECUT") != std::string::npos) return "LEP2 (91.5)";
+    if(fileName.find("LEP2") != std::string::npos && fileName.find("ECUT") != std::string::npos) return "LEP2 (<100GeV)";
     if(fileName.find("PYTHIA8") != std::string::npos) return "PYTHIA8";
+    if(fileName.find("pythia8") != std::string::npos) return "PYTHIA8";
 
+    std::cout<<"No valid data name"<<std::endl;
     return "";
 }
 
@@ -58,7 +60,7 @@ int plotAllTH1F(const std::string inFileName, const std::string dataName)
     inFileList.push_back(new TFile(fileList.at(0).c_str(), "READ"));
     std::vector<std::string> inTH1FNames = returnRootFileContentsList(inFileList.at(0), "TH1F");
     removeVectorDuplicates(&inTH1FNames);
-    const Int_t nTH1F = (Int_t)inTH1FNames.size();
+    
     /// anthony you are here and are checking that all files have the same list of histograms to plot
     for (unsigned int fI = 1; fI < fileList.size() ; ++fI)
     {
@@ -71,11 +73,13 @@ int plotAllTH1F(const std::string inFileName, const std::string dataName)
             {
                 std::cout<<Form("Histogram missing %s from file 2.",inTH1FNames.at(tI).c_str())<<std::endl;
                 inTH1FNames.erase(inTH1FNames.begin() + tI);
+                tI--; // since the list shortens 
             }
+
         }
 
     }
-
+    const Int_t nTH1F = (Int_t)inTH1FNames.size();
     static const int numFiles = fileList.size();
 
     TH1F* inTH1F_p[nTH1F][numFiles];
@@ -107,6 +111,7 @@ int plotAllTH1F(const std::string inFileName, const std::string dataName)
 
         for(unsigned int fI = 1; fI < fileList.size(); ++fI)
         {
+            std::cout<<inTH1FNames.at(iter).c_str()<<std::endl;
             inTH1F_p[iter][fI] = (TH1F*)inFileList.at(fI)->Get(inTH1FNames.at(iter).c_str());
             inTH1F_p[iter][fI]->Rebin(5);
             inTH1F_p[iter][fI]->SetName(Form("%s HI",histName.c_str()));
@@ -140,7 +145,7 @@ int plotAllTH1F(const std::string inFileName, const std::string dataName)
 
         TH2F *hempty;
         // Declare binning for hempty histogram
-        if(histName.find("phi") != std::string::npos ) {xMin = -TMath::Pi(); xMax = TMath::Pi();}
+        if(histName.find("phi") != std::string::npos) {xMin = -TMath::Pi(); xMax = TMath::Pi();}
         Double_t binsX[nBinsX+1];
         const Double_t xLow = xMin;
         const Double_t xHi = xMax;
@@ -166,8 +171,8 @@ int plotAllTH1F(const std::string inFileName, const std::string dataName)
     	xjjroot::sethempty(hempty,0,0);
     	hempty->Draw();
         TLegend *l;
-        if(histName.find("phi") != std::string::npos) l = new TLegend(0.56,0.7-0.15,0.96,0.83-0.15);
-        else l = new TLegend(0.56,0.7,0.96,0.83);
+        if(histName.find("phi") != std::string::npos || histName.find("Phi") != std::string::npos) l = new TLegend(0.56,0.7-0.15,0.96,0.83-0.15);
+        else l = new TLegend(0.56,0.7,0.88,0.83);
         xjjroot::setleg(l);
         // ANTHONY YOU ARE HERE ADDRESSING THE LEGEND ISSUE if the legend is causing a problem then just change to using tlatex probably easiest 
         for (unsigned int fI = 0; fI < fileList.size(); fI++)

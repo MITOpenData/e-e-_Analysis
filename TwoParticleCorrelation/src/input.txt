@@ -1,0 +1,3 @@
+../DQC/LEP1_NC_DQC_0216.root
+../DQC/LEP2_NC_DQC_0216.root
+../DQC/pythia8_nc_dqc_0228.root
