@@ -132,14 +132,39 @@ bool check998(std::string inStr){return checkGeneral(inStr, "-998.");}
 //isNewInfo was originally for introduction of ntpc, etc.
 //isNewInfo2 is for nitc, nvdet
 
+void initVal(Int_t* in, Int_t set){(*in) = set; return;}
+void initVal(Float_t* in, Float_t set){(*in) = set; return;}
+void initVal(Double_t* in, Float_t set){(*in) = set; return;}
+void initVal(std::vector<Int_t*> in, Float_t set)
+{
+  for(unsigned int i = 0; i < in.size(); ++i){initVal(in.at(i), set);}
+  return;
+}
+void initVal(std::vector<Float_t*> in, Float_t set)
+{
+  for(unsigned int i = 0; i < in.size(); ++i){initVal(in.at(i), set);}
+  return;
+}
+void initVal(std::vector<Double_t*> in, Float_t set)
+{
+  for(unsigned int i = 0; i < in.size(); ++i){initVal(in.at(i), set);}
+  return;
+}
+void initTVector3(TVector3* in){(*in) = TVector3(0,0,0); return;}
+void initTVector3(std::vector<TVector3*> in)
+{
+  for(unsigned int i = 0; i < in.size(); ++i){initTVector3(in.at(i));}
+  return;
+}
+
 void doEndEvent(particleData* pData_p, eventData* eData_p, std::vector<boostedEvtData*> bData_p, Int_t counterParticles, Int_t nTrk, Int_t nTrk_GT0p4, Int_t nTrk_GT0p4Thrust, TVector3 netP, TVector3 netP_charged)
 {
   pData_p->nParticle=counterParticles;
   
   for(unsigned int jI = 0; jI < bData_p.size(); ++jI){bData_p.at(jI)->nParticle = counterParticles;}
 
-  TVector3 thrust = TVector3(0,0,0);
-  TVector3 thrust_charged = TVector3(0,0,0);
+  TVector3 thrust, thrust_charged;
+  initTVector3({&thrust, &thrust_charged});
   
   thrust = getThrust(pData_p->nParticle, pData_p->px, pData_p->py, pData_p->pz, THRUST::OPTIMAL);
   thrust_charged = getChargedThrust(pData_p->nParticle, pData_p->px, pData_p->py, pData_p->pz, pData_p->pwflag, THRUST::OPTIMAL);
@@ -400,10 +425,9 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 
     std::vector<int> runNo;
     std::vector<int> evtNo;
-    TVector3 netP = TVector3(0,0,0);
-    TVector3 thrust = TVector3(0,0,0);
-    TVector3 netP_charged = TVector3(0,0,0);
-    TVector3 thrust_charged = TVector3(0,0,0);
+    TVector3 netP, netP_charged;
+    initTVector3({&netP, &netP_charged});
+
     int nTrk=0;
     int nTrk_GT0p4=0;
     int nTrk_GT0p4Thrust=0;
@@ -487,24 +511,15 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	pData.EventNo= std::stoi(num.at(evtPos));
 	pData.Energy= std::stof(num.at(ePos));
 
-	pData.bFlag = -999;
-	pData.bx = -999.;
-	pData.by = -999.;
-	pData.ebx = -999.;
-	pData.eby = -999.;
-      
+	initVal(&(pData.bFlag), -999.);
+	initVal({&(pData.bx), &(pData.by), &(pData.ebx), &(pData.eby)}, -999.);
+
 	runNo.push_back(pData.RunNo);
 	evtNo.push_back(pData.EventNo);
       
-        netP = TVector3(0,0,0);
-        thrust = TVector3(0,0,0);
-        netP_charged = TVector3(0,0,0);
-        thrust_charged = TVector3(0,0,0);
-        nTrk=0;
-        nTrk_GT0p4=0;
-        nTrk_GT0p4Thrust=0;
+	initTVector3({&netP, &netP_charged});
+	initVal({&nTrk, &nTrk_GT0p4, &nTrk_GT0p4Thrust, &counterParticles}, 0);
 
-	counterParticles=0;   
 	++counterEntries;	
 	
 	continue;
@@ -667,15 +682,8 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
       if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
       std::ifstream fileGen(genFileStr.c_str());
-      counterEntries=0;
-      counterParticles=0;
-      netP = TVector3(0,0,0);
-      thrust = TVector3(0,0,0);
-      netP_charged = TVector3(0,0,0);
-      thrust_charged = TVector3(0,0,0);
-      nTrk=0;
-      nTrk_GT0p4=0;
-      nTrk_GT0p4Thrust=0;
+      initTVector3({&netP, &netP_charged});
+      initVal({&nTrk, &nTrk_GT0p4, &nTrk_GT0p4Thrust, &counterParticles, &counterEntries}, 0);
 
       while(std::getline(fileGen,getStr)){
 	if(getStr.size() == 0) continue;
@@ -757,23 +765,10 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	  pgData.EventNo= std::stoi(num.at(evtPos));
 	  pgData.Energy= std::stof(num.at(ePos));
 
-	  pgData.bFlag = -999;
-	  pgData.bx = -999.;
-	  pgData.by = -999.;
-	  pgData.ebx = -999.;
-	  pgData.eby = -999.;
-	  
-          netP = TVector3(0,0,0);
-          thrust = TVector3(0,0,0);
-          netP_charged = TVector3(0,0,0);
-          thrust_charged = TVector3(0,0,0);
-          nTrk=0;
-          nTrk_GT0p4=0;
-          nTrk_GT0p4Thrust=0;
-
-	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << ", " << genFileStr << ", " << counterEntries << ", " << evtNo.size() << std::endl;
-	  if(doLocalDebug) std::cout << pgData.RunNo << ", " << pgData.EventNo << std::endl;
-	  if(doLocalDebug) std::cout << runNo.at(counterEntries) << ", " << evtNo.at(counterEntries) << std::endl;
+	  initVal(&(pData.bFlag), -999.);
+	  initVal({&(pData.bx), &(pData.by), &(pData.ebx), &(pData.eby)}, -999.);	 
+	  initTVector3({&netP, &netP_charged});
+	  initVal({&nTrk, &nTrk_GT0p4, &nTrk_GT0p4Thrust, &counterParticles}, 0);
 	  
 	  if(pgData.RunNo != runNo.at(counterEntries) && pgData.EventNo != evtNo.at(counterEntries)){
 	    std::cout << "Gen entries dont match reco for file \'" << genFileStr << "\'. return 1" << std::endl;
@@ -807,12 +802,6 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	    
 	    return 1;
 	  }
-
-	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-
-	  counterParticles=0;   
-
-	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 	  
 	  ++counterEntries;	
 
