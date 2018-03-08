@@ -36,7 +36,6 @@ Double_t smear (Double_t xt)
 {
   Double_t xeff= 0.3 + (1.0-0.3)/20*(xt+10.0);  // efficiency
   Double_t x= gRandom->Rndm();
-//  if (x>xeff) return -10;
   Double_t xsmear= gRandom->Gaus(-5,1);     // bias and smear
   return xt+xsmear;
 }
@@ -45,9 +44,7 @@ Double_t smear (Double_t xt)
 
 void UnfoldThrust()
 {
-    
-   
-     
+  // Use the output ntople from thrust_distribution.     
   TFile *infMC = new TFile("outFile_LEP1MC_0_9999.root");
   TTree *tMC = (TTree*)infMC->Get("nt");
   TFile *infMCGen = new TFile("outFile_LEP1MCGen_0_9999.root");
@@ -55,7 +52,7 @@ void UnfoldThrust()
   TFile *infData = new TFile("outFile_LEP1_0_9999.root");
   TTree *tData = (TTree*)infData->Get("nt");
 
-
+  // HEP data from ALEPH QCD paper EPJC 2004
   TFile *hdata = new TFile("../inputs/HEPData-ins636645-v1-Table54.root");
   TH1D *hep;
   hdata->cd("Table 54");
@@ -66,11 +63,12 @@ void UnfoldThrust()
   hep->SetMarkerStyle(20);
   hep->SetMarkerSize(1);
 
+  // Output file
   TFile *output = new TFile("unfolding.root","recreate");
-  TH1D *hM = new TH1D("hM","",42,0.58,1);
-  TH1D *hMMC = new TH1D("hMMC","",42,0.58,1);
-  TH1D *hT = new TH1D("hT","",42,0.58,1);
-  TH1D *hTAll = new TH1D("hTAll","",42,0.58,1);
+  TH1D *hM = new TH1D("hM","",42,0.58,1);			// Measurement from Data (or from MC for closure test)
+  TH1D *hMMC = new TH1D("hMMC","",42,0.58,1);			// Measurement from MC
+  TH1D *hT = new TH1D("hT","",42,0.58,1);			// Generator level truth from MC
+  TH1D *hTAll = new TH1D("hTAll","",42,0.58,1);			// Generator level truth without event selection
  
 
 
@@ -81,7 +79,7 @@ void UnfoldThrust()
   tData->Draw("T>>hM");
   //hM = (TH1D*)infData->Get("h_thrust");
   tMC->Draw("GenThrust>>hT");
-  tMCAll->Draw("GenThrust>>hTAll");
+  tMC->Draw("GenThrust>>hTAll");
   hM->Sumw2();
   hMMC->Sumw2();
   hT->Sumw2();
@@ -179,7 +177,7 @@ void UnfoldThrust()
   
   
   bayesianUnfold myUnfolding(hR,hT,0);
-  myUnfolding.unfold(hM,4);
+  myUnfolding.unfold(hM,20);
   
   TCanvas *c = new TCanvas("c","",600,600);
 
@@ -223,6 +221,7 @@ void UnfoldThrust()
 
   TCanvas *c5 = new TCanvas("c5","",CanvasSizeX,CanvasSizeY);
   TH1F *hRatioU = (TH1F*)hU->Clone();
+  hRatioU->Sumw2();
   hRatioU->Divide(hT);
   hRatioU->SetXTitle("Unfolded / Truth");
   hRatioU->Draw();
@@ -241,8 +240,9 @@ void UnfoldThrust()
 
   TCanvas *cRatio = new TCanvas("cRatio","Result /HEP",600,600);
   TH1D *hRatio = (TH1D*)hFinalResult->Clone("hRatio");
+  
   hRatio->Divide(hep);
-  hRatio->Draw();
+  hRatio->Draw("hist");
 
   hFinalResult->SetAxisRange(0,19.5,"Y");
   TCanvas *cResult = new TCanvas("cResult","",600,600);
@@ -270,5 +270,8 @@ void UnfoldThrust()
    }
    hep->Draw("hist Same");
    hFinalResult->Draw("same");
+   
+   cout <<hep->Integral()<<endl;
+   cout <<hep->Integral()<<endl;
    
 }
