@@ -156,7 +156,7 @@ int ridge_check
     TH1F * multiplicity = new TH1F("multiplicity",";nTrk;nEvents",200,0,200);
     
     /// Initialize the trees for use
-    std::cout<<"Initializing trees for use..."<<std::endl;
+    // std::cout<<"Initializing trees for use..."<<std::endl;
     std::string jtTreeName = "";
     if (s.jttree == 0) jtTreeName = "ak4ESchemeJetTree";
     if (s.jttree == 1) jtTreeName = "ak4WTAmodpSchemeJetTree";
@@ -199,7 +199,7 @@ int ridge_check
         side_t->GetEntry(i);
         jt->GetEntry(i);
         data.update();
-        if (i%10000==0) std::cout <<i<<"/"<<nevent<<std::endl;
+	//    if (i%10000==0) std::cout <<i<<"/"<<nevent<<std::endl;
         
         // find the event energy histogram(s)
         std::vector<Int_t> histE;
@@ -212,7 +212,7 @@ int ridge_check
         if(!s.donTrkThrust) nTrk = s.ridge_eventSelection(data.passesWW, data.missP, data.nParticle, data.nref, data.jtpt, data.jteta, data.STheta, data.mass, data.nTPC, data.theta, data.pmag, data.d0, data.z0, data.pwflag);
         if(s.donTrkThrust) nTrk = s.ridge_eventSelection(data.passesWW, data.missP, data.nParticle, data.nref, data.jtpt, data.jteta, data.STheta, data.mass, data.nTPC, data.theta_wrtThr, data.pmag, data.d0, data.z0, data.pwflag);
         if( nTrk < 0) continue;
-        //std::cout<<data.RuntNo<<","<<data.EventNo<<std::endl;
+        std::cout<<data.RunNo<<","<<data.EventNo<<std::endl;
         
         // find the event nTrk histogram(s)
         std::vector<Int_t> histNtrk = s.histNtrk(nTrk);
