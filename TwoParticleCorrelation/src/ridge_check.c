@@ -272,13 +272,13 @@ int ridge_check
                 if (s.doTheta) angle2 = data.getTheta(k); else angle2 = data.getEta(k);
                 Float_t phi2 = data.getPhi(k);
                 
-                for(int eI = 0; eI< histE.size(); eI++)
+                for(unsigned int eI = 0; eI< histE.size(); eI++)
                 {
-                    for(int nI = 0; nI< histNtrk.size(); nI++)
+                    for(unsigned int nI = 0; nI< histNtrk.size(); nI++)
                     {
-                        for(int pI = 0; pI< histPt1.size(); pI++)
+                        for(unsigned int pI = 0; pI< histPt1.size(); pI++)
                         {
-                            for(int etI = 0; etI< histEta1.size(); etI++)
+                            for(unsigned int etI = 0; etI< histEta1.size(); etI++)
                             {
                                 signal2PC[eI][nI][pI][etI]->Fill(angle1-angle2,dphi(phi1,phi2),fillNumerator/(s.getDifferential())/nTrk);
                                 signal2PC[eI][nI][pI][etI]->Fill(angle1-angle2,dphi(phi2,phi1),fillNumerator/(s.getDifferential())/nTrk);
@@ -381,13 +381,13 @@ int ridge_check
                     if (s.doTheta) angle_mix = mix.getTheta(k); else angle_mix = mix.getEta(k);
                     Float_t phi_mix = mix.getPhi(k);
 
-                    for(int eI = 0; eI< histE.size(); eI++)
+                    for(unsigned int eI = 0; eI< histE.size(); eI++)
                     {
-                        for(int nI = 0; nI< histNtrk_mix.size(); nI++) // histNtrk_mix contains the intersection of histNtrk_mix and histNtrk
+                        for(unsigned int nI = 0; nI< histNtrk_mix.size(); nI++) // histNtrk_mix contains the intersection of histNtrk_mix and histNtrk
                         {
-                            for(int pI = 0; pI< histPt_bkg1.size(); pI++)
+                            for(unsigned int pI = 0; pI< histPt_bkg1.size(); pI++)
                             {
-                                for(int etI = 0; etI< histEta_bkg1.size(); etI++)
+                                for(unsigned int etI = 0; etI< histEta_bkg1.size(); etI++)
                                 {
                                     bkgrnd2PC[eI][nI][pI][etI]->Fill(angle-angle_mix,dphi(phi,phi_mix),fillNumerator/(s.getDifferential())/nTrk);
                                     bkgrnd2PC[eI][nI][pI][etI]->Fill(angle-angle_mix,dphi(phi_mix,phi),fillNumerator/(s.getDifferential())/nTrk);
