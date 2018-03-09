@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  7 MAR 2018 18:24
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  9 MAR 2018 00:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -3862,15 +3862,15 @@ Class revtex4-1 Warning: If you want your PACS to appear in your output, use do
 cument class option showpacs.
 
 [1{/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./ale
-ph-logo.jpg>] (./main.toc)
+ph-logo.jpg>] (./main.toc
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 11.
+)
 \tf@toc=\write4
 \openout4 = `main.toc'.
 
- (./introduction.tex
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 3.
- [2] [3]) (./data.tex)
-(./dataQuality.tex
+ (./introduction.tex [2] [3]) (./detector.tex)
+(./data.tex) (./dataQuality.tex
 <images/DQC/LEP1MC/jteta_akR4ESchemeJetTree.pdf, id=23, 569.12625pt x 416.55624
 pt>
 File: images/DQC/LEP1MC/jteta_akR4ESchemeJetTree.pdf Graphic file (type pdf)
@@ -9853,9 +9853,9 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 8329 strings out of 492995
- 232329 string characters out of 6132704
- 192601 words of memory out of 5000000
+ 8332 strings out of 492995
+ 232363 string characters out of 6132704
+ 192600 words of memory out of 5000000
  11439 multiletter control sequences out of 15000+600000
  15517 words of font info for 53 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -9874,7 +9874,7 @@ exlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/tex
 live/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texl
 ive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texli
 ve/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on main.pdf (75 pages, 14881402 bytes).
+Output written on main.pdf (75 pages, 14881279 bytes).
 PDF statistics:
  26194 PDF objects out of 26593 (max. 8388607)
  10758 compressed objects within 108 object streams

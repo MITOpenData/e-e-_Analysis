@@ -36,6 +36,7 @@ class Selection
         enum SIMPLEPID {BELLE_PHOTON, BELLE_ELECTRON, BELLE_PION, BELLE_MUON, BELLE_KAON, BELLE_PROTON};    // BELLE Particle Definition
         enum SIMPLEPWFLAG {ALEPH_CHARGED_TRACK, ALEPH_CHARGED_LEPTONS1, ALEPH_CHARGED_LEPTONS2, ALEPH_V0, ALEPH_PHOTON, ALEPH_NEUTRAL_HADRON};  // ALEPH Particle Flow Classification
         bool doGen = false; // turn of event and track selections
+        bool getThetaAngle = false;
         
         /* Detector Specific Cuts */
         
@@ -70,7 +71,7 @@ class Selection
         // Beam Axis
         static const Int_t nptBins_wrtBeam = 3;
         Float_t ptBinsLow_wrtBeam[nptBins_wrtBeam]  = {0.4,0.4,1.0};  // measured in GeV
-        Float_t ptBinsHigh_wrtBeam[nptBins_wrtBeam] = {50.0,4.0,3.0};
+        Float_t ptBinsHigh_wrtBeam[nptBins_wrtBeam] = {100.0,4.0,3.0};
         static const Int_t netaBins_wrtBeam = 2;
         Float_t etaBinsLow_wrtBeam[netaBins_wrtBeam]  = {1.6, 1.8};
         Float_t missPCut_wrtBeam = 20;
@@ -312,12 +313,13 @@ std::vector<Int_t> Selection::histPt(Float_t pt)
 std::vector<Int_t> Selection::histEta(Float_t eta)
 {
     std::vector<Int_t> hists;
+    
     // we iterate backwards because we want to fill all of the bins with an eta fill less than or equal to the min 
     for (Int_t i = 0; i < netaBins; ++i)
     {
-        if (doThrust && (eta < etaBinsLow_wrtThr[i])) hists.push_back(i);
-        else if (doWTA && (eta < etaBinsLow_wrtThr[i])) hists.push_back(i);
-        else if (eta < etaBinsLow_wrtBeam[i]) hists.push_back(i);
+        if (doThrust && (TMath::Abs(eta) < etaBinsLow_wrtThr[i])) hists.push_back(i);
+        else if (doWTA && (TMath::Abs(eta) < etaBinsLow_wrtThr[i])) hists.push_back(i);
+        else if (TMath::Abs(eta) < etaBinsLow_wrtBeam[i]) hists.push_back(i);
     }
     return hists;
 }

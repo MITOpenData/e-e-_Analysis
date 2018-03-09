@@ -30,7 +30,7 @@
 #include "include/fourier.h"
 #include "include/TPCNtupleData.h"
 #include "include/Selection.h"
-#include "DataProcessing/include/smartJetName.h"
+#include "../../DataProcessing/include/smartJetName.h"
 
 /********************************************************************************************************************/
 // Two particle correlation analysis
@@ -199,7 +199,7 @@ int ridge_check
         side_t->GetEntry(i);
         jt->GetEntry(i);
         data.update();
-	//    if (i%10000==0) std::cout <<i<<"/"<<nevent<<std::endl;
+	    if (i%10000==0) std::cout <<i<<"/"<<nevent<<std::endl;
         
         // find the event energy histogram(s)
         std::vector<Int_t> histE;
@@ -212,7 +212,7 @@ int ridge_check
         if(!s.donTrkThrust) nTrk = s.ridge_eventSelection(data.passesWW, data.missP, data.nParticle, data.nref, data.jtpt, data.jteta, data.STheta, data.mass, data.nTPC, data.theta, data.pmag, data.d0, data.z0, data.pwflag);
         if(s.donTrkThrust) nTrk = s.ridge_eventSelection(data.passesWW, data.missP, data.nParticle, data.nref, data.jtpt, data.jteta, data.STheta, data.mass, data.nTPC, data.theta_wrtThr, data.pmag, data.d0, data.z0, data.pwflag);
         if( nTrk < 0) continue;
-        std::cout<<data.RunNo<<","<<data.EventNo<<std::endl;
+        //std::cout<<data.RunNo<<","<<data.EventNo<<std::endl;
         
         // find the event nTrk histogram(s)
         std::vector<Int_t> histNtrk = s.histNtrk(nTrk);
@@ -244,13 +244,12 @@ int ridge_check
             // Decide which pt and eta range to fill
             std::vector<Int_t> histPt1 = s.histPt(data.getPt(j));
             std::vector<Int_t> histEta1 = s.histEta(data.getEta(j));
-
             if(histPt1.size() == 0 || histEta1.size() == 0) continue; 
-
+            //std::cout<<"1st particle "<<histEta1.size()<<std::endl;
             Float_t angle1;
-            if (s.doTheta) angle1 = data.getTheta(j); else angle1 = data.getEta(j);
+            if (s.getThetaAngle) angle1 = data.getTheta(j); else angle1 = data.getEta(j);
             Float_t phi1 = data.getPhi(j);
-            
+            //std::cout<<"eta for first particle "<<angle1<<std::endl;
             // Signal loop, calculate S correlation function
             for ( Int_t k=j+1;k<data.nParticle;k++ )
             {
@@ -259,6 +258,7 @@ int ridge_check
 
                 std::vector<Int_t> histPt2 = s.histPt(data.getPt(k));
                 std::vector<Int_t> histEta2 = s.histEta(data.getEta(k));
+                //std::cout<<histEta2.size()<<std::endl;
                 //initial check that histPt2(Eta2) are not empty
                 if(histPt2.size() == 0 || histEta2.size() == 0) continue; 
                 // Loop over elements of histPt1(Eta1) and check if the element is present in histPt2(Eta2). if yes then leave the element, if no then remove it. 
@@ -269,7 +269,7 @@ int ridge_check
                 if(histPt1.size() == 0 || histEta1.size() == 0) continue; 
                 
                 Float_t angle2;
-                if (s.doTheta) angle2 = data.getTheta(k); else angle2 = data.getEta(k);
+                if (s.getThetaAngle) angle2 = data.getTheta(k); else angle2 = data.getEta(k);
                 Float_t phi2 = data.getPhi(k);
                 
                 for(unsigned int eI = 0; eI< histE.size(); eI++)
@@ -280,6 +280,7 @@ int ridge_check
                         {
                             for(unsigned int etI = 0; etI< histEta1.size(); etI++)
                             {
+                                //std::cout<<"histEta "<<histEta1.at(etI)<<" eta1 = "<<angle1<<" eta2 = "<<angle2<<std::endl;
                                 signal2PC[eI][nI][pI][etI]->Fill(angle1-angle2,dphi(phi1,phi2),fillNumerator/(s.getDifferential())/nTrk);
                                 signal2PC[eI][nI][pI][etI]->Fill(angle1-angle2,dphi(phi2,phi1),fillNumerator/(s.getDifferential())/nTrk);
                                 signal2PC[eI][nI][pI][etI]->Fill(angle2-angle1,dphi(phi1,phi2),fillNumerator/(s.getDifferential())/nTrk);
@@ -355,7 +356,7 @@ int ridge_check
 
                 // load the angles to be used
                 Float_t angle;
-                if (s.doTheta) angle = data.getTheta(j); else angle = data.getEta(j);
+                if (s.getThetaAngle) angle = data.getTheta(j); else angle = data.getEta(j);
                 Float_t phi = data.getPhi(j);
 
                 // Background loop, calculate B correlation function from mixed event
@@ -378,7 +379,7 @@ int ridge_check
 
                     // load the angles to be used 
                     Float_t angle_mix;
-                    if (s.doTheta) angle_mix = mix.getTheta(k); else angle_mix = mix.getEta(k);
+                    if (s.getThetaAngle) angle_mix = mix.getTheta(k); else angle_mix = mix.getEta(k);
                     Float_t phi_mix = mix.getPhi(k);
 
                     for(unsigned int eI = 0; eI< histE.size(); eI++)

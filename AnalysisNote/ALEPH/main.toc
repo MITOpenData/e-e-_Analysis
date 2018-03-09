@@ -4,23 +4,24 @@
 \contentsline {section}{\numberline {}Contents}{2}{}
 \tocdepth@restore 
 \contentsline {section}{\numberline {I}Introduction}{3}{}
-\contentsline {section}{\numberline {II}Data Sample}{4}{}
-\contentsline {section}{\numberline {III}Data Quality Checks}{4}{}
+\contentsline {section}{\numberline {II}The ALEPH Detector}{4}{}
+\contentsline {section}{\numberline {III}Data Sample}{4}{}
+\contentsline {section}{\numberline {IV}Data Quality Checks}{4}{}
 \contentsline {subsection}{\numberline {A}LEP1 vs LEP1 Monte-Carlo}{5}{}
 \contentsline {subsection}{\numberline {B}LEP2 vs LEP2 Monte-Carlo}{13}{}
 \contentsline {subsection}{\numberline {C}LEP1 vs LEP2 (event energy $>$ 100GeV)}{21}{}
-\contentsline {section}{\numberline {IV}Multiplicity Distributions}{29}{}
-\contentsline {section}{\numberline {V}Analysis}{32}{}
-\contentsline {section}{\numberline {VI}Thrust and sphericity axes}{32}{}
-\contentsline {section}{\numberline {VII}Winner-Take-All Axis}{34}{}
-\contentsline {section}{\numberline {VIII}Event Selection}{34}{}
-\contentsline {section}{\numberline {IX}Thrust distribution}{34}{}
-\contentsline {section}{\numberline {X}Two-Particle Correlation Function}{35}{}
+\contentsline {section}{\numberline {V}Multiplicity Distributions}{29}{}
+\contentsline {section}{\numberline {VI}Analysis}{32}{}
+\contentsline {section}{\numberline {VII}Thrust and sphericity axes}{32}{}
+\contentsline {section}{\numberline {VIII}Winner-Take-All Axis}{34}{}
+\contentsline {section}{\numberline {IX}Event Selection}{34}{}
+\contentsline {section}{\numberline {X}Thrust distribution}{34}{}
+\contentsline {section}{\numberline {XI}Two-Particle Correlation Function}{35}{}
 \contentsline {subsection}{\numberline {A}Analysis for 2018.01.26 production}{38}{}
 \contentsline {subsection}{\numberline {B}Analysis for 2018.02.XX production}{56}{}
-\contentsline {section}{\numberline {XI}Systematical Uncertainties}{56}{}
-\contentsline {section}{\numberline {XII}Summary}{56}{}
-\contentsline {section}{\numberline {XIII}Appendix}{56}{}
+\contentsline {section}{\numberline {XII}Systematical Uncertainties}{56}{}
+\contentsline {section}{\numberline {XIII}Summary}{56}{}
+\contentsline {section}{\numberline {XIV}Appendix}{56}{}
 \contentsline {subsection}{\numberline {A}Cross-check analysis with independent macros}{56}{}
 \contentsline {subsection}{\numberline {B}Comparison of Raw Spectra}{64}{}
 \contentsline {subsection}{\numberline {C}Raw data}{65}{}
