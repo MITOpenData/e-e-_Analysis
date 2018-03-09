@@ -9,6 +9,9 @@ class TPCNtupleData{
     
     Selection s;
 
+    Int_t EventNo;
+    Int_t RunNo;
+
     Float_t Energy;
     Int_t nParticle;
     bool passesWW;
@@ -193,6 +196,8 @@ class TPCNtupleData{
     void setTPCTreeStatus(TTree *t1, TTree *t2)
     {
       t1->SetBranchStatus("*", 0);
+      t1->SetBranchStatus("EventNo",1);
+      t1->SetBranchStatus("RunNo",1);
       t1->SetBranchStatus("Energy",1);
       t1->SetBranchStatus("nParticle", 1);
       t1->SetBranchStatus("pt", 1);
@@ -245,7 +250,8 @@ class TPCNtupleData{
 void setupTPCTree(TTree *t1, TTree *t2, TTree *t3, TPCNtupleData &data)
 {
     Selection s;
-
+    t1->SetBranchAddress("EventNo",&data.EventNo);
+    t1->SetBranchAddress("RunNo",&data.RunNo);
     t1->SetBranchAddress("Energy",&data.Energy);
     t1->SetBranchAddress("nParticle",&data.nParticle);
     t1->SetBranchAddress("passesWW",&data.passesWW);

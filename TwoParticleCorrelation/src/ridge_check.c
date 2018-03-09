@@ -212,6 +212,8 @@ int ridge_check
         if(!s.donTrkThrust) nTrk = s.ridge_eventSelection(data.passesWW, data.missP, data.nParticle, data.nref, data.jtpt, data.jteta, data.STheta, data.mass, data.nTPC, data.theta, data.pmag, data.d0, data.z0, data.pwflag);
         if(s.donTrkThrust) nTrk = s.ridge_eventSelection(data.passesWW, data.missP, data.nParticle, data.nref, data.jtpt, data.jteta, data.STheta, data.mass, data.nTPC, data.theta_wrtThr, data.pmag, data.d0, data.z0, data.pwflag);
         if( nTrk < 0) continue;
+        std::cout<<"EventNo: "<<data.EventNo<<" , RunNo: "<<data.RunNo<<std::endl;
+        
         // find the event nTrk histogram(s)
         std::vector<Int_t> histNtrk = s.histNtrk(nTrk);
 	    if(histNtrk.size() == 0) { std::cout<<"calculated nTrk does not fit in any of the specified ranges...skipping event"<<std::endl; continue;}
