@@ -42,15 +42,15 @@ class Selection
         
         // From 1990 "Properties of Hadronic Events in e+e- Annihilation at sqrt(s) = 91 GeV" ALEPH Collaboration paper
             // Track Cuts
-        bool doNTPC = true;    Int_t nTPCMin = 4;  Int_t nTPCMax = 999;
+        bool doNTPC = false;    Int_t nTPCMin = 4;  Int_t nTPCMax = 999;
         bool doTheta = true;   Float_t thetaMin = 20*TMath::Pi()/180.;  Float_t thetaMax = 160*TMath::Pi()/180.;  // measured in radians
         bool doP = true;   Float_t pMin = 0.2; // measured in GeV
-        bool dod0 = true;     Float_t d0Cut = 3; // measured in cm
-        bool doz0 = true;   Float_t z0Cut = 5;  // measured in cm
+        bool dod0 = false;     Float_t d0Cut = 3; // measured in cm
+        bool doz0 = false;   Float_t z0Cut = 5;  // measured in cm
             // Event Cuts
         bool doE = true; Float_t TotalChrgEnergyMin = 15; // measured in GeV
-        Float_t nTrkMin = 1;
-        bool doSTheta = true; Float_t SThetaMax = 0.8;  
+        Float_t nTrkMin = 5;
+        bool doSTheta = false; Float_t SThetaMax = 0.8;  
         // end of 1990 cuts
         bool domissPCut = false;  Float_t missPCut = 20;  // measured in GeV
         /* Frame Dependent Cuts */
