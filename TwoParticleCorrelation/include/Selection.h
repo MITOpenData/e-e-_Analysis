@@ -237,7 +237,7 @@ int Selection::ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticl
     if( N >= 1000) return -1;
 
     if (doE && E < TotalChrgEnergyMin) return -1;
-    if(doSTheta && TMath::Abs(cos(STheta))>=0.8) return -1;
+    if(doSTheta && TMath::Abs(cos(STheta))>=SThetaMax) return -1;
     //// End of 1990 cuts ////
 
     ///////// Missing Momentum /////////
