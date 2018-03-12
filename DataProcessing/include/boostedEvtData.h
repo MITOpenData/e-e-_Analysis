@@ -25,8 +25,9 @@ class boostedEvtData{
   float boosty;
   float boostz;
   float boost;
+  float particleWeight;
 
-  static const int nVar = 18;
+  static const int nVar = 19;
   std::string varStr[nVar] = {"nParticle",
                               "WTAAxis_Theta",
                               "WTAAxis_ThetaPerp",
@@ -44,7 +45,9 @@ class boostedEvtData{
                               "boostx",
                               "boosty",
                               "boostz",
-                              "boost"};
+                              "boost",
+                              "particleWeight",
+};
 
   bool varIsGood[nVar];
   
@@ -63,6 +66,7 @@ boostedEvtData::boostedEvtData()
   boosty = -999;
   boostz = -999;
   boost = -999;
+  particleWeight = 1; //should be initialized to 1 if not used in mixing
 
   for(Int_t pI = 0; pI < nMaxBoostedPart; ++pI){
     pt[pI] = -999;
@@ -120,6 +124,7 @@ void boostedEvtData::SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::s
   if(varIsGood[15]) inTree_p->SetBranchAddress("boosty", &boosty);
   if(varIsGood[16]) inTree_p->SetBranchAddress("boostz", &boostz);
   if(varIsGood[17]) inTree_p->SetBranchAddress("boost", &boost);
+  if(varIsGood[18]) inTree_p->SetBranchAddress("particleWeight", &particleWeight);
   
   return;
 }
@@ -144,6 +149,7 @@ void boostedEvtData::SetBranchWrite(TTree* inTree_p)
   inTree_p->Branch("boosty", &boosty, "boosty/F");
   inTree_p->Branch("boostz", &boostz, "boostz/F");
   inTree_p->Branch("boost", &boost, "boost/F");
+  inTree_p->Branch("particleWeight", &particleWeight, "particleWeight/F");
 
   return;
 }

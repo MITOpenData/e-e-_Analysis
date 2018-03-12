@@ -35,7 +35,7 @@ inline bool checkEtaThrustPIs1(TVector3 thrust, TVector3 p)
   return TMath::Abs(thrust0 - thrust1) < minDel && TMath::Abs(thrust0 - thrust2) < minDel && TMath::Abs(thrust1 - thrust2) < minDel;
 }
 
-//this is actually rapidity w/ pion mass assumption
+//this is actually rapidity w/ mass given
 inline double rapFromThrust(TVector3 thrust, TVector3 p, float mass){
   Double_t minDel = 0.01;
   if(mass < minDel && checkEtaThrustPIs1(thrust, p)) return 99.;
