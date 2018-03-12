@@ -57,14 +57,8 @@ void setBoostedVariables(bool doBoost, particleData *p, boostedEvtData *b, TLore
     mainAxis.Boost(boost);
 
     b->WTAAxis_Theta = mainAxis.Vect().Theta();
-    b->WTAAxis_ThetaPerp = mainAxis.Vect().Theta();
-    if(b->WTAAxis_ThetaPerp > TMath::Pi()/2.) b->WTAAxis_ThetaPerp -= TMath::Pi()/2.;
-    else b->WTAAxis_ThetaPerp += TMath::Pi()/2.;
+    b->WTAAxis_ThetaPerp = getPerpVector(mainAxis.Vect()).Theta();
     b->WTAAxis_Phi = mainAxis.Vect().Phi();
-
-    TLorentzVector deltaAxis;
-    Double_t tempEta = -1.*TMath::Log(TMath::Tan(b->WTAAxis_ThetaPerp/2.));
-    deltaAxis.SetPtEtaPhiM(mainAxis.Pt(), tempEta, mainAxis.Phi(), mainAxis.M());
 
     b->boostx = boost.X(); 
     b->boosty = boost.Y(); 
@@ -78,20 +72,15 @@ void setBoostedVariables(bool doBoost, particleData *p, boostedEvtData *b, TLore
 
       b->pt[i] = ptFromThrust(mainAxis.Vect().Unit(), part.Vect());
       b->pmag[i] = part.Vect().Mag();
-      Double_t minDel = 0.000001;
-      if(TMath::Abs(mainAxis.Vect().Unit()[0]) < minDel && TMath::Abs(mainAxis.Vect().Unit()[1]) < minDel && TMath::Abs(mainAxis.Vect().Unit()[2]) < minDel) b->eta[i] = 99.;
-      else if(checkEtaThrustPIs1(mainAxis.Vect().Unit(), part.Vect())) b->eta[i] = 99.;
-      else b->eta[i] = -TMath::Log(TMath::Tan(thetaFromThrust(mainAxis.Vect().Unit(), part.Vect())/2.0));//true defition of eta
+      b->eta[i] = etaFromThrust(mainAxis.Vect().Unit(),part.Vect());
       b->theta[i] = thetaFromThrust(mainAxis.Vect().Unit(), part.Vect());
       b->phi[i] = phiFromThrust(mainAxis.Vect().Unit(), part.Vect());
 
-      b->pt_Perp[i] = ptFromThrust(deltaAxis.Vect().Unit(), part.Vect());
+      b->pt_Perp[i] = ptFromThrust(mainAxis.Vect(), part.Vect(), true);
       b->pmag_Perp[i] = part.Vect().Mag();
-      if(TMath::Abs(deltaAxis.Vect().Unit()[0]) < minDel && TMath::Abs(deltaAxis.Vect().Unit()[1]) < minDel && TMath::Abs(deltaAxis.Vect().Unit()[2]) < minDel) b->eta_Perp[i] = 99.;
-      else if(checkEtaThrustPIs1(deltaAxis.Vect().Unit(), part.Vect())) b->eta_Perp[i] = 99.;
-      else b->eta_Perp[i] = -TMath::Log(TMath::Tan(thetaFromThrust(deltaAxis.Vect().Unit(), part.Vect())/2.0));//true defition of eta
-      b->theta_Perp[i] = thetaFromThrust(deltaAxis.Vect().Unit(), part.Vect());
-      b->phi_Perp[i] = phiFromThrust(deltaAxis.Vect().Unit(), part.Vect());
+      b->eta_Perp[i] = etaFromThrust(mainAxis.Vect(), part.Vect(), true);
+      b->theta_Perp[i] = thetaFromThrust(mainAxis.Vect(), part.Vect(), true);
+      b->phi_Perp[i] = phiFromThrust(mainAxis.Vect(), part.Vect(), true);
     }
   }
 }

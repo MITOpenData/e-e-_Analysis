@@ -83,13 +83,11 @@ void appendMixEvtBoosted(boostedEvtData *out, particleData *in, TVector3 mixAxis
     out->theta[oldnParticle+i] = thetaFromThrust(mixAxis,particle.Vect());
     out->phi[oldnParticle+i] = phiFromThrust(mixAxis,particle.Vect());
 
-    //FIXME THESE ARE WRONG
-    out->pt_Perp[oldnParticle+i] = ptFromThrust(mixAxis,particle.Vect());
+    out->pt_Perp[oldnParticle+i] = ptFromThrust(mixAxis,particle.Vect(), true);
     out->pmag_Perp[oldnParticle+i] = particle.Vect().Mag();
-    out->eta_Perp[oldnParticle+i] = etaFromThrust(mixAxis,particle.Vect());
-    out->theta_Perp[oldnParticle+i] = thetaFromThrust(mixAxis,particle.Vect());
-    out->phi_Perp[oldnParticle+i] = phiFromThrust(mixAxis,particle.Vect());
-
+    out->eta_Perp[oldnParticle+i] = etaFromThrust(mixAxis,particle.Vect(), true);
+    out->theta_Perp[oldnParticle+i] = thetaFromThrust(mixAxis,particle.Vect(), true);
+    out->phi_Perp[oldnParticle+i] = phiFromThrust(mixAxis,particle.Vect(), true);
   }
 
   //account for fact that we are using multiple events to mix

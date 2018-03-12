@@ -17,11 +17,20 @@ double dphi(double phi1,double phi2)
     return a;
 }
 
-inline double ptFromThrust(TVector3 thrust, TVector3 p){
+inline TVector3 getPerpVector(TVector3 v){
+  TVector3 tempV = v;
+  tempV.Rotate(TMath::Pi()/2.0,TVector3(0,0,1).Cross(tempV.Unit()));
+  if(TMath::Abs(tempV.Phi()-v.Phi())>1) tempV = -tempV;
+  return tempV;
+}
+
+inline double ptFromThrust(TVector3 thrust, TVector3 p, bool doPerpThrust = false){
+  if(doPerpThrust) thrust = getPerpVector(thrust);
   return p.Perp(thrust); 
 }
 
-inline double thetaFromThrust(TVector3 thrust, TVector3 p){
+inline double thetaFromThrust(TVector3 thrust, TVector3 p, bool doPerpThrust = false){
+  if(doPerpThrust) thrust = getPerpVector(thrust);
   return p.Angle(thrust);
 }
 
@@ -36,7 +45,8 @@ inline bool checkEtaThrustPIs1(TVector3 thrust, TVector3 p)
 }
 
 //this is actually rapidity w/ mass given
-inline double rapFromThrust(TVector3 thrust, TVector3 p, float mass){
+inline double rapFromThrust(TVector3 thrust, TVector3 p, float mass, bool doPerpThrust = false){
+  if(doPerpThrust) thrust = getPerpVector(thrust);
   Double_t minDel = 0.01;
   if(mass < minDel && checkEtaThrustPIs1(thrust, p)) return 99.;
   float pl = p*(thrust.Unit());//logitudinal momentum component
@@ -45,14 +55,16 @@ inline double rapFromThrust(TVector3 thrust, TVector3 p, float mass){
   return rap;//rapidity
 }
 
-inline double etaFromThrust(TVector3 thrust, TVector3 p){
+inline double etaFromThrust(TVector3 thrust, TVector3 p, bool doPerpThrust = false){
+  if(doPerpThrust) thrust = getPerpVector(thrust);
   Double_t minDel = 0.000001;
   if(TMath::Abs(thrust[0]) < minDel && TMath::Abs(thrust[1]) < minDel && TMath::Abs(thrust[2]) < minDel) return 99.;
   else if(checkEtaThrustPIs1(thrust, p)) return 99.;
   return -TMath::Log( TMath::Tan( thetaFromThrust(thrust,p)/2.0));
 }
 
-inline double phiFromThrust(TVector3 thrust, TVector3 p){
+inline double phiFromThrust(TVector3 thrust, TVector3 p, bool doPerpThrust = false){
+  if(doPerpThrust) thrust = getPerpVector(thrust);
   TVector3 pt = p-((p*thrust.Unit())*(thrust.Unit()));//pt vector
   TVector3 z = TVector3(0,0,1);
   TVector3 phiOrigin = thrust.Unit().Cross((thrust.Unit().Cross(z)));//vector that will be phi=0 (in plane of thrust and beam line
