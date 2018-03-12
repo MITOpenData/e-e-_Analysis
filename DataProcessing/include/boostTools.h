@@ -62,9 +62,8 @@ void setBoostedVariables(bool doBoost, particleData *p, boostedEvtData *b, TLore
     else b->WTAAxis_ThetaPerp += TMath::Pi()/2.;
     b->WTAAxis_Phi = mainAxis.Vect().Phi();
 
-    
     TLorentzVector deltaAxis;
-    Float_t tempEta = -1.*TMath::Log(TMath::Tan(b->WTAAxis_ThetaPerp/2.));
+    Double_t tempEta = -1.*TMath::Log(TMath::Tan(b->WTAAxis_ThetaPerp/2.));
     deltaAxis.SetPtEtaPhiM(mainAxis.Pt(), tempEta, mainAxis.Phi(), mainAxis.M());
 
     b->boostx = boost.X(); 

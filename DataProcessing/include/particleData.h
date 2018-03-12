@@ -5,7 +5,7 @@
 
 class particleData{
  public:
-  static const int nMaxPart = 10000;
+  static const int nMaxPart = 1000;
 
   int nParticle;
   int EventNo;

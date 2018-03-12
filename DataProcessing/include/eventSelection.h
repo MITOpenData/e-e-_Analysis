@@ -11,10 +11,15 @@
 #include "fastjet/ClusterSequence.hh"
 
 #include "include/particleData.h"
+#include "include/eventData.h"
 
 class eventSelection{
  public:
   std::vector<fastjet::PseudoJet> particles;
+
+  int nJISR = 2;
+  fastjet::JetDefinition jDefISR;
+
   int nJWW = 4;
   fastjet::JetDefinition jDefWW;
 
@@ -27,6 +32,11 @@ class eventSelection{
 
   Double_t masslessRescale_;
 
+  Double_t factorA_;
+  Double_t factorB_;
+  Double_t factorC_;
+  Double_t factorD_;
+
   Double_t pxSumFinal_;
   Double_t pySumFinal_;
   Double_t pzSumFinal_;
@@ -34,6 +44,12 @@ class eventSelection{
 
   std::vector<TLorentzVector> finalFourJet;
 
+  Bool_t passesTotalChgEnergyMin = false;
+  Bool_t passesNTrkMin = false;
+  Bool_t passesSTheta = false;
+  Bool_t passesMissP = false;
+
+  Bool_t passesISR = false;
   Bool_t passesWW = false;
   Bool_t passesD2 = false;
   Bool_t passesCW = false;
@@ -41,10 +57,23 @@ class eventSelection{
   Float_t d2 = 9999999.;
   Float_t cW = 9999999.;
 
-  eventSelection(){jDefWW = fastjet::JetDefinition(fastjet::ee_kt_algorithm);}
-  eventSelection(particleData* inPart){jDefWW = fastjet::JetDefinition(fastjet::ee_kt_algorithm); setEventSelection(inPart);}
-  Bool_t checkDoRescale(std::vector<TLorentzVector>* inJets, Float_t eScale);
-  void setEventSelection(particleData* inPart);
+  eventSelection(){
+    jDefISR = fastjet::JetDefinition(fastjet::ee_kt_algorithm);
+    jDefWW = fastjet::JetDefinition(fastjet::ee_kt_algorithm);
+  }
+  eventSelection(particleData* inPart, eventData* inData){
+    jDefISR = fastjet::JetDefinition(fastjet::ee_kt_algorithm);
+    jDefWW = fastjet::JetDefinition(fastjet::ee_kt_algorithm);
+    setEventSelection(inPart, inData);
+  }
+  Bool_t checkDoRescale(std::vector<TLorentzVector>* inJets, std::vector<double>* factors, Float_t cmEnergy);
+  void setEventSelection(particleData* inPart, eventData* inData);
+  Bool_t getPassesTotalChgEnergyMin(){return passesTotalChgEnergyMin;}
+  Bool_t getPassesNTrkMin(){return passesNTrkMin;}
+  Bool_t getPassesSTheta(){return passesSTheta;}
+  Bool_t getPassesMissP(){return passesMissP;}
+
+  Bool_t getPassesISR(){return passesISR;}
   Bool_t getPassesWW(){return passesWW;}
   Bool_t getPassesD2(){return passesD2;}
   Bool_t getPassesCW(){return passesCW;}
@@ -58,6 +87,11 @@ class eventSelection{
 
   std::vector<TLorentzVector> getInitFourJet(){return initFourJet;}
 
+  Double_t getFactorA(){return factorA_;}
+  Double_t getFactorB(){return factorB_;}
+  Double_t getFactorC(){return factorC_;}
+  Double_t getFactorD(){return factorD_;}
+
   Double_t getFinalFourJetSumPx(){return pxSumFinal_;}
   Double_t getFinalFourJetSumPy(){return pySumFinal_;}
   Double_t getFinalFourJetSumPz(){return pzSumFinal_;}
@@ -65,7 +99,6 @@ class eventSelection{
 
   std::vector<TLorentzVector> getFinalFourJet(){return finalFourJet;}
 };
-
 
 /*
 Bool_t eventSelection::checkDoRescale(std::vector<TLorentzVector>* inJets, Float_t eScale)
@@ -75,29 +108,87 @@ Bool_t eventSelection::checkDoRescale(std::vector<TLorentzVector>* inJets, Float
   Float_t currPz = 0;
   Float_t currE = 0;
 
-  for(unsigned int i = 0 ; i < inJets.size(); ++i){
-    currPx += inJets.at(i).Px();
-    currPy += inJets.at(i).Py();
-    currPz += inJets.at(i).Pz();
+  for(unsigned int i = 0 ; i < inJets->size(); ++i){
+    currPx += inJets->at(i).Px();
+    currPy += inJets->at(i).Py();
+    currPz += inJets->at(i).Pz();
 
-    inJets.at(i).SetE(TMath::Sqrt(inJets.at(i).Px()*inJets.at(i).Px() + inJets.at(i).Py()*inJets.at(i).Py() + inJets.at(i).Pz()*inJets.at(i).Pz()));
+    inJets->at(i).SetE(TMath::Sqrt(inJets->at(i).Px()*inJets->at(i).Px() + inJets->at(i).Py()*inJets->at(i).Py() + inJets->at(i).Pz()*inJets->at(i).Pz()));
     
-    currE += inJets.at(i).E();
+    currE += inJets->at(i).E();
   }
 
-  if(TMath::Abs(currPx) > 1.){
-    
-    return true;
+  std::cout << "Total: " << currPx << ", " << currPy << ", " << currPz << ", " << currE << std::endl;
+  for(unsigned int i = 0 ; i < inJets->size(); ++i){
+    std::cout << " " << i << ": " << inJets->at(i).Px() << ", " << inJets->at(i).Pz() << ", " << inJets->at(i).Pz() << ", " << inJets->at(i).E() << std::endl;
   }
-  else if(TMath::Abs(currPy) > 1.){
+
+  if(TMath::Abs(currPx) > 5.){
+    std::vector<int> pos;
+    Float_t currTot = 0;
+    for(unsigned int i = 0 ; i < inJets->size(); ++i){
+      if((currPx > 0 && inJets->at(i).Px() > 0) || (currPx < 0 && inJets->at(i).Px() < 0)){
+	pos.push_back(i);
+	currTot += inJets->at(i).Px();
+      }
+    }
+
+    for(unsigned int i = 0 ; i < pos.size(); ++i){
+      inJets->at(pos.at(i)).SetPx(inJets->at(pos.at(i)).Px()*(currTot - currPx)/currTot);
+      inJets->at(pos.at(i)).SetPy(inJets->at(pos.at(i)).Py()*(currTot - currPx)/currTot);
+      inJets->at(pos.at(i)).SetPz(inJets->at(pos.at(i)).Pz()*(currTot - currPx)/currTot);
+      inJets->at(pos.at(i)).SetE(inJets->at(pos.at(i)).Px()*inJets->at(pos.at(i)).Px() + inJets->at(pos.at(i)).Py()*inJets->at(pos.at(i)).Py() + inJets->at(pos.at(i)).Pz()*inJets->at(pos.at(i)).Pz());
+    }
 
     return true;
   }
-  else if(TMath::Abs(currPz) > 1.){
+  else if(TMath::Abs(currPy) > 5.){
+    std::vector<int> pos;
+    Float_t currTot = 0;
+    for(unsigned int i = 0 ; i < inJets->size(); ++i){
+      if((currPy > 0 && inJets->at(i).Py() > 0) || (currPy < 0 && inJets->at(i).Py() < 0)){
+	pos.push_back(i);
+	currTot += inJets->at(i).Py();
+      }
+    }
+
+    for(unsigned int i = 0 ; i < pos.size(); ++i){
+      inJets->at(pos.at(i)).SetPx(inJets->at(pos.at(i)).Px()*(currTot - currPy)/currTot);
+      inJets->at(pos.at(i)).SetPy(inJets->at(pos.at(i)).Py()*(currTot - currPy)/currTot);
+      inJets->at(pos.at(i)).SetPz(inJets->at(pos.at(i)).Pz()*(currTot - currPy)/currTot);
+      inJets->at(pos.at(i)).SetE(inJets->at(pos.at(i)).Px()*inJets->at(pos.at(i)).Px() + inJets->at(pos.at(i)).Py()*inJets->at(pos.at(i)).Py() + inJets->at(pos.at(i)).Pz()*inJets->at(pos.at(i)).Pz());
+    }
 
     return true;
   }
-  else if(TMath::Abs(currE) > 1.){
+  else if(TMath::Abs(currPz) > 5.){
+    std::vector<int> pos;
+    Float_t currTot = 0;
+    for(unsigned int i = 0 ; i < inJets->size(); ++i){
+      if((currPz > 0 && inJets->at(i).Pz() > 0) || (currPz < 0 && inJets->at(i).Pz() < 0)){
+	pos.push_back(i);
+	currTot += inJets->at(i).Pz();
+      }
+    }
+
+
+    for(unsigned int i = 0 ; i < pos.size(); ++i){
+      inJets->at(pos.at(i)).SetPx(inJets->at(pos.at(i)).Px()*(currTot - currPz)/currTot);
+      inJets->at(pos.at(i)).SetPy(inJets->at(pos.at(i)).Py()*(currTot - currPz)/currTot);
+      inJets->at(pos.at(i)).SetPz(inJets->at(pos.at(i)).Pz()*(currTot - currPz)/currTot);
+      inJets->at(pos.at(i)).SetE(inJets->at(pos.at(i)).Px()*inJets->at(pos.at(i)).Px() + inJets->at(pos.at(i)).Py()*inJets->at(pos.at(i)).Py() + inJets->at(pos.at(i)).Pz()*inJets->at(pos.at(i)).Pz());
+    }
+
+    return true;
+  }
+  else if(TMath::Abs(currE - eScale) > 5.){
+    for(unsigned int i = 0 ; i < inJets->size(); ++i){
+      inJets->at(i).SetPx(inJets->at(i).Px()*eScale/currE);
+      inJets->at(i).SetPy(inJets->at(i).Py()*eScale/currE);
+      inJets->at(i).SetPz(inJets->at(i).Pz()*eScale/currE);
+      
+      inJets->at(i).SetE(inJets->at(i).Px()*inJets->at(i).Px() + inJets->at(i).Py()*inJets->at(i).Py() + inJets->at(i).Pz()*inJets->at(i).Pz());
+    }
 
     return true;
   }
@@ -106,7 +197,7 @@ Bool_t eventSelection::checkDoRescale(std::vector<TLorentzVector>* inJets, Float
 }
 */
 
-Bool_t eventSelection::checkDoRescale(std::vector<TLorentzVector>* inJets, Float_t eScale)
+Bool_t eventSelection::checkDoRescale(std::vector<TLorentzVector>* inJets, std::vector<double>* factors, Float_t cmEnergy)
 {
   Float_t px0 = inJets->at(0).Px();
   Float_t py0 = inJets->at(0).Py();
@@ -135,56 +226,149 @@ Bool_t eventSelection::checkDoRescale(std::vector<TLorentzVector>* inJets, Float
   Float_t ct = pz2 - pz1*p20xy/p10xy - pz0*px2/px0 + pz0*px1*p20xy/(px0*p10xy);
   Float_t dt = pz3 - pz1*p30xy/p10xy - pz0*px3/px0 + pz0*px1*p30xy/(px0*p10xy);
 
-  Float_t d = eScale;
-  Float_t divD = -p0*(p20xy*px1*dt/(p10xy*ct) - px1*p30xy/p10xy - px2*dt/ct + px3)/px0;
-  divD += p1*(p20xy*dt/(p10xy*ct) - p30xy/p10xy) - p2*dt/ct + p3;
-
-  d /= divD;
-
+  Float_t d = 1.;
   Float_t c = -d*dt/ct;
   Float_t b = -(c*p20xy + d*p30xy)/p10xy;
   Float_t a = -1.*(b*px1 + c*px2 + d*px3)/px0;
 
-  inJets->at(0).SetPxPyPzE(a*px0, a*py0, a*pz0, a*p0);
-  inJets->at(1).SetPxPyPzE(b*px1, b*py1, b*pz1, b*p1);
-  inJets->at(2).SetPxPyPzE(c*px2, c*py2, c*pz2, c*p2);
-  inJets->at(3).SetPxPyPzE(d*px3, d*py3, d*pz3, d*p3);
+  d = 1.;
+  c = 1.;
+  b = 1.;
+  a = 1.;
+
+  p0 = a*TMath::Sqrt(px0*px0 + py0*py0 + pz0*pz0);
+  p1 = b*TMath::Sqrt(px1*px1 + py1*py1 + pz1*pz1);
+  p2 = c*TMath::Sqrt(px2*px2 + py2*py2 + pz2*pz2);
+  p3 = d*TMath::Sqrt(px3*px3 + py3*py3 + pz3*pz3);
+
+  Float_t cmFactor = cmEnergy/(p0 + p1 + p2 + p3);
+  p0 *= cmFactor;
+  p1 *= cmFactor;
+  p2 *= cmFactor;
+  p3 *= cmFactor;
+  
+  a *= cmFactor;
+  b *= cmFactor;
+  c *= cmFactor;
+  d *= cmFactor;
+
+  inJets->at(0).SetPxPyPzE(a*px0, a*py0, a*pz0, p0);
+  inJets->at(1).SetPxPyPzE(b*px1, b*py1, b*pz1, p1);
+  inJets->at(2).SetPxPyPzE(c*px2, c*py2, c*pz2, p2);
+  inJets->at(3).SetPxPyPzE(d*px3, d*py3, d*pz3, p3);
+
+  factors->push_back(a);
+  factors->push_back(b);
+  factors->push_back(c);
+  factors->push_back(d);
+  //  std::cout << " a,b,c,d: " << a << ", " << b << ", " << c << ", " << d << std::endl;
 
   return false;
 }
 
-void eventSelection::setEventSelection(particleData* inPart)
+void eventSelection::setEventSelection(particleData* inPart, eventData* inData)
 {
   particles.clear();
+
+  passesTotalChgEnergyMin = false;
+  passesNTrkMin = false;
+  passesSTheta = false;
+  passesMissP = false;
+
+  passesISR = false;
   passesWW = false;
   passesD2 = false;
   passesCW = false;
 
+  initFourJet.clear();
+  finalFourJet.clear();
+
+  initFourJet.push_back({0,0,0,0});
+  initFourJet.push_back({0,0,0,0});
+  initFourJet.push_back({0,0,0,0});
+  initFourJet.push_back({0,0,0,0});
+
+  finalFourJet.push_back({0,0,0,0});
+  finalFourJet.push_back({0,0,0,0});
+  finalFourJet.push_back({0,0,0,0});
+  finalFourJet.push_back({0,0,0,0});
+
   if(inPart->nParticle < 4) return;
+
+  Float_t TotalChgEnergy = 0;
+  Int_t NTrk = 0;
+  Float_t STheta = inData->STheta;
+  Float_t MissP = inData->missP;
 
   for(Int_t pI = 0; pI < inPart->nParticle; ++pI){
     Double_t e = TMath::Sqrt(inPart->pmag[pI]*inPart->pmag[pI] + inPart->mass[pI]*inPart->mass[pI]);
     particles.push_back(fastjet::PseudoJet(inPart->px[pI], inPart->py[pI], inPart->pz[pI], e));
+
+    if(inPart->ntpc[pI] < 4) continue;
+    if(inPart->theta[pI] < 20.*TMath::Pi()/180.) continue;
+    if(inPart->theta[pI] > 160.*TMath::Pi()/180.) continue;
+    if(inPart->pmag[pI] < .2) continue;
+    if(TMath::Abs(inPart->d0[pI]) > 3.) continue;
+    if(TMath::Abs(inPart->z0[pI]) > 5.) continue;
+
+    if(inPart->pwflag[pI] == 0){
+      TotalChgEnergy += TMath::Sqrt(inPart->pmag[pI]*inPart->pmag[pI] + inPart->mass[pI]*inPart->mass[pI]);
+      NTrk += 1;
+    }    
   }
 
-  fastjet::ClusterSequence cs(particles, jDefWW);
-  std::vector<fastjet::PseudoJet> fourJetsFJ = cs.exclusive_jets(nJWW);
-  std::vector<TLorentzVector> fourJets;
+  passesTotalChgEnergyMin = TotalChgEnergy >= 15;
+  passesNTrkMin = NTrk >= 5;
+  passesSTheta = STheta <= .8;
+  passesMissP = MissP < 20;
 
-  initFourJet.clear();
-  finalFourJet.clear();
+  fastjet::ClusterSequence csISR(particles, jDefISR);
+  std::vector<fastjet::PseudoJet> twoJetsFJ = csISR.exclusive_jets(nJISR);
+  std::vector<TLorentzVector> twoJets;
+
+  //two jet implementation follows https://arxiv.org/pdf/hep-ex/9810047.pdf, 1,2,3 eq.
+  for(unsigned int i = 0; i < twoJetsFJ.size(); ++i){
+    TLorentzVector temp(twoJetsFJ.at(i).px(), twoJetsFJ.at(i).py(), twoJetsFJ.at(i).pz(), twoJetsFJ.at(i).E());
+    twoJets.push_back(temp);
+  }
+  Double_t absBeta = TMath::Abs(TMath::Sin(twoJets.at(0).Theta() + twoJets.at(1).Theta()));
+  absBeta /= (TMath::Sin(twoJets.at(0).Theta()) + TMath::Abs(twoJets.at(1).Theta()));
+  Double_t x = 2*absBeta/(1+absBeta);
+  Double_t sPrime = inPart->Energy*inPart->Energy*(1-x);
+  Double_t mass = (twoJets.at(0) + twoJets.at(1)).M();
+
+  //cuts from http://cds.cern.ch/record/690637/files/ep-2003-084.pdf, page2, middle paragraph (before d^2 equation
+  passesISR = mass/inPart->Energy > .7 || sPrime/(inPart->Energy*inPart->Energy) > .81;
+
+  if(!passesISR) return;
+
+  fastjet::ClusterSequence csWW(particles, jDefWW);
+  std::vector<fastjet::PseudoJet> fourJetsFJ = csWW.exclusive_jets(nJWW);
+  std::vector<TLorentzVector> fourJets;
 
   for(unsigned int i = 0; i < fourJetsFJ.size(); ++i){
     TLorentzVector temp(fourJetsFJ.at(i).px(), fourJetsFJ.at(i).py(), fourJetsFJ.at(i).pz(), fourJetsFJ.at(i).E());
     fourJets.push_back(temp);
-    initFourJet.push_back(temp);
+    initFourJet.at(i) = temp;
+  }
+
+  for(unsigned int i = 0; i < fourJets.size(); ++i){
+    for(unsigned int j = i+1; j < fourJets.size(); ++j){
+      if(fourJets.at(i).E() > fourJets.at(j).E()){
+	TLorentzVector temp = fourJets.at(j);
+	fourJets.at(j) = fourJets.at(i);
+	fourJets.at(i) = temp;
+
+	initFourJet.at(j) = initFourJet.at(i);
+	initFourJet.at(i) = temp;
+      }
+    }
   }
 
   pxSumInit_ = 0;
   pySumInit_ = 0;
   pzSumInit_ = 0;
   eSumInit_ = 0;
-
 
   pxSumFinal_ = 0;
   pySumFinal_ = 0;
@@ -198,9 +382,22 @@ void eventSelection::setEventSelection(particleData* inPart)
     eSumInit_ += fourJets.at(i).E();
   }
   
-  bool doRescale = (TMath::Abs(pxSumInit_) > 1. || TMath::Abs(pySumInit_) > 1. || TMath::Abs(pzSumInit_) > 1.);
+  bool doRescale = (TMath::Abs(pxSumInit_) > 1. || TMath::Abs(pySumInit_) > 1. || TMath::Abs(pzSumInit_) > 1. || TMath::Abs(eSumInit_ - inPart->Energy) > 1.);
+  std::vector<double> factors;
 
-  while(doRescale){doRescale = checkDoRescale(&fourJets, inPart->Energy);}
+  factorA_ = 1.;
+  factorB_ = 1.;
+  factorC_ = 1.;
+  factorD_ = 1.;
+  
+  while(doRescale){
+    doRescale = checkDoRescale(&fourJets, &factors, inPart->Energy);
+    factorA_ = factors.at(0);
+    factorB_ = factors.at(1);
+    factorC_ = factors.at(2);
+    factorD_ = factors.at(3);
+  }
+
 
   /*
   Float_t pxSumMid_ = 0;
@@ -225,7 +422,7 @@ void eventSelection::setEventSelection(particleData* inPart)
     pySumFinal_ += fourJets.at(i).Py();
     pzSumFinal_ += fourJets.at(i).Pz();
     eSumFinal_ += fourJets.at(i).E();
-    finalFourJet.push_back(fourJets.at(i));
+    finalFourJet.at(i) = fourJets.at(i);
   }
 
   d2 = 999999999.;

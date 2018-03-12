@@ -5,7 +5,7 @@
 
 class boostedEvtData{
  public:
-  static const int nMaxBoostedPart = 10000;
+  static const int nMaxBoostedPart = 1000;
 
   int nParticle;
   float WTAAxis_Theta;
