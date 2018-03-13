@@ -43,6 +43,7 @@ do
         echo $lines
     done    
 done
+wait
 
 for i in tempLoc_$outFileName/*.txt
 do
