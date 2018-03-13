@@ -27,7 +27,7 @@ rm currentNumberOfJobs.txt
 for i in $inFileLoc/*.root
 do
     echo "./bin/findGlobalMaxMin.exe $i tempLoc_$outFileName/out_$pos.root >& tempLoc_$outFileName/out_$pos.txt &"
-    ./bin/findGlobalMaxMin.exe $i tempLoc_$outFileName/out_$pos.root >& tempLoc_$outFileName/out_$pos.txt &
+    ./bin/findGlobalMaxMin.exe $i >& tempLoc_$outFileName/out_$pos.txt &
     pos=$((pos + 1))
 
     sleep 2
