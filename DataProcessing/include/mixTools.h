@@ -55,11 +55,21 @@ void appendMixEvt(particleData *out, particleData *in, TVector3 thrustAxis, TVec
     out->rap_wrtThr[oldnParticle+i] = rapFromThrust(thrustAxis, particle, in->mass[i]);
     out->theta_wrtThr[oldnParticle+i] = thetaFromThrust(thrustAxis, particle);
     out->phi_wrtThr[oldnParticle+i] = phiFromThrust(thrustAxis, particle);
+    out->pt_wrtThrPerp[oldnParticle+i] = ptFromThrust(thrustAxis, particle, true);
+    out->eta_wrtThrPerp[oldnParticle+i] = etaFromThrust(thrustAxis, particle, true);
+    out->rap_wrtThrPerp[oldnParticle+i] = rapFromThrust(thrustAxis, particle, in->mass[i], true);
+    out->theta_wrtThrPerp[oldnParticle+i] = thetaFromThrust(thrustAxis, particle, true);
+    out->phi_wrtThr[oldnParticle+i] = phiFromThrust(thrustAxis, particle, true);
     out->pt_wrtChThr[oldnParticle+i] = ptFromThrust(thrustAxis_ch, particle);
     out->eta_wrtChThr[oldnParticle+i] = etaFromThrust(thrustAxis_ch, particle);
     out->rap_wrtChThr[oldnParticle+i] = rapFromThrust(thrustAxis_ch, particle, in->mass[i]);
     out->theta_wrtChThr[oldnParticle+i]= thetaFromThrust(thrustAxis_ch, particle);          
     out->phi_wrtChThr[oldnParticle+i] = phiFromThrust(thrustAxis_ch, particle);              
+    out->pt_wrtChThrPerp[oldnParticle+i] = ptFromThrust(thrustAxis_ch, particle,true);
+    out->eta_wrtChThrPerp[oldnParticle+i] = etaFromThrust(thrustAxis_ch, particle,true);
+    out->rap_wrtChThrPerp[oldnParticle+i] = rapFromThrust(thrustAxis_ch, particle, in->mass[i],true);
+    out->theta_wrtChThrPerp[oldnParticle+i]= thetaFromThrust(thrustAxis_ch, particle,true);          
+    out->phi_wrtChThrPerp[oldnParticle+i] = phiFromThrust(thrustAxis_ch, particle,true);              
   }
 
   //account for fact that we are using multiple events to mix
