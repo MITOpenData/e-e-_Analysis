@@ -112,6 +112,9 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
     TVector3 thrustAxis, thrustAxis_ch;
     thrustAxis.SetMagThetaPhi(1, edataSig.TTheta, edataSig.TPhi);  
     thrustAxis_ch.SetMagThetaPhi(1, edataSig.TTheta_charged, edataSig.TPhi_charged);  
+    
+    int signalProcess = pdataSig.process;
+    int signalEnergy = (int)(pdataSig.Energy < 100);
 
     //get WTA and boosts
     TVector3 WTAAxis[nBoostedTrees], WTABoost[nBoostedTrees];
@@ -138,11 +141,13 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
       inTree1_p->GetEntry(j);
 
       //make sure mixed event is a good one (using Sig tree here because it is the input tree)
-      //eventSelection eS;
-      //eS.setEventSelection(&pdataSig, &edataSig);
-      //bool isGoodEvent = eS.passesTotalChgEnergyMin && eS.passesNTrkMin && eS.passesSTheta && eS.passesMissP && eS.passesISR && eS.passesWW;
-      bool isGoodEvent = true;
-      if(isGoodEvent) mixedEventsFound++;
+      eventSelection eS;
+      eS.setEventSelection(&pdataSig, &edataSig);
+      bool isGoodEvent = eS.passesTotalChgEnergyMin && eS.passesNTrkMin && eS.passesSTheta && eS.passesMissP && eS.passesISR && eS.passesWW;
+      bool processesMatch = (signalProcess == pdataSig.process);
+      bool energiesMatch = (signalEnergy == (int)(pdataSig.Energy < 100));
+      if(isGoodEvent && processesMatch && energiesMatch) mixedEventsFound++;
+      else continue;
 
       //particle loop is in here
       appendMixEvt(&pdataMix, &pdataSig, thrustAxis, thrustAxis_ch, (float)mixedEventsFound);
