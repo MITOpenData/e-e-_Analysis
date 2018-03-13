@@ -29,6 +29,7 @@
 #include "include/sphericityTools.h"
 #include "include/processJets.h"
 #include "include/uniqueIDTools.h"
+#include "src/mixFile.cc"
 
 bool getIsMC(std::string inStr)
 {
@@ -1393,5 +1394,9 @@ int main(int argc, char *argv[])
   int retVal = 0;
   if(argc == 4) retVal += scan(argv[1], argv[2], argv[3]);
   else if(argc == 5) retVal += scan(argv[1], argv[2], argv[3], argv[4]);
+  
+  std::cout << "Making mixing file..." << std::endl;
+  if(argc == 5) retVal += makeMixFile(argv[4]);
+  else          retVal += makeMixFile(argv[1]);
   return retVal;
 }

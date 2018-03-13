@@ -30,6 +30,12 @@
 int makeMixFile(std::string inputFile, std::string outputFile = "", const int nEvts2Mix = 3){
 
   //open file and get main tree
+  //if given a .aleph file, look for .root file in local directory instead (for scan.cc implementation)
+  if(inputFile.find(".aleph") != std::string::npos){
+    while(inputFile.find("/") != std::string::npos){inputFile.replace(0, inputFile.find("/")+1,"");}
+    size_t lastindex = inputFile.find_last_of(".");
+    inputFile = inputFile.substr(0, lastindex)+".root";
+  }
   TFile * input = TFile::Open(inputFile.c_str(),"read");
   TTree * inTree1_p = (TTree*)input->Get("t");
   
@@ -69,9 +75,14 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
 
   //open output file
   TFile * output;
-  size_t lastindex = inputFile.find_last_of(".");
-  if(outputFile.compare("")==0) output = TFile::Open(Form("%s_Mix.root",(inputFile.substr(0, lastindex)).c_str()),"recreate");
-  else                          output = TFile::Open(outputFile.c_str(),"recreate");
+  if(outputFile.compare("")==0){
+    while(inputFile.find("/") != std::string::npos){inputFile.replace(0, inputFile.find("/")+1,"");}
+    size_t lastindex = inputFile.find_last_of(".");
+    output = TFile::Open(Form("%s_Mix.root",(inputFile.substr(0, lastindex)).c_str()),"recreate");
+  }
+  else{  
+    output = TFile::Open(outputFile.c_str(),"recreate");
+  }
   
   //particle info
   particleData pdataMix;
@@ -148,17 +159,3 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
   return 0;
 }
 
-int main(int argc, char *argv[])
-{
-  if(argc != 2 && argc != 3 && argc !=4){
-    std::cout << "Usage: ./bin/scan.exe <inFileName> <OPT-outFileName> <OPT-NEvts2Mix>" << std::endl;
-    return 1;
-  }
-
-  std::cout << "Begin processing..." << std::endl;
-  int retVal = 0;
-  if(argc == 2) retVal += makeMixFile(argv[1]);
-  else if(argc == 3) retVal += makeMixFile(argv[1], argv[2]);
-  else if(argc == 4) retVal += makeMixFile(argv[1], argv[2], std::atoi(argv[3]));
-  return retVal;
-}

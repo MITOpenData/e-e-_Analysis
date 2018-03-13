@@ -14,15 +14,15 @@ MKDIR_PDF=mkdir -p $(LOCAL)/pdfDir
 
 #programs to make
 
-all: mkdirBin mkdirPdf scan.exe mixFile.exe countNEvt.exe doComparison.exe
+all: mkdirBin mkdirPdf scan.exe mixMain.exe countNEvt.exe doComparison.exe
 mkdirBin:
 	$(MKDIR_BIN)
 mkdirPdf:
 	$(MKDIR_PDF)
 scan.exe: src/scan.cc
 	$(CXX) $(CXXFLAGS) $(ROOT) $(FASTJET) -I $(LOCAL) -o bin/scan.exe src/scan.cc
-mixFile.exe: src/mixFile.cc
-	$(CXX) $(CXXFLAGS) $(ROOT) $(FASTJET) -I $(LOCAL) -o bin/mixFile.exe src/mixFile.cc
+mixMain.exe: src/mixMain.cc
+	$(CXX) $(CXXFLAGS) $(ROOT) $(FASTJET) -I $(LOCAL) -o bin/mixMain.exe src/mixMain.cc
 doComparison.exe: src/doComparison.cc
 	$(CXX) $(CXXFLAGS) $(ROOT) -I $(LOCAL) -o bin/doComparison.exe src/doComparison.cc
 countNEvt.exe: src/countNEvt.C
