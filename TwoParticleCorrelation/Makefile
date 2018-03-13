@@ -31,8 +31,8 @@ ridge_check: src/ridge_check.c
 histoHadd_TH1F: src/histoHadd_TH1F.C
 	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -o bin/histoHadd_TH1F.exe src/histoHadd_TH1F.C
 
-findGlobalMaxMin: src/findGlobalMaxMin.c
-	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -o bin/findGlobalMaxMin.exe src/findGlobalMaxMin.c
+findGlobalMaxMin: src/findGlobalMaxMin.C
+	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -o bin/findGlobalMaxMin.exe src/findGlobalMaxMin.C
 
 clean:
 	rm *~ || true
