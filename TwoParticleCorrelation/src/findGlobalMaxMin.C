@@ -31,8 +31,8 @@ int findGlobalMaxMin(const std::string inFileName)
 		return 1;
 	}
 
-	std::cout<<"Initializing Mins and Maxs..."<<std::endl;
-  	/////// LOADING THE INITIAL BRANCHES/RANGES FROM FILE 1 ///////
+	//std::cout<<"Initializing Mins and Maxs..."<<std::endl;
+  /////// LOADING THE INITIAL BRANCHES/RANGES FROM FILE 1 ///////
 
   	TFile* inFile_p = new TFile(fileList.at(0).c_str(), "READ");
     TTree* inTree_p = (TTree*)inFile_p->Get("t");
