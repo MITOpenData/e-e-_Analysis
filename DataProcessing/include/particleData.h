@@ -231,7 +231,7 @@ void particleData::SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::str
   if(varIsGood[8]) inTree_p->SetBranchAddress("Energy", &Energy);
   if(varIsGood[9]) inTree_p->SetBranchAddress("bFlag", &bFlag);
   if(varIsGood[10]) inTree_p->SetBranchAddress("particleWeight", &particleWeight);
-  if(varIsGood[11) inTree_p->SetBranchAddress("bx", &bx);
+  if(varIsGood[11]) inTree_p->SetBranchAddress("bx", &bx);
   if(varIsGood[12]) inTree_p->SetBranchAddress("by", &by);
   if(varIsGood[13]) inTree_p->SetBranchAddress("ebx", &ebx);
   if(varIsGood[14]) inTree_p->SetBranchAddress("eby", &eby);
