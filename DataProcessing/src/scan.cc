@@ -28,6 +28,7 @@
 #include "include/boostTools.h"
 #include "include/sphericityTools.h"
 #include "include/processJets.h"
+#include "include/uniqueIDTools.h"
 
 bool getIsMC(std::string inStr)
 {
@@ -257,6 +258,8 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
     std::cout << "Given inFileName \'" << inFileName << "\' is invalid, return 1." << std::endl;
     return 1;
   }
+
+  uniqueIDTools idMaker;
 
   std::vector<std::string> fileList;
   if(inFileName.size() < 5){
@@ -554,10 +557,15 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	pData.year = year;
 	pData.subDir = subDir;
 	pData.process = process;
+	pData.isMC = isMC;
+
 	pData.RunNo = std::stoi(num.at(runPos));
 	pData.EventNo= std::stoi(num.at(evtPos));
 	pData.Energy= std::stof(num.at(ePos));
 	
+	if(isMC) pData.uniqueID = idMaker.getID(isMC, process, subDir, year, pData.RunNo, pData.EventNo);
+	else pData.uniqueID = idMaker.getID(isMC, 0, 0, year, pData.RunNo, pData.EventNo);
+
 	eData.passesNTupleAfterCut = true;
 
 	initVal(&(pData.bFlag), -999.);
@@ -805,9 +813,14 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	  pgData.year = year;
 	  pgData.subDir = subDir;
 	  pgData.process = process;
+	  pgData.isMC = isMC;
 	  pgData.RunNo = std::stoi(num.at(runPos));
 	  pgData.EventNo= std::stoi(num.at(evtPos));
 	  pgData.Energy= std::stof(num.at(ePos));
+
+
+	  if(isMC) pgData.uniqueID = idMaker.getID(isMC, process, subDir, year, pgData.RunNo, pgData.EventNo);
+	  else pgData.uniqueID = idMaker.getID(isMC, 0, 0, year, pgData.RunNo, pgData.EventNo);
 
 	  egData.passesNTupleAfterCut = true;
 
@@ -1097,10 +1110,14 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	  pgBeforeData.year = year;
 	  pgBeforeData.subDir = subDir;
 	  pgBeforeData.process = process;
+	  pgBeforeData.isMC = isMC;
 	  pgBeforeData.RunNo = std::stoi(num.at(runPos));
 	  pgBeforeData.EventNo= std::stoi(num.at(evtPos));
 	  pgBeforeData.Energy= std::stof(num.at(ePos));
 
+	  if(isMC) pgBeforeData.uniqueID = idMaker.getID(isMC, process, subDir, year, pgBeforeData.RunNo, pgBeforeData.EventNo);
+	  else pgBeforeData.uniqueID = idMaker.getID(isMC, 0, 0, year, pgBeforeData.RunNo, pgBeforeData.EventNo);
+	  
 	  bool passesNTupleAfterCut = false;
 	  for(unsigned int rI = 0; rI < runNo.size(); ++rI){
 	    if(pgBeforeData.RunNo == runNo.at(rI) && pgBeforeData.EventNo == evtNo.at(rI)){
