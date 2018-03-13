@@ -471,7 +471,7 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int doEC
   }
   
     
-    
+  const Int_t nBins = 1000;  
   // check that the brachMax and brachMin are not equal and add a little bit of space to make the plot look nicer
   for(Int_t i = 0; i < nVarToComp; ++i){
     double tempInterval = branchMaxs.at(i) - branchMins.at(i);
@@ -484,7 +484,7 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int doEC
     }
     //std::cout << listOfCompBranches.at(i)<<" "<< branchMins.at(i) << ", " << branchMaxs.at(i) << std::endl;
   // initialize the histograms for the particle data
-    const Int_t nBins = 1000;
+    
     unsigned int loc = 0;
     for(unsigned int hI = 0; hI < fileList.size(); ++hI)
     {
