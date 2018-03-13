@@ -47,19 +47,24 @@ inline bool checkEtaThrustPIs1(TVector3 thrust, TVector3 p)
 //this is actually rapidity w/ mass given
 inline double rapFromThrust(TVector3 thrust, TVector3 p, float mass, bool doPerpThrust = false){
   if(doPerpThrust) thrust = getPerpVector(thrust);
-  Double_t minDel = 0.01;
-  if(mass < minDel && checkEtaThrustPIs1(thrust, p)) return 99.;
+  //  Double_t minDel = 0.01;
+  //  if(mass < minDel && checkEtaThrustPIs1(thrust, p)) return 99.;
   float pl = p*(thrust.Unit());//logitudinal momentum component
   float E = TMath::Power(p.Mag2()+mass*mass,0.5);//energy
   double rap = 0.5*TMath::Log((E+pl)/(E-pl));
+  if(rap > 99.) rap = 99.;
+  else if(rap < -99.) rap = -99.;
   return rap;//rapidity
 }
 
 inline double etaFromThrust(TVector3 thrust, TVector3 p, bool doPerpThrust = false){
   if(doPerpThrust) thrust = getPerpVector(thrust);
-  Double_t minDel = 0.000001;
-  if(TMath::Abs(thrust[0]) < minDel && TMath::Abs(thrust[1]) < minDel && TMath::Abs(thrust[2]) < minDel) return 99.;
-  else if(checkEtaThrustPIs1(thrust, p)) return 99.;
+  //  Double_t minDel = 0.000001;
+  //  if(TMath::Abs(thrust[0]) < minDel && TMath::Abs(thrust[1]) < minDel && TMath::Abs(thrust[2]) < minDel) return 99.;
+  //  else if(checkEtaThrustPIs1(thrust, p)) return 99.;
+  double eta = -TMath::Log( TMath::Tan( thetaFromThrust(thrust,p)/2.0));
+  if(eta > 99.) eta = 99.;
+  else if(eta < -99.) eta = -99.;
   return -TMath::Log( TMath::Tan( thetaFromThrust(thrust,p)/2.0));
 }
 
