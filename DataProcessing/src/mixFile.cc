@@ -137,8 +137,10 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
   
       inTree1_p->GetEntry(j);
 
-      //make sure mixed event is a good one
-      bool isGoodEvent = true;
+      //make sure mixed event is a good one (using Sig tree here because it is the input tree)
+      eventSelection eSelection;
+      eSelection.setEventSelection(&pdataSig, &edataSig);
+      bool isGoodEvent = passesTotalChgEnergyMin && passesNTrkMin && passesSTheta && passesMissP && passesISR && passesWW;
       if(isGoodEvent) mixedEventsFound++;
 
       //particle loop is in here
