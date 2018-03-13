@@ -49,13 +49,23 @@ class particleData{
   float rap_wrtThr[nMaxPart];
   float theta_wrtThr[nMaxPart];
   float phi_wrtThr[nMaxPart];
+  float pt_wrtThrPerp[nMaxPart];
+  float eta_wrtThrPerp[nMaxPart];
+  float rap_wrtThrPerp[nMaxPart];
+  float theta_wrtThrPerp[nMaxPart];
+  float phi_wrtThrPerp[nMaxPart];
   float pt_wrtChThr[nMaxPart];
   float eta_wrtChThr[nMaxPart];
   float rap_wrtChThr[nMaxPart];
   float theta_wrtChThr[nMaxPart];
   float phi_wrtChThr[nMaxPart];
+  float pt_wrtChThrPerp[nMaxPart];
+  float eta_wrtChThrPerp[nMaxPart];
+  float rap_wrtChThrPerp[nMaxPart];
+  float theta_wrtChThrPerp[nMaxPart];
+  float phi_wrtChThrPerp[nMaxPart];
 
-  static const int nVar = 44;
+  static const int nVar = 54;
   std::string varStr[nVar] = {"nParticle",
 			      "EventNo",
 			      "RunNo",
@@ -95,11 +105,21 @@ class particleData{
 			      "rap_wrtThr",
 			      "theta_wrtThr",
 			      "phi_wrtThr",
+			      "pt_wrtThrPerp",
+			      "eta_wrtThrPerp",
+			      "rap_wrtThrPerp",
+			      "theta_wrtThrPerp",
+			      "phi_wrtThrPerp",
 			      "pt_wrtChThr",
 			      "eta_wrtChThr",
 			      "rap_wrtChThr",
 			      "theta_wrtChThr",
-			      "phi_wrtChThr"};
+			      "phi_wrtChThr",
+			      "pt_wrtChThrPerp",
+			      "eta_wrtChThrPerp",
+			      "rap_wrtChThrPerp",
+			      "theta_wrtChThrPerp",
+			      "phi_wrtChThrPerp"};
 
   bool varIsGood[nVar];
   
@@ -153,11 +173,21 @@ particleData::particleData()
     rap_wrtThr[i] = -999;
     theta_wrtThr[i] = -999;
     phi_wrtThr[i] = -999;
+    pt_wrtThrPerp[i] = -999;
+    eta_wrtThrPerp[i] = -999;
+    rap_wrtThrPerp[i] = -999;
+    theta_wrtThrPerp[i] = -999;
+    phi_wrtThrPerp[i] = -999;
     pt_wrtChThr[i] = -999;
     eta_wrtChThr[i] = -999;
     rap_wrtChThr[i] = -999;
     theta_wrtChThr[i] = -999;
     phi_wrtChThr[i] = -999;
+    pt_wrtChThrPerp[i] = -999;
+    eta_wrtChThrPerp[i] = -999;
+    rap_wrtChThrPerp[i] = -999;
+    theta_wrtChThrPerp[i] = -999;
+    phi_wrtChThrPerp[i] = -999;
   }
   
   for(int i = 0; i < nVar; ++i){varIsGood[i] = true;}
@@ -223,11 +253,21 @@ void particleData::SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::str
   if(varIsGood[36]) inTree_p->SetBranchAddress("rap_wrtThr", rap_wrtThr);
   if(varIsGood[37]) inTree_p->SetBranchAddress("theta_wrtThr", theta_wrtThr);
   if(varIsGood[38]) inTree_p->SetBranchAddress("phi_wrtThr", phi_wrtThr);
-  if(varIsGood[39]) inTree_p->SetBranchAddress("pt_wrtChThr", pt_wrtChThr);
-  if(varIsGood[40]) inTree_p->SetBranchAddress("eta_wrtChThr", eta_wrtChThr);
-  if(varIsGood[41]) inTree_p->SetBranchAddress("rap_wrtChThr", rap_wrtChThr);
-  if(varIsGood[42]) inTree_p->SetBranchAddress("theta_wrtChThr", theta_wrtChThr);
-  if(varIsGood[43]) inTree_p->SetBranchAddress("phi_wrtChThr", phi_wrtChThr);
+  if(varIsGood[39]) inTree_p->SetBranchAddress("pt_wrtThrPerp", pt_wrtThrPerp);
+  if(varIsGood[40]) inTree_p->SetBranchAddress("eta_wrtThrPerp", eta_wrtThrPerp);
+  if(varIsGood[41]) inTree_p->SetBranchAddress("rap_wrtThrPerp", rap_wrtThrPerp);
+  if(varIsGood[42]) inTree_p->SetBranchAddress("theta_wrtThrPerp", theta_wrtThrPerp);
+  if(varIsGood[43]) inTree_p->SetBranchAddress("phi_wrtThrPerp", phi_wrtThrPerp);
+  if(varIsGood[44]) inTree_p->SetBranchAddress("pt_wrtChThr", pt_wrtChThr);
+  if(varIsGood[45]) inTree_p->SetBranchAddress("eta_wrtChThr", eta_wrtChThr);
+  if(varIsGood[46]) inTree_p->SetBranchAddress("rap_wrtChThr", rap_wrtChThr);
+  if(varIsGood[47]) inTree_p->SetBranchAddress("theta_wrtChThr", theta_wrtChThr);
+  if(varIsGood[48]) inTree_p->SetBranchAddress("phi_wrtChThr", phi_wrtChThr);
+  if(varIsGood[49]) inTree_p->SetBranchAddress("pt_wrtChThrPerp", pt_wrtChThrPerp);
+  if(varIsGood[50]) inTree_p->SetBranchAddress("eta_wrtChThrPerp", eta_wrtChThrPerp);
+  if(varIsGood[51]) inTree_p->SetBranchAddress("rap_wrtChThrPerp", rap_wrtChThrPerp);
+  if(varIsGood[52]) inTree_p->SetBranchAddress("theta_wrtChThrPerp", theta_wrtChThrPerp);
+  if(varIsGood[53]) inTree_p->SetBranchAddress("phi_wrtChThrPerp", phi_wrtChThrPerp);
   
   return;
 }
@@ -273,11 +313,21 @@ void particleData::SetBranchWrite(TTree* inTree_p)
   inTree_p->Branch("rap_wrtThr", rap_wrtThr, "rap_wrtThr[nParticle]/F");
   inTree_p->Branch("theta_wrtThr", theta_wrtThr, "theta_wrtThr[nParticle]/F");
   inTree_p->Branch("phi_wrtThr", phi_wrtThr, "phi_wrtThr[nParticle]/F");
+  inTree_p->Branch("pt_wrtThrPerp", pt_wrtThrPerp, "pt_wrtThrPerp[nParticle]/F");
+  inTree_p->Branch("eta_wrtThrPerp", eta_wrtThrPerp, "eta_wrtThrPerp[nParticle]/F");
+  inTree_p->Branch("rap_wrtThrPerp", rap_wrtThrPerp, "rap_wrtThrPerp[nParticle]/F");
+  inTree_p->Branch("theta_wrtThrPerp", theta_wrtThrPerp, "theta_wrtThrPerp[nParticle]/F");
+  inTree_p->Branch("phi_wrtThrPerp", phi_wrtThrPerp, "phi_wrtThrPerp[nParticle]/F");
   inTree_p->Branch("pt_wrtChThr", pt_wrtChThr, "pt_wrtChThr[nParticle]/F");
   inTree_p->Branch("eta_wrtChThr", eta_wrtChThr, "eta_wrtChThr[nParticle]/F");
   inTree_p->Branch("rap_wrtChThr", rap_wrtChThr, "rap_wrtChThr[nParticle]/F");
   inTree_p->Branch("theta_wrtChThr", theta_wrtChThr, "theta_wrtChThr[nParticle]/F");
   inTree_p->Branch("phi_wrtChThr", phi_wrtChThr, "phi_wrtChThr[nParticle]/F");
+  inTree_p->Branch("pt_wrtChThrPerp", pt_wrtChThrPerp, "pt_wrtChThrPerp[nParticle]/F");
+  inTree_p->Branch("eta_wrtChThrPerp", eta_wrtChThrPerp, "eta_wrtChThrPerp[nParticle]/F");
+  inTree_p->Branch("rap_wrtChThrPerp", rap_wrtChThrPerp, "rap_wrtChThrPerp[nParticle]/F");
+  inTree_p->Branch("theta_wrtChThrPerp", theta_wrtChThrPerp, "theta_wrtChThrPerp[nParticle]/F");
+  inTree_p->Branch("phi_wrtChThrPerp", phi_wrtChThrPerp, "phi_wrtChThrPerp[nParticle]/F");
   
   return;
 }

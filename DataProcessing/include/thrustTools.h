@@ -89,11 +89,22 @@ void setThrustVariables(particleData *p, eventData *e, TVector3 thrust, TVector3
     p->rap_wrtThr[i] = rapFromThrust(thrust, part, p->mass[i]);
     p->theta_wrtThr[i] = thetaFromThrust(thrust, part);
     p->phi_wrtThr[i] = phiFromThrust(thrust, part);
+    p->pt_wrtThrPerp[i] = ptFromThrust(thrust, part, true);
+    p->eta_wrtThrPerp[i] = etaFromThrust(thrust, part, true);
+    p->rap_wrtThrPerp[i] = rapFromThrust(thrust, part, p->mass[i], true);
+    p->theta_wrtThrPerp[i] = thetaFromThrust(thrust, part, true);
+    p->phi_wrtThrPerp[i] = phiFromThrust(thrust, part, true);
     
     p->pt_wrtChThr[i] = ptFromThrust(chThrust, part);
     p->eta_wrtChThr[i] = etaFromThrust(chThrust, part);
     p->theta_wrtChThr[i] = thetaFromThrust(chThrust, part);
     p->phi_wrtChThr[i] = phiFromThrust(chThrust, part);
+    p->rap_wrtChThr[i] = rapFromThrust(chThrust, part,p->mass[i]);
+    p->pt_wrtChThrPerp[i] = ptFromThrust(chThrust, part, true);
+    p->eta_wrtChThrPerp[i] = etaFromThrust(chThrust, part, true);
+    p->theta_wrtChThrPerp[i] = thetaFromThrust(chThrust, part, true);
+    p->phi_wrtChThrPerp[i] = phiFromThrust(chThrust, part, true);
+    p->rap_wrtChThrPerp[i] = rapFromThrust(chThrust, part,p->mass[i],true);
     
     if(p->pwflag[i]==0 && p->pt_wrtThr[i]>0.4) nTrk++;
   }
