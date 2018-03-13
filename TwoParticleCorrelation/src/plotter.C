@@ -85,7 +85,7 @@ int plotAllTH1F(const std::string inFileName, const std::string dataName)
     TH1F* inTH1F_p[nTH1F][numFiles];
     TCanvas* inTH1F_c[nTH1F];
 
-    const Int_t nBinsX = 20;
+    const Int_t nBinsX = 50; // should be a divisor of 100 = number of bins of inputted histograms
     const Int_t nBinsY = 20;
 
     for(Int_t iter = 0; iter < nTH1F; iter++)
@@ -94,10 +94,11 @@ int plotAllTH1F(const std::string inFileName, const std::string dataName)
         int start_position_to_erase = histName.find("_file");
         histName.erase(start_position_to_erase,histName.length());
         if(histName.find("nParticle") != std::string::npos) histName = "nTrk";
-        std::cout<<histName<<std::endl;
+        //std::cout<<histName<<std::endl;
         // the default # bins of the input files is 100. Reduce by factor of 5 to 20 bins 
         inTH1F_p[iter][0] = (TH1F*)inFileList.at(0)->Get(inTH1FNames.at(iter).c_str());
-        inTH1F_p[iter][0]->Rebin(5);
+        // rebin to the nBinsX
+        inTH1F_p[iter][0]->Rebin((inTH1F_p[iter][0]->GetSize()-2)/nBinsX);
         inTH1F_p[iter][0]->SetName(Form("%s",histName.c_str()));
         inTH1F_p[iter][0]->Scale(1.0/inTH1F_p[iter][0]->Integral()); // scale to probability distribution
 
@@ -113,8 +114,8 @@ int plotAllTH1F(const std::string inFileName, const std::string dataName)
         {
             std::cout<<inTH1FNames.at(iter).c_str()<<std::endl;
             inTH1F_p[iter][fI] = (TH1F*)inFileList.at(fI)->Get(inTH1FNames.at(iter).c_str());
-            inTH1F_p[iter][fI]->Rebin(5);
-            inTH1F_p[iter][fI]->SetName(Form("%s HI",histName.c_str()));
+            inTH1F_p[iter][fI]->Rebin((inTH1F_p[iter][fI]->GetSize()-2)/nBinsX);
+            inTH1F_p[iter][fI]->SetName(Form("%s",histName.c_str()));
             inTH1F_p[iter][fI]->Scale(1.0/inTH1F_p[iter][fI]->Integral()); // scale to probability distribution
 
             // check if xMin,xMax, or yMax needs to be adjusted 
@@ -122,7 +123,6 @@ int plotAllTH1F(const std::string inFileName, const std::string dataName)
             {
                 if (histName.find("eta") != std::string::npos && inTH1F_p[iter][fI]->GetBinLowEdge(1) < -10.0) xMin = xMin;
                 else xMin = inTH1F_p[iter][fI]->GetBinLowEdge(1);
-                
             }
             if ( xMax < inTH1F_p[iter][fI]->GetBinLowEdge(inTH1F_p[iter][fI]->GetNbinsX()+1)) 
             {
@@ -147,9 +147,12 @@ int plotAllTH1F(const std::string inFileName, const std::string dataName)
         // Declare binning for hempty histogram
         if(histName.find("phi") != std::string::npos) {xMin = -TMath::Pi(); xMax = TMath::Pi();}
         Double_t binsX[nBinsX+1];
+        if(searchName == "pt") {xMin = 0; xMax = 100;}
+        if(histName.find("eta") != std::string::npos) std::cout<<"ETA"<<yMax<<std::endl;
         const Double_t xLow = xMin;
         const Double_t xHi = xMax;
         getLinBins(xLow,xHi,nBinsX,binsX);
+        // rebin all of the histograms to the same binning as hempty
         if (std::find(logPlots.begin(), logPlots.end(), searchName) != logPlots.end())
         {
             gPad->SetLogy();
@@ -174,13 +177,26 @@ int plotAllTH1F(const std::string inFileName, const std::string dataName)
         if(histName.find("phi") != std::string::npos || histName.find("Phi") != std::string::npos) l = new TLegend(0.56,0.7-0.15,0.96,0.83-0.15);
         else l = new TLegend(0.56,0.7,0.88,0.83);
         xjjroot::setleg(l);
-        // ANTHONY YOU ARE HERE ADDRESSING THE LEGEND ISSUE if the legend is causing a problem then just change to using tlatex probably easiest 
+
+        // Manually rebin the old histograms to the new binning with new min and max because the default root rebinning is sketchy and sucks
+        TH1F* inTH1F_rebin[numFiles];
         for (unsigned int fI = 0; fI < fileList.size(); fI++)
         {
-            xjjroot::setthgrstyle(inTH1F_p[iter][fI], colors[fI], 21, 1.2, colors[fI], 1, 1, -1, -1, -1);
-            inTH1F_p[iter][fI]->SetMarkerStyle(markerStyles[fI]);
-            inTH1F_p[iter][fI]->Draw("pe same");
-            l->AddEntry(inTH1F_p[iter][fI],getDataName(fileList.at(fI)).c_str(),"p");
+            inTH1F_rebin[fI] = new TH1F(Form("%s_rebin",histName.c_str()),"",nBinsX,binsX);
+            std::cout<<inTH1F_rebin[fI]->GetSize()<<std::endl;
+            //inTH1F_rebin[fI] = (TH1F*)inTH1F_p[iter][fI]->Rebin(nBinsX,Form("%s_rebin",histName.c_str()),binsX);
+            //inTH1F_p[iter][fI] = dynamic_cast<TH1F*>(inTH1F_p[iter][fI]->Rebin(nBinsX,Form("%s_rebin",histName.c_str()),binsX));
+            for (unsigned int nI = 1; nI<=inTH1F_p[fI]->GetNbinsX(); nI++)
+            {
+                Float_t binCenter = inTH1F_rebin[fI]->GetBinCenter(nI);
+                Int_t y = (Int_t) inTH1F_p[iter][fI]->GetBinContent(inTH1F_p[iter][fI]->FindBin(binCenter));
+                inTH1F_rebin[fI]->SetBinContent(nI,)
+                inTH1F_rebin[fI]->Fill(inTH1F_p[iter][fI]->GetBinCenter(nI),inTH1F_p[iter][fI]->GetBinContent(nI));
+            }
+            xjjroot::setthgrstyle(inTH1F_rebin[fI], colors[fI], 21, 1.2, colors[fI], 1, 1, -1, -1, -1);
+            inTH1F_rebin[fI]->SetMarkerStyle(markerStyles[fI]);
+            inTH1F_rebin[fI]->Draw("p same");
+            l->AddEntry(inTH1F_rebin[fI],getDataName(fileList.at(fI)).c_str(),"p");
         }
         l->Draw("SAME");
         // save the normal plot

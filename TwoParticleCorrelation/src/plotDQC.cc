@@ -484,21 +484,22 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int doEC
     }
     //std::cout << listOfCompBranches.at(i)<<" "<< branchMins.at(i) << ", " << branchMaxs.at(i) << std::endl;
   // initialize the histograms for the particle data
+    const Int_t nBins = 1000;
     unsigned int loc = 0;
     for(unsigned int hI = 0; hI < fileList.size(); ++hI)
     {
-        hist.at(hI).at(i) = new TH1F(Form((listOfCompBranches.at(i) + "_file%d_h").c_str(),hI), (";" + listOfCompBranches.at(i) + ";Counts").c_str(), 100, branchMins.at(i), branchMaxs.at(i));
+        hist.at(hI).at(i) = new TH1F(Form((listOfCompBranches.at(i) + "_file%d_h").c_str(),hI), (";" + listOfCompBranches.at(i) + ";Counts").c_str(), nBins, branchMins.at(i), branchMaxs.at(i));
         for(unsigned int hII = hI+1; hII < fileList.size(); ++hII)
         {
-            histRat.at(loc).at(i) = new TH1F(Form((listOfCompBranches.at(i) + "_file_Rat%dOver%d_h").c_str(),hI,hII), (";" + listOfCompBranches.at(i) + Form(";File%d/File%d",hI,hII)).c_str(), 100, branchMins.at(i), branchMaxs.at(i));
-            histDelta.at(loc).at(i) = new TH1F(Form((listOfCompBranches.at(i) + "_Delta%dFrom%d_EvtByEvt_h").c_str(),hI,hII), (";" + listOfCompBranches.at(i) + Form("_{File %d}",hI) + "-" + listOfCompBranches.at(i) + Form("_{File %d};Counts",hII)).c_str(), 100, -1, 1);
+            histRat.at(loc).at(i) = new TH1F(Form((listOfCompBranches.at(i) + "_file_Rat%dOver%d_h").c_str(),hI,hII), (";" + listOfCompBranches.at(i) + Form(";File%d/File%d",hI,hII)).c_str(), nBins, branchMins.at(i), branchMaxs.at(i));
+            histDelta.at(loc).at(i) = new TH1F(Form((listOfCompBranches.at(i) + "_Delta%dFrom%d_EvtByEvt_h").c_str(),hI,hII), (";" + listOfCompBranches.at(i) + Form("_{File %d}",hI) + "-" + listOfCompBranches.at(i) + Form("_{File %d};Counts",hII)).c_str(), nBins, -1, 1);
             centerTitles({histRat.at(loc).at(i), histDelta.at(loc).at(i)});
             ++loc;
         }
         centerTitles(hist.at(hI).at(i));
     }
     if ( (loc) != nTriangNum ) std::cout<<"Incorrect number of delta and ratio histograms initialized"<<std::endl;
-    //hist1_p[i] = new TH1F((listOfCompBranches.at(i) + "_file1_h").c_str(), (";" + listOfCompBranches.at(i) + ";Counts").c_str(), 100, branchMins.at(i), branchMaxs.at(i));
+    //hist1_p[i] = new TH1F((listOfCompBranches.at(i) + "_file1_h").c_str(), (";" + listOfCompBranches.at(i) + ";Counts").c_str(), nBins, branchMins.at(i), branchMaxs.at(i));
   }
   
   for(Int_t jI = 0; jI < nJetTrees; ++jI)
@@ -526,11 +527,11 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int doEC
       for (unsigned int hI = 0; hI < fileList.size(); ++hI)
       {
           // at(file).at(jet Tree).at(branch)
-          hist_Jet.at(hI).at(jI).at(bI) = new TH1F(Form((nameStr + "_file%d_h").c_str(),hI), (";" + brStr + " (" + jetStr + ");Counts").c_str(), 100, tempMin, tempMax);
+          hist_Jet.at(hI).at(jI).at(bI) = new TH1F(Form((nameStr + "_file%d_h").c_str(),hI), (";" + brStr + " (" + jetStr + ");Counts").c_str(), nBins, tempMin, tempMax);
           for (unsigned int hII = hI+1; hII < fileList.size(); ++hII)
           {
-              histRat_Jet.at(loc).at(jI).at(bI) = new TH1F(Form((nameStr + "_file_Rat%dOver%d_h").c_str(),hI,hII), (";" + brStr + " (" + jetStr + Form(");File%d/File%d",hI,hII)).c_str(), 100, tempMin, tempMax);
-              histDelta_Jet.at(loc).at(jI).at(bI) = new TH1F(Form((nameStr + "_Delta%dFrom%d_EvtByEvt_h").c_str(),hI,hII), (";" + brStr + Form("_{File %d}",hI) + "-" + brStr + Form("_{File %d}",hII) + " (" + jetStr + ");Counts").c_str(), 100, -1, 1);
+              histRat_Jet.at(loc).at(jI).at(bI) = new TH1F(Form((nameStr + "_file_Rat%dOver%d_h").c_str(),hI,hII), (";" + brStr + " (" + jetStr + Form(");File%d/File%d",hI,hII)).c_str(), nBins, tempMin, tempMax);
+              histDelta_Jet.at(loc).at(jI).at(bI) = new TH1F(Form((nameStr + "_Delta%dFrom%d_EvtByEvt_h").c_str(),hI,hII), (";" + brStr + Form("_{File %d}",hI) + "-" + brStr + Form("_{File %d}",hII) + " (" + jetStr + ");Counts").c_str(), nBins, -1, 1);
               centerTitles({histRat_Jet.at(loc).at(jI).at(bI), histDelta_Jet.at(loc).at(jI).at(bI)});
               ++loc;
           }
