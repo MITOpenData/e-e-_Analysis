@@ -212,41 +212,6 @@ void doEndEvent(particleData* pData_p, eventData* eData_p, std::vector<boostedEv
 
   eData_p->passesISR = eSelection.getPassesISR();
   eData_p->passesWW = eSelection.getPassesWW();
-  eData_p->passesD2 = eSelection.getPassesD2();
-  eData_p->passesCW = eSelection.getPassesCW();
-  eData_p->d2 = eSelection.getD2();
-  eData_p->cW = eSelection.getCW();
-
-  eData_p->wwInitFourJetSumPx = eSelection.getInitFourJetSumPx();
-  eData_p->wwInitFourJetSumPy = eSelection.getInitFourJetSumPy();
-  eData_p->wwInitFourJetSumPz = eSelection.getInitFourJetSumPz();
-  eData_p->wwInitFourJetSumE = eSelection.getInitFourJetSumE();
-
-  std::vector<TLorentzVector> tempJets = eSelection.getInitFourJet();
-  for(unsigned int jI = 0; jI < tempJets.size(); ++jI){
-    eData_p->wwInitFourJetPx[jI] = tempJets.at(jI).Px();
-    eData_p->wwInitFourJetPy[jI] = tempJets.at(jI).Py();
-    eData_p->wwInitFourJetPz[jI] = tempJets.at(jI).Pz();
-    eData_p->wwInitFourJetE[jI] = tempJets.at(jI).E();
-  }
-
-  eData_p->wwFinalFourJetSumPx = eSelection.getFinalFourJetSumPx();
-  eData_p->wwFinalFourJetSumPy = eSelection.getFinalFourJetSumPy();
-  eData_p->wwFinalFourJetSumPz = eSelection.getFinalFourJetSumPz();
-  eData_p->wwFinalFourJetSumE = eSelection.getFinalFourJetSumE();
-
-  tempJets = eSelection.getFinalFourJet();
-  for(unsigned int jI = 0; jI < tempJets.size(); ++jI){
-    eData_p->wwFinalFourJetPx[jI] = tempJets.at(jI).Px();
-    eData_p->wwFinalFourJetPy[jI] = tempJets.at(jI).Py();
-    eData_p->wwFinalFourJetPz[jI] = tempJets.at(jI).Pz();
-    eData_p->wwFinalFourJetE[jI] = tempJets.at(jI).E();
-  }
-
-  eData_p->wwFactorA = eSelection.getFactorA();
-  eData_p->wwFactorB = eSelection.getFactorB();
-  eData_p->wwFactorC = eSelection.getFactorC();
-  eData_p->wwFactorD = eSelection.getFactorD();
 
   return;
 }
