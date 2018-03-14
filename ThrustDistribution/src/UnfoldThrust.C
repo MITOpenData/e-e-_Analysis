@@ -65,14 +65,14 @@ void UnfoldThrust()
 
   // Output file
   TFile *output = new TFile("unfolding.root","recreate");
-  TH1D *hM = new TH1D("hM","",42,0.58,1);			// Measurement from Data (or from MC for closure test)
-  TH1D *hMMC = new TH1D("hMMC","",42,0.58,1);			// Measurement from MC
+  TH1D *hM = new TH1D("hM","",168*4,0.58,1);			// Measurement from Data (or from MC for closure test)
+  TH1D *hMMC = new TH1D("hMMC","",168*4,0.58,1);			// Measurement from MC
   TH1D *hT = new TH1D("hT","",42,0.58,1);			// Generator level truth from MC
   TH1D *hTAll = new TH1D("hTAll","",42,0.58,1);			// Generator level truth without event selection
  
 
 
-  TH2D *hR = new TH2D("hR","",42,0.58,1,42,0.58,1);
+  TH2D *hR = new TH2D("hR","",42,0.58,1,168*4,0.58,1);
   
   tMC->Draw("T:GenThrust>>hR");
   tMC->Draw("T>>hMMC");
@@ -228,7 +228,56 @@ void UnfoldThrust()
   hM->Write();
   
   TH1D *hFinalResult = (TH1D*)hU->Clone("hFinalResult");
-  hFinalResult->Divide(hEff);
+//  hFinalResult->Divide(hEff);
+  TH1F *h21 = new TH1F("h21","Thrust {passesNTupleAfterCut}",42,0.58,1);
+   h21->SetBinContent(0,1);
+   h21->SetBinContent(1,1);
+   h21->SetBinContent(2,0.9285714);
+   h21->SetBinContent(3,0.9285714);
+   h21->SetBinContent(4,0.8939394);
+   h21->SetBinContent(5,0.8971962);
+   h21->SetBinContent(6,0.9121951);
+   h21->SetBinContent(7,0.8943299);
+   h21->SetBinContent(8,0.8938462);
+   h21->SetBinContent(9,0.884575);
+   h21->SetBinContent(10,0.8953488);
+   h21->SetBinContent(11,0.8851064);
+   h21->SetBinContent(12,0.8851675);
+   h21->SetBinContent(13,0.8867925);
+   h21->SetBinContent(14,0.8872348);
+   h21->SetBinContent(15,0.8840485);
+   h21->SetBinContent(16,0.8779925);
+   h21->SetBinContent(17,0.8726858);
+   h21->SetBinContent(18,0.8678712);
+   h21->SetBinContent(19,0.8636898);
+   h21->SetBinContent(20,0.8513274);
+   h21->SetBinContent(21,0.8612982);
+   h21->SetBinContent(22,0.8511291);
+   h21->SetBinContent(23,0.8410661);
+   h21->SetBinContent(24,0.8423542);
+   h21->SetBinContent(25,0.8365706);
+   h21->SetBinContent(26,0.8293999);
+   h21->SetBinContent(27,0.8220196);
+   h21->SetBinContent(28,0.8202455);
+   h21->SetBinContent(29,0.8049728);
+   h21->SetBinContent(30,0.8055472);
+   h21->SetBinContent(31,0.7993565);
+   h21->SetBinContent(32,0.7976353);
+   h21->SetBinContent(33,0.7920892);
+   h21->SetBinContent(34,0.784632);
+   h21->SetBinContent(35,0.7816142);
+   h21->SetBinContent(36,0.7793024);
+   h21->SetBinContent(37,0.7798591);
+   h21->SetBinContent(38,0.7801157);
+   h21->SetBinContent(39,0.7823851);
+   h21->SetBinContent(40,0.7850208);
+   h21->SetBinContent(41,0.7825564);
+   h21->SetBinContent(42,0.7914762);
+   for (int i=0;i<=42;i++) {
+      h21->SetBinError(i,0);
+   }
+   
+  hFinalResult->Multiply(h21);
   hFinalResult->SetXTitle("Thrust");
   hFinalResult->SetYTitle("#frac{1}{#sigma} #frac{d#sigma}{dT}");
 
