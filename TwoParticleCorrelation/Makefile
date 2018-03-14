@@ -23,16 +23,16 @@ mkdirPdfdir:
 	$(MKDIR_PDFDIR)
 
 plotDQC: src/plotDQC.cc
-	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -o bin/plotDQC.exe -c src/plotDQC.cc
+	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -o bin/plotDQC.exe src/plotDQC.cc
 
 ridge_check: src/ridge_check.c
-	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -o bin/ridge_check.exe -c src/ridge_check.c
+	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -o bin/ridge_check.exe src/ridge_check.c
 
 histoHadd_TH1F: src/histoHadd_TH1F.C
-	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -o bin/histoHadd_TH1F.exe -c src/histoHadd_TH1F.C
+	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -o bin/histoHadd_TH1F.exe src/histoHadd_TH1F.C
 
 findGlobalMaxMin: src/findGlobalMaxMin.C
-	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -o bin/findGlobalMaxMin.exe -c src/findGlobalMaxMin.C
+	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -o bin/findGlobalMaxMin.exe src/findGlobalMaxMin.C
 
 clean:
 	rm *~ || true
