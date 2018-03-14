@@ -76,7 +76,7 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
   //open output file
   TFile * output;
   if(outputFile.compare("")==0){
-    while(inputFile.find("/") != std::string::npos){inputFile.replace(0, inputFile.find("/")+1,"");}
+    //    while(inputFile.find("/") != std::string::npos){inputFile.replace(0, inputFile.find("/")+1,"");}
     size_t lastindex = inputFile.find_last_of(".");
     output = TFile::Open(Form("%s_Mix.root",(inputFile.substr(0, lastindex)).c_str()),"recreate");
   }
@@ -103,7 +103,7 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
   //loop through input file for the signal events
   for(int i = 0; i<inTree1_p->GetEntries(); i++){
     //for testing
-    if(i>100) break;
+    //    if(i>100) break;
     
     inTree1_p->GetEntry(i);
     for(Int_t jI = 0; jI < nBoostedTrees; ++jI) bTree1_p[jI]->GetEntry(i);
