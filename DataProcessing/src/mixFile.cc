@@ -16,7 +16,6 @@
 #include "include/doLocalDebug.h"
 #include "include/checkMakeDir.h"
 #include "include/particleData.h"
-#include "include/eventSelection.h"
 #include "include/eventData.h"
 #include "include/jetData.h"
 #include "include/boostedEvtData.h"
@@ -104,7 +103,7 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
   //loop through input file for the signal events
   for(int i = 0; i<inTree1_p->GetEntries(); i++){
     //for testing
-    //    if(i>100) break;
+    //if(i>100) break;
     
     inTree1_p->GetEntry(i);
     for(Int_t jI = 0; jI < nBoostedTrees; ++jI) bTree1_p[jI]->GetEntry(i);
@@ -142,9 +141,7 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
       inTree1_p->GetEntry(j);
 
       //make sure mixed event is a good one (using Sig tree here because it is the input tree)
-      eventSelection eS;
-      eS.setEventSelection(&pdataSig, &edataSig);
-      bool isGoodEvent = eS.passesTotalChgEnergyMin && eS.passesNTrkMin && eS.passesSTheta && eS.passesMissP && eS.passesISR && eS.passesWW;
+      bool isGoodEvent = edataSig.passesAll;
       bool processesMatch = (signalProcess == pdataSig.process);
       bool energiesMatch = (signalEnergy == (int)(pdataSig.Energy < 100));
       if(isGoodEvent && processesMatch && energiesMatch) mixedEventsFound++;
