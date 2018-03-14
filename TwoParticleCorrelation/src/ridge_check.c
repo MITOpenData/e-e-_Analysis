@@ -281,10 +281,10 @@ int ridge_check
                             for(unsigned int etI = 0; etI< histEta1.size(); etI++)
                             {
                                 //std::cout<<"histEta "<<histEta1.at(etI)<<" eta1 = "<<angle1<<" eta2 = "<<angle2<<std::endl;
-                                signal2PC[eI][nI][pI][etI]->Fill(angle1-angle2,dphi(phi1,phi2),fillNumerator/(s.getDifferential())/nTrk);
-                                signal2PC[eI][nI][pI][etI]->Fill(angle1-angle2,dphi(phi2,phi1),fillNumerator/(s.getDifferential())/nTrk);
-                                signal2PC[eI][nI][pI][etI]->Fill(angle2-angle1,dphi(phi1,phi2),fillNumerator/(s.getDifferential())/nTrk);
-                                signal2PC[eI][nI][pI][etI]->Fill(angle2-angle1,dphi(phi2,phi1),fillNumerator/(s.getDifferential())/nTrk);
+                                signal2PC[histE.at(eI)][histNtrk.at(nI)][histPt1.at(pI)][histEta1.at(etI)]->Fill(angle1-angle2,dphi(phi1,phi2),fillNumerator/(s.getDifferential())/nTrk);
+                                signal2PC[histE.at(eI)][histNtrk.at(nI)][histPt1.at(pI)][histEta1.at(etI)]->Fill(angle1-angle2,dphi(phi2,phi1),fillNumerator/(s.getDifferential())/nTrk);
+                                signal2PC[histE.at(eI)][histNtrk.at(nI)][histPt1.at(pI)][histEta1.at(etI)]->Fill(angle2-angle1,dphi(phi1,phi2),fillNumerator/(s.getDifferential())/nTrk);
+                                signal2PC[histE.at(eI)][histNtrk.at(nI)][histPt1.at(pI)][histEta1.at(etI)]->Fill(angle2-angle1,dphi(phi2,phi1),fillNumerator/(s.getDifferential())/nTrk);
                             }
                         }
                     }
@@ -390,10 +390,10 @@ int ridge_check
                             {
                                 for(unsigned int etI = 0; etI< histEta_bkg1.size(); etI++)
                                 {
-                                    bkgrnd2PC[eI][nI][pI][etI]->Fill(angle-angle_mix,dphi(phi,phi_mix),fillNumerator/(s.getDifferential())/nTrk);
-                                    bkgrnd2PC[eI][nI][pI][etI]->Fill(angle-angle_mix,dphi(phi_mix,phi),fillNumerator/(s.getDifferential())/nTrk);
-                                    bkgrnd2PC[eI][nI][pI][etI]->Fill(angle_mix-angle,dphi(phi,phi_mix),fillNumerator/(s.getDifferential())/nTrk);
-                                    bkgrnd2PC[eI][nI][pI][etI]->Fill(angle_mix-angle,dphi(phi_mix,phi),fillNumerator/(s.getDifferential())/nTrk);
+                                    bkgrnd2PC[histE.at(eI)][histNtrk.at(nI)][histPt_bkg1.at(pI)][histEta_bkg1.at(etI)]->Fill(angle-angle_mix,dphi(phi,phi_mix),fillNumerator/(s.getDifferential())/nTrk);
+                                    bkgrnd2PC[histE.at(eI)][histNtrk.at(nI)][histPt_bkg1.at(pI)][histEta_bkg1.at(etI)]->Fill(angle-angle_mix,dphi(phi_mix,phi),fillNumerator/(s.getDifferential())/nTrk);
+                                    bkgrnd2PC[histE.at(eI)][histNtrk.at(nI)][histPt_bkg1.at(pI)][histEta_bkg1.at(etI)]->Fill(angle_mix-angle,dphi(phi,phi_mix),fillNumerator/(s.getDifferential())/nTrk);
+                                    bkgrnd2PC[histE.at(eI)][histNtrk.at(nI)][histPt_bkg1.at(pI)][histEta_bkg1.at(etI)]->Fill(angle_mix-angle,dphi(phi_mix,phi),fillNumerator/(s.getDifferential())/nTrk);
                                 }
                             }
                         }
