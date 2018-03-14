@@ -1,4 +1,3 @@
-//
 //  thrust_distribution.c
 //
 //
@@ -213,6 +212,9 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
     Float_t missP;
     Float_t missTheta;
     bool passesWW;
+    bool passesISR;
+    bool passesD2;
+    bool passesCW;
     Int_t nChargedHadrons;
     
     t1->SetBranchAddress("nParticle",&nParticle);
@@ -234,6 +236,9 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
     t1->SetBranchAddress("missP", &missP);
     t1->SetBranchAddress("missTheta", &missTheta);
     t1->SetBranchAddress("passesWW", &passesWW);
+    t1->SetBranchAddress("passesISR", &passesISR);
+    t1->SetBranchAddress("passesD2", &passesD2);
+    t1->SetBranchAddress("passesCW", &passesCW);
 
     if(dataname == "LEP1MC" || dataname == "LEP1MCGen") {
        tgen = (TTree*) f->Get("tgen");
@@ -311,7 +316,7 @@ int thrust_distribution(TString filename = "~/lxplus/LEP2_all_merged_20180122.ro
 	if (nobj<13) continue;
 	pwflag0=nChargedHadrons;
         // NUMBER 1: if we get 5 charged particles
-	if (nch>=5)
+	if (nch>=5&&passesISR&&passesWW)
         {
 	    Float_t Thrust = T_sum/T_mag;
             h_thrust->Fill(Thrust, 1);
