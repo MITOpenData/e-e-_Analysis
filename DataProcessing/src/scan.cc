@@ -1361,7 +1361,7 @@ int main(int argc, char *argv[])
   else if(argc == 5) retVal += scan(argv[1], argv[2], argv[3], argv[4]);
   
   std::cout << "Making mixing file..." << std::endl;
-  if(argc == 5) retVal += makeMixFile(argv[4]);
+  if(argc == 5) retVal += makeMixFile(argv[4], argv[4]);
   else          retVal += makeMixFile(argv[1]);
   return retVal;
 }

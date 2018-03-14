@@ -76,12 +76,13 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
   //open output file
   TFile * output;
   if(outputFile.compare("")==0){
-    //    while(inputFile.find("/") != std::string::npos){inputFile.replace(0, inputFile.find("/")+1,"");}
+    while(inputFile.find("/") != std::string::npos){inputFile.replace(0, inputFile.find("/")+1,"");}
     size_t lastindex = inputFile.find_last_of(".");
     output = TFile::Open(Form("%s_Mix.root",(inputFile.substr(0, lastindex)).c_str()),"recreate");
   }
   else{  
-    output = TFile::Open(outputFile.c_str(),"recreate");
+    size_t lastindex = outputFile.find_last_of(".");
+    output = TFile::Open(Form("%s_Mix.root",(outputFile.substr(0, lastindex)).c_str()),"recreate");
   }
   
   //particle info
@@ -156,7 +157,7 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
     outTree1_p->Fill();
     for(Int_t jI = 0; jI < nBoostedTrees; ++jI) outTree1_b[jI]->Fill();
   }
-  output->Write();
+  output->Write("", TObject::kOverwrite);
   
   for(Int_t jI = 0; jI < nBoostedTrees; ++jI) delete outTree1_b[jI];
   delete outTree1_p;
