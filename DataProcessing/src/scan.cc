@@ -530,9 +530,13 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	pData.RunNo = std::stoi(num.at(runPos));
 	pData.EventNo= std::stoi(num.at(evtPos));
 	pData.Energy= std::stof(num.at(ePos));
-	
-	if(isMC) pData.uniqueID = idMaker.getID(isMC, process, subDir, year, pData.RunNo, pData.EventNo);
-	else pData.uniqueID = idMaker.getID(isMC, 0, 0, year, pData.RunNo, pData.EventNo);
+
+	int tempSubDir = subDir;
+	if(tempSubDir < 0) tempSubDir = 0;
+	int tempProcess = process;
+	if(tempProcess < 0) tempProcess = 15;
+	 
+	pData.uniqueID = idMaker.getID(isMC, tempProcess, tempSubDir, year, pData.RunNo, pData.EventNo);
 
 	eData.passesNTupleAfterCut = true;
 
@@ -785,10 +789,13 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	  pgData.RunNo = std::stoi(num.at(runPos));
 	  pgData.EventNo= std::stoi(num.at(evtPos));
 	  pgData.Energy= std::stof(num.at(ePos));
-
-
-	  if(isMC) pgData.uniqueID = idMaker.getID(isMC, process, subDir, year, pgData.RunNo, pgData.EventNo);
-	  else pgData.uniqueID = idMaker.getID(isMC, 0, 0, year, pgData.RunNo, pgData.EventNo);
+       
+	  int tempSubDir = subDir;
+	  if(tempSubDir < 0) tempSubDir = 0;
+	  int tempProcess = process;
+	  if(tempProcess < 0) tempProcess = 15;
+	  
+	  pgData.uniqueID = idMaker.getID(isMC, tempProcess, tempSubDir, year, pgData.RunNo, pgData.EventNo);
 
 	  egData.passesNTupleAfterCut = true;
 
@@ -1082,10 +1089,14 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	  pgBeforeData.RunNo = std::stoi(num.at(runPos));
 	  pgBeforeData.EventNo= std::stoi(num.at(evtPos));
 	  pgBeforeData.Energy= std::stof(num.at(ePos));
-
-	  if(isMC) pgBeforeData.uniqueID = idMaker.getID(isMC, process, subDir, year, pgBeforeData.RunNo, pgBeforeData.EventNo);
-	  else pgBeforeData.uniqueID = idMaker.getID(isMC, 0, 0, year, pgBeforeData.RunNo, pgBeforeData.EventNo);
 	  
+	  int tempSubDir = subDir;
+	  if(tempSubDir < 0) tempSubDir = 0;
+	  int tempProcess = process;
+	  if(tempProcess < 0) tempProcess = 15;
+	  
+	  pgBeforeData.uniqueID = idMaker.getID(isMC, tempProcess, tempSubDir, year, pgBeforeData.RunNo, pgBeforeData.EventNo);
+
 	  bool passesNTupleAfterCut = false;
 	  for(unsigned int rI = 0; rI < runNo.size(); ++rI){
 	    if(pgBeforeData.RunNo == runNo.at(rI) && pgBeforeData.EventNo == evtNo.at(rI)){
