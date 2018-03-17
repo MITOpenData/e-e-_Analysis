@@ -34,6 +34,7 @@ class jetData{
   jetData();
   void SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::string> inList);
   void SetBranchWrite(TTree* inTree_p);
+  void preFillClean();
 };
 
 jetData::jetData()
@@ -101,5 +102,17 @@ void jetData::SetBranchWrite(TTree* inTree_p)
 
   return;
 }
+
+void jetData::preFillClean()
+{
+  for(Int_t i = 0; i < nref; ++i){
+    jtpt[i] = reducedPrecision(jtpt[i]);
+    jtphi[i] = reducedPrecision(jtphi[i]);
+    jtm[i] = reducedPrecision(jtm[i]);
+    jteta[i] = reducedPrecision(jteta[i]);
+  }
+
+  return;
+} 
 
 #endif

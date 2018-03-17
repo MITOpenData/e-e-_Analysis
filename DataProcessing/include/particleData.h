@@ -3,6 +3,8 @@
 
 #include "TTree.h"
 
+#include "include/dataTools.h"
+
 class particleData{
  public:
   static const int nMaxPart = 1000;
@@ -130,6 +132,7 @@ class particleData{
   particleData();
   void SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::string> inList);
   void SetBranchWrite(TTree* inTree_p);
+  void preFillClean();
 };
 
 particleData::particleData()
@@ -162,14 +165,14 @@ particleData::particleData()
     theta[i] = -999;
     phi[i] = -999;
     mass[i] = -999;
-    charge[i] = -999;
-    pwflag[i] = -999;
+    charge[i] = -127;
+    pwflag[i] = -127;
     pid[i] = -999;
     d0[i] = -999;
     z0[i] = -999;
-    ntpc[i] = -999;
-    nitc[i] = -999;
-    nvdet[i] = -999;
+    ntpc[i] = -127;
+    nitc[i] = -127;
+    nvdet[i] = -127;
     vx[i] = -999.;
     vy[i] = -999.;
     vz[i] = -999.;
@@ -307,14 +310,14 @@ void particleData::SetBranchWrite(TTree* inTree_p)
   inTree_p->Branch("theta", theta, "theta[nParticle]/F");
   inTree_p->Branch("phi", phi, "phi[nParticle]/F");
   inTree_p->Branch("mass", mass, "mass[nParticle]/F");
-  inTree_p->Branch("charge", charge, "charge[nParticle]/F");
-  inTree_p->Branch("pwflag", pwflag, "pwflag[nParticle]/I");
+  inTree_p->Branch("charge", charge, "charge[nParticle]/B");
+  inTree_p->Branch("pwflag", pwflag, "pwflag[nParticle]/B");
   inTree_p->Branch("pid", pid, "pid[nParticle]/I");
   inTree_p->Branch("d0", d0, "d0[nParticle]/F");
   inTree_p->Branch("z0", z0, "z0[nParticle]/F");
-  inTree_p->Branch("ntpc", ntpc, "ntpc[nParticle]/I");
-  inTree_p->Branch("nitc", nitc, "nitc[nParticle]/I");
-  inTree_p->Branch("nvdet", nvdet, "nvdet[nParticle]/I");
+  inTree_p->Branch("ntpc", ntpc, "ntpc[nParticle]/B");
+  inTree_p->Branch("nitc", nitc, "nitc[nParticle]/B");
+  inTree_p->Branch("nvdet", nvdet, "nvdet[nParticle]/B");
   inTree_p->Branch("vx", vx, "vx[nParticle]/F");
   inTree_p->Branch("vy", vy, "vy[nParticle]/F");
   inTree_p->Branch("vz", vz, "vz[nParticle]/F");
@@ -339,6 +342,52 @@ void particleData::SetBranchWrite(TTree* inTree_p)
   inTree_p->Branch("theta_wrtChThrPerp", theta_wrtChThrPerp, "theta_wrtChThrPerp[nParticle]/F");
   inTree_p->Branch("phi_wrtChThrPerp", phi_wrtChThrPerp, "phi_wrtChThrPerp[nParticle]/F");
   
+  return;
+}
+
+
+void particleData::preFillClean()
+{
+  for(Int_t i = 0; i < nParticle; ++i){
+    px[i] = reducedPrecision(px[i]);
+    py[i] = reducedPrecision(py[i]);
+    pz[i] = reducedPrecision(pz[i]);
+    pt[i] = reducedPrecision(pt[i]);
+    pmag[i] = reducedPrecision(pmag[i]);
+    rap[i] = reducedPrecision(rap[i]);
+    eta[i] = reducedPrecision(eta[i]);
+    theta[i] = reducedPrecision(theta[i]);
+    phi[i] = reducedPrecision(phi[i]);
+    mass[i] = reducedPrecision(mass[i]);
+    pid[i] = reducedPrecision(pid[i]);
+    d0[i] = reducedPrecision(d0[i]);
+    z0[i] = reducedPrecision(z0[i]);
+    vx[i] = reducedPrecision(vx[i]);
+    vy[i] = reducedPrecision(vy[i]);
+    vz[i] = reducedPrecision(vz[i]);
+    
+    pt_wrtThr[i] = reducedPrecision(pt_wrtThr[i]);
+    eta_wrtThr[i] = reducedPrecision(eta_wrtThr[i]);
+    rap_wrtThr[i] = reducedPrecision(rap_wrtThr[i]);
+    theta_wrtThr[i] = reducedPrecision(theta_wrtThr[i]);
+    phi_wrtThr[i] = reducedPrecision(phi_wrtThr[i]);
+    pt_wrtThrPerp[i] = reducedPrecision(pt_wrtThrPerp[i]);
+    eta_wrtThrPerp[i] = reducedPrecision(eta_wrtThrPerp[i]);
+    rap_wrtThrPerp[i] = reducedPrecision(rap_wrtThrPerp[i]);
+    theta_wrtThrPerp[i] = reducedPrecision(theta_wrtThrPerp[i]);
+    phi_wrtThrPerp[i] = reducedPrecision(phi_wrtThrPerp[i]);
+
+    pt_wrtChThr[i] = reducedPrecision(pt_wrtThr[i]);
+    eta_wrtChThr[i] = reducedPrecision(eta_wrtThr[i]);
+    rap_wrtChThr[i] = reducedPrecision(rap_wrtThr[i]);
+    theta_wrtChThr[i] = reducedPrecision(theta_wrtThr[i]);
+    phi_wrtChThr[i] = reducedPrecision(phi_wrtThr[i]);
+    pt_wrtChThrPerp[i] = reducedPrecision(pt_wrtThrPerp[i]);
+    eta_wrtChThrPerp[i] = reducedPrecision(eta_wrtThrPerp[i]);
+    rap_wrtChThrPerp[i] = reducedPrecision(rap_wrtThrPerp[i]);
+    theta_wrtChThrPerp[i] = reducedPrecision(theta_wrtThrPerp[i]);
+    phi_wrtChThrPerp[i] = reducedPrecision(phi_wrtThrPerp[i]);
+  }
   return;
 }
 

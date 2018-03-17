@@ -490,7 +490,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	doEndEvent(&pData, &eData, bDataTempVect, counterParticles, nTrk, nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
 	bDataTempVect.clear();
 
-	if(counterEntries>0) tout->Fill(); 	
+	if(counterEntries>0){pData.preFillClean(); tout->Fill();}
 	//Processing particles->jets
 	for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	  processJets(particles, jDef[jIter], jDefReclust[jIter], &(jData[jIter]), jtPtCut, rParam[jIter], nFinalClust[jIter]);
@@ -498,6 +498,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 
 	if(counterEntries>0){
 	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){
+	    jData[jIter].preFillClean();
 	    jout[jIter]->Fill();
 	    if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
 	      if(rParamIs8[jIter] || nFinalClust[jIter] == 2){
@@ -506,6 +507,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 		  TVector3 wtaBoost = findBack2BackBoost(jData[jIter].fourJet[0],jData[jIter].fourJet[1]);
 		  setBoostedVariables(true, &pData, &(bData[jIter]), jData[jIter].fourJet[0], wtaBoost);
 		}
+		bData[jIter].preFillClean();
 		bout[jIter]->Fill();
 	      }
             }
@@ -644,11 +646,11 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	  pData.nitc[counterParticles] =  std::stoi(num.at(9 + posOffset));	
 	  pData.nvdet[counterParticles] =  std::stoi(num.at(10 + posOffset));	
 	}
-	else initVal({&(pData.nitc[counterParticles]), &(pData.nvdet[counterParticles])}, -999);
+	else initVal({&(pData.nitc[counterParticles]), &(pData.nvdet[counterParticles])}, -127);
       }
       else{
 	initVal({&(pData.d0[counterParticles]), &(pData.z0[counterParticles]), NULL}, -999);
-	initVal({&(pData.ntpc[counterParticles]), &(pData.nitc[counterParticles]), &(pData.nvdet[counterParticles])}, -999);
+	initVal({&(pData.ntpc[counterParticles]), &(pData.nitc[counterParticles]), &(pData.nvdet[counterParticles])}, -127);
       }
       initVal({&(pData.vx[counterParticles]), &(pData.vy[counterParticles]), &(pData.vz[counterParticles])}, -999.);
       //missing momentum calculation and multiplicity calculation
@@ -671,12 +673,13 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
     doEndEvent(&pData, &eData, bDataTempVect, counterParticles, nTrk, nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
     bDataTempVect.clear();
     
-    if(counterEntries>0) tout->Fill(); 
+    if(counterEntries>0){pData.preFillClean(); tout->Fill();}
     for(int jIter = 0; jIter < nJtAlgo; ++jIter){
       processJets(particles, jDef[jIter], jDefReclust[jIter], &(jData[jIter]), jtPtCut, rParam[jIter], nFinalClust[jIter]);
     }
     if(counterEntries>0){
       for(int jIter = 0; jIter < nJtAlgo; ++jIter){
+	jData[jIter].preFillClean();
 	jout[jIter]->Fill();
 	if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
 	  if(rParamIs8[jIter] || nFinalClust[jIter] == 2){
@@ -685,6 +688,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	      TVector3 wtaBoost = findBack2BackBoost(jData[jIter].fourJet[0],jData[jIter].fourJet[1]);
 	      setBoostedVariables(true, &pData, &(bData[jIter]), jData[jIter].fourJet[0], wtaBoost);
 	    }
+	    bData[jIter].preFillClean();
 	    bout[jIter]->Fill();
 	  }
         }
@@ -749,12 +753,13 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	  doEndEvent(&pgData, &egData, bgDataTempVect, counterParticles, nTrk, nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
 	  bgDataTempVect.clear();
 
-	  if(counterEntries>0) tgout->Fill(); 
+	  if(counterEntries>0){pgData.preFillClean(); tgout->Fill();}
 
 	  //Processing particles->jets
 	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	    processJets(particles, jDef[jIter], jDefReclust[jIter], &(jgData[jIter]), jtPtCut, rParam[jIter], nFinalClust[jIter]);
 	    if(counterEntries>0){
+	      jgData[jIter].preFillClean();
 	      jgout[jIter]->Fill();
 	      if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
 		if(rParamIs8[jIter] || nFinalClust[jIter] == 2){
@@ -763,6 +768,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 		    TVector3 wtaBoost = findBack2BackBoost(jgData[jIter].fourJet[0],jgData[jIter].fourJet[1]);
 		    setBoostedVariables(true, &pgData, &(bgData[jIter]), jgData[jIter].fourJet[0], wtaBoost);
 		  }
+		  bgData[jIter].preFillClean();
 		  bgout[jIter]->Fill();
 		}
 	      }		
@@ -937,11 +943,11 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	  pgData.vz[counterParticles] = std::stof(num.at(8+posOffset));
 
 	  initVal({&(pgData.d0[counterParticles]), &(pgData.z0[counterParticles]), NULL}, -999);
-	  initVal({&(pgData.ntpc[counterParticles]), &(pgData.nitc[counterParticles]), &(pgData.nvdet[counterParticles])}, -999);
+	  initVal({&(pgData.ntpc[counterParticles]), &(pgData.nitc[counterParticles]), &(pgData.nvdet[counterParticles])}, -127);
 	}
 	else{
 	  initVal({&(pgData.vx[counterParticles]), &(pgData.vy[counterParticles]), &(pgData.vz[counterParticles]), &(pgData.d0[counterParticles]), &(pgData.z0[counterParticles])}, -999);
-	  initVal({&(pgData.ntpc[counterParticles]), &(pgData.nitc[counterParticles]), &(pgData.nvdet[counterParticles])}, -999);
+	  initVal({&(pgData.ntpc[counterParticles]), &(pgData.nitc[counterParticles]), &(pgData.nvdet[counterParticles])}, -127);
 	}
 	
 	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
@@ -969,10 +975,11 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
       
       if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
-      if(counterEntries>0) tgout->Fill(); 
+      if(counterEntries>0){pgData.preFillClean(); tgout->Fill();}
       for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	processJets(particles, jDef[jIter], jDefReclust[jIter], &(jgData[jIter]), jtPtCut, rParam[jIter], nFinalClust[jIter]);
 	if(counterEntries>0){
+	  jgData[jIter].preFillClean();
 	  jgout[jIter]->Fill();
 	  if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
 	    if(rParamIs8[jIter] || nFinalClust[jIter] == 2){
@@ -981,6 +988,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 		TVector3 wtaBoost = findBack2BackBoost(jgData[jIter].fourJet[0],jgData[jIter].fourJet[1]);
 		setBoostedVariables(true, &pgData, &(bgData[jIter]), jgData[jIter].fourJet[0], wtaBoost);
 	      }
+	      bgData[jIter].preFillClean();
 	      bgout[jIter]->Fill();
 	    }
 	  }
@@ -1049,12 +1057,13 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	  doEndEvent(&pgBeforeData, &egBeforeData, bgBeforeDataTempVect, counterParticles, nTrk, nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
 	  bgBeforeDataTempVect.clear();
 
-	  if(counterEntries>0) tgBeforeout->Fill(); 
+	  if(counterEntries>0){pgBeforeData.preFillClean(); tgBeforeout->Fill();}
 
 	  //Processing particles->jets
 	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	    processJets(particles, jDef[jIter], jDefReclust[jIter], &(jgBeforeData[jIter]), jtPtCut, rParam[jIter], nFinalClust[jIter]);
 	    if(counterEntries>0){
+	      jgBeforeData[jIter].preFillClean();
 	      jgBeforeout[jIter]->Fill();
 	      if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
 		if(rParamIs8[jIter] || nFinalClust[jIter] == 2){
@@ -1063,6 +1072,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 		    TVector3 wtaBoost = findBack2BackBoost(jgBeforeData[jIter].fourJet[0],jgBeforeData[jIter].fourJet[1]);
 		    setBoostedVariables(true, &pgBeforeData, &(bgBeforeData[jIter]), jgBeforeData[jIter].fourJet[0], wtaBoost);
 		  }
+		  bgBeforeData[jIter].preFillClean();
 		  bgBeforeout[jIter]->Fill();
 		}
 	      }		
@@ -1257,11 +1267,11 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	  pgBeforeData.vz[counterParticles] = std::stof(num.at(8+posOffset));
 
 	  initVal({&(pgBeforeData.d0[counterParticles]), &(pgBeforeData.z0[counterParticles]), NULL}, -999);
-	  initVal({&(pgBeforeData.ntpc[counterParticles]), &(pgBeforeData.nitc[counterParticles]), &(pgBeforeData.nvdet[counterParticles])}, -999);
+	  initVal({&(pgBeforeData.ntpc[counterParticles]), &(pgBeforeData.nitc[counterParticles]), &(pgBeforeData.nvdet[counterParticles])}, -127);
 	}
 	else{
 	  initVal({&(pgBeforeData.vx[counterParticles]), &(pgBeforeData.vy[counterParticles]), &(pgBeforeData.vz[counterParticles]), &(pgBeforeData.d0[counterParticles]), &(pgBeforeData.z0[counterParticles])}, -999);
-	  initVal({&(pgBeforeData.ntpc[counterParticles]), &(pgBeforeData.nitc[counterParticles]), &(pgBeforeData.nvdet[counterParticles])}, -999);
+	  initVal({&(pgBeforeData.ntpc[counterParticles]), &(pgBeforeData.nitc[counterParticles]), &(pgBeforeData.nvdet[counterParticles])}, -127);
 	}
 	
 	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
@@ -1285,10 +1295,11 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
       doEndEvent(&pgBeforeData, &egBeforeData, bgBeforeDataTempVect, counterParticles, nTrk, nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
       bgBeforeDataTempVect.clear();
       
-      if(counterEntries>0) tgBeforeout->Fill(); 
+      if(counterEntries>0){pgBeforeData.preFillClean(); tgBeforeout->Fill();}
       for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	processJets(particles, jDef[jIter], jDefReclust[jIter], &(jgBeforeData[jIter]), jtPtCut, rParam[jIter], nFinalClust[jIter]);
 	if(counterEntries>0){
+	  jgBeforeData[jIter].preFillClean();
 	  jgBeforeout[jIter]->Fill();
 	  if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
 	    if(rParamIs8[jIter] || nFinalClust[jIter] == 2){
@@ -1297,6 +1308,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 		TVector3 wtaBoost = findBack2BackBoost(jgBeforeData[jIter].fourJet[0],jgBeforeData[jIter].fourJet[1]);
 		setBoostedVariables(true, &pgBeforeData, &(bgBeforeData[jIter]), jgBeforeData[jIter].fourJet[0], wtaBoost);
 	      }
+	      bgBeforeData[jIter].preFillClean();
 	      bgBeforeout[jIter]->Fill();
 	    }
 	  }
@@ -1368,13 +1380,39 @@ int main(int argc, char *argv[])
     return 1;
   }
 
+  std::vector<std::string> fileListTemp;
+  std::string inFileName = argv[1];
+
+  int nMix = -1;
+
+  if(inFileName.substr(inFileName.size()-4, 4).find(".txt") != std::string::npos){
+    std::ifstream pathFile(inFileName.c_str());
+    std::string paths;
+    while(std::getline(pathFile, paths)){
+      if(paths.size() == 0) continue;
+      fileListTemp.push_back(paths);
+    }
+    pathFile.close();
+  }
+  else if(inFileName.substr(inFileName.size()-5, 5).find(".list") != std::string::npos) fileListTemp.push_back(inFileName);
+  else if(inFileName.substr(inFileName.size()-6, 6).find(".aleph") != std::string::npos) fileListTemp.push_back(inFileName);
+  else{
+    std::cout << "WARNING: inFileName \'" << inFileName << "\' cannot determine MC or Data, mixing 1 event only." << std::endl;
+    nMix = 1;
+  }
+
+  if(nMix < 0){
+    if(getIsMC(fileListTemp.at(0))) nMix = 1;
+    else nMix = 3;
+  }
+
   std::cout << "Begin processing..." << std::endl;
   int retVal = 0;
   if(argc == 4) retVal += scan(argv[1], argv[2], argv[3]);
   else if(argc == 5) retVal += scan(argv[1], argv[2], argv[3], argv[4]);
   
   std::cout << "Making mixing file..." << std::endl;
-  if(argc == 5) retVal += makeMixFile(argv[4], argv[4]);
-  else          retVal += makeMixFile(argv[1]);
+  if(argc == 5) retVal += makeMixFile(argv[4], argv[4], nMix);
+  else          retVal += makeMixFile(argv[1], "", nMix);
   return retVal;
 }

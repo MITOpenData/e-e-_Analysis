@@ -100,8 +100,12 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
   }
   
  
+  const Int_t printInterval = 20;
+  const Int_t printNEntries = inTree1_p->GetEntries()/printInterval;
+
   //loop through input file for the signal events
   for(int i = 0; i<inTree1_p->GetEntries(); i++){
+    if(i%printNEntries == 0) std::cout << "Mixing entry: " << i << inTree1_p->GetEntries() << std::endl;
     //for testing
     //if(i>100) break;
     
@@ -151,8 +155,9 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
       appendMixEvt(&pdataMix, &pdataSig, thrustAxis, thrustAxis_ch, (float)mixedEventsFound);
       for(Int_t jI = 0; jI < nBoostedTrees; ++jI) appendMixEvtBoosted(&bDataMix[jI], &pdataSig, WTAAxis[jI], WTABoost[jI], (float)mixedEventsFound);
     }
+    pdataMix.preFillClean();
     outTree1_p->Fill();
-    for(Int_t jI = 0; jI < nBoostedTrees; ++jI) outTree1_b[jI]->Fill();
+    for(Int_t jI = 0; jI < nBoostedTrees; ++jI){bDataMix[jI].preFillClean(); outTree1_b[jI]->Fill();}
   }
   output->Write("", TObject::kOverwrite);
   

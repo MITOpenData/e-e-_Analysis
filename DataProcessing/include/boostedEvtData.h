@@ -3,6 +3,8 @@
 
 #include "TTree.h"
 
+#include "include/dataTools.h"
+
 class boostedEvtData{
  public:
   static const int nMaxBoostedPart = 1000;
@@ -54,6 +56,7 @@ class boostedEvtData{
   boostedEvtData();
   void SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::string> inList);
   void SetBranchWrite(TTree* inTree_p);
+  void preFillClean();
 };
 
 boostedEvtData::boostedEvtData()
@@ -150,6 +153,25 @@ void boostedEvtData::SetBranchWrite(TTree* inTree_p)
   inTree_p->Branch("boostz", &boostz, "boostz/F");
   inTree_p->Branch("boost", &boost, "boost/F");
   inTree_p->Branch("particleWeight", &particleWeight, "particleWeight/F");
+
+  return;
+}
+
+void boostedEvtData::preFillClean()
+{
+  for(Int_t pI = 0; pI < nParticle; ++pI){
+    pt[pI] = reducedPrecision(pt[pI]);
+    pmag[pI] = reducedPrecision(pmag[pI]);
+    eta[pI] = reducedPrecision(eta[pI]);
+    theta[pI] = reducedPrecision(theta[pI]);
+    phi[pI] = reducedPrecision(phi[pI]);
+
+    pt_Perp[pI] = reducedPrecision(pt_Perp[pI]);
+    pmag_Perp[pI] = reducedPrecision(pmag_Perp[pI]);
+    eta_Perp[pI] = reducedPrecision(eta_Perp[pI]);
+    theta_Perp[pI] = reducedPrecision(theta_Perp[pI]);
+    phi_Perp[pI] = reducedPrecision(phi_Perp[pI]);
+  }
 
   return;
 }
