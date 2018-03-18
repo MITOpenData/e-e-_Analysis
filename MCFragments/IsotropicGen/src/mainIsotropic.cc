@@ -21,6 +21,9 @@
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/PseudoJet.hh"
 
+//mixing
+#include "src/mixFile.cc"
+
 //local dependencies
 #include "include/jetData.h"
 #include "include/particleData.h"
@@ -253,6 +256,7 @@ int main(int argc, char* argv[])
       eData.missChargedPt = netP_charged.Perp();
       eData.missChargedTheta = netP_charged.Theta();
       eData.missChargedPhi = netP_charged.Phi();
+      eData.passesAll = 1;
 
 
       for(int pI = 0; pI < pData.nParticle; ++pI){
@@ -291,7 +295,7 @@ int main(int argc, char* argv[])
             TLorentzVector jet2LV = TLorentzVector(jet2,jet2.Mag());          
 
 	    TVector3 wtaBoost = findBack2BackBoost(jet1LV, jet2LV);
-	    setBoostedVariables(true, &pData, &bData, jData[jIter].fourJet[0], wtaBoost);
+	    setBoostedVariables(true, &pData, &bData, jet1LV, wtaBoost);
 	  }
 	  boostedGenTree_p->Fill();
 	}
@@ -328,6 +332,10 @@ int main(int argc, char* argv[])
   double endTime = get_wall_time();
 
   std::cout << "Start to end: " << startTime << ", " << endTime << std::endl;
+
+  std::cout << "Mixing File..." << std::endl;
+  makeMixFile(outFileName, "", 1);
+  std::cout << "Job done" << std::endl;
 
   return 0;
 }
