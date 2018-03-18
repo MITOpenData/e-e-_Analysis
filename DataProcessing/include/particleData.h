@@ -34,15 +34,15 @@ class particleData{
   float theta[nMaxPart];
   float phi[nMaxPart];
   float mass[nMaxPart];
-  float charge[nMaxPart];
+  Char_t charge[nMaxPart];
   // Starting from 0, pwflag (via Marcello) - CHARGED_TRACK, CHARGED_LEPTONS1, CHARGED_LEPTONS2, V0, PHOTON, NEUTRAL_HADRON
-  int pwflag[nMaxPart];
+  Char_t pwflag[nMaxPart];
   int pid[nMaxPart];
   float d0[nMaxPart];
   float z0[nMaxPart];
-  int ntpc[nMaxPart];
-  int nitc[nMaxPart];
-  int nvdet[nMaxPart];
+  Char_t ntpc[nMaxPart];
+  Char_t nitc[nMaxPart];
+  Char_t nvdet[nMaxPart];
   float vx[nMaxPart];
   float vy[nMaxPart];
   float vz[nMaxPart];

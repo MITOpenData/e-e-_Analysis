@@ -105,7 +105,7 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
 
   //loop through input file for the signal events
   for(int i = 0; i<inTree1_p->GetEntries(); i++){
-    if(i%printNEntries == 0) std::cout << "Mixing entry: " << i << inTree1_p->GetEntries() << std::endl;
+    if(i%printNEntries == 0) std::cout << "Mixing entry: " << i << "/" << inTree1_p->GetEntries() << std::endl;
     //for testing
     //if(i>100) break;
     

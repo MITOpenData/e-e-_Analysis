@@ -136,9 +136,18 @@ bool check998(std::string inStr){return checkGeneral(inStr, "-998.");}
 //isNewInfo2 is for nitc, nvdet
 
 void initVal(Int_t* in, Int_t set){(*in) = set; return;}
+void initVal(Char_t* in, Char_t set){(*in) = set; return;}
 void initVal(Float_t* in, Float_t set){(*in) = set; return;}
 void initVal(Double_t* in, Double_t set){(*in) = set; return;}
 void initVal(std::vector<Int_t*> in, Int_t set)
+{
+  for(unsigned int i = 0; i < in.size(); ++i){
+    if(in.at(i) == NULL) continue;
+    initVal(in.at(i), set);
+  }
+  return;
+}
+void initVal(std::vector<Char_t*> in, Char_t set)
 {
   for(unsigned int i = 0; i < in.size(); ++i){
     if(in.at(i) == NULL) continue;
@@ -646,11 +655,18 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	  pData.nitc[counterParticles] =  std::stoi(num.at(9 + posOffset));	
 	  pData.nvdet[counterParticles] =  std::stoi(num.at(10 + posOffset));	
 	}
-	else initVal({&(pData.nitc[counterParticles]), &(pData.nvdet[counterParticles])}, -127);
+	else{
+	  pgData.nitc[counterParticles] = -127;
+	  pgData.nvdet[counterParticles] = -127;
+	  //initVal({&(pData.nitc[counterParticles]), &(pData.nvdet[counterParticles])}, -127);
+	}
       }
       else{
 	initVal({&(pData.d0[counterParticles]), &(pData.z0[counterParticles]), NULL}, -999);
-	initVal({&(pData.ntpc[counterParticles]), &(pData.nitc[counterParticles]), &(pData.nvdet[counterParticles])}, -127);
+	pData.ntpc[counterParticles] = -127;
+	pData.nitc[counterParticles] = -127;
+	pData.nvdet[counterParticles] = -127;
+	//	initVal({&(pData.ntpc[counterParticles]), &(pData.nitc[counterParticles]), &(pData.nvdet[counterParticles])}, -127);
       }
       initVal({&(pData.vx[counterParticles]), &(pData.vy[counterParticles]), &(pData.vz[counterParticles])}, -999.);
       //missing momentum calculation and multiplicity calculation
@@ -943,11 +959,18 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	  pgData.vz[counterParticles] = std::stof(num.at(8+posOffset));
 
 	  initVal({&(pgData.d0[counterParticles]), &(pgData.z0[counterParticles]), NULL}, -999);
-	  initVal({&(pgData.ntpc[counterParticles]), &(pgData.nitc[counterParticles]), &(pgData.nvdet[counterParticles])}, -127);
+
+	  pgData.ntpc[counterParticles] = -127;
+	  pgData.nitc[counterParticles] = -127;
+	  pgData.nvdet[counterParticles] = -127;
+	  //	  initVal({&(pgData.ntpc[counterParticles]), &(pgData.nitc[counterParticles]), &(pgData.nvdet[counterParticles])}, -127);
 	}
 	else{
 	  initVal({&(pgData.vx[counterParticles]), &(pgData.vy[counterParticles]), &(pgData.vz[counterParticles]), &(pgData.d0[counterParticles]), &(pgData.z0[counterParticles])}, -999);
-	  initVal({&(pgData.ntpc[counterParticles]), &(pgData.nitc[counterParticles]), &(pgData.nvdet[counterParticles])}, -127);
+	  pgData.ntpc[counterParticles] = -127;
+	  pgData.nitc[counterParticles] = -127;
+	  pgData.nvdet[counterParticles] = -127;
+	  //	  initVal({&(pgData.ntpc[counterParticles]), &(pgData.nitc[counterParticles]), &(pgData.nvdet[counterParticles])}, -127);
 	}
 	
 	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
@@ -1267,11 +1290,19 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	  pgBeforeData.vz[counterParticles] = std::stof(num.at(8+posOffset));
 
 	  initVal({&(pgBeforeData.d0[counterParticles]), &(pgBeforeData.z0[counterParticles]), NULL}, -999);
-	  initVal({&(pgBeforeData.ntpc[counterParticles]), &(pgBeforeData.nitc[counterParticles]), &(pgBeforeData.nvdet[counterParticles])}, -127);
+	  
+	  pgBeforeData.ntpc[counterParticles] = -127;
+	  pgBeforeData.nitc[counterParticles] = -127;
+	  pgBeforeData.nvdet[counterParticles] = -127;
+	  //	  initVal({&(pgBeforeData.ntpc[counterParticles]), &(pgBeforeData.nitc[counterParticles]), &(pgBeforeData.nvdet[counterParticles])}, -127);
 	}
 	else{
 	  initVal({&(pgBeforeData.vx[counterParticles]), &(pgBeforeData.vy[counterParticles]), &(pgBeforeData.vz[counterParticles]), &(pgBeforeData.d0[counterParticles]), &(pgBeforeData.z0[counterParticles])}, -999);
-	  initVal({&(pgBeforeData.ntpc[counterParticles]), &(pgBeforeData.nitc[counterParticles]), &(pgBeforeData.nvdet[counterParticles])}, -127);
+
+	  pgBeforeData.ntpc[counterParticles] = -127;
+	  pgBeforeData.nitc[counterParticles] = -127;
+	  pgBeforeData.nvdet[counterParticles] = -127;
+	  //	  initVal({&(pgBeforeData.ntpc[counterParticles]), &(pgBeforeData.nitc[counterParticles]), &(pgBeforeData.nvdet[counterParticles])}, -127);
 	}
 	
 	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
