@@ -2,6 +2,7 @@
 #define JETDATA_H
 
 #include "TLorentzVector.h"
+#include "dataTools.h"
 
 class jetData{
  public:
