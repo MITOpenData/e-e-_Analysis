@@ -3,7 +3,7 @@
 
 #include "TTree.h"
 
-#include "include/dataTools.h"
+#include "dataTools.h"
 
 class particleData{
  public:
@@ -34,15 +34,15 @@ class particleData{
   float theta[nMaxPart];
   float phi[nMaxPart];
   float mass[nMaxPart];
-  Char_t charge[nMaxPart];
+  Short_t charge[nMaxPart];
   // Starting from 0, pwflag (via Marcello) - CHARGED_TRACK, CHARGED_LEPTONS1, CHARGED_LEPTONS2, V0, PHOTON, NEUTRAL_HADRON
-  Char_t pwflag[nMaxPart];
+  Short_t pwflag[nMaxPart];
   int pid[nMaxPart];
   float d0[nMaxPart];
   float z0[nMaxPart];
-  Char_t ntpc[nMaxPart];
-  Char_t nitc[nMaxPart];
-  Char_t nvdet[nMaxPart];
+  Short_t ntpc[nMaxPart];
+  Short_t nitc[nMaxPart];
+  Short_t nvdet[nMaxPart];
   float vx[nMaxPart];
   float vy[nMaxPart];
   float vz[nMaxPart];
@@ -310,14 +310,14 @@ void particleData::SetBranchWrite(TTree* inTree_p)
   inTree_p->Branch("theta", theta, "theta[nParticle]/F");
   inTree_p->Branch("phi", phi, "phi[nParticle]/F");
   inTree_p->Branch("mass", mass, "mass[nParticle]/F");
-  inTree_p->Branch("charge", charge, "charge[nParticle]/B");
-  inTree_p->Branch("pwflag", pwflag, "pwflag[nParticle]/B");
+  inTree_p->Branch("charge", charge, "charge[nParticle]/S");
+  inTree_p->Branch("pwflag", pwflag, "pwflag[nParticle]/S");
   inTree_p->Branch("pid", pid, "pid[nParticle]/I");
   inTree_p->Branch("d0", d0, "d0[nParticle]/F");
   inTree_p->Branch("z0", z0, "z0[nParticle]/F");
-  inTree_p->Branch("ntpc", ntpc, "ntpc[nParticle]/B");
-  inTree_p->Branch("nitc", nitc, "nitc[nParticle]/B");
-  inTree_p->Branch("nvdet", nvdet, "nvdet[nParticle]/B");
+  inTree_p->Branch("ntpc", ntpc, "ntpc[nParticle]/S");
+  inTree_p->Branch("nitc", nitc, "nitc[nParticle]/S");
+  inTree_p->Branch("nvdet", nvdet, "nvdet[nParticle]/S");
   inTree_p->Branch("vx", vx, "vx[nParticle]/F");
   inTree_p->Branch("vy", vy, "vy[nParticle]/F");
   inTree_p->Branch("vz", vz, "vz[nParticle]/F");

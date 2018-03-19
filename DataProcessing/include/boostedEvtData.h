@@ -3,7 +3,7 @@
 
 #include "TTree.h"
 
-#include "include/dataTools.h"
+#include "dataTools.h"
 
 class boostedEvtData{
  public:
