@@ -20,6 +20,7 @@
 #include "include/doLocalDebug.h"
 #include "include/checkMakeDir.h"
 #include "include/particleData.h"
+#include "include/trackSelection.h"
 #include "include/eventSelection.h"
 #include "include/eventData.h"
 #include "include/jetData.h"
@@ -390,6 +391,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
   }
 
   eventSelection eSelection;
+  TrackSelection trkSelection = TrackSelection();
 
   particleData pData;
   jetData jData[nJtAlgo];
@@ -677,7 +679,8 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
         if(v.Pt()>0.4) nTrk_GT0p4++; 
         if(v.Pt()>0.4) nTrk_GT0p4Thrust++; 
       } 
- 
+      pData.highPurity[counterParticles] = trkSelection.highPurity(&pData, counterParticles);
+
       ++counterParticles;	
     }
 

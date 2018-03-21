@@ -41,6 +41,7 @@ void appendMixEvt(particleData *out, particleData *in, TVector3 thrustAxis, TVec
     out->pid[oldnParticle+i] = in->pid[i];
     out->d0[oldnParticle+i] = in->d0[i];
     out->z0[oldnParticle+i] = in->z0[i];
+    out->highPurity[oldnParticle+i] = in->highPurity[i];
     out->ntpc[oldnParticle+i] = in->ntpc[i];
     out->nitc[oldnParticle+i] = in->nitc[i];
     out->nvdet[oldnParticle+i] = in->nvdet[i];
