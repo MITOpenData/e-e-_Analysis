@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
   double startTime = get_wall_time();
 
   if(argc != 4 && argc != 5 && argc != 6 && argc != 7 && argc != 8){
-    std::cout << "Usage: ./mainCustom.exe <outFileName> <isSysPP> <jobNum> <maxEvt> <poissonMean>" << std::endl;
+    std::cout << "Usage: ./mainCustom.exe <outFileName> <isSysPP> <jobNum> <maxEvt> <poissonMean> <doRegularThrustWTAAxis>" << std::endl;
     return 1;
   }
 
@@ -64,6 +64,10 @@ int main(int argc, char* argv[])
   int tempPoissonMean_ = 15;
   if(argc >= 6) tempPoissonMean_ = std::stoi(argv[5]);
   const int poissonMean_ = tempPoissonMean_;
+
+  int tempDoRegularAxis = 0;
+  if(argc>=7) tempDoRegularAxis = std::stoi(argv[6]);
+  const bool doRegularAxis = (bool)tempDoRegularAxis;
 
   const double jtPtCut = .01;
   const int nJtAlgo = 8;
@@ -239,8 +243,10 @@ int main(int argc, char* argv[])
       TVector3 thrust = TVector3(0,0,0);
       thrust.SetMagThetaPhi(1,TMath::ACos(r->Rndm()*2-1),r->Rndm()*TMath::Pi()*2);
       TVector3 thrustCh = thrust;
-      //TVector3 thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz, THRUST::OPTIMAL);
-      //TVector3 thrustCh = getThrust(pDataCh.nParticle, pDataCh.px, pDataCh.py, pDataCh.pz, THRUST::OPTIMAL);
+      if(tempDoRegularAxis){
+        thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz, THRUST::OPTIMAL);
+        thrustCh = getThrust(pDataCh.nParticle, pDataCh.px, pDataCh.py, pDataCh.pz, THRUST::OPTIMAL);
+      }
 
       eData.Thrust = thrust.Mag();
       eData.TTheta = thrust.Theta();
@@ -295,7 +301,12 @@ int main(int argc, char* argv[])
             TLorentzVector jet2LV = TLorentzVector(jet2,jet2.Mag());          
 
 	    TVector3 wtaBoost = findBack2BackBoost(jet1LV, jet2LV);
-	    setBoostedVariables(true, &pData, &bData, jet1LV, wtaBoost);
+            if(tempDoRegularAxis){
+              wtaBoost = findBack2BackBoost(jData[jIter].fourJet[0],jData[jIter].fourJet[1]);
+	      setBoostedVariables(true, &pData, &bData, jData[jIter].fourJet[0], wtaBoost);
+            } else {
+	      setBoostedVariables(true, &pData, &bData, jet1LV, wtaBoost);
+            }
 	  }
 	  boostedGenTree_p->Fill();
 	}
