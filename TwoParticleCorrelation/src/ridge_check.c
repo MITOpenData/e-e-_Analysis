@@ -235,7 +235,8 @@ int ridge_check
         /****************************************/
         for ( Int_t j=0;j<data.particle.nParticle;j++ )
         {
-            if(!s.ridge_trackSelection(data.particle.ntpc[j],data.getTheta(j),data.getPmag(j), data.particle.d0[j], data.particle.z0[j], data.particle.	pwflag[j])) continue;
+//            if(!s.ridge_trackSelection(data.particle.ntpc[j],data.getTheta(j),data.getPmag(j), data.particle.d0[j], data.particle.z0[j], data.particle.	pwflag[j])) continue;
+            if(!s.ridge_trackSelection(data.particle.ntpc[j],data.particle.theta[j],data.particle.pmag[j], data.particle.d0[j], data.particle.z0[j], data.particle.	pwflag[j])) continue;
 	    h_phi->Fill(data.getPhi(j));
             h_eta->Fill(data.getEta(j));
             h_theta->Fill(data.getTheta(j));
@@ -253,7 +254,8 @@ int ridge_check
             // Signal loop, calculate S correlation function
             for ( Int_t k=j+1;k<data.particle.nParticle;k++ )
             {
-                if(!s.ridge_trackSelection(data.particle.ntpc[k],data.getTheta(k),data.getPmag(k), data.particle.d0[k], data.particle.z0[k], data.particle.pwflag[k])) continue;
+//                if(!s.ridge_trackSelection(data.particle.ntpc[k],data.getTheta(k),data.getPmag(k), data.particle.d0[k], data.particle.z0[k], data.particle.pwflag[k])) continue;
+                if(!s.ridge_trackSelection(data.particle.ntpc[k],data.particle.theta[k],data.particle.pmag[k], data.particle.d0[k], data.particle.z0[k], data.particle.pwflag[k])) continue;
                 // Check if the second particle is in the same range of pt and eta 
 
                 std::vector<Int_t> histPt2 = s.histPt(data.getPt(k));
@@ -343,7 +345,8 @@ int ridge_check
             for ( Int_t j=0;j<data.particle.nParticle;j++ )
             {
                 // decide if valid track
-                if(!s.ridge_trackSelection(data.particle.ntpc[j],data.getTheta(j),data.getPmag(j), data.particle.d0[j], data.particle.z0[j], data.particle.pwflag[j])) continue;
+//                if(!s.ridge_trackSelection(data.particle.ntpc[j],data.getTheta(j),data.getPmag(j), data.particle.d0[j], data.particle.z0[j], data.particle.pwflag[j])) continue;
+                if(!s.ridge_trackSelection(data.particle.ntpc[j],data.particle.theta[j],data.particle.pmag[j], data.particle.d0[j], data.particle.z0[j], data.particle.pwflag[j])) continue;
 
                 // Decide which pt and eta range to fill
                 std::vector<Int_t> histPt_bkg1 = s.histPt(data.getPt(j));
@@ -359,7 +362,8 @@ int ridge_check
                 for ( Int_t k=0;k<mix.particle.nParticle;k++ )
                 {
                     // decide if valid track
-                    if(!s.ridge_trackSelection(mix.particle.ntpc[k],mix.getTheta(k),mix.getPmag(k), mix.particle.d0[k], mix.particle.z0[k], mix.particle.pwflag[k])) continue;
+//                    if(!s.ridge_trackSelection(mix.particle.ntpc[k],mix.getTheta(k),mix.getPmag(k), mix.particle.d0[k], mix.particle.z0[k], mix.particle.pwflag[k])) continue;
+                    if(!s.ridge_trackSelection(mix.particle.ntpc[k],mix.particle.theta[k],mix.particle.pmag[k], mix.particle.d0[k], mix.particle.z0[k], mix.particle.pwflag[k])) continue;
                     
                     // Check if the second particle is in the same range of pt and eta    
                     std::vector<Int_t> histPt_bkg2 = s.histPt(mix.getPt(k));
