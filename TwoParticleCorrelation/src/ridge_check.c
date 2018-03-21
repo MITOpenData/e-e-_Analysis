@@ -179,13 +179,13 @@ int ridge_check
     TChain * side_t = new TChain(sideTree.c_str());       side_t->Add(inFileName.c_str());
     TChain * jt = new TChain(jtTreeName.c_str());       jt->Add(inFileName.c_str());
 
-    TPCNtupleData data(s.doBelle, s.doThrust, s.doWTA);      setupTPCTree(t,side_t,jt,data);       data.setTPCTreeStatus(t,side_t);
+    TPCNtupleData data(s.doBelle, s.doThrust, s.doWTA);      data.setupTPCTree(t,side_t,jt);   
     
     TChain * t_mix = new TChain("t");       t_mix->Add(inFileName.c_str());
     TChain * side_t_mix = new TChain(sideTree.c_str());       side_t_mix->Add(inFileName.c_str());
     TChain * jt_mix = new TChain(jtTreeName.c_str());       jt_mix->Add(inFileName.c_str());
     
-    TPCNtupleData mix(s.doBelle, s.doThrust, s.doWTA);       setupTPCTree(t_mix,side_t_mix,jt_mix,mix);        mix.setTPCTreeStatus(t_mix,side_t_mix);
+    TPCNtupleData mix(s.doBelle, s.doThrust, s.doWTA);       mix.setupTPCTree(t_mix,side_t_mix,jt_mix);        
     
     // analysis
     Int_t nevent = (Int_t)t->GetEntries();
@@ -198,19 +198,19 @@ int ridge_check
         t->GetEntry(i);
         side_t->GetEntry(i);
         jt->GetEntry(i);
-        data.update();
+        
 	    if (i%10000==0) std::cout <<i<<"/"<<nevent<<std::endl;
         
         // find the event energy histogram(s)
         std::vector<Int_t> histE;
         if(inFileName.find("JobNum") != std::string::npos) histE.push_back(0); // the PYTHIA8 is e+e-→Z on Z pole ~ 91.5 GeV
-        else histE = s.histEnergy(data.Energy);
+        else histE = s.histEnergy(data.particle.Energy);
         if(histE.size() == 0) { std::cout<<"event energy does not fit in any of the specified ranges...skipping event"<<std::endl; continue;}
 
         // nTrk calculation
         Int_t nTrk = 0;
-        if(!s.donTrkThrust) nTrk = s.ridge_eventSelection(data.passesWW, data.missP, data.nParticle, data.nref, data.jtpt, data.jteta, data.STheta, data.mass, data.nTPC, data.theta, data.pmag, data.d0, data.z0, data.pwflag);
-        if(s.donTrkThrust) nTrk = s.ridge_eventSelection(data.passesWW, data.missP, data.nParticle, data.nref, data.jtpt, data.jteta, data.STheta, data.mass, data.nTPC, data.theta_wrtThr, data.pmag, data.d0, data.z0, data.pwflag);
+        if(!s.donTrkThrust) nTrk = s.ridge_eventSelection(data.event.passesWW, data.event.missP, data.particle.nParticle, data.jet.nref, data.jet.jtpt, data.jet.jteta, data.event.STheta, data.particle.mass, data.particle.ntpc, data.particle.theta, data.particle.pmag, data.particle.d0, data.particle.z0, data.particle.pwflag);
+        if(s.donTrkThrust) nTrk = s.ridge_eventSelection(data.event.passesWW, data.event.missP, data.particle.nParticle, data.jet.nref, data.jet.jtpt, data.jet.jteta, data.event.STheta, data.particle.mass, data.particle.ntpc, data.particle.theta_wrtThr, data.particle.pmag, data.particle.d0, data.particle.z0, data.particle.pwflag);
         if( nTrk < 0) continue;
         //std::cout<<data.RunNo<<","<<data.EventNo<<std::endl;
         
@@ -218,24 +218,24 @@ int ridge_check
         std::vector<Int_t> histNtrk = s.histNtrk(nTrk);
 	    if(histNtrk.size() == 0) { std::cout<<"calculated nTrk does not fit in any of the specified ranges...skipping event"<<std::endl; continue;}
 
-        h_eff->Fill(nTrk/data.nParticle);
+        h_eff->Fill(nTrk/data.particle.nParticle);
         h_Aj->Fill(s.fillAj);
         multiplicity->Fill(nTrk);
         
         // increment the number of signal events bin for each nTrk histogram going to be filled
         for(unsigned int nI = 0; nI < histNtrk.size(); ++nI) nSignalEvts[histNtrk.at(nI)] += 1;
         
-        h_Ttheta->Fill(data.TTheta);
-        h_Tphi->Fill(data.TPhi);
+        h_Ttheta->Fill(data.getTTheta());
+        h_Tphi->Fill(data.getTPhi());
 
         Float_t fillNumerator = 1.0;
-        if (s.doPP) fillNumerator = data.pthatWeight;
+        //if (s.doPP) fillNumerator = data.pthatWeight;
         /****************************************/
         // S calculation using multiplicity cut //
         /****************************************/
-        for ( Int_t j=0;j<data.nParticle;j++ )
+        for ( Int_t j=0;j<data.particle.nParticle;j++ )
         {
-            if(!s.ridge_trackSelection(data.nTPC[j],data.getTheta(j),data.getPmag(j), data.d0[j], data.z0[j], data.pwflag[j])) continue;
+            if(!s.ridge_trackSelection(data.particle.ntpc[j],data.getTheta(j),data.getPmag(j), data.particle.d0[j], data.particle.z0[j], data.particle.	pwflag[j])) continue;
             h_phi->Fill(data.getPhi(j));
             h_eta->Fill(data.getEta(j));
             h_theta->Fill(data.getTheta(j));
@@ -251,9 +251,9 @@ int ridge_check
             Float_t phi1 = data.getPhi(j);
             //std::cout<<"eta for first particle "<<angle1<<std::endl;
             // Signal loop, calculate S correlation function
-            for ( Int_t k=j+1;k<data.nParticle;k++ )
+            for ( Int_t k=j+1;k<data.particle.nParticle;k++ )
             {
-                if(!s.ridge_trackSelection(data.nTPC[k],data.getTheta(k),data.getPmag(k), data.d0[k], data.z0[k], data.pwflag[k])) continue;
+                if(!s.ridge_trackSelection(data.particle.ntpc[k],data.getTheta(k),data.getPmag(k), data.particle.d0[k], data.particle.z0[k], data.particle.pwflag[k])) continue;
                 // Check if the second particle is in the same range of pt and eta 
 
                 std::vector<Int_t> histPt2 = s.histPt(data.getPt(k));
@@ -304,8 +304,9 @@ int ridge_check
             jt_mix->GetEntry(selected);
         
             Int_t nTrk_mix;
-            if(!s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(mix.passesWW, mix.missP, mix.nParticle, mix.nref, mix.jtpt, mix.jteta, mix.STheta, mix.mass, mix.nTPC, mix.theta, mix.pmag, mix.d0, mix.z0, mix.pwflag);
-            if(s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(mix.passesWW, mix.missP, mix.nParticle, mix.nref, mix.jtpt, mix.jteta, mix.STheta, mix.mass, mix.nTPC, mix.theta, mix.pmag, mix.d0, mix.z0, mix.pwflag);
+            if(!s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(mix.event.passesWW, mix.event.missP, mix.particle.nParticle, mix.jet.nref, mix.jet.jtpt, mix.jet.jteta, mix.event.STheta, mix.particle.mass, mix.particle.ntpc, mix.particle.theta, mix.particle.pmag, mix.particle.d0, mix.particle.z0, mix.particle.pwflag);
+            if(s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(mix.event.passesWW, mix.event.missP, mix.particle.nParticle, mix.jet.nref, mix.jet.jtpt, mix.jet.jteta, mix.event.STheta, mix.particle.mass, mix.particle.ntpc, mix.particle.theta_wrtThr, mix.particle.pmag, mix.particle.d0, mix.particle.z0, mix.particle.pwflag);
+
             // find the event nTrk histogram(s)
             std::vector<Int_t> histNtrk_mix = s.histNtrk(nTrk_mix);
             // loop over the background event nTrk histos and determine if the signal event has the same histos. If yes then leave the entry. If no then remove the entry from histNtrk_mix. 
@@ -314,7 +315,7 @@ int ridge_check
             // We continue to search until we find an event that passes the mixed event selection criteria and has a non-null histNtrk_mix intersection with histNtrk.
             // s.isMixedEvent returns false if the mixed event fails the criteria in which case we want to enter the while loop.
             // If the size of histNtrk_mix is 0 then the mixed event is a different nTrk range than the signal event and we do not want mix in which case we want to enter the while loop.
-            while (histNtrk_mix.size() == 0 || !s.isMixedEvent(nTrk, nTrk_mix, data.jteta[0], mix.jteta[0], data.getTTheta(), mix.getTTheta(), data.getTPhi(), mix.getTPhi()))
+            while (histNtrk_mix.size() == 0 || !s.isMixedEvent(nTrk, nTrk_mix, data.jet.jteta[0], mix.jet.jteta[0], data.getTTheta(), mix.getTTheta(), data.getTPhi(), mix.getTPhi()))
             {
                 selected++;
                 if (selected >= t->GetEntries()) selected = 0;
@@ -322,18 +323,13 @@ int ridge_check
                 side_t_mix->GetEntry(selected);
                 jt_mix->GetEntry(selected);
                 
-                if(!s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(mix.passesWW, mix.missP, mix.nParticle, mix.nref, mix.jtpt, mix.jteta, mix.STheta, mix.mass, mix.nTPC, mix.theta, mix.pmag, mix.d0, mix.z0, mix.pwflag);
-                if(s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(mix.passesWW, mix.missP, mix.nParticle, mix.nref, mix.jtpt, mix.jteta, mix.STheta, mix.mass, mix.nTPC, mix.theta, mix.pmag, mix.d0, mix.z0, mix.pwflag);
+                if(!s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(mix.event.passesWW, mix.event.missP, mix.particle.nParticle, mix.jet.nref, mix.jet.jtpt, mix.jet.jteta, mix.event.STheta, mix.particle.mass, mix.particle.ntpc, mix.particle.theta, mix.particle.pmag, mix.particle.d0, mix.particle.z0, mix.particle.pwflag);
+                if(s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(mix.event.passesWW, mix.event.missP, mix.particle.nParticle, mix.jet.nref, mix.jet.jtpt, mix.jet.jteta, mix.event.STheta, mix.particle.mass, mix.particle.ntpc, mix.particle.theta_wrtThr, mix.particle.pmag, mix.particle.d0, mix.particle.z0, mix.particle.pwflag);
                 // find the event nTrk histogram(s)
                 histNtrk_mix = s.histNtrk(nTrk_mix);
                 // loop over the background event nTrk histos and determine if the signal event has the same histos. If yes then leave the entry. If no then remove the entry from histNtrk_mix. 
                 for(unsigned int nI = 0; nI <histNtrk_mix.size(); nI++) if(std::find(histNtrk.begin(), histNtrk.end(), histNtrk_mix.at(nI)) == histNtrk.end()) histNtrk_mix.erase(histNtrk_mix.begin() + nI);
-            }
-            
-            // Use the Thrust axis from the signal event instead of mixed event
-            //mix.TTheta=data.TTheta;
-            //mix.TPhi=data.TPhi;
-            mix.update();
+            }           
             
             if (i==selected)
             {
@@ -344,10 +340,10 @@ int ridge_check
             // increment the number of background events bin for each nTrk histogram going to be filled (note that this should give the same result as the signal events increment)
             for(unsigned int nI = 0; nI < histNtrk.size(); ++nI) nBkgrndEvts[histNtrk.at(nI)] += 1;
 
-            for ( Int_t j=0;j<data.nParticle;j++ )
+            for ( Int_t j=0;j<data.particle.nParticle;j++ )
             {
                 // decide if valid track
-                if(!s.ridge_trackSelection(data.nTPC[j],data.getTheta(j),data.getPmag(j), data.d0[j], data.z0[j], data.pwflag[j])) continue;
+                if(!s.ridge_trackSelection(data.particle.ntpc[j],data.getTheta(j),data.getPmag(j), data.particle.d0[j], data.particle.z0[j], data.particle.pwflag[j])) continue;
 
                 // Decide which pt and eta range to fill
                 std::vector<Int_t> histPt_bkg1 = s.histPt(data.getPt(j));
@@ -360,10 +356,10 @@ int ridge_check
                 Float_t phi = data.getPhi(j);
 
                 // Background loop, calculate B correlation function from mixed event
-                for ( Int_t k=0;k<mix.nParticle;k++ )
+                for ( Int_t k=0;k<mix.particle.nParticle;k++ )
                 {
                     // decide if valid track
-                    if(!s.ridge_trackSelection(mix.nTPC[k],mix.getTheta(k),mix.getPmag(k), mix.d0[k], mix.z0[k], mix.pwflag[k])) continue;
+                    if(!s.ridge_trackSelection(mix.particle.ntpc[k],mix.getTheta(k),mix.getPmag(k), mix.particle.d0[k], mix.particle.z0[k], mix.particle.pwflag[k])) continue;
                     
                     // Check if the second particle is in the same range of pt and eta    
                     std::vector<Int_t> histPt_bkg2 = s.histPt(mix.getPt(k));
