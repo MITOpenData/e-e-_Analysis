@@ -51,7 +51,8 @@ using namespace std;
 int ridge_check
     (
      const std::string inFileName, // input file
-     std::string outFileName    // output file
+      std::string outFileName,    // output file
+      std::string inMixFileName="" // input mix file
     )
 {
     // ROOT Global setting
@@ -61,10 +62,11 @@ int ridge_check
     // set up plots
     Selection s = Selection();
     if(inFileName.find("JobNum") != std::string::npos){s.doNTPC = false; s.dod0 = false; s.doz0 = false; s.doWW = false;} // for MC
-
+    
     if(outFileName.find(".root") == std::string::npos) outFileName = outFileName + ".root";
+    
     TFile * output = TFile::Open(outFileName.c_str(),"recreate");
-
+    
     /// Initialize the histograms
     std::cout<<"Initializing histograms..."<<std::endl;
     static const Int_t nEnergyBins = s.nEnergyBins;
@@ -100,14 +102,12 @@ int ridge_check
             {
                 for(int k = 0; k<netaBins; k++)
                 {
-                    if(s.doThrust)
+                    if(s.doThrust) // Thrust Axis Analysis
                     {
                         signal2PC[e][i][j][k] = new TH2F(Form("signal2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
                         signal2PC[e][i][j][k]->Sumw2();
                         bkgrnd2PC[e][i][j][k] = new TH2F(Form("bkgrnd2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
                         bkgrnd2PC[e][i][j][k]->Sumw2();
-                        //nEvtSigHist[i][j][k] = new TH1D(Form("nEvtSigHisto_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),"nEvtSigHisto",1,0,1);
-                        //nEvtBkgHist[i][j][k] = new TH1D(Form("nEvtBkgHisto_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),"nEvtBkgHisto",1,0,1);
                         if(!s.doParallel)
                         {
                             ratio2PC[e][i][j][k] = new TH2F(Form("ratio2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
@@ -116,14 +116,12 @@ int ridge_check
                             longRangeYield[e][i][j][k]->Sumw2();
                         } 
                     }
-                    else if (s.doWTA)
+                    else if (s.doWTA) // WTA Axis Analysis
                     {
                         signal2PC[e][i][j][k] = new TH2F(Form("signal2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
                         signal2PC[e][i][j][k]->Sumw2();
                         bkgrnd2PC[e][i][j][k] = new TH2F(Form("bkgrnd2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
                         bkgrnd2PC[e][i][j][k]->Sumw2();
-                        //nEvtSigHist[i][j][k] = new TH1D(Form("nEvtSigHisto_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], s.ptBinsLow_wrtWTA[j],s.ptBinsHigh_wrtWTA[j],s.etaBinsLow_wrtWTA[k]),"nEvtSigHisto",1,0,1);
-                        //nEvtBkgHist[i][j][k] = new TH1D(Form("nEvtBkgHisto_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], s.ptBinsLow_wrtWTA[j],s.ptBinsHigh_wrtWTA[j],s.etaBinsLow_wrtWTA[k]),"nEvtBkgHisto",1,0,1);
                         if(!s.doParallel)
                         {
                             ratio2PC[e][i][j][k] = new TH2F(Form("ratio2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
@@ -132,14 +130,12 @@ int ridge_check
                             longRangeYield[e][i][j][k]->Sumw2();
                         }  
                     }
-                    else /* Beam */
+                    else /* Beam Axis Analysis */
                     {
                         signal2PC[e][i][j][k] = new TH2F(Form("signal2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
                         signal2PC[e][i][j][k]->Sumw2();
                         bkgrnd2PC[e][i][j][k] = new TH2F(Form("bkgrnd2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
                         bkgrnd2PC[e][i][j][k]->Sumw2();
-                        //nEvtSigHist[i][j][k] = new TH1D(Form("nEvtSigHisto_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], s.ptBinsLow_wrtWTA[j],s.ptBinsHigh_wrtWTA[j],s.etaBinsLow_wrtWTA[k]),"nEvtSigHisto",1,0,1);
-                        //nEvtBkgHist[i][j][k] = new TH1D(Form("nEvtBkgHisto_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], s.ptBinsLow_wrtWTA[j],s.ptBinsHigh_wrtWTA[j],s.etaBinsLow_wrtWTA[k]),"nEvtBkgHisto",1,0,1);
                         if(!s.doParallel)
                         {
                             ratio2PC[e][i][j][k] = new TH2F(Form("ratio2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
@@ -181,7 +177,15 @@ int ridge_check
 
     TPCNtupleData data(s.doBelle, s.doThrust, s.doWTA);      data.setupTPCTree(t,side_t,jt);   
     
-    TChain * t_mix = new TChain("t");       t_mix->Add(inFileName.c_str());
+    bool doMixFile=0;
+    TChain * t_mix = new TChain("t");       
+    if (inMixFileName=="") {
+       t_mix->Add(inFileName.c_str());
+    } else {
+       doMixFile=1;
+       t_mix->Add(inMixFileName.c_str());
+    }
+    
     TChain * side_t_mix = new TChain(sideTree.c_str());       side_t_mix->Add(inFileName.c_str());
     TChain * jt_mix = new TChain(jtTreeName.c_str());       jt_mix->Add(inFileName.c_str());
     
@@ -300,14 +304,15 @@ int ridge_check
         for (Int_t nMix = 0; nMix<s.bkgrd_runs; nMix++)
         {
             Int_t selected=i+1;
-            if (selected >= t->GetEntries()) selected = 0;
+	    if (selected >= t->GetEntries()) selected = 0;
+            if (doMixFile==1) selected=i;
             t_mix->GetEntry(selected);
             side_t_mix->GetEntry(selected);
             jt_mix->GetEntry(selected);
         
-            Int_t nTrk_mix;
-            if(!s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(mix.event.passesWW, mix.event.missP, mix.particle.nParticle, mix.jet.nref, mix.jet.jtpt, mix.jet.jteta, mix.event.STheta, mix.particle.mass, mix.particle.ntpc, mix.particle.theta, mix.particle.pmag, mix.particle.d0, mix.particle.z0, mix.particle.pwflag);
-            if(s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(mix.event.passesWW, mix.event.missP, mix.particle.nParticle, mix.jet.nref, mix.jet.jtpt, mix.jet.jteta, mix.event.STheta, mix.particle.mass, mix.particle.ntpc, mix.particle.theta_wrtThr, mix.particle.pmag, mix.particle.d0, mix.particle.z0, mix.particle.pwflag);
+            Int_t nTrk_mix=nTrk;
+            if(!s.donTrkThrust&&!doMixFile) nTrk_mix = s.ridge_eventSelection(mix.event.passesWW, mix.event.missP, mix.particle.nParticle, mix.jet.nref, mix.jet.jtpt, mix.jet.jteta, mix.event.STheta, mix.particle.mass, mix.particle.ntpc, mix.particle.theta, mix.particle.pmag, mix.particle.d0, mix.particle.z0, mix.particle.pwflag);
+            if(s.donTrkThrust&&!doMixFile) nTrk_mix = s.ridge_eventSelection(mix.event.passesWW, mix.event.missP, mix.particle.nParticle, mix.jet.nref, mix.jet.jtpt, mix.jet.jteta, mix.event.STheta, mix.particle.mass, mix.particle.ntpc, mix.particle.theta_wrtThr, mix.particle.pmag, mix.particle.d0, mix.particle.z0, mix.particle.pwflag);
 
             // find the event nTrk histogram(s)
             std::vector<Int_t> histNtrk_mix = s.histNtrk(nTrk_mix);
@@ -317,7 +322,7 @@ int ridge_check
             // We continue to search until we find an event that passes the mixed event selection criteria and has a non-null histNtrk_mix intersection with histNtrk.
             // s.isMixedEvent returns false if the mixed event fails the criteria in which case we want to enter the while loop.
             // If the size of histNtrk_mix is 0 then the mixed event is a different nTrk range than the signal event and we do not want mix in which case we want to enter the while loop.
-            while (histNtrk_mix.size() == 0 || !s.isMixedEvent(nTrk, nTrk_mix, data.jet.jteta[0], mix.jet.jteta[0], data.getTTheta(), mix.getTTheta(), data.getTPhi(), mix.getTPhi()))
+            while (!doMixFile || histNtrk_mix.size() == 0 || !s.isMixedEvent(nTrk, nTrk_mix, data.jet.jteta[0], mix.jet.jteta[0], data.getTTheta(), mix.getTTheta(), data.getTPhi(), mix.getTPhi()))
             {
                 selected++;
                 if (selected >= t->GetEntries()) selected = 0;
@@ -332,12 +337,7 @@ int ridge_check
                 // loop over the background event nTrk histos and determine if the signal event has the same histos. If yes then leave the entry. If no then remove the entry from histNtrk_mix. 
                 for(unsigned int nI = 0; nI <histNtrk_mix.size(); nI++) if(std::find(histNtrk.begin(), histNtrk.end(), histNtrk_mix.at(nI)) == histNtrk.end()) histNtrk_mix.erase(histNtrk_mix.begin() + nI);
             }           
-            
-            if (i==selected)
-            {
-                std::cout <<"Error in Mixing!"<<std::endl;
-                continue;
-            }
+                       
             
             // increment the number of background events bin for each nTrk histogram going to be filled (note that this should give the same result as the signal events increment)
             for(unsigned int nI = 0; nI < histNtrk.size(); ++nI) nBkgrndEvts[histNtrk.at(nI)] += 1;
@@ -488,10 +488,12 @@ int main(int argc, char* argv[])
     if(argc < 3 || argc > 19)
     {
         std::cout << "Usage: ./ridge_check.exe <inFileName> <outFileName>" <<std::endl;
+        std::cout << "Usage: ./ridge_check.exe <inFileName> <outFileName> <mixFileName>" <<std::endl;
         return 1;
     }
     
     int retVal = 0;
     if(argc == 3) retVal += ridge_check(argv[1], argv[2]);
+    if(argc == 4) retVal += ridge_check(argv[1], argv[2], argv[3]);
     return retVal;
 }
