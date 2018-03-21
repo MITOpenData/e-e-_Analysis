@@ -30,10 +30,37 @@ class TPCNtupleData{
     }
     
     void setupTPCTree(TTree *tData, TTree *tBoost, TTree *tJet) {
+       std::vector<std::string> listData;
        std::vector<std::string> list;
-       particle.SetStatusAndAddressRead(tData,list);
+       listData.push_back("nParticle");
+       listData.push_back("Energy");
+       listData.push_back("pt");
+       listData.push_back("pmag");
+       listData.push_back("mass");
+       listData.push_back("pwflag");
+       listData.push_back("eta");
+       listData.push_back("theta");
+       listData.push_back("phi");
+       listData.push_back("d0");
+       listData.push_back("z0");
+       listData.push_back("ntpc");
+       
+       if (doThrust) {
+          listData.push_back("pt_wrtThr");
+          listData.push_back("eta_wrtThr");
+          listData.push_back("phi_wrtThr");
+          listData.push_back("theta_wrtThr");
+       }
+       
+       std::vector<std::string> listJet;
+       listJet.push_back("nref");
+       listJet.push_back("jtpt");
+       listJet.push_back("jteta");
+       
+       particle.SetStatusAndAddressRead(tData,listData);
+       event.SetStatusAndAddressRead(tData,list);
        if (doWTA) boosted.SetStatusAndAddressRead(tBoost,list);
-       jet.SetStatusAndAddressRead(tJet,list);
+       jet.SetStatusAndAddressRead(tJet,listJet);
     }	
     
     // Decide if paricle j is a charged hadron    
@@ -60,7 +87,7 @@ class TPCNtupleData{
      if (doThrust)
      {
          return particle.pt_wrtThr[j];
-     } else {
+     } else if (doWTA){
          return boosted.pt[j];
      }
      return particle.pt[j];
