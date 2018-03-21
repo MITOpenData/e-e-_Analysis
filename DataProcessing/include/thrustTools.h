@@ -205,7 +205,7 @@ TVector3 getThrustBelle(int n, float *px, float *py, float *pz){
   return thrustBelleSTD(momenta.begin(), momenta.end(), SelfFunc(TVector3()));
 }
 
-TVector3 getChargedThrustBelle(int n, float *px, float *py, float *pz, Char_t *pwflag){
+TVector3 getChargedThrustBelle(int n, float *px, float *py, float *pz, Short_t *pwflag){
   std::vector<TVector3> momenta;
   for (int i = 0; i < n; ++i) {
     if(pwflag[i]!=0) continue;
@@ -318,7 +318,7 @@ TVector3 getThrustHerwig(int n, float *px, float *py, float *pz){
 }
 
 //almost a straight copy of above, but filter for pwflag==0 (tracks)
-TVector3 getChargedThrustHerwig(int n, float *px, float *py, float *pz, Char_t *pwflag){
+TVector3 getChargedThrustHerwig(int n, float *px, float *py, float *pz, Short_t *pwflag){
   float nTrk = 0;
   float pSum = 0;
   for(int t = 0; t<n; t++){
@@ -465,7 +465,7 @@ TVector3 getThrust(int n, float *px, float *py, float *pz, THRUST::algorithm alg
   return thrustAxis;
 }
 
-TVector3 getChargedThrust(int n, float *px, float *py, float *pz, Char_t *pwflag, THRUST::algorithm algo=THRUST::HERWIG){
+TVector3 getChargedThrust(int n, float *px, float *py, float *pz, Short_t *pwflag, THRUST::algorithm algo=THRUST::HERWIG){
   float nTrk = 0;
   for(int t = 0; t<n; t++){
     if(pwflag[t]!=0) continue;
