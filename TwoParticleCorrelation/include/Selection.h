@@ -130,7 +130,7 @@ class Selection
         Float_t getEtaPlotRange();
         Float_t getDifferential();
         int ridge_trackSelection(Int_t nTPC, Float_t theta, Float_t p, Float_t d0, Float_t z0, Int_t pwflag);
-        int ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticle, Int_t nref, Float_t jtpt[], Float_t jteta[], Float_t STheta, Float_t mass[], Int_t nTPC[], Float_t theta[], Float_t pmag[], Float_t d0[], Float_t z0[], Int_t pwflag[]);
+        int ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticle, Int_t nref, Float_t jtpt[], Float_t jteta[], Float_t STheta, Float_t mass[], Short_t nTPC[], Float_t theta[], Float_t pmag[], Float_t d0[], Float_t z0[], Short_t pwflag[]);
         bool isMixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta, Float_t jteta_mix, Float_t TTheta, Float_t TTheta_mix, Float_t TPhi, Float_t TPhi_mix);
         std::vector<Int_t> histEnergy(Float_t Energy);
         std::vector<Int_t> histNtrk(Int_t N);
@@ -214,7 +214,7 @@ int Selection::ridge_trackSelection(Int_t nTPC, Float_t theta, Float_t p, Float_
 
 
 /////// MUST UPDATE THE EVENT SELECTION BASED ON AXIS/THE 1990 PAPER/////////
-int Selection::ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticle, Int_t nref, Float_t jtpt[], Float_t jteta[], Float_t STheta, Float_t mass[],/* track selection */ Int_t nTPC[], Float_t theta[], Float_t pmag[], Float_t d0[], Float_t z0[], Int_t pwflag[])
+int Selection::ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticle, Int_t nref, Float_t jtpt[], Float_t jteta[], Float_t STheta, Float_t mass[],/* track selection */ Short_t nTPC[], Float_t theta[], Float_t pmag[], Float_t d0[], Float_t z0[], Short_t pwflag[])
 {
     
     ///////// QCD Paper Selection /////////
