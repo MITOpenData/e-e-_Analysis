@@ -40,6 +40,7 @@ class particleData{
   int pid[nMaxPart];
   float d0[nMaxPart];
   float z0[nMaxPart];
+  bool highPurity[nMaxPart];
   Short_t ntpc[nMaxPart];
   Short_t nitc[nMaxPart];
   Short_t nvdet[nMaxPart];
@@ -69,7 +70,7 @@ class particleData{
   float theta_wrtChThrPerp[nMaxPart];
   float phi_wrtChThrPerp[nMaxPart];
 
-  static const int nVar = 56;
+  static const int nVar = 57;
   std::string varStr[nVar] = {"nParticle",
 			      "EventNo",
 			      "RunNo",
@@ -100,6 +101,7 @@ class particleData{
 			      "pid",
 			      "d0",
 			      "z0",
+                              "highPurity",
 			      "ntpc",
 			      "nitc",
 			      "nvdet",
@@ -170,6 +172,7 @@ particleData::particleData()
     pid[i] = -999;
     d0[i] = -999;
     z0[i] = -999;
+    highPurity[i] = true;
     ntpc[i] = -127;
     nitc[i] = -127;
     nvdet[i] = -127;
@@ -253,32 +256,33 @@ void particleData::SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::str
   if(varIsGood[27]) inTree_p->SetBranchAddress("pid", pid);
   if(varIsGood[28]) inTree_p->SetBranchAddress("d0", d0);
   if(varIsGood[29]) inTree_p->SetBranchAddress("z0", z0);
-  if(varIsGood[30]) inTree_p->SetBranchAddress("ntpc", ntpc);
-  if(varIsGood[31]) inTree_p->SetBranchAddress("nitc", nitc);
-  if(varIsGood[32]) inTree_p->SetBranchAddress("nvdet", nvdet);
-  if(varIsGood[33]) inTree_p->SetBranchAddress("vx", vx);
-  if(varIsGood[34]) inTree_p->SetBranchAddress("vy", vy);
-  if(varIsGood[35]) inTree_p->SetBranchAddress("vz", vz);
-  if(varIsGood[36]) inTree_p->SetBranchAddress("pt_wrtThr", pt_wrtThr);
-  if(varIsGood[37]) inTree_p->SetBranchAddress("eta_wrtThr", eta_wrtThr);
-  if(varIsGood[38]) inTree_p->SetBranchAddress("rap_wrtThr", rap_wrtThr);
-  if(varIsGood[39]) inTree_p->SetBranchAddress("theta_wrtThr", theta_wrtThr);
-  if(varIsGood[40]) inTree_p->SetBranchAddress("phi_wrtThr", phi_wrtThr);
-  if(varIsGood[41]) inTree_p->SetBranchAddress("pt_wrtThrPerp", pt_wrtThrPerp);
-  if(varIsGood[42]) inTree_p->SetBranchAddress("eta_wrtThrPerp", eta_wrtThrPerp);
-  if(varIsGood[43]) inTree_p->SetBranchAddress("rap_wrtThrPerp", rap_wrtThrPerp);
-  if(varIsGood[44]) inTree_p->SetBranchAddress("theta_wrtThrPerp", theta_wrtThrPerp);
-  if(varIsGood[45]) inTree_p->SetBranchAddress("phi_wrtThrPerp", phi_wrtThrPerp);
-  if(varIsGood[46]) inTree_p->SetBranchAddress("pt_wrtChThr", pt_wrtChThr);
-  if(varIsGood[47]) inTree_p->SetBranchAddress("eta_wrtChThr", eta_wrtChThr);
-  if(varIsGood[48]) inTree_p->SetBranchAddress("rap_wrtChThr", rap_wrtChThr);
-  if(varIsGood[49]) inTree_p->SetBranchAddress("theta_wrtChThr", theta_wrtChThr);
-  if(varIsGood[50]) inTree_p->SetBranchAddress("phi_wrtChThr", phi_wrtChThr);
-  if(varIsGood[51]) inTree_p->SetBranchAddress("pt_wrtChThrPerp", pt_wrtChThrPerp);
-  if(varIsGood[52]) inTree_p->SetBranchAddress("eta_wrtChThrPerp", eta_wrtChThrPerp);
-  if(varIsGood[53]) inTree_p->SetBranchAddress("rap_wrtChThrPerp", rap_wrtChThrPerp);
-  if(varIsGood[54]) inTree_p->SetBranchAddress("theta_wrtChThrPerp", theta_wrtChThrPerp);
-  if(varIsGood[55]) inTree_p->SetBranchAddress("phi_wrtChThrPerp", phi_wrtChThrPerp);
+  if(varIsGood[30]) inTree_p->SetBranchAddress("highPurity", highPurity);
+  if(varIsGood[31]) inTree_p->SetBranchAddress("ntpc", ntpc);
+  if(varIsGood[32]) inTree_p->SetBranchAddress("nitc", nitc);
+  if(varIsGood[33]) inTree_p->SetBranchAddress("nvdet", nvdet);
+  if(varIsGood[34]) inTree_p->SetBranchAddress("vx", vx);
+  if(varIsGood[35]) inTree_p->SetBranchAddress("vy", vy);
+  if(varIsGood[36]) inTree_p->SetBranchAddress("vz", vz);
+  if(varIsGood[37]) inTree_p->SetBranchAddress("pt_wrtThr", pt_wrtThr);
+  if(varIsGood[38]) inTree_p->SetBranchAddress("eta_wrtThr", eta_wrtThr);
+  if(varIsGood[39]) inTree_p->SetBranchAddress("rap_wrtThr", rap_wrtThr);
+  if(varIsGood[40]) inTree_p->SetBranchAddress("theta_wrtThr", theta_wrtThr);
+  if(varIsGood[41]) inTree_p->SetBranchAddress("phi_wrtThr", phi_wrtThr);
+  if(varIsGood[42]) inTree_p->SetBranchAddress("pt_wrtThrPerp", pt_wrtThrPerp);
+  if(varIsGood[43]) inTree_p->SetBranchAddress("eta_wrtThrPerp", eta_wrtThrPerp);
+  if(varIsGood[44]) inTree_p->SetBranchAddress("rap_wrtThrPerp", rap_wrtThrPerp);
+  if(varIsGood[45]) inTree_p->SetBranchAddress("theta_wrtThrPerp", theta_wrtThrPerp);
+  if(varIsGood[46]) inTree_p->SetBranchAddress("phi_wrtThrPerp", phi_wrtThrPerp);
+  if(varIsGood[47]) inTree_p->SetBranchAddress("pt_wrtChThr", pt_wrtChThr);
+  if(varIsGood[48]) inTree_p->SetBranchAddress("eta_wrtChThr", eta_wrtChThr);
+  if(varIsGood[49]) inTree_p->SetBranchAddress("rap_wrtChThr", rap_wrtChThr);
+  if(varIsGood[50]) inTree_p->SetBranchAddress("theta_wrtChThr", theta_wrtChThr);
+  if(varIsGood[51]) inTree_p->SetBranchAddress("phi_wrtChThr", phi_wrtChThr);
+  if(varIsGood[52]) inTree_p->SetBranchAddress("pt_wrtChThrPerp", pt_wrtChThrPerp);
+  if(varIsGood[53]) inTree_p->SetBranchAddress("eta_wrtChThrPerp", eta_wrtChThrPerp);
+  if(varIsGood[54]) inTree_p->SetBranchAddress("rap_wrtChThrPerp", rap_wrtChThrPerp);
+  if(varIsGood[55]) inTree_p->SetBranchAddress("theta_wrtChThrPerp", theta_wrtChThrPerp);
+  if(varIsGood[56]) inTree_p->SetBranchAddress("phi_wrtChThrPerp", phi_wrtChThrPerp);
   
   return;
 }
@@ -315,6 +319,7 @@ void particleData::SetBranchWrite(TTree* inTree_p)
   inTree_p->Branch("pid", pid, "pid[nParticle]/I");
   inTree_p->Branch("d0", d0, "d0[nParticle]/F");
   inTree_p->Branch("z0", z0, "z0[nParticle]/F");
+  inTree_p->Branch("highPurity", highPurity, "highPurity[nParticle]/O");
   inTree_p->Branch("ntpc", ntpc, "ntpc[nParticle]/S");
   inTree_p->Branch("nitc", nitc, "nitc[nParticle]/S");
   inTree_p->Branch("nvdet", nvdet, "nvdet[nParticle]/S");

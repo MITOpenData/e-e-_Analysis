@@ -36,7 +36,7 @@ class TrackSelection{
    inline bool passesPWFlag(Short_t pwflag);
 
    bool highPurity(particleData * p, int indx);
- 
+   void fillHighPurity(particleData * p); 
  private:
    Short_t nTPCcut = 4;
    float thetaCutLow = 20.*TMath::Pi()/180.;
@@ -56,7 +56,13 @@ bool TrackSelection::highPurity(particleData * p, int indx){
   if(!passesNTPC(p->ntpc[indx]))     return false;
 
   return true;
+}
 
+void TrackSelection::fillHighPurity(particleData * p){
+  for(int i = 0; i<p->nParticle; i++){
+    if(highPurity(p,i)) p->highPurity[i] = true;
+    else p->highPurity[i] = false;
+  }
 }
 
 inline bool TrackSelection::passesNTPC(Short_t ntpc){ return ntpc>=nTPCcut; }
