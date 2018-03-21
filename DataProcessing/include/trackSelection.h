@@ -7,6 +7,13 @@
 #include "TLorentzVector.h"
 #include "include/particleData.h"
 
+/*example do getting highPurity requirement for ith particle from pData:
+TrackSelection trkSel = TrackSelection();
+particleData pData;
+int i;
+bool isGoodTrk = TrackSelection.highPurity(&pData,i);
+*/
+
 class TrackSelection{
  public:
    TrackSelection();
@@ -26,6 +33,7 @@ class TrackSelection{
    inline bool passesPt(float pt);
    inline bool passesD0(float d0);
    inline bool passesZ0(float z0);
+   inline bool passesPWFlag(Short_t pwflag);
 
    bool highPurity(particleData * p, int indx);
  
@@ -40,11 +48,12 @@ class TrackSelection{
 };
 
 bool TrackSelection::highPurity(particleData * p, int indx){
-  if(!passesTheta(p->theta[indx])) return false;
-  if(!passesP(p->pmag[indx]))      return false;
-  if(!passesD0(p->d0[indx]))       return false;
-  if(!passesZ0(p->z0[indx]))       return false;
-  if(!passesNTPC(p->ntpc[indx]))   return false;
+  if(!passesPWFlag(p->pwflag[indx])) return false;
+  if(!passesTheta(p->theta[indx]))   return false;
+  if(!passesP(p->pmag[indx]))        return false;
+  if(!passesD0(p->d0[indx]))         return false;
+  if(!passesZ0(p->z0[indx]))         return false;
+  if(!passesNTPC(p->ntpc[indx]))     return false;
 
   return true;
 
@@ -56,6 +65,7 @@ inline bool TrackSelection::passesP(float p){ return p>=pCut;}
 inline bool TrackSelection::passesPt(float pt){ return pt>=ptCut;}
 inline bool TrackSelection::passesD0(float d0){ return TMath::Abs(d0)<=d0Cut;}
 inline bool TrackSelection::passesZ0(float z0){ return TMath::Abs(z0)<=z0Cut;}
+inline bool TrackSelection::passesPWFlag(Short_t pwflag){ return pwflag==0;}
 
 void TrackSelection::setnTPCCut(Short_t cut){ nTPCcut = cut;}
 void TrackSelection::setThetaCutLow(float cut){ thetaCutLow = cut;}

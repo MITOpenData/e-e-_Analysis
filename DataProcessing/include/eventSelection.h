@@ -191,11 +191,8 @@ void eventSelection::setEventSelection(particleData* inPart, eventData* inData)
     particles.push_back(fastjet::PseudoJet(inPart->px[pI], inPart->py[pI], inPart->pz[pI], e));
 
     if(!trkSel.highPurity(inPart, pI)) continue;
-
-    if(inPart->pwflag[pI] == 0){
-      TotalChgEnergy += TMath::Sqrt(inPart->pmag[pI]*inPart->pmag[pI] + inPart->mass[pI]*inPart->mass[pI]);
-      NTrk += 1;
-    }    
+    TotalChgEnergy += TMath::Sqrt(inPart->pmag[pI]*inPart->pmag[pI] + inPart->mass[pI]*inPart->mass[pI]);
+    NTrk += 1;
   }
 
   passesTotalChgEnergyMin = TotalChgEnergy >= 15;
