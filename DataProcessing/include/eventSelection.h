@@ -10,6 +10,7 @@
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
 
+#include "include/trackSelection.h"
 #include "include/particleData.h"
 #include "include/eventData.h"
 
@@ -75,6 +76,10 @@ class eventSelection{
 
   Bool_t getPassesISR(){return passesISR;}
   Bool_t getPassesWW(){return passesWW;}
+
+  private:
+    TrackSelection trkSel = TrackSelection();
+
 };
 
 
@@ -185,12 +190,7 @@ void eventSelection::setEventSelection(particleData* inPart, eventData* inData)
     Double_t e = TMath::Sqrt(inPart->pmag[pI]*inPart->pmag[pI] + inPart->mass[pI]*inPart->mass[pI]);
     particles.push_back(fastjet::PseudoJet(inPart->px[pI], inPart->py[pI], inPart->pz[pI], e));
 
-    if(inPart->ntpc[pI] < 4) continue;
-    if(inPart->theta[pI] < 20.*TMath::Pi()/180.) continue;
-    if(inPart->theta[pI] > 160.*TMath::Pi()/180.) continue;
-    if(inPart->pmag[pI] < .2) continue;
-    if(TMath::Abs(inPart->d0[pI]) > 3.) continue;
-    if(TMath::Abs(inPart->z0[pI]) > 5.) continue;
+    if(!trkSel.highPurity(inPart, pI)) continue;
 
     if(inPart->pwflag[pI] == 0){
       TotalChgEnergy += TMath::Sqrt(inPart->pmag[pI]*inPart->pmag[pI] + inPart->mass[pI]*inPart->mass[pI]);
