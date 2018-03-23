@@ -21,12 +21,14 @@ class TPCNtupleData{
     bool isBelle;
     bool doThrust;
     bool doWTA;
+    bool doPerp;
      
        
-    TPCNtupleData(bool ana=0, bool thrust=0, bool wta=0) {
+    TPCNtupleData(bool ana=0, bool thrust=0, bool wta=0, bool perp=0) {
        isBelle = ana;
        doWTA=wta;
        doThrust=thrust;
+       doPerp=perp;
     }
     
     void setupTPCTree(TTree *tData, TTree *tBoost, TTree *tJet) {
@@ -46,10 +48,17 @@ class TPCNtupleData{
        listData.push_back("ntpc");
        
        if (doThrust) {
-          listData.push_back("pt_wrtThr");
-          listData.push_back("eta_wrtThr");
-          listData.push_back("phi_wrtThr");
-          listData.push_back("theta_wrtThr");
+          if (doPerp) {
+             listData.push_back("pt_wrtThrPerp");
+             listData.push_back("eta_wrtThrPerp");
+             listData.push_back("phi_wrtThrPerp");
+             listData.push_back("theta_wrtThrPerp");
+	  } else {
+             listData.push_back("pt_wrtThr");
+             listData.push_back("eta_wrtThr");
+             listData.push_back("phi_wrtThr");
+             listData.push_back("theta_wrtThr");
+	  }   
        }
        
        std::vector<std::string> listJet;
@@ -86,9 +95,17 @@ class TPCNtupleData{
     {
      if (doThrust)
      {
-         return particle.pt_wrtThr[j];
+         if (doPerp) {
+	    return particle.pt_wrtThrPerp[j];
+	 } else {
+	    return particle.pt_wrtThr[j];
+	 }
      } else if (doWTA){
-         return boosted.pt[j];
+         if (doPerp) {
+	    return boosted.pt_Perp[j];
+	 } else {
+            return boosted.pt[j];
+	 }
      }
      return particle.pt[j];
     }
@@ -98,10 +115,18 @@ class TPCNtupleData{
     {
      if (doThrust)
      {
-         return particle.eta_wrtThr[j];
+         if (doPerp) {
+            return particle.eta_wrtThrPerp[j];
+         } else {
+            return particle.eta_wrtThr[j];
+         }
      } else if (doWTA)
      {
-         return boosted.eta[j];
+         if (doPerp) {
+            return boosted.eta_Perp[j];
+	 } else {   
+            return boosted.eta[j];
+	 }   
      }
      return particle.eta[j];
     }
@@ -111,10 +136,18 @@ class TPCNtupleData{
     {
      if (doThrust)
      {
-         return particle.phi_wrtThr[j];
+         if (doPerp) {
+            return particle.phi_wrtThrPerp[j];
+         } else {
+            return particle.phi_wrtThr[j];
+         }
      } else if (doWTA)
      {
-         return boosted.phi[j];
+         if (doPerp) {
+            return boosted.phi_Perp[j];
+	 } else { 
+	    return boosted.phi[j];
+	 }     
      }
      return particle.phi[j];
     }
@@ -124,10 +157,18 @@ class TPCNtupleData{
     {
      if (doThrust)
      {
-         return particle.theta_wrtThr[j];
+         if (doPerp) {
+            return particle.theta_wrtThrPerp[j];
+	 } else {
+	    return particle.theta_wrtThr[j];
+	 }    
      } else if (doWTA) 
      {
-        return boosted.theta[j];
+         if (doPerp) {
+            return boosted.theta_Perp[j];
+	 } else {   
+            return boosted.theta[j];
+         }
      }
      return particle.theta[j];
     }
@@ -135,7 +176,13 @@ class TPCNtupleData{
     // return pmag
     Float_t getPmag(int j)
     {
-     if (doWTA) return boosted.pmag[j];
+     if (doWTA) {
+        if (doPerp) {
+	   return boosted.pmag_Perp[j];
+        } else {
+	   return boosted.pmag[j];
+	}
+     }	 
      return particle.pmag[j];
     }
     
