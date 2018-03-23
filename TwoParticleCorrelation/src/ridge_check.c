@@ -31,6 +31,7 @@
 #include "include/TPCNtupleData.h"
 #include "include/Selection.h"
 #include "../../DataProcessing/include/smartJetName.h"
+#include "include/ProgressBar.h"
 
 /********************************************************************************************************************/
 // Two particle correlation analysis
@@ -58,6 +59,7 @@ int ridge_check
     // ROOT Global setting
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
+
     
     // set up plots
     Selection s = Selection();
@@ -189,12 +191,18 @@ int ridge_check
     TChain * side_t_mix = new TChain(sideTree.c_str());       side_t_mix->Add(inFileName.c_str());
     TChain * jt_mix = new TChain(jtTreeName.c_str());       jt_mix->Add(inFileName.c_str());
     
-    TPCNtupleData mix(s.doBelle, s.doThrust, s.doWTA);       mix.setupTPCTree(t_mix,side_t_mix,jt_mix);        
+    TPCNtupleData mix(s.doBelle, s.doThrust, s.doWTA, s.doPerp);       mix.setupTPCTree(t_mix,side_t_mix,jt_mix);        
     
     // analysis
     Int_t nevent = (Int_t)t->GetEntries();
     if(s.doOneEvent) nevent = s.numEvents;
 
+    // Progress bar
+    ProgressBar Bar(cout, nevent);
+    Bar.SetStyle(4);
+
+    unsigned int entryDiv = (nevent > 200) ? nevent / 200 : 1;
+ 
     /****************************************/
     // Main Event Loop
     /****************************************/
@@ -203,8 +211,10 @@ int ridge_check
         side_t->GetEntry(i);
         jt->GetEntry(i);
         
-	    if (i%10000==0) std::cout <<i<<"/"<<nevent<<std::endl;
-        
+        Bar.Update(i);
+        Bar.PrintWithMod(entryDiv);
+
+
         // find the event energy histogram(s)
         std::vector<Int_t> histE;
         if(inFileName.find("JobNum") != std::string::npos) histE.push_back(0); // the PYTHIA8 is e+e-→Z on Z pole ~ 91.5 GeV
@@ -322,7 +332,7 @@ int ridge_check
             // We continue to search until we find an event that passes the mixed event selection criteria and has a non-null histNtrk_mix intersection with histNtrk.
             // s.isMixedEvent returns false if the mixed event fails the criteria in which case we want to enter the while loop.
             // If the size of histNtrk_mix is 0 then the mixed event is a different nTrk range than the signal event and we do not want mix in which case we want to enter the while loop.
-            while (!doMixFile || histNtrk_mix.size() == 0 || !s.isMixedEvent(nTrk, nTrk_mix, data.jet.jteta[0], mix.jet.jteta[0], data.getTTheta(), mix.getTTheta(), data.getTPhi(), mix.getTPhi()))
+            while (!doMixFile && (histNtrk_mix.size() == 0 || !s.isMixedEvent(nTrk, nTrk_mix, data.jet.jteta[0], mix.jet.jteta[0], data.getTTheta(), mix.getTTheta(), data.getTPhi(), mix.getTPhi())))
             {
                 selected++;
                 if (selected >= t->GetEntries()) selected = 0;
@@ -337,7 +347,7 @@ int ridge_check
                 // loop over the background event nTrk histos and determine if the signal event has the same histos. If yes then leave the entry. If no then remove the entry from histNtrk_mix. 
                 for(unsigned int nI = 0; nI <histNtrk_mix.size(); nI++) if(std::find(histNtrk.begin(), histNtrk.end(), histNtrk_mix.at(nI)) == histNtrk.end()) histNtrk_mix.erase(histNtrk_mix.begin() + nI);
             }           
-                       
+            if (doMixFile==1 && selected!=i) cout <<"ERROR MIXING"<<endl;           
             
             // increment the number of background events bin for each nTrk histogram going to be filled (note that this should give the same result as the signal events increment)
             for(unsigned int nI = 0; nI < histNtrk.size(); ++nI) nBkgrndEvts[histNtrk.at(nI)] += 1;
