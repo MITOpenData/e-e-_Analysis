@@ -44,7 +44,8 @@ class Selection
             // Track Cuts
         bool doNTPC = false;    Int_t nTPCMin = 4;  Int_t nTPCMax = 999;
         bool doTheta = true;   Float_t thetaMin = 20*TMath::Pi()/180.;  Float_t thetaMax = 160*TMath::Pi()/180.;  // measured in radians
-        bool doP = true;   Float_t pMin = 0.2; // measured in GeV
+        bool doP = false;   Float_t pMin = 0.2; // measured in GeV
+        bool doPt = true;   Float_t ptMin = 0.2; // measured in GeV
         bool dod0 = false;     Float_t d0Cut = 3; // measured in cm
         bool doz0 = false;   Float_t z0Cut = 5;  // measured in cm
             // Event Cuts
@@ -78,10 +79,10 @@ class Selection
         Float_t etaPlotRange_wrtBeam = 3.2;
 
         // Thrust Axis
-        bool doThrust = false;  bool donTrkThrust = false; // false = use beam axis for nTrk calculation
+        bool doThrust = true;  bool donTrkThrust = false; // false = use beam axis for nTrk calculation
         static const Int_t nptBins_wrtThr = 3;
         Float_t ptBinsLow_wrtThr[nptBins_wrtThr]  = {0.4,0.4,1.0};  // measured in GeV {1.0,0.4}
-        Float_t ptBinsHigh_wrtThr[nptBins_wrtThr] = {0.4,0.4,1.0}; // {3.0,100.0}
+        Float_t ptBinsHigh_wrtThr[nptBins_wrtThr] = {100.0,4.0,3.0}; // {3.0,100.0}
         static const Int_t netaBins_wrtThr = 2;
         Float_t etaBinsLow_wrtThr[netaBins_wrtThr]  = {4.5,5.0}; //{4.5,5.0}
         Float_t missPCut_wrtThr = 20;
@@ -91,16 +92,19 @@ class Selection
         bool doWTA = false;
         static const Int_t nptBins_wrtWTA = 3;
         Float_t ptBinsLow_wrtWTA[nptBins_wrtWTA]  = {0.4,0.4,1.0};  // measured in GeV
-        Float_t ptBinsHigh_wrtWTA[nptBins_wrtWTA] = {0.4,0.4,1.0};
+        Float_t ptBinsHigh_wrtWTA[nptBins_wrtWTA] = {100,4.0,3.0};
         static const Int_t netaBins_wrtWTA = 1;
         Float_t etaBinsLow_wrtWTA[netaBins_wrtWTA]  = {5.0};
         Float_t missPCut_wrtWTA = 20;
         Float_t etaPlotRange_wrtWTA = 6.0;
 
+        // Use the perpendicular direction of WTA or Thrust axis?
+	bool doPerp = true;
+
         /* Independent Cuts */
-        static const Int_t nEnergyBins = 2;
-        Float_t energyBinsLow[nEnergyBins] = {0,100}; // {0,100}
-        Float_t energyBinsHigh[nEnergyBins] = {100,999}; // {100,999}
+        static const Int_t nEnergyBins = 1;
+        Float_t energyBinsLow[nEnergyBins] = {0}; // {0,100}
+        Float_t energyBinsHigh[nEnergyBins] = {100}; // {100,999}
 
         static const Int_t nMultBins = 4;
         Int_t multBinsLow[nMultBins]  = {0 , 20, 30, 35};
@@ -165,6 +169,7 @@ Selection::Selection()
         doNTPC = false;
         doTheta = false;
         doP = false;
+        doPt = false;
         dod0 = false;
         doz0 = false;
         doWW = false;
@@ -202,6 +207,7 @@ int Selection::ridge_trackSelection(Int_t nTPC, Float_t theta, Float_t p, Float_
     if (doNTPC && (nTPC <= nTPCMin || nTPC >= nTPCMax) ) return 0;
     if (doTheta && (theta <= thetaMin || theta >= thetaMax)) return 0;
     if (doP && ( TMath::Abs(p) < pMin)) return 0;
+    if (doPt && ( TMath::Abs(pt) < ptMin)) return 0;
     if (dod0 && (TMath::Abs(d0) > d0Cut)) return 0;
     if (doz0 && (TMath::Abs(z0) > z0Cut)) return 0;
 
