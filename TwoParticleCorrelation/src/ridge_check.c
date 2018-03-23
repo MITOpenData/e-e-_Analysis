@@ -49,34 +49,59 @@ using namespace std;
 // Main Analysis Routine
 /********************************************************************************************************************/
 
-int ridge_check
-    (
-     const std::string inFileName, // input file
-      std::string outFileName,    // output file
-      std::string inMixFileName="" // input mix file
-    )
+int ridge_check( const std::string inFileName, 		// Input file
+                       std::string outFileName,    	// Output file
+      		       std::string inMixFileName="", 	// Input mix file
+		       bool overwrite = false,		// if we overwrite the doWTA, doThrust and doPerp from selection.h
+		       bool owThrust = false,		// overwrite the value of doThrust from selection.h
+		       bool owWTA = false,		// overwrite the value of doWTA from selection.h
+		       bool owPerp = false,		// overwrite the value of doPerp from selection.h
+		       int verbose = 1                 // Verbose level
+               )
 {
     // ROOT Global setting
-    TH1::SetDefaultSumw2();
-    TH2::SetDefaultSumw2();
+    TH1::SetDefaultSumw2();    TH2::SetDefaultSumw2();
 
-    
-    // set up plots
+    // Set up plots
     Selection s = Selection();
-    if(inFileName.find("JobNum") != std::string::npos){s.doNTPC = false; s.dod0 = false; s.doz0 = false; s.doWW = false;} // for MC
+    if(inFileName.find("JobNum") != std::string::npos){   // Yen-Jie: Why do we need this?
+       if (verbose) cout <<"With file name containing JobNum, assume this is a MC"<<endl;      
+       s.doNTPC = false; s.dod0 = false; s.doz0 = false; s.doWW = false;
+    } // for MC
     
     if(outFileName.find(".root") == std::string::npos) outFileName = outFileName + ".root";
+    
+    // Print general information
+    cout <<"Input File : "<<inFileName<<endl;
+    cout <<"Output File: "<<outFileName<<endl;
+    cout <<"Mix File: "<<inMixFileName<<endl;
+    
+    
+    if (overwrite) {
+       cout <<"Overwrite the default value from Selection.h"<<endl;
+       if (owThrust) s.doThrust = true; else s.doThrust = false;
+       if (owWTA)    s.doWTA = true; else s.doWTA = false;
+       if (owPerp)    s.doPerp = true; else s.doPerp = false;
+    }
+    
+    if (s.doThrust && s.doWTA) { cout <<"Can't have both doWTA and doThrust on in Selection.h!"<<endl; return 0; }
+    if (s.doThrust) 	cout <<"Thrust axis analysis"<<endl;
+    else if (s.doWTA) 	cout <<"WTA axis analysis"<<endl;
+    else 		cout <<"Beam axis analysis"<<endl;
+    if (s.doThrust||s.doWTA) {
+       if (s.doPerp) cout <<"Reference axis rotated by 90 degree"<<endl;
+    }    
     
     TFile * output = TFile::Open(outFileName.c_str(),"recreate");
     
     /// Initialize the histograms
     std::cout<<"Initializing histograms..."<<std::endl;
+
     static const Int_t nEnergyBins = s.nEnergyBins;
     static const Int_t nMultBins = s.nMultBins;
     static const Int_t nptBins = s.nptBins;
     static const Int_t netaBins = s.netaBins;
 
-    
     TH2F * signal2PC[nEnergyBins][nMultBins][nptBins][netaBins];
     TH2F * bkgrnd2PC[nEnergyBins][nMultBins][nptBins][netaBins];
     TH2F * ratio2PC[nEnergyBins][nMultBins][nptBins][netaBins];
@@ -199,7 +224,7 @@ int ridge_check
 
     // Progress bar
     ProgressBar Bar(cout, nevent);
-    Bar.SetStyle(4);
+    Bar.SetStyle(1);
 
     unsigned int entryDiv = (nevent > 200) ? nevent / 200 : 1;
  
@@ -211,9 +236,10 @@ int ridge_check
         side_t->GetEntry(i);
         jt->GetEntry(i);
         
-        Bar.Update(i);
-        Bar.PrintWithMod(entryDiv);
-
+        //if (i%1000==0) {
+	   Bar.Update(i);
+           Bar.PrintWithMod(entryDiv);
+        //}
 
         // find the event energy histogram(s)
         std::vector<Int_t> histE;
@@ -223,8 +249,8 @@ int ridge_check
 
         // nTrk calculation
         Int_t nTrk = 0;
-        if(!s.donTrkThrust) nTrk = s.ridge_eventSelection(data.event.passesWW, data.event.missP, data.particle.nParticle, data.jet.nref, data.jet.jtpt, data.jet.jteta, data.event.STheta, data.particle.mass, data.particle.ntpc, data.particle.theta, data.particle.pmag, data.particle.d0, data.particle.z0, data.particle.pwflag);
-        if(s.donTrkThrust) nTrk = s.ridge_eventSelection(data.event.passesWW, data.event.missP, data.particle.nParticle, data.jet.nref, data.jet.jtpt, data.jet.jteta, data.event.STheta, data.particle.mass, data.particle.ntpc, data.particle.theta_wrtThr, data.particle.pmag, data.particle.d0, data.particle.z0, data.particle.pwflag);
+        if(!s.donTrkThrust) nTrk = s.ridge_eventSelection(data.event.passesWW, data.event.missP, data.particle.nParticle, data.jet.nref, data.jet.jtpt, data.jet.jteta, data.event.STheta, data.particle.mass, data.particle.ntpc, data.particle.theta, data.particle.pmag, data.particle.pt, data.particle.d0, data.particle.z0, data.particle.pwflag);
+        if(s.donTrkThrust) nTrk = s.ridge_eventSelection(data.event.passesWW, data.event.missP, data.particle.nParticle, data.jet.nref, data.jet.jtpt, data.jet.jteta, data.event.STheta, data.particle.mass, data.particle.ntpc, data.particle.theta_wrtThr, data.particle.pmag, data.particle.pt_wrtThr, data.particle.d0, data.particle.z0, data.particle.pwflag);
         if( nTrk < 0) continue;
         //std::cout<<data.RunNo<<","<<data.EventNo<<std::endl;
         
@@ -249,8 +275,7 @@ int ridge_check
         /****************************************/
         for ( Int_t j=0;j<data.particle.nParticle;j++ )
         {
-//            if(!s.ridge_trackSelection(data.particle.ntpc[j],data.getTheta(j),data.getPmag(j), data.particle.d0[j], data.particle.z0[j], data.particle.	pwflag[j])) continue;
-            if(!s.ridge_trackSelection(data.particle.ntpc[j],data.particle.theta[j],data.particle.pmag[j], data.particle.d0[j], data.particle.z0[j], data.particle.	pwflag[j])) continue;
+            if(!s.ridge_trackSelection(data.particle.ntpc[j],data.particle.theta[j],data.particle.pmag[j], data.particle.pt[j], data.particle.d0[j], data.particle.z0[j], data.particle.	pwflag[j])) continue;
 	    h_phi->Fill(data.getPhi(j));
             h_eta->Fill(data.getEta(j));
             h_theta->Fill(data.getTheta(j));
@@ -268,8 +293,7 @@ int ridge_check
             // Signal loop, calculate S correlation function
             for ( Int_t k=j+1;k<data.particle.nParticle;k++ )
             {
-//                if(!s.ridge_trackSelection(data.particle.ntpc[k],data.getTheta(k),data.getPmag(k), data.particle.d0[k], data.particle.z0[k], data.particle.pwflag[k])) continue;
-                if(!s.ridge_trackSelection(data.particle.ntpc[k],data.particle.theta[k],data.particle.pmag[k], data.particle.d0[k], data.particle.z0[k], data.particle.pwflag[k])) continue;
+                if(!s.ridge_trackSelection(data.particle.ntpc[k],data.particle.theta[k],data.particle.pmag[k], data.particle.pt[k], data.particle.d0[k], data.particle.z0[k], data.particle.pwflag[k])) continue;
                 // Check if the second particle is in the same range of pt and eta 
 
                 std::vector<Int_t> histPt2 = s.histPt(data.getPt(k));
@@ -321,8 +345,8 @@ int ridge_check
             jt_mix->GetEntry(selected);
         
             Int_t nTrk_mix=nTrk;
-            if(!s.donTrkThrust&&!doMixFile) nTrk_mix = s.ridge_eventSelection(mix.event.passesWW, mix.event.missP, mix.particle.nParticle, mix.jet.nref, mix.jet.jtpt, mix.jet.jteta, mix.event.STheta, mix.particle.mass, mix.particle.ntpc, mix.particle.theta, mix.particle.pmag, mix.particle.d0, mix.particle.z0, mix.particle.pwflag);
-            if(s.donTrkThrust&&!doMixFile) nTrk_mix = s.ridge_eventSelection(mix.event.passesWW, mix.event.missP, mix.particle.nParticle, mix.jet.nref, mix.jet.jtpt, mix.jet.jteta, mix.event.STheta, mix.particle.mass, mix.particle.ntpc, mix.particle.theta_wrtThr, mix.particle.pmag, mix.particle.d0, mix.particle.z0, mix.particle.pwflag);
+            if(!s.donTrkThrust&&!doMixFile) nTrk_mix = s.ridge_eventSelection(mix.event.passesWW, mix.event.missP, mix.particle.nParticle, mix.jet.nref, mix.jet.jtpt, mix.jet.jteta, mix.event.STheta, mix.particle.mass, mix.particle.ntpc, mix.particle.theta, mix.particle.pmag, mix.particle.pt , mix.particle.d0, mix.particle.z0, mix.particle.pwflag);
+            if(s.donTrkThrust&&!doMixFile) nTrk_mix = s.ridge_eventSelection(mix.event.passesWW, mix.event.missP, mix.particle.nParticle, mix.jet.nref, mix.jet.jtpt, mix.jet.jteta, mix.event.STheta, mix.particle.mass, mix.particle.ntpc, mix.particle.theta_wrtThr, mix.particle.pmag, mix.particle.pt_wrtThr, mix.particle.d0, mix.particle.z0, mix.particle.pwflag);
 
             // find the event nTrk histogram(s)
             std::vector<Int_t> histNtrk_mix = s.histNtrk(nTrk_mix);
@@ -340,8 +364,8 @@ int ridge_check
                 side_t_mix->GetEntry(selected);
                 jt_mix->GetEntry(selected);
                 
-                if(!s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(mix.event.passesWW, mix.event.missP, mix.particle.nParticle, mix.jet.nref, mix.jet.jtpt, mix.jet.jteta, mix.event.STheta, mix.particle.mass, mix.particle.ntpc, mix.particle.theta, mix.particle.pmag, mix.particle.d0, mix.particle.z0, mix.particle.pwflag);
-                if(s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(mix.event.passesWW, mix.event.missP, mix.particle.nParticle, mix.jet.nref, mix.jet.jtpt, mix.jet.jteta, mix.event.STheta, mix.particle.mass, mix.particle.ntpc, mix.particle.theta_wrtThr, mix.particle.pmag, mix.particle.d0, mix.particle.z0, mix.particle.pwflag);
+                if(!s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(mix.event.passesWW, mix.event.missP, mix.particle.nParticle, mix.jet.nref, mix.jet.jtpt, mix.jet.jteta, mix.event.STheta, mix.particle.mass, mix.particle.ntpc, mix.particle.theta, mix.particle.pmag, mix.particle.pt, mix.particle.d0, mix.particle.z0, mix.particle.pwflag);
+                if(s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(mix.event.passesWW, mix.event.missP, mix.particle.nParticle, mix.jet.nref, mix.jet.jtpt, mix.jet.jteta, mix.event.STheta, mix.particle.mass, mix.particle.ntpc, mix.particle.theta_wrtThr, mix.particle.pmag, mix.particle.pt_wrtThr, mix.particle.d0, mix.particle.z0, mix.particle.pwflag);
                 // find the event nTrk histogram(s)
                 histNtrk_mix = s.histNtrk(nTrk_mix);
                 // loop over the background event nTrk histos and determine if the signal event has the same histos. If yes then leave the entry. If no then remove the entry from histNtrk_mix. 
@@ -355,8 +379,7 @@ int ridge_check
             for ( Int_t j=0;j<data.particle.nParticle;j++ )
             {
                 // decide if valid track
-//                if(!s.ridge_trackSelection(data.particle.ntpc[j],data.getTheta(j),data.getPmag(j), data.particle.d0[j], data.particle.z0[j], data.particle.pwflag[j])) continue;
-                if(!s.ridge_trackSelection(data.particle.ntpc[j],data.particle.theta[j],data.particle.pmag[j], data.particle.d0[j], data.particle.z0[j], data.particle.pwflag[j])) continue;
+                if(!s.ridge_trackSelection(data.particle.ntpc[j],data.particle.theta[j],data.particle.pmag[j], data.particle.pt[j], data.particle.d0[j], data.particle.z0[j], data.particle.pwflag[j])) continue;
 
                 // Decide which pt and eta range to fill
                 std::vector<Int_t> histPt_bkg1 = s.histPt(data.getPt(j));
@@ -372,8 +395,7 @@ int ridge_check
                 for ( Int_t k=0;k<mix.particle.nParticle;k++ )
                 {
                     // decide if valid track
-//                    if(!s.ridge_trackSelection(mix.particle.ntpc[k],mix.getTheta(k),mix.getPmag(k), mix.particle.d0[k], mix.particle.z0[k], mix.particle.pwflag[k])) continue;
-                    if(!s.ridge_trackSelection(mix.particle.ntpc[k],mix.particle.theta[k],mix.particle.pmag[k], mix.particle.d0[k], mix.particle.z0[k], mix.particle.pwflag[k])) continue;
+                    if(!s.ridge_trackSelection(mix.particle.ntpc[k],mix.particle.theta[k],mix.particle.pmag[k], mix.particle.pt[k], mix.particle.d0[k], mix.particle.z0[k], mix.particle.pwflag[k])) continue;
                     
                     // Check if the second particle is in the same range of pt and eta    
                     std::vector<Int_t> histPt_bkg2 = s.histPt(mix.getPt(k));

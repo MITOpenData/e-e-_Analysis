@@ -133,8 +133,8 @@ class Selection
         Selection();
         Float_t getEtaPlotRange();
         Float_t getDifferential();
-        int ridge_trackSelection(Int_t nTPC, Float_t theta, Float_t p, Float_t d0, Float_t z0, Int_t pwflag);
-        int ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticle, Int_t nref, Float_t jtpt[], Float_t jteta[], Float_t STheta, Float_t mass[], Short_t nTPC[], Float_t theta[], Float_t pmag[], Float_t d0[], Float_t z0[], Short_t pwflag[]);
+        int ridge_trackSelection(Int_t nTPC, Float_t theta, Float_t p, Float_t pt, Float_t d0, Float_t z0, Int_t pwflag);
+        int ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticle, Int_t nref, Float_t jtpt[], Float_t jteta[], Float_t STheta, Float_t mass[], Short_t nTPC[], Float_t theta[], Float_t pmag[], Float_t pt[], Float_t d0[], Float_t z0[], Short_t pwflag[]);
         bool isMixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta, Float_t jteta_mix, Float_t TTheta, Float_t TTheta_mix, Float_t TPhi, Float_t TPhi_mix);
         std::vector<Int_t> histEnergy(Float_t Energy);
         std::vector<Int_t> histNtrk(Int_t N);
@@ -198,7 +198,7 @@ Float_t Selection::getDifferential()
 }
 // return 1 if the track passes the selection
 // otherwise return 0
-int Selection::ridge_trackSelection(Int_t nTPC, Float_t theta, Float_t p, Float_t d0, Float_t z0, Int_t pwflag)
+int Selection::ridge_trackSelection(Int_t nTPC, Float_t theta, Float_t p, Float_t pt, Float_t d0, Float_t z0, Int_t pwflag)
 {
     // only charged tracks
     if (pwflag != ALEPH_CHARGED_TRACK) return 0;
@@ -220,7 +220,8 @@ int Selection::ridge_trackSelection(Int_t nTPC, Float_t theta, Float_t p, Float_
 
 
 /////// MUST UPDATE THE EVENT SELECTION BASED ON AXIS/THE 1990 PAPER/////////
-int Selection::ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticle, Int_t nref, Float_t jtpt[], Float_t jteta[], Float_t STheta, Float_t mass[],/* track selection */ Short_t nTPC[], Float_t theta[], Float_t pmag[], Float_t d0[], Float_t z0[], Short_t pwflag[])
+int Selection::ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticle, Int_t nref, Float_t jtpt[], Float_t jteta[], Float_t STheta, Float_t mass[],/* track selection */ Short_t nTPC[], Float_t theta[], Float_t pmag[],
+Float_t pt[], Float_t d0[], Float_t z0[], Short_t pwflag[])
 {
     
     ///////// QCD Paper Selection /////////
@@ -232,7 +233,7 @@ int Selection::ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticl
 
     for (Int_t j=0;j<nParticle;j++)
     {
-        if (ridge_trackSelection(nTPC[j],theta[j],pmag[j], d0[j], z0[j], pwflag[j]))
+        if (ridge_trackSelection(nTPC[j],theta[j],pmag[j],pt[j], d0[j], z0[j], pwflag[j]))
         {
             N += 1;
             E += sqrt(pow(pmag[j],2) + pow(mass[j],2));
