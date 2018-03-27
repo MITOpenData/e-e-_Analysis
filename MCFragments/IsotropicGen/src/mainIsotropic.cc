@@ -192,6 +192,7 @@ int main(int argc, char* argv[])
     pData.nParticle = 0;
     bData.nParticle = 0;
     eData.nChargedHadrons = 0;
+    eData.nChargedHadronsHP = eventSize;
     eData.nChargedHadrons_GT0p4 = 0;
     eData.nChargedHadrons_GT0p4Thrust = 0;
   
