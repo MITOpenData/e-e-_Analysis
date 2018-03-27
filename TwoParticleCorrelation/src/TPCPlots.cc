@@ -2,6 +2,7 @@
 #include "TH1F.h"
 #include "TH2F.h"
 #include "TCanvas.h"
+#include "TVirtualPad.h"
 #include "TLegend.h"
 #include "TMath.h"
 #include "TFile.h"
@@ -55,7 +56,7 @@ void formatZaxis(TH2F * h, bool minIsZero = true){
     
   for(int i = 1; i<h->GetXaxis()->GetNbins()+1; i++){
     for(int j = 1; j<h->GetYaxis()->GetNbins()+1; j++){
-        if( h->GetYaxis()->GetBinCenter(j) >= dphi_peakMin && h->GetYaxis()->GetBinCenter(j) <= dphi_peakMax && h->GetXaxis()->GetBinCenter(i) >= deta_peakMin && h->GetXaxis()->GetBinCenter(i) <= deta_peakMax) continue;
+      if( h->GetYaxis()->GetBinCenter(j) >= dphi_peakMin && h->GetYaxis()->GetBinCenter(j) <= dphi_peakMax && h->GetXaxis()->GetBinCenter(i) >= deta_peakMin && h->GetXaxis()->GetBinCenter(i) <= deta_peakMax) continue;
       if(h->GetBinContent(i,j)>=maximum) maximum = h->GetBinContent(i,j);
       if(h->GetBinContent(i,j)<=minimum) minimum = h->GetBinContent(i,j);
       averageSum += h->GetBinContent(i,j);
@@ -70,8 +71,18 @@ void formatZaxis(TH2F * h, bool minIsZero = true){
   //else                h->GetZaxis()->SetRangeUser(minimum-0.2*(mean-minimum),mean+2.0*(mean-minimum));
 }
 
-void TPCPlots(const std::string inFileName1)
+void setupCanvas(TVirtualPad *c1)
 {
+          c1->SetLeftMargin(0.2);
+          c1->SetTheta(60.839);
+          c1->SetPhi(38.0172);
+}
+
+void TPCPlots(const std::string inFileName1,int doOneBin=0)
+{
+  // ROOT Global setting
+  TH1::SetDefaultSumw2();    TH2::SetDefaultSumw2();
+
   Selection s;
     
   gStyle->SetLegendBorderSize(0);
@@ -91,6 +102,7 @@ void TPCPlots(const std::string inFileName1)
   TH2F * ratio2PC[nEnergyBins][nMultBins][nptBins][netaBins];
 
   TFile * f1 = TFile::Open(inFileName1.c_str(),"read");
+  TFile * fout = TFile::Open("output.root","recreate");
 
   TH1D * nEvtSigHist1 = (TH1D*)f1->Get("nEvtSigHisto");
   TH1D * nEvtBkgHist1 = (TH1D*)f1->Get("nEvtSigHisto"); 
@@ -98,16 +110,19 @@ void TPCPlots(const std::string inFileName1)
   Float_t etaPlotRange = s.getEtaPlotRange();
   double etaranges[8]={2,10,2.2,10,2.4,10,2.6,10};
   Int_t minbin,maxbin;
-
+  Int_t nCanvas=0;
   for(int e = 0; e<nEnergyBins; e++)
   {
+    if (doOneBin&&e!=0) continue;
     for(int m = 0; m<s.nMultBins; m++)
     {
+      if (doOneBin&&m!=0) continue;
       for(int p = 0; p<nptBins; p++)
       {
+        if (doOneBin&&p!=0) continue;
         for(int et = 0; et<netaBins; et++)
         {
-                //if(i>1) continue;
+          if (doOneBin&&et!=0) continue;
           // preparing variables for the legend and checking if valid axis
           std::string sqrts = "#sqrt{s}";
           if(s.energyBinsHigh[e] <= 100) sqrts = sqrts + "=91GeV";
@@ -131,15 +146,14 @@ void TPCPlots(const std::string inFileName1)
 
           // loading histograms
           signal2PC[e][m][p][et] = (TH2F*)f1->Get(Form("signal2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
-          signal2PC[e][m][p][et]->Sumw2();
           signal2PC[e][m][p][et]->Scale(1./nEvtSigHist1->GetBinContent(m+1)); // plus 1 because 0 is the underflow bin
           bkgrnd2PC[e][m][p][et] = (TH2F*)f1->Get(Form("bkgrnd2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
-          bkgrnd2PC[e][m][p][et]->Sumw2();
           bkgrnd2PC[e][m][p][et]->Scale(1./nEvtBkgHist1->GetBinContent(m+1));
-          ratio2PC[e][m][p][et] = new TH2F(Form("ratio2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[m],s.multBinsHigh[m],p,et),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
-          ratio2PC[e][m][p][et]->Sumw2();
+          ratio2PC[e][m][p][et] = (TH2F*) signal2PC[e][m][p][et]->Clone(Form("ratio2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
+	  ratio2PC[e][m][p][et]->Reset();
           calculateRatio(signal2PC[e][m][p][et],bkgrnd2PC[e][m][p][et],ratio2PC[e][m][p][et]);
-
+          if (signal2PC[e][m][p][et]->GetEntries()==0) continue;
+	  
           // For performing 1D projection
           TH1F*h_deltaphi[7];
         
@@ -149,7 +163,6 @@ void TPCPlots(const std::string inFileName1)
               minbin =  ratio2PC[e][m][p][et]->GetXaxis()->FindBin(etaranges[j]);
               maxbin =  ratio2PC[e][m][p][et]->GetXaxis()->FindBin(etaranges[j+1]);
               h_deltaphi[j]  = (TH1F*) ratio2PC[e][m][p][et]->ProjectionY(Form("h_deltaphi%d_%d_%d_%d_%d_%d",j,e,s.multBinsLow[m],s.multBinsHigh[m],p,et),minbin,maxbin);
-              h_deltaphi[j]->Sumw2();
               h_deltaphi[j]->SetName(Form("h_deltaphi%d_%d_%d_%d_%d_%d",j,e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
               h_deltaphi[j]->GetXaxis()->SetTitle("#Delta#phi");
               if (s.doTheta)  h_deltaphi[j]->SetTitle(Form("#Delta#phi, #Delta#theta (%1.1f, %1.1f), Multipliplicity (%1.1d, %1.1d)",etaranges[j],etaranges[j+1], s.multBinsLow[m],s.multBinsHigh[m]));
@@ -159,35 +172,55 @@ void TPCPlots(const std::string inFileName1)
           }
 
           // drawing plots
-          TCanvas * c1 = new TCanvas("c1","c1",800,800);
-          c1->SetLeftMargin(0.2);
-          c1->SetTheta(60.839);
-          c1->SetPhi(38.0172);
+	  nCanvas++;
+	  
+          TCanvas * cAll = new TCanvas(Form("c_%d",nCanvas),Form("Summary%d",nCanvas),800,800);
+	  cAll->Divide(2,2);
+	  //for (Int_t iCanvas = 1; iCanvas<4; iCanvas++) setupCanvas(cAll->GetPad(iCanvas));
+          
+	  TCanvas * c1 = new TCanvas("c1","c1",800,800);
+          setupCanvas(c1);
           formatTPCAxes(signal2PC[e][m][p][et],1.5,1.5,2);
           formatZaxis(signal2PC[e][m][p][et],1);
-          signal2PC[e][m][p][et]->Draw("surf1 fb");
+          c1->cd();
+	  signal2PC[e][m][p][et]->Draw("surf1 fb");
           l->Draw("same");
           //sig[m]->GetZaxis()->SetRangeUser(0.9*sig[m]->GetMinimum(),0.4*sig[m]->GetMaximum());
           c1->SaveAs(Form("../pdfDir/%s_signal_%d_%d_%d_%d_%d.png",saveName.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
           c1->SaveAs(Form("../pdfDir/%s_signal_%d_%d_%d_%d_%d.pdf",saveName.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
-          //c1->SaveAs(Form("../pdfDir/%s_signal1_%d_%d_%d_%d_%d.C",saveName.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
+          
+	  cAll->cd(1);
+	  signal2PC[e][m][p][et]->Draw("surf1 fb");
+          l->Draw("same");
+          
+	  //c1->SaveAs(Form("../pdfDir/%s_signal1_%d_%d_%d_%d_%d.C",saveName.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
             
           formatTPCAxes(bkgrnd2PC[e][m][p][et],1.5,1.5,2);
           formatZaxis(bkgrnd2PC[e][m][p][et],1);
+          c1->cd();
           bkgrnd2PC[e][m][p][et]->Draw("surf1 fb");
           l->Draw("same");
-          //bkg[m]->GetZaxis()->SetRangeUser(0.9*bkg[m]->GetMinimum(),1.1*bkg[m]->GetMaximum());
           c1->SaveAs(Form("../pdfDir/%s_background_%d_%d_%d_%d_%d.png",saveName.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
           c1->SaveAs(Form("../pdfDir/%s_background_%d_%d_%d_%d_%d.pdf",saveName.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
           //c1->SaveAs(Form("../pdfDir/%s_background1_%d_%d_%d_%d_%d.C",saveName.c_str(),s.multBinsLow[m],s.multBinsHigh[m]));
-            
+          
+	  cAll->cd(2);
+	  bkgrnd2PC[e][m][p][et]->Draw("surf1 fb");
+          l->Draw("same");
+          
+	    
           formatTPCAxes(ratio2PC[e][m][p][et],1.5,1.5,2);
           formatZaxis(ratio2PC[e][m][p][et],0);
+          c1->cd();
           ratio2PC[e][m][p][et]->Draw("surf1 fb");
           l->Draw("same");
           c1->SaveAs(Form("../pdfDir/%s_ratio2PC_%d_%d_%d_%d_%d.png",saveName.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
           c1->SaveAs(Form("../pdfDir/%s_ratio2PC_%d_%d_%d_%d_%d.pdf",saveName.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
           //c1->SaveAs(Form("../pdfDir/%s_ratio2PC_%d_%d_%d_%d_%d.C",saveName.c_str(),s.multBinsLow[m],s.multBinsHigh[m]));
+          
+	  cAll->cd(3);
+	  ratio2PC[e][m][p][et]->Draw("surf1 fb");
+          l->Draw("same");
             
           TCanvas * c2 = new TCanvas("c2","dphi",600,600);
           c2->Divide(2,2);
@@ -211,15 +244,19 @@ void TPCPlots(const std::string inFileName1)
             c2->SaveAs(Form("../pdfDir/%s_deltaphi_%d_%d_%d_%d_%d.pdf",saveName.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
             //c2->SaveAs(Form("../pdfDir/%s_longRangeYield1_%d_%d.C",saveName.c_str(),s.multBinsLow[m],s.multBinsHigh[m]));
 
-          delete c1;
-          delete l;
+          cAll->cd(4);
+          h_deltaphi[0]->Draw();
+	  delete c1;
+          /*
+	  delete l;
           delete signal2PC[e][m][p][et];
           delete bkgrnd2PC[e][m][p][et];
           delete ratio2PC[e][m][p][et];
-          for (Int_t i=0;i<4;i++) 
-          {
-            delete h_deltaphi[i*2];
-          }
+          for (Int_t i=0;i<4;i++)  delete h_deltaphi[i*2];
+	  */
+	  cAll->SaveAs(Form("../pdfDir/%s_Summary_%d_%d_%d_%d_%d.png",saveName.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
+          cAll->SaveAs(Form("../pdfDir/%s_Summary_%d_%d_%d_%d_%d.pdf",saveName.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
+            
         }
       }
     }
@@ -279,6 +316,8 @@ void TPCPlots(const std::string inFileName1)
   //c2->SaveAs(Form("../pdfDir/%s_pt1.C",saveName.c_str()));
   c2->SetLogy();
     
+
+  fout->Write();
   delete c2;
 
 }
