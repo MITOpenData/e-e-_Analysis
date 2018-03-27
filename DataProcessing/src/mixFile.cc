@@ -21,12 +21,13 @@
 #include "include/boostedEvtData.h"
 #include "include/thrustTools.h"
 #include "include/mixTools.h"
+#include "include/mixMap.h"
 #include "include/boostTools.h"
 #include "include/sphericityTools.h"
 #include "include/returnRootFileContentsList.h"
 #include "include/removeVectorDuplicates.h"
 
-int makeMixFile(std::string inputFile, std::string outputFile = "", const int nEvts2Mix = 3){
+int makeMixFile(std::string inputFile, std::string outputFile = "", const int nEvts2Mix = 3, const int maxMult = 34){
 
   //open file and get main tree
   //if given a .aleph file, look for .root file in local directory instead (for scan.cc implementation)
@@ -98,6 +99,14 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
     bDataMix[jI].SetBranchWrite(outTree1_b[jI]);
   }
 
+  //set up mixing multiplicity map
+  MixMap m = MixMap(maxMult);
+  for(int i = 0; i<inTree1_p->GetEntries(); i++){
+    inTree1_p->GetEntry(i);
+    if(!(edataSig.passesAll)) continue;
+    m.addElement(edataSig.nChargedHadronsHP,i);
+  }
+
   const Int_t printInterval = 20;
   const Int_t printNEntries = TMath::Max(1,(int)(inTree1_p->GetEntries()/printInterval));
 
@@ -105,7 +114,7 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
   for(int i = 0; i<inTree1_p->GetEntries(); i++){
     if(i%printNEntries == 0) std::cout << "Mixing entry: " << i << "/" << inTree1_p->GetEntries() << std::endl;
     //for testing
-    //if(i>100) break;
+    if(i>100) break;
     
     inTree1_p->GetEntry(i);
     for(Int_t jI = 0; jI < nBoostedTrees; ++jI) bTree1_p[jI]->GetEntry(i);
@@ -114,7 +123,8 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
     TVector3 thrustAxis, thrustAxis_ch;
     thrustAxis.SetMagThetaPhi(1, edataSig.TTheta, edataSig.TPhi);  
     thrustAxis_ch.SetMagThetaPhi(1, edataSig.TTheta_charged, edataSig.TPhi_charged);  
-    
+   
+    int signalMultiplicity = edataSig.nChargedHadronsHP; 
     int signalProcess = pdataSig.process;
     int signalEnergy = (int)(pdataSig.Energy < 100);
 
@@ -130,23 +140,23 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
     for(Int_t jI = 0; jI < nBoostedTrees; ++jI) resetMixEvtBoosted(&bDataMix[jI]);
 
     int mixedEventsFound = 0;
-    for(int j = i+1; mixedEventsFound < nEvts2Mix; j++){
-      //wrap around if you hit end of file
-      if(j==inTree1_p->GetEntries()) j=0;
-
-      //if we check the entire file and haven't found enough mixed events, give up 
+    while(mixedEventsFound < nEvts2Mix){
+      int j = m.getNextElement(signalMultiplicity ,i);
+      inTree1_p->GetEntry(j);
+      
+      //if we check the entire file and haven't found enough mixed events, give up and mix it with itself.  Warning if it passes evt sel
       if(i==j){
-        std::cout << "Warning! Only " << mixedEventsFound << "/" << nEvts2Mix << " found in file for event index i!  Giving up with less than the requested number of mixed events..." << std::endl;
+        if(edataSig.passesAll) std::cout << "Warning! Only " << mixedEventsFound << "/" << nEvts2Mix << " found in file for event index " <<  i << "!  Giving up with less than the requested number of mixed events..." << std::endl;
+        appendMixEvt(&pdataMix, &pdataSig, thrustAxis, thrustAxis_ch, (float)mixedEventsFound);
+        for(Int_t jI = 0; jI < nBoostedTrees; ++jI) appendMixEvtBoosted(&bDataMix[jI], &pdataSig, WTAAxis[jI], WTABoost[jI], (float)mixedEventsFound);
         break;
       }
   
-      inTree1_p->GetEntry(j);
 
       //make sure mixed event is a good one (using Sig tree here because it is the input tree)
-      bool isGoodEvent = edataSig.passesAll;
       bool processesMatch = (signalProcess == pdataSig.process);
       bool energiesMatch = (signalEnergy == (int)(pdataSig.Energy < 100));
-      if(isGoodEvent && processesMatch && energiesMatch) mixedEventsFound++;
+      if(processesMatch && energiesMatch) mixedEventsFound++;
       else continue;
 
       //particle loop is in here

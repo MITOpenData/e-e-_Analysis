@@ -104,6 +104,5 @@ void appendMixEvtBoosted(boostedEvtData *out, particleData *in, TVector3 mixAxis
   //account for fact that we are using multiple events to mix
   out->particleWeight = 1.0/nEventsFound;
 }
-
 #endif
 
