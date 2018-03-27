@@ -86,7 +86,7 @@ class Selection
         static const Int_t netaBins_wrtThr = 2;
         Float_t etaBinsLow_wrtThr[netaBins_wrtThr]  = {4.5,5.0}; //{4.5,5.0}
         Float_t missPCut_wrtThr = 20;
-        Float_t etaPlotRange_wrtThr = 6.0;
+        Float_t etaPlotRange_wrtThr = 3.2;
 
         // WTA Axis
         bool doWTA = false;
@@ -96,7 +96,7 @@ class Selection
         static const Int_t netaBins_wrtWTA = 1;
         Float_t etaBinsLow_wrtWTA[netaBins_wrtWTA]  = {5.0};
         Float_t missPCut_wrtWTA = 20;
-        Float_t etaPlotRange_wrtWTA = 6.0;
+        Float_t etaPlotRange_wrtWTA = 3.2;
 
         // Use the perpendicular direction of WTA or Thrust axis?
 	bool doPerp = true;
