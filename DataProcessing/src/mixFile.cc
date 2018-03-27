@@ -71,7 +71,6 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
     bData1[jI].SetStatusAndAddressRead(bTree1_p[jI], listOfBoostedTreeBranches.at(jI));
   }
 
-
   //open output file
   TFile * output;
   if(outputFile.compare("")==0){
@@ -98,10 +97,9 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
     outTree1_b[jI]->SetDirectory(output);
     bDataMix[jI].SetBranchWrite(outTree1_b[jI]);
   }
-  
- 
+
   const Int_t printInterval = 20;
-  const Int_t printNEntries = inTree1_p->GetEntries()/printInterval;
+  const Int_t printNEntries = TMath::Max(1,(int)(inTree1_p->GetEntries()/printInterval));
 
   //loop through input file for the signal events
   for(int i = 0; i<inTree1_p->GetEntries(); i++){
