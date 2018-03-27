@@ -114,7 +114,7 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
   for(int i = 0; i<inTree1_p->GetEntries(); i++){
     if(i%printNEntries == 0) std::cout << "Mixing entry: " << i << "/" << inTree1_p->GetEntries() << std::endl;
     //for testing
-    if(i>100) break;
+    //if(i>100) break;
     
     inTree1_p->GetEntry(i);
     for(Int_t jI = 0; jI < nBoostedTrees; ++jI) bTree1_p[jI]->GetEntry(i);
