@@ -198,23 +198,27 @@ int ridge_check( const std::string inFileName, 		// Input file
     std::string sideTree = "t";
     if (s.doWTA) sideTree = "BoostedWTAR8Evt";
     
-    TChain * t = new TChain("t");       t->Add(inFileName.c_str());
-    TChain * side_t = new TChain(sideTree.c_str());       side_t->Add(inFileName.c_str());
-    TChain * jt = new TChain(jtTreeName.c_str());       jt->Add(inFileName.c_str());
+    TChain * t = new TChain("t");       			t->Add(inFileName.c_str());
+    TChain * side_t = new TChain(sideTree.c_str());       	side_t->Add(inFileName.c_str());
+    TChain * jt = new TChain(jtTreeName.c_str());       	jt->Add(inFileName.c_str());
 
-    TPCNtupleData data(s.doBelle, s.doThrust, s.doWTA);      data.setupTPCTree(t,side_t,jt);   
+    TPCNtupleData data(s.doBelle, s.doThrust, s.doWTA);      	data.setupTPCTree(t,side_t,jt);   
     
     bool doMixFile=0;
+
     TChain * t_mix = new TChain("t");       
-    if (inMixFileName=="") {
+
+    if (inMixFileName=="") {   // no mix file specified
+       cout <<"Performan analysis without mix file"<<endl;
        t_mix->Add(inFileName.c_str());
     } else {
        doMixFile=1;
+       cout <<"Performan analysis with mix file = "<<inMixFileName<<endl;
        t_mix->Add(inMixFileName.c_str());
     }
     
-    TChain * side_t_mix = new TChain(sideTree.c_str());       side_t_mix->Add(inFileName.c_str());
-    TChain * jt_mix = new TChain(jtTreeName.c_str());       jt_mix->Add(inFileName.c_str());
+    TChain * side_t_mix = new TChain(sideTree.c_str());       	side_t_mix->Add(inFileName.c_str());
+    TChain * jt_mix = new TChain(jtTreeName.c_str());       	jt_mix->Add(inFileName.c_str());
     
     TPCNtupleData mix(s.doBelle, s.doThrust, s.doWTA, s.doPerp);       mix.setupTPCTree(t_mix,side_t_mix,jt_mix);        
     
@@ -236,10 +240,10 @@ int ridge_check( const std::string inFileName, 		// Input file
         side_t->GetEntry(i);
         jt->GetEntry(i);
         
-        //if (i%1000==0) {
+        if (i%1000==0) {
 	   Bar.Update(i);
            Bar.PrintWithMod(entryDiv);
-        //}
+        }
 
         // find the event energy histogram(s)
         std::vector<Int_t> histE;
