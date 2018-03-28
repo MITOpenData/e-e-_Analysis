@@ -9,6 +9,7 @@ class MixMap{
     
     void addElement(unsigned char mult, int indx);
     int getNextElement(unsigned char mult, int indx);
+    void setCurrentElement(unsigned char mult, int indx);
 
   private:
     void buildRanges();
@@ -26,6 +27,32 @@ class MixMap{
 
 //for multiplicities above maxMult, bin everything together so it's easy to match them
 inline unsigned char MixMap::multCheck( unsigned char mult){ return (mult > maxM-1) ? maxM-1 : mult;}
+
+void MixMap::setCurrentElement(unsigned char mult, int indx){
+  mult = multCheck(mult);
+ if(isSorted == false){
+    std::cout << "Sorting mixing map..." << std::endl;
+    std::sort(multMap.begin(), multMap.end());
+    buildRanges();
+    std::cout << "Done sorting map..." << std::endl;
+    isSorted = true;
+  }
+  if(nEvtsPerMult.at(mult)<2){
+    //std::cout << "Warning: less than 2 events in sample passing matching criterion.  Cannot mix!  Returning the events own index: " << indx << std::endl;
+    return;
+  }
+
+  std::pair< unsigned char, int> tempPair = std::pair< unsigned char, int >(mult, indx);
+  std::vector< std::pair< unsigned char, int> >::iterator start = multMap.begin()+multRange.at(mult).first;
+  std::vector< std::pair< unsigned char, int> >::iterator end = multMap.begin()+multRange.at(mult).second;
+  auto it = std::find(start, end, tempPair);
+
+  if(it==end) return;
+
+  int index = it-multMap.begin();
+  multCurrEvt.at(mult) = index;
+
+}
 
 void MixMap::buildRanges(){
   int boundary1 = 0;

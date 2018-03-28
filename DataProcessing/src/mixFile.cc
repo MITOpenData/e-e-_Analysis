@@ -39,7 +39,7 @@ double get_wall_time(){
   return (double)time.tv_sec + (double)time.tv_usec * .000001;
 }
 
-int makeMixFile(std::string inputFile, std::string outputFile = "", const int nEvts2Mix = 3, const int maxMult = 34){
+int makeMixFile(std::string inputFile, std::string outputFile = "", const int nEvts2Mix = 3, const int maxMult = 35){
   double startTime = get_wall_time();
   double getTime = 0;
 
@@ -74,7 +74,7 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
     m.addElement(edataSig.nChargedHadronsHP,i);
   }
   
-  std::vector<std::string> listOfBranches = {"nParticle", "process", "Energy", "px", "py", "pz", "pt", "pmag", "rap", "eta", "theta", "phi", "highPurity", "passesAll", "nChargedHadronsHP", "Thrust", "TTheta", "TPhi", "Thrust_charged", "TTheta_charged", "TPhi_charged"};
+  std::vector<std::string> listOfBranches = {"nParticle", "process", "Energy", "px", "py", "pz", "pt", "pmag", "rap", "eta", "theta", "phi", "highPurity", "pwflag", "passesAll", "nChargedHadronsHP", "Thrust", "TTheta", "TPhi", "Thrust_charged", "TTheta_charged", "TPhi_charged"};
   pdataSig.SetStatusAndAddressRead(inTree1_p, listOfBranches);
   edataSig.SetStatusAndAddressRead(inTree1_p, listOfBranches);
 
@@ -164,6 +164,8 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
     //setup loop over other events in file to get mixed events
     resetMixEvt(&pdataMix);
     for(Int_t jI = 0; jI < nBoostedTrees; ++jI) resetMixEvtBoosted(&bDataMix[jI]);
+   
+    m.setCurrentElement(signalMultiplicity,i);//makes sure you find 'close' events in the file to speed things up
 
     int mixedEventsFound = 0;
     while(mixedEventsFound < nEvts2Mix){
@@ -171,7 +173,8 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
       tempTime = get_wall_time();
       inTree1_p->GetEntry(j);
       getTime += get_wall_time()-tempTime;
-      
+     
+  
       //if we check the entire file and haven't found enough mixed events, give up and mix it with itself.  Warning if it passes evt sel
       if(i==j){
         if(edataSig.passesAll) std::cout << "Warning! Only " << mixedEventsFound << "/" << nEvts2Mix << " found in file for event index " <<  i << "!  Giving up with less than the requested number of mixed events..." << std::endl;
