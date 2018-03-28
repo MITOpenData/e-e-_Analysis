@@ -35,15 +35,6 @@
 #include "include/doGlobalDebug.h"
 #include "include/processJets.h"
 
-double get_wall_time(){
-  struct timeval time;
-  if (gettimeofday(&time,NULL)){
-    //  Handle error
-    return 0;
-  }
-  return (double)time.tv_sec + (double)time.tv_usec * .000001;
-}
-
 inline bool passesTheta(float t){return TMath::Abs(TMath::Cos(t))<0.8;}
 
 int main(int argc, char* argv[])
@@ -282,11 +273,20 @@ int main(int argc, char* argv[])
 	pData.theta_wrtThr[pI] = thetaFromThrust(thrust, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]));
 	pData.eta_wrtThr[pI] = etaFromThrust(thrust, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]));
 	pData.phi_wrtThr[pI] = phiFromThrust(thrust, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]));
+	pData.pt_wrtThrPerp[pI] = ptFromThrust(thrust, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]), true);
+	pData.theta_wrtThrPerp[pI] = thetaFromThrust(thrust, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]), true);
+	pData.eta_wrtThrPerp[pI] = etaFromThrust(thrust, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]), true);
+	pData.phi_wrtThrPerp[pI] = phiFromThrust(thrust, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]), true);
+
 
 	pData.pt_wrtChThr[pI] = ptFromThrust(thrustCh, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]));
 	pData.theta_wrtChThr[pI] = thetaFromThrust(thrustCh, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]));
 	pData.eta_wrtChThr[pI] = etaFromThrust(thrustCh, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]));
 	pData.phi_wrtChThr[pI] = phiFromThrust(thrustCh, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]));
+	pData.pt_wrtChThrPerp[pI] = ptFromThrust(thrustCh, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]),true);
+	pData.theta_wrtChThrPerp[pI] = thetaFromThrust(thrustCh, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]),true);
+	pData.eta_wrtChThrPerp[pI] = etaFromThrust(thrustCh, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]),true);
+	pData.phi_wrtChThrPerp[pI] = phiFromThrust(thrustCh, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]),true);
       }
 
       for(int jIter = 0; jIter < nJtAlgo; ++jIter){
