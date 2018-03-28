@@ -78,7 +78,7 @@ void setupCanvas(TVirtualPad *c1)
           c1->SetPhi(38.0172);
 }
 
-void TPCPlots(const std::string inFileName1,int doOneBin=0)
+int TPCPlots(const std::string inFileName1,int doOneBin=0)
 {
   // ROOT Global setting
   TH1::SetDefaultSumw2();    TH2::SetDefaultSumw2();
@@ -116,7 +116,7 @@ void TPCPlots(const std::string inFileName1,int doOneBin=0)
     if (doOneBin&&e!=0) continue;
     for(int m = 0; m<s.nMultBins; m++)
     {
-      if (doOneBin&&m!=0) continue;
+      //if (doOneBin&&m!=0) continue;
       for(int p = 0; p<nptBins; p++)
       {
         if (doOneBin&&p!=0) continue;
@@ -176,7 +176,7 @@ void TPCPlots(const std::string inFileName1,int doOneBin=0)
 	  
           TCanvas * cAll = new TCanvas(Form("c_%d",nCanvas),Form("Summary%d",nCanvas),800,800);
 	  cAll->Divide(2,2);
-	  //for (Int_t iCanvas = 1; iCanvas<4; iCanvas++) setupCanvas(cAll->GetPad(iCanvas));
+	  for (Int_t iCanvas = 1; iCanvas<4; iCanvas++) setupCanvas(cAll->GetPad(iCanvas));
           
 	  TCanvas * c1 = new TCanvas("c1","c1",800,800);
           setupCanvas(c1);
@@ -255,12 +255,14 @@ void TPCPlots(const std::string inFileName1,int doOneBin=0)
           for (Int_t i=0;i<4;i++)  delete h_deltaphi[i*2];
 	  */
 	  cAll->SaveAs(Form("../pdfDir/%s_Summary_%d_%d_%d_%d_%d.png",saveName.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
-          cAll->SaveAs(Form("../pdfDir/%s_Summary_%d_%d_%d_%d_%d.pdf",saveName.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
+          cAll->SaveAs(Form("../summary/%s_Summary_%d_%d_%d_%d_%d.pdf",saveName.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
             
         }
       }
     }
   }
+  
+  if (doOneBin) return 0;
 
   TH1F *eta1, *theta1, *pt1, *phi1, *TTheta1, *TPhi1;
   pt1 = (TH1F*)f1->Get("pt");
