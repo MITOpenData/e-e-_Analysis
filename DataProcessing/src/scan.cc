@@ -11,6 +11,7 @@
 #include "TLorentzVector.h"
 #include "TVector3.h"
 #include "TNamed.h"
+#include "TDatime.h"
 
 //fastjet dependencies
 #include "fastjet/ClusterSequence.hh"
@@ -1414,6 +1415,10 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 
 int main(int argc, char *argv[])
 {
+  TDatime* date = new TDatime();
+
+  std::cout << "START DATE, TIME: " << date->GetDate() << ", " << date->GetTime() << std::endl;
+
   if(argc != 4 && argc != 5){
     std::cout << "Usage: ./bin/scan.exe <inFileName> <isNewInfo> <isNewInfo2> <OPT-outFileName>" << std::endl;
     return 1;
@@ -1453,5 +1458,9 @@ int main(int argc, char *argv[])
   std::cout << "Making mixing file..." << std::endl;
   if(argc == 5) retVal += makeMixFile(argv[4], argv[4], nMix);
   else          retVal += makeMixFile(argv[1], "", nMix);
+
+  std::cout << "END DATE, TIME: " << date->GetDate() << ", " << date->GetTime() << std::endl;
+  delete date;
+
   return retVal;
 }
