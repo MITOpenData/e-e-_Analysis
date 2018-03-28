@@ -137,7 +137,7 @@ bool check998(std::string inStr){return checkGeneral(inStr, "-998.");}
 //isNewInfo2 is for nitc, nvdet
 
 void initVal(Int_t* in, Int_t set){(*in) = set; return;}
-void initVal(Char_t* in, Char_t set){(*in) = set; return;}
+void initVal(Short_t* in, Short_t set){(*in) = set; return;}
 void initVal(Float_t* in, Float_t set){(*in) = set; return;}
 void initVal(Double_t* in, Double_t set){(*in) = set; return;}
 void initVal(std::vector<Int_t*> in, Int_t set)
@@ -148,7 +148,7 @@ void initVal(std::vector<Int_t*> in, Int_t set)
   }
   return;
 }
-void initVal(std::vector<Char_t*> in, Char_t set)
+void initVal(std::vector<Short_t*> in, Short_t set)
 {
   for(unsigned int i = 0; i < in.size(); ++i){
     if(in.at(i) == NULL) continue;
@@ -621,7 +621,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
       float _py = std::stof(num.at(1));
       float _pz = std::stof(num.at(2));
       float _m = std::stof(num.at(3));
-      float _charge = std::stof(num.at(4));
+      Short_t _charge = std::stoi(num.at(4));
       int _pwflag = std::stoi(num.at(5));
 
       if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
@@ -928,7 +928,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	float _py = std::stof(num.at(1));
 	float _pz = std::stof(num.at(2));
 	float _m = std::stof(num.at(3));
-	float _charge = std::stof(num.at(4));
+	Short_t _charge = std::stoi(num.at(4));
 	int _pwflag = std::stoi(num.at(5));
 
 	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
@@ -1260,7 +1260,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	float _py = std::stof(num.at(1));
 	float _pz = std::stof(num.at(2));
 	float _m = std::stof(num.at(3));
-	float _charge = std::stof(num.at(4));
+	Short_t _charge = std::stoi(num.at(4));
 	int _pwflag = std::stoi(num.at(5));
 
 	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;

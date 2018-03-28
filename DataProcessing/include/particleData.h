@@ -382,16 +382,16 @@ void particleData::preFillClean()
     theta_wrtThrPerp[i] = reducedPrecision(theta_wrtThrPerp[i]);
     phi_wrtThrPerp[i] = reducedPrecision(phi_wrtThrPerp[i]);
 
-    pt_wrtChThr[i] = reducedPrecision(pt_wrtThr[i]);
-    eta_wrtChThr[i] = reducedPrecision(eta_wrtThr[i]);
-    rap_wrtChThr[i] = reducedPrecision(rap_wrtThr[i]);
-    theta_wrtChThr[i] = reducedPrecision(theta_wrtThr[i]);
-    phi_wrtChThr[i] = reducedPrecision(phi_wrtThr[i]);
-    pt_wrtChThrPerp[i] = reducedPrecision(pt_wrtThrPerp[i]);
-    eta_wrtChThrPerp[i] = reducedPrecision(eta_wrtThrPerp[i]);
-    rap_wrtChThrPerp[i] = reducedPrecision(rap_wrtThrPerp[i]);
-    theta_wrtChThrPerp[i] = reducedPrecision(theta_wrtThrPerp[i]);
-    phi_wrtChThrPerp[i] = reducedPrecision(phi_wrtThrPerp[i]);
+    pt_wrtChThr[i] = reducedPrecision(pt_wrtChThr[i]);
+    eta_wrtChThr[i] = reducedPrecision(eta_wrtChThr[i]);
+    rap_wrtChThr[i] = reducedPrecision(rap_wrtChThr[i]);
+    theta_wrtChThr[i] = reducedPrecision(theta_wrtChThr[i]);
+    phi_wrtChThr[i] = reducedPrecision(phi_wrtChThr[i]);
+    pt_wrtChThrPerp[i] = reducedPrecision(pt_wrtChThrPerp[i]);
+    eta_wrtChThrPerp[i] = reducedPrecision(eta_wrtChThrPerp[i]);
+    rap_wrtChThrPerp[i] = reducedPrecision(rap_wrtChThrPerp[i]);
+    theta_wrtChThrPerp[i] = reducedPrecision(theta_wrtChThrPerp[i]);
+    phi_wrtChThrPerp[i] = reducedPrecision(phi_wrtChThrPerp[i]);
   }
   return;
 }
