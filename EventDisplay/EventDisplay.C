@@ -10,7 +10,12 @@
 #include "TView3D.h"
 #include "TCanvas.h"
 
+// Dataformat
 #include "include/smartJetName.h"
+#include "include/particleData.h"
+#include "include/jetData.h"
+#include "include/boostedEvtData.h"
+#include "include/eventData.h"
 
 //nasty global variables for nextEvent() function
 std::string currentFile;
@@ -47,75 +52,36 @@ void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/
 
   TFile * f = TFile::Open(inputFile.c_str(),"read");
   TTree * t = (TTree*)f->Get("t");
-  TTree * WTA_t=0;
-  if(doWTA){
-    WTA_t = (TTree*)f->Get("BoostedWTAR8Evt");
-  }
+  TTree * WTA_t = WTA_t = (TTree*)f->Get("BoostedWTAR8Evt");
   TTree * jt = (TTree*)f->Get(smartJetName("ak8ESchemeJetTree", f).c_str()); 
   TTree * wta = (TTree*)f->Get(smartJetName("ak8WTAmodpSchemeJetTree", f).c_str());
 
-  int nParticle;
-  float pt[500];
-  float eta[500];
-  float phi[500];
-  float px[500];
-  float py[500];
-  float pz[500];
-  float charge[500];
-  int pwflag[500], pwflagMix[500];
+  particleData particle;
+  jetData jet;
+  jetData WTAjet;
+  boostedEvtData boosted;
+  eventData event;
 
-
-  float wtapt[500];
-  float wtaeta[500];
-  float wtaphi[500];
-
-  int nref;
-  float jtpt[50];
-  float jteta[50];
-  float jtphi[50];
+  std::vector<std::string> list;
   
-  int wtanref;
-  float wtajtpt[50];
-  float wtajteta[50];
-  float wtajtphi[50];
+  particle.SetStatusAndAddressRead(t,list);
+  event.SetStatusAndAddressRead(t,list);
+  boosted.SetStatusAndAddressRead(WTA_t,list);
+  jet.SetStatusAndAddressRead(jt,list);
+  WTAjet.SetStatusAndAddressRead(jt,list);
 
-  float TTheta;
-  float TPhi;
-  t->SetBranchAddress("TTheta_charged",&TTheta);
-  t->SetBranchAddress("TPhi_charged",&TPhi);    
-  t->SetBranchAddress("nParticle",&nParticle);
-  t->SetBranchAddress("pt",&pt);
-  t->SetBranchAddress("phi",&phi);
-  t->SetBranchAddress("eta",&eta);
-  t->SetBranchAddress("px",&px);              
-  t->SetBranchAddress("py",&py);              
-  t->SetBranchAddress("pz",&pz);     
-  if(doWTA){
-    WTA_t->SetBranchAddress("pt",&wtapt);
-    WTA_t->SetBranchAddress("phi",&wtaphi);
-    WTA_t->SetBranchAddress("eta",&wtaeta);
-  }        
-  t->SetBranchAddress("pwflag",&pwflag);     
-  t->SetBranchAddress("charge",&charge); 
-  jt->SetBranchAddress("nref",&nref);
-  jt->SetBranchAddress("jtpt",&jtpt);
-  jt->SetBranchAddress("jteta",&jteta);
-  jt->SetBranchAddress("jtphi",&jtphi);
-  wta->SetBranchAddress("nref",&wtanref);
-  wta->SetBranchAddress("jtpt",&wtajtpt);
-  wta->SetBranchAddress("jteta",&wtajteta);
-  wta->SetBranchAddress("jtphi",&wtajtphi);
+
   t->GetEntry(eventIndx);
   if(doWTA) WTA_t->GetEntry(eventIndx);
   jt->GetEntry(eventIndx);
   wta->GetEntry(eventIndx);
 
   TVector3 thrust = TVector3(0,0,0);
-  thrust.SetMagThetaPhi(10,TTheta,TPhi);
+  thrust.SetMagThetaPhi(10,event.TTheta,event.TPhi);
   TVector3 wta1 = TVector3(0,0,0);
-  if(wtanref>0) wta1.SetMagThetaPhi(10,2*TMath::ATan(TMath::Exp(-wtajteta[0])),wtajtphi[0]);
+  if(WTAjet.nref>0) wta1.SetMagThetaPhi(10,2*TMath::ATan(TMath::Exp(-WTAjet.jteta[0])),WTAjet.jtphi[0]);
   TVector3 wta2 = TVector3(0,0,0);
-  if(wtanref>1) wta2.SetMagThetaPhi(10,2*TMath::ATan(TMath::Exp(-wtajteta[1])),wtajtphi[1]);
+  if(WTAjet.nref>1) wta2.SetMagThetaPhi(10,2*TMath::ATan(TMath::Exp(-WTAjet.jteta[1])),WTAjet.jtphi[1]);
 
 
   TCanvas* c1 = new TCanvas("AzimuthalView","AzimuthalView",600,600);
@@ -134,7 +100,7 @@ void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/
   c3->SetFillColor(kBlack);  
   TView *view3 = TView::CreateView(1);
   view3->SetRange(-1,-1,-1,1,1,1);
-  view3->RotateView(TPhi*180/TMath::Pi(),TTheta*180/TMath::Pi());
+  view3->RotateView(event.TPhi*180/TMath::Pi(),event.TTheta*180/TMath::Pi());
   view3->ZoomView(c3,10);
 
   THelix * helix[1000];
@@ -176,30 +142,39 @@ void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/
   }
 
   int nHelix = 0;
-  for(int i = 0; i<nParticle; i++){
-    if(pwflag[i]!=0) continue;
-    if(pt[i]<ptCut) continue;
+  for(int i = 0; i<particle.nParticle; i++){
+    if(particle.pwflag[i]!=0) continue;
+    if(particle.pt[i]<ptCut) continue;
+
     //jet tracks
     int trackColor = 0;
-    if(jtpt[0]*TMath::CosH(jteta[0])>5 && dR(jteta[0],jtphi[0],eta[i],phi[i])<0.8) trackColor = 1;
-    if(jtpt[1]*TMath::CosH(jteta[1])>5 && dR(jteta[1],jtphi[1],eta[i],phi[i])<0.8) trackColor = 2;
-    if(jtpt[2]*TMath::CosH(jteta[2])>5 && dR(jteta[2],jtphi[2],eta[i],phi[i])<0.8) trackColor = 3;
-    if(jtpt[3]*TMath::CosH(jteta[3])>5 && dR(jteta[3],jtphi[3],eta[i],phi[i])<0.8) trackColor = 4;
-    if(doWTA && wtapt[i]<0.01) trackColor = 5;
+    if(jet.jtpt[0]*TMath::CosH(jet.jteta[0])>5 && dR(jet.jteta[0],jet.jtphi[0],particle.eta[i],particle.phi[i])<0.8) trackColor = 1;
+    if(jet.jtpt[1]*TMath::CosH(jet.jteta[1])>5 && dR(jet.jteta[1],jet.jtphi[1],particle.eta[i],particle.phi[i])<0.8) trackColor = 2;
+    if(jet.jtpt[2]*TMath::CosH(jet.jteta[2])>5 && dR(jet.jteta[2],jet.jtphi[2],particle.eta[i],particle.phi[i])<0.8) trackColor = 3;
+    if(jet.jtpt[3]*TMath::CosH(jet.jteta[3])>5 && dR(jet.jteta[3],jet.jtphi[3],particle.eta[i],particle.phi[i])<0.8) trackColor = 4;
+    if(doWTA && boosted.pt[i]<0.01) trackColor = 5;
     //std::cout <<  jteta[0] << " " << jtphi[0] <<" " <<  eta[i] << " " << phi[i] << std::endl;
     //std::cout <<  dR(jteta[0],jtphi[0],eta[i],phi[i]) << std::endl;
 
-    //std::cout << i<<" "  << px[i]<<" "  << py[i]<<" " << pz[i]<<" " << charge[i] << " " << trackColor <<  std::endl; 
+    //std::cout << i<<" "  << px<<" "  << py<<" " << pz<<" " << particle.charge[i] << " " << trackColor <<  std::endl; 
+
+    Float_t px,py,pz,pt;
     if(doWTA){
       TVector3 trk3(0,0,0);
-      trk3.SetPtEtaPhi(wtapt[i],wtaeta[i],wtaphi[i]);
-      px[i] = trk3.x();
-      py[i] = trk3.y();
-      pz[i] = trk3.z();
+      trk3.SetPtEtaPhi(boosted.pt[i],boosted.eta[i],boosted.phi[i]);
+      px = trk3.x();
+      py = trk3.y();
+      pz = trk3.z();
+      pt = boosted.pt[i];
+    } else {
+      px = particle.px[i];
+      py = particle.py[i];
+      pz = particle.pz[i];
+      pt = particle.pt[i];
     }
 
-    helix[nHelix] = new THelix(0,0,0,px[i],py[i],pz[i],charge[i]*1.5);
-    formatHelix(helix[nHelix],pz[i],pt[i],trackColor,doWTA);
+    helix[nHelix] = new THelix(0,0,0,px,py,pz,particle.charge[i]*1.5);
+    formatHelix(helix[nHelix],pz,pt,trackColor,doWTA);
     c1->cd();
     helix[nHelix]->Draw("same");
     c2->cd();
