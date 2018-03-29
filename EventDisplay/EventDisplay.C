@@ -36,46 +36,47 @@ void formatHelix(THelix * h, float pz, float pt, int color = 0, bool doWTA = fal
   h->SetLineWidth(1);
   
   float rangeBound = 1;
-  if(!doWTA){
-    if(pt<2.5 && TMath::Abs(pz)<0.5) rangeBound = TMath::Abs(pz);
-  }
+  if(!doWTA) && pt<2.5 && TMath::Abs(pz)<0.5) rangeBound = TMath::Abs(pz);
   h->SetRange(0,rangeBound);
   if(pz<0) h->SetRange(-rangeBound,0);
 }
 
-
-void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180125/LEP1Data1995_recons_aftercut-MERGED.root" ,int eventIndx = 574, float ptCut = 0, bool doWTA = false){
-
+void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180125/LEP1Data1995_recons_aftercut-MERGED.root" ,
+                  int eventIndx = 574, 
+		  float ptCut = 0, 
+		  bool doWTA = false){
   currentFile=inputFile;
   currentEvtIndx=eventIndx;
   currentPtCut=ptCut;
 
-  TFile * f = TFile::Open(inputFile.c_str(),"read");
-  TTree * t = (TTree*)f->Get("t");
-  TTree * WTA_t = WTA_t = (TTree*)f->Get("BoostedWTAR8Evt");
-  TTree * jt = (TTree*)f->Get(smartJetName("ak8ESchemeJetTree", f).c_str()); 
-  TTree * wta = (TTree*)f->Get(smartJetName("ak8WTAmodpSchemeJetTree", f).c_str());
+  TFile * f 	= TFile::Open(inputFile.c_str(),"read");
+  TTree * t 	= (TTree*)f->Get("t");
+  TTree * WTA_t = (TTree*)f->Get("BoostedWTAR8Evt");
+  TTree * jt 	= (TTree*)f->Get(smartJetName("ak8ESchemeJetTree", f).c_str()); 
+  TTree * wta 	= (TTree*)f->Get(smartJetName("ak8WTAmodpSchemeJetTree", f).c_str());
 
+  // Define dataformat
   particleData particle;
   jetData jet;
   jetData WTAjet;
   boostedEvtData boosted;
   eventData event;
 
-  std::vector<std::string> list;
-  
+  // Setup branches
+  std::vector<std::string> list;  
   particle.SetStatusAndAddressRead(t,list);
   event.SetStatusAndAddressRead(t,list);
   boosted.SetStatusAndAddressRead(WTA_t,list);
   jet.SetStatusAndAddressRead(jt,list);
   WTAjet.SetStatusAndAddressRead(jt,list);
 
-
+  // Take the event of interest
   t->GetEntry(eventIndx);
   if(doWTA) WTA_t->GetEntry(eventIndx);
   jt->GetEntry(eventIndx);
   wta->GetEntry(eventIndx);
 
+  // Draw Thrust and WTA axis
   TVector3 thrust = TVector3(0,0,0);
   thrust.SetMagThetaPhi(10,event.TTheta,event.TPhi);
   TVector3 wta1 = TVector3(0,0,0);
@@ -141,6 +142,7 @@ void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/
     helix[997]->Draw();
   }
 
+  // Draw charged particles
   int nHelix = 0;
   for(int i = 0; i<particle.nParticle; i++){
     if(particle.pwflag[i]!=0) continue;
