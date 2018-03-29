@@ -11,6 +11,7 @@
 #include "TLorentzVector.h"
 #include "TVector3.h"
 #include "TNamed.h"
+#include "TDatime.h"
 
 //fastjet dependencies
 #include "fastjet/ClusterSequence.hh"
@@ -137,7 +138,7 @@ bool check998(std::string inStr){return checkGeneral(inStr, "-998.");}
 //isNewInfo2 is for nitc, nvdet
 
 void initVal(Int_t* in, Int_t set){(*in) = set; return;}
-void initVal(Char_t* in, Char_t set){(*in) = set; return;}
+void initVal(Short_t* in, Short_t set){(*in) = set; return;}
 void initVal(Float_t* in, Float_t set){(*in) = set; return;}
 void initVal(Double_t* in, Double_t set){(*in) = set; return;}
 void initVal(std::vector<Int_t*> in, Int_t set)
@@ -148,7 +149,7 @@ void initVal(std::vector<Int_t*> in, Int_t set)
   }
   return;
 }
-void initVal(std::vector<Char_t*> in, Char_t set)
+void initVal(std::vector<Short_t*> in, Short_t set)
 {
   for(unsigned int i = 0; i < in.size(); ++i){
     if(in.at(i) == NULL) continue;
@@ -621,7 +622,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
       float _py = std::stof(num.at(1));
       float _pz = std::stof(num.at(2));
       float _m = std::stof(num.at(3));
-      float _charge = std::stof(num.at(4));
+      Short_t _charge = std::stoi(num.at(4));
       int _pwflag = std::stoi(num.at(5));
 
       if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
@@ -928,7 +929,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	float _py = std::stof(num.at(1));
 	float _pz = std::stof(num.at(2));
 	float _m = std::stof(num.at(3));
-	float _charge = std::stof(num.at(4));
+	Short_t _charge = std::stoi(num.at(4));
 	int _pwflag = std::stoi(num.at(5));
 
 	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
@@ -1260,7 +1261,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	float _py = std::stof(num.at(1));
 	float _pz = std::stof(num.at(2));
 	float _m = std::stof(num.at(3));
-	float _charge = std::stof(num.at(4));
+	Short_t _charge = std::stoi(num.at(4));
 	int _pwflag = std::stoi(num.at(5));
 
 	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
@@ -1414,6 +1415,10 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 
 int main(int argc, char *argv[])
 {
+  TDatime* date = new TDatime();
+
+  std::cout << "START DATE, TIME: " << date->GetDate() << ", " << date->GetTime() << std::endl;
+
   if(argc != 4 && argc != 5){
     std::cout << "Usage: ./bin/scan.exe <inFileName> <isNewInfo> <isNewInfo2> <OPT-outFileName>" << std::endl;
     return 1;
@@ -1453,5 +1458,9 @@ int main(int argc, char *argv[])
   std::cout << "Making mixing file..." << std::endl;
   if(argc == 5) retVal += makeMixFile(argv[4], argv[4], nMix);
   else          retVal += makeMixFile(argv[1], "", nMix);
+
+  std::cout << "END DATE, TIME: " << date->GetDate() << ", " << date->GetTime() << std::endl;
+  delete date;
+
   return retVal;
 }

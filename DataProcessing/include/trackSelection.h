@@ -50,7 +50,7 @@ class TrackSelection{
 bool TrackSelection::highPurity(particleData * p, int indx){
   if(!passesPWFlag(p->pwflag[indx])) return false;
   if(!passesTheta(p->theta[indx]))   return false;
-  if(!passesP(p->pmag[indx]))        return false;
+  if(!passesPt(p->pt[indx]))        return false;
   if(!passesD0(p->d0[indx]))         return false;
   if(!passesZ0(p->z0[indx]))         return false;
   if(!passesNTPC(p->ntpc[indx]))     return false;

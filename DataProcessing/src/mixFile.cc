@@ -12,6 +12,9 @@
 #include "TVector3.h"
 #include "TNamed.h"
 
+#include <time.h>
+#include <sys/time.h>
+
 //local dependencies
 #include "include/doLocalDebug.h"
 #include "include/checkMakeDir.h"
@@ -21,12 +24,24 @@
 #include "include/boostedEvtData.h"
 #include "include/thrustTools.h"
 #include "include/mixTools.h"
+#include "include/mixMap.h"
 #include "include/boostTools.h"
 #include "include/sphericityTools.h"
 #include "include/returnRootFileContentsList.h"
 #include "include/removeVectorDuplicates.h"
 
-int makeMixFile(std::string inputFile, std::string outputFile = "", const int nEvts2Mix = 3){
+double get_wall_time(){
+  struct timeval time;
+  if (gettimeofday(&time,NULL)){
+    //  Handle error
+    return 0;
+  }
+  return (double)time.tv_sec + (double)time.tv_usec * .000001;
+}
+
+int makeMixFile(std::string inputFile, std::string outputFile = "", const int nEvts2Mix = 3, const int maxMult = 35){
+  double startTime = get_wall_time();
+  double getTime = 0;
 
   //open file and get main tree
   //if given a .aleph file, look for .root file in local directory instead (for scan.cc implementation)
@@ -39,14 +54,28 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
   TTree * inTree1_p = (TTree*)input->Get("t");
   
   //compile list of branches and set them
-  std::vector<std::string> listOfBranches;
-  TObjArray* list1_p = (TObjArray*)inTree1_p->GetListOfBranches();
-  for(Int_t i = 0; i < list1_p->GetEntries(); ++i)  listOfBranches.push_back(list1_p->At(i)->GetName());
+  //std::vector<std::string> listOfBranches;
+  //TObjArray* list1_p = (TObjArray*)inTree1_p->GetListOfBranches();
+  //for(Int_t i = 0; i < list1_p->GetEntries(); ++i)  listOfBranches.push_back(list1_p->At(i)->GetName());
+  
   
   //particle and event info
+  inTree1_p->SetBranchStatus("*",0);
   particleData pdataSig;
-  pdataSig.SetStatusAndAddressRead(inTree1_p, listOfBranches);
   eventData edataSig;  
+  std::vector<std::string> listOfBranches2 = {"passesAll", "nChargedHadronsHP"};
+  edataSig.SetStatusAndAddressRead(inTree1_p, listOfBranches2); 
+
+  //set up mixing multiplicity map
+  MixMap m = MixMap(maxMult);
+  for(int i = 0; i<inTree1_p->GetEntries(); i++){
+    inTree1_p->GetEntry(i);
+    if(!(edataSig.passesAll)) continue;
+    m.addElement(edataSig.nChargedHadronsHP,i);
+  }
+  
+  std::vector<std::string> listOfBranches = {"nParticle", "process", "Energy", "px", "py", "pz", "pt", "pmag", "rap", "eta", "theta", "phi", "highPurity", "pwflag", "passesAll", "nChargedHadronsHP", "Thrust", "TTheta", "TPhi", "Thrust_charged", "TTheta_charged", "TPhi_charged"};
+  pdataSig.SetStatusAndAddressRead(inTree1_p, listOfBranches);
   edataSig.SetStatusAndAddressRead(inTree1_p, listOfBranches);
 
   //wta branches
@@ -54,11 +83,12 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
   removeVectorDuplicates(&listOfBoostedTrees1);
   std::vector< std::vector<std::string> > listOfBoostedTreeBranches;
   for(unsigned int jI = 0; jI < listOfBoostedTrees1.size(); ++jI){
-    TTree* tempTree_p = (TTree*)input->Get(listOfBoostedTrees1.at(jI).c_str());
-    TObjArray* tempList = (TObjArray*)tempTree_p->GetListOfBranches();
-    std::vector<std::string> tempV;
+   // TTree* tempTree_p = (TTree*)input->Get(listOfBoostedTrees1.at(jI).c_str());
+   // TObjArray* tempList = (TObjArray*)tempTree_p->GetListOfBranches();
+   // std::vector<std::string> tempV;
+    std::vector<std::string> tempV = {"WTAAxis_Theta","WTAAxis_ThetaPerp","WTAAxis_Phi","boostx","boosty","boostz"};
 
-    for(Int_t i = 0; i < tempList->GetEntries(); ++i) tempV.push_back(tempList->At(i)->GetName());
+   // for(Int_t i = 0; i < tempList->GetEntries(); ++i) tempV.push_back(tempList->At(i)->GetName());
 
     listOfBoostedTreeBranches.push_back(tempV);
   }
@@ -70,7 +100,6 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
     bTree1_p[jI]->SetBranchStatus("*", 0);
     bData1[jI].SetStatusAndAddressRead(bTree1_p[jI], listOfBoostedTreeBranches.at(jI));
   }
-
 
   //open output file
   TFile * output;
@@ -98,25 +127,30 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
     outTree1_b[jI]->SetDirectory(output);
     bDataMix[jI].SetBranchWrite(outTree1_b[jI]);
   }
-  
- 
+
+
   const Int_t printInterval = 20;
-  const Int_t printNEntries = inTree1_p->GetEntries()/printInterval;
+  const Int_t printNEntries = TMath::Max(1,(int)(inTree1_p->GetEntries()/printInterval));
+
+  double startTimeLoop = get_wall_time();
 
   //loop through input file for the signal events
   for(int i = 0; i<inTree1_p->GetEntries(); i++){
     if(i%printNEntries == 0) std::cout << "Mixing entry: " << i << "/" << inTree1_p->GetEntries() << std::endl;
     //for testing
-    //if(i>100) break;
-    
+    //if(i>1000) break;
+    double tempTime = get_wall_time(); 
     inTree1_p->GetEntry(i);
     for(Int_t jI = 0; jI < nBoostedTrees; ++jI) bTree1_p[jI]->GetEntry(i);
+    getTime += get_wall_time()-tempTime; 
+
     //set temp variables for signal event if needed
     //get thrust axes
     TVector3 thrustAxis, thrustAxis_ch;
     thrustAxis.SetMagThetaPhi(1, edataSig.TTheta, edataSig.TPhi);  
     thrustAxis_ch.SetMagThetaPhi(1, edataSig.TTheta_charged, edataSig.TPhi_charged);  
-    
+   
+    int signalMultiplicity = edataSig.nChargedHadronsHP; 
     int signalProcess = pdataSig.process;
     int signalEnergy = (int)(pdataSig.Energy < 100);
 
@@ -130,25 +164,30 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
     //setup loop over other events in file to get mixed events
     resetMixEvt(&pdataMix);
     for(Int_t jI = 0; jI < nBoostedTrees; ++jI) resetMixEvtBoosted(&bDataMix[jI]);
+   
+    m.setCurrentElement(signalMultiplicity,i);//makes sure you find 'close' events in the file to speed things up
 
     int mixedEventsFound = 0;
-    for(int j = i+1; mixedEventsFound < nEvts2Mix; j++){
-      //wrap around if you hit end of file
-      if(j==inTree1_p->GetEntries()) j=0;
-
-      //if we check the entire file and haven't found enough mixed events, give up 
+    while(mixedEventsFound < nEvts2Mix){
+      int j = m.getNextElement(signalMultiplicity ,i);
+      tempTime = get_wall_time();
+      inTree1_p->GetEntry(j);
+      getTime += get_wall_time()-tempTime;
+     
+  
+      //if we check the entire file and haven't found enough mixed events, give up and mix it with itself.  Warning if it passes evt sel
       if(i==j){
-        std::cout << "Warning! Only " << mixedEventsFound << "/" << nEvts2Mix << " found in file for event index i!  Giving up with less than the requested number of mixed events..." << std::endl;
+        if(edataSig.passesAll) std::cout << "Warning! Only " << mixedEventsFound << "/" << nEvts2Mix << " found in file for event index " <<  i << "!  Giving up with less than the requested number of mixed events..." << std::endl;
+        appendMixEvt(&pdataMix, &pdataSig, thrustAxis, thrustAxis_ch, (float)mixedEventsFound);
+        for(Int_t jI = 0; jI < nBoostedTrees; ++jI) appendMixEvtBoosted(&bDataMix[jI], &pdataSig, WTAAxis[jI], WTABoost[jI], (float)mixedEventsFound);
         break;
       }
   
-      inTree1_p->GetEntry(j);
 
       //make sure mixed event is a good one (using Sig tree here because it is the input tree)
-      bool isGoodEvent = edataSig.passesAll;
       bool processesMatch = (signalProcess == pdataSig.process);
       bool energiesMatch = (signalEnergy == (int)(pdataSig.Energy < 100));
-      if(isGoodEvent && processesMatch && energiesMatch) mixedEventsFound++;
+      if(processesMatch && energiesMatch) mixedEventsFound++;
       else continue;
 
       //particle loop is in here
@@ -167,6 +206,10 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
 
 
   std::cout << "Job Complete!" << std::endl;
+  double endTime = get_wall_time();
+  std::cout << "Mix wall time: " << endTime-startTime << std::endl;
+  std::cout << "Looping wall time: " << endTime-startTimeLoop << std::endl;
+  std::cout << "getEntry time: " << getTime << " " << getTime/(endTime-startTimeLoop)*100 << "\%" << std::endl;
   return 0;
 }
 
