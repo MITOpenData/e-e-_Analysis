@@ -52,14 +52,19 @@ string trees[33] = {
 
 
    TTree* ch[33];
-
+   TTree *originalTrees[33];
+   int exists[33];
    int N = 33;
    
    TFile *inf = new TFile(fname);
    TFile *outf = new TFile(outfile, "RECREATE");
    for(int i = 0; i < N; ++i){
-      ch[i] = ((TTree*) inf->Get(trees[i].data()))->CloneTree(0);
-      cout<<"Tree loaded : "<<string(trees[i]).data()<<endl;
+      exists[i]=0;
+      originalTrees[i]=(TTree*) inf->Get(trees[i].data());
+      cout<<"Tree loading : "<<string(trees[i]).data()<<endl;
+      if (originalTrees[i]==0) continue;
+      exists[i]=1;
+      ch[i] = originalTrees[i]->CloneTree(0);
       cout<<"Entries : "<<((TTree*) inf->Get(trees[i].data()))->GetEntries()<<endl;
       ch[i]->SetMaxTreeSize(4000000000);
    }
@@ -74,11 +79,16 @@ string trees[33] = {
      t->GetEntry(i);
      if (i%1000 == 0) cout <<i<<" / "<<t->GetEntries()<<endl;
      if (data.nChargedHadrons>=30) {
-        for (int j=0;j<N;j++) ch[j]->Fill();
+        for (int j=0;j<N;j++) {
+	  if (exists[j]==0)continue;
+	  originalTrees[j]->GetEntry(i);
+	  ch[j]->Fill();
+	}  
      }
    } 
    
    for (int j=0;j<N;j++){
+	  if (exists[j]==0)continue;
       ch[j]->Write();
    }
    outf->ls();
