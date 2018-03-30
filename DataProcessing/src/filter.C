@@ -74,9 +74,15 @@ string trees[33] = {
      t->GetEntry(i);
      if (i%1000 == 0) cout <<i<<" / "<<t->GetEntries()<<endl;
      if (data.nChargedHadrons>=30) {
-        ch[0]->Fill();
+        for (int j=0;j<N;j++) ch[j]->Fill();
      }
    } 
+   
+   for (int j=0;j<N;j++){
+      ch[j]->Write();
+   }
+   outf->ls();
+   outf->Close();
 /*
    TFile* file = new TFile(outfile, "RECREATE");
    
