@@ -76,7 +76,6 @@ int ridge_check( const std::string inFileName, 		// Input file
     cout <<"Output File: "<<outFileName<<endl;
     cout <<"Mix File: "<<inMixFileName<<endl;
     
-    
     if (overwrite) {
        cout <<"Overwrite the default value from Selection.h"<<endl;
        if (owThrust) s.doThrust = true; else s.doThrust = false;
@@ -181,10 +180,11 @@ int ridge_check( const std::string inFileName, 		// Input file
     /// Initialize the trees for use
     // std::cout<<"Initializing trees for use..."<<std::endl;
     std::string jtTreeName = "";
-    if (s.jttree == 0) jtTreeName = "ak4ESchemeJetTree";
-    if (s.jttree == 1) jtTreeName = "ak4WTAmodpSchemeJetTree";
-    if (s.jttree == 2) jtTreeName = "ak8ESchemeJetTree";
-    if (s.jttree == 3) jtTreeName = "ak8WTAmodpSchemeJetTree";
+    if (s.jttree == 0) jtTreeName = "akR4ESchemeJetTree";
+    if (s.jttree == 1) jtTreeName = "akR4WTAmodpSchemeJetTree";
+    if (s.jttree == 2) jtTreeName = "akR8ESchemeJetTree";
+    if (s.jttree == 3) jtTreeName = "akR8WTAmodpSchemeJetTree";
+    if (s.jttree == 4) jtTreeName = "ktN2WTAmodpSchemeJetTree";
     
     if(inFileName.find(".root") != std::string::npos){
       TFile* temp_p = new TFile(inFileName.c_str(), "READ");
@@ -195,8 +195,7 @@ int ridge_check( const std::string inFileName, 		// Input file
     
     // files and variables for input
     // get the correct tree for the analysis
-    std::string sideTree = "t";
-    if (s.doWTA) sideTree = "BoostedWTAR8Evt";
+    std::string sideTree = "BoostedWTAR8Evt";
     
     TChain * t = new TChain("t");       			t->Add(inFileName.c_str());
     TChain * side_t = new TChain(sideTree.c_str());       	side_t->Add(inFileName.c_str());
@@ -239,12 +238,9 @@ int ridge_check( const std::string inFileName, 		// Input file
         t->GetEntry(i);
         side_t->GetEntry(i);
         jt->GetEntry(i);
+	Bar.Update(i);
+        Bar.PrintWithMod(entryDiv);
         
-        if (i%1000==0) {
-	   Bar.Update(i);
-           Bar.PrintWithMod(entryDiv);
-        }
-
         // find the event energy histogram(s)
         std::vector<Int_t> histE;
         if(inFileName.find("JobNum") != std::string::npos) histE.push_back(0); // the PYTHIA8 is e+e-→Z on Z pole ~ 91.5 GeV
@@ -315,7 +311,6 @@ int ridge_check( const std::string inFileName, 		// Input file
                 Float_t angle2;
                 if (s.getThetaAngle) angle2 = data.getTheta(k); else angle2 = data.getEta(k);
                 Float_t phi2 = data.getPhi(k);
-                
                 for(unsigned int eI = 0; eI< histE.size(); eI++)
                 {
                     for(unsigned int nI = 0; nI< histNtrk.size(); nI++)
