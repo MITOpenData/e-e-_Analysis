@@ -9,6 +9,8 @@
 #include "TVector3.h"
 #include "TView3D.h"
 #include "TCanvas.h"
+#include "TLatex.h"
+#include "TLegend.h"
 
 // Dataformat
 #include "include/smartJetName.h"
@@ -36,7 +38,7 @@ void formatHelix(THelix * h, float pz, float pt, int color = 0, bool doWTA = fal
   h->SetLineWidth(1);
   
   float rangeBound = 1;
-  if(!doWTA) && pt<2.5 && TMath::Abs(pz)<0.5) rangeBound = TMath::Abs(pz);
+  if(!doWTA && pt<2.5 && TMath::Abs(pz)<0.5) rangeBound = TMath::Abs(pz);
   h->SetRange(0,rangeBound);
   if(pz<0) h->SetRange(-rangeBound,0);
 }
@@ -44,7 +46,8 @@ void formatHelix(THelix * h, float pz, float pt, int color = 0, bool doWTA = fal
 void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180125/LEP1Data1995_recons_aftercut-MERGED.root" ,
                   int eventIndx = 574, 
 		  float ptCut = 0, 
-		  bool doWTA = false){
+		  bool doWTA = false,
+		  bool verbose = 0){
   currentFile=inputFile;
   currentEvtIndx=eventIndx;
   currentPtCut=ptCut;
@@ -52,8 +55,8 @@ void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/
   TFile * f 	= TFile::Open(inputFile.c_str(),"read");
   TTree * t 	= (TTree*)f->Get("t");
   TTree * WTA_t = (TTree*)f->Get("BoostedWTAR8Evt");
-  TTree * jt 	= (TTree*)f->Get(smartJetName("ak8ESchemeJetTree", f).c_str()); 
-  TTree * wta 	= (TTree*)f->Get(smartJetName("ak8WTAmodpSchemeJetTree", f).c_str());
+  TTree * jt 	= (TTree*)f->Get(smartJetName("akR8ESchemeJetTree", f).c_str()); 
+  TTree * wta 	= (TTree*)f->Get(smartJetName("akR8WTAmodpSchemeJetTree", f).c_str());
 
   // Define dataformat
   particleData particle;
@@ -68,11 +71,11 @@ void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/
   event.SetStatusAndAddressRead(t,list);
   boosted.SetStatusAndAddressRead(WTA_t,list);
   jet.SetStatusAndAddressRead(jt,list);
-  WTAjet.SetStatusAndAddressRead(jt,list);
+  WTAjet.SetStatusAndAddressRead(wta,list);
 
   // Take the event of interest
   t->GetEntry(eventIndx);
-  if(doWTA) WTA_t->GetEntry(eventIndx);
+  WTA_t->GetEntry(eventIndx);
   jt->GetEntry(eventIndx);
   wta->GetEntry(eventIndx);
 
@@ -84,30 +87,45 @@ void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/
   TVector3 wta2 = TVector3(0,0,0);
   if(WTAjet.nref>1) wta2.SetMagThetaPhi(10,2*TMath::ATan(TMath::Exp(-WTAjet.jteta[1])),WTAjet.jtphi[1]);
 
-
-  TCanvas* c1 = new TCanvas("AzimuthalView","AzimuthalView",600,600);
+  TCanvas *c = new TCanvas("c","Event Display",1000, 1000);
+  c->Divide(2,2);
+  c->SetFillColor(kGray+3);
+  TCanvas* c1 = (TCanvas*)c->GetPad(1);//new TCanvas("AzimuthalView","AzimuthalView",600,600);
   c1->SetFillColor(kBlack);  
   TView *view = TView::CreateView(1);
   view->SetRange(-1,-1,-1,1,1,1);
-  view->TopView();
+  view->TopView(c1);
 
-  TCanvas* c2 = new TCanvas("TopView","TopView",600,600);
+  TCanvas* c2 = (TCanvas*)c->GetPad(2); //new TCanvas("TopView","TopView",600,600);
   c2->SetFillColor(kBlack);  
   TView *view2 = TView::CreateView(1);
   view2->SetRange(-1,-1,-1,1,1,1);
-  view2->SideView();
+  view2->SideView(c2);
   
-  TCanvas* c3 = new TCanvas("AzimuthalThrustView","AzimuthalThrustView",600,600);
+  TCanvas* c3 = (TCanvas*)c->GetPad(3); //new TCanvas("AzimuthalThrustView","AzimuthalThrustView",600,600);
   c3->SetFillColor(kBlack);  
   TView *view3 = TView::CreateView(1);
   view3->SetRange(-1,-1,-1,1,1,1);
-  view3->RotateView(event.TPhi*180/TMath::Pi(),event.TTheta*180/TMath::Pi());
+//  view3->RotateView(thrust.Phi()*180/TMath::Pi(),thrust.Theta()*180/TMath::Pi(),c3);
+  view3->FrontView(c3);
   view3->ZoomView(c3,10);
+  
+  TCanvas* c4 = (TCanvas*)c->GetPad(4); //new TCanvas("AzimuthalThrustView","AzimuthalThrustView",600,600);
+  c4->SetFillColor(kGray+3);  
+  TView *view4 = TView::CreateView(1);
+  view4->ZoomView(c4,1);
+  c4->Update();
+  
+  TLegend *leg = new TLegend(0.1,0.1,0.9,0.9);
+  leg->SetFillStyle(0);
+  leg->SetBorderSize(0);
+  leg->SetTextColor(kWhite);
+  
 
   THelix * helix[1000];
   if(!doWTA){
-    helix[999] = new THelix(0,0,0,thrust.Px(),thrust.Py(),thrust.Pz(),0.000001);
-    helix[999]->SetRange(-1,1);
+    helix[999] = new THelix(0,0,0,thrust.Px(),thrust.Py(),thrust.Pz(),0.00000001);
+    helix[999]->SetRange(-2,2);
     helix[999]->SetLineColor(8);
     helix[999]->SetLineWidth(3);
     c1->cd();
@@ -117,7 +135,7 @@ void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/
     c3->cd();
     helix[999]->Draw();
     
-    helix[998] = new THelix(0,0,0,wta1.Px(),wta1.Py(),wta1.Pz(),0.000001);
+    helix[998] = new THelix(0,0,0,wta1.Px(),wta1.Py(),wta1.Pz(),0.00000001);
     if(wta1.Pz()<0) helix[998]->SetRange(-1,0);
     if(wta1.Pz()>=0) helix[998]->SetRange(0,1);
     helix[998]->SetLineColor(38);
@@ -140,6 +158,28 @@ void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/
     helix[997]->Draw();
     c3->cd();
     helix[997]->Draw();
+    leg->AddEntry(helix[999],"ALEPH Archived Data Event Display","t");
+    leg->AddEntry(helix[999],"Thrust Axis","l");
+    leg->AddEntry(helix[998],"WTA Jet Axis 1","l");
+    leg->AddEntry(helix[997],"WTA Jet Axis 2","l");
+    
+    helix[992] = new THelix(0,0,0,1,1,1,0);
+    helix[993] = new THelix(0,0,0,1,1,1,0);
+    helix[994] = new THelix(0,0,0,1,1,1,0);
+    helix[995] = new THelix(0,0,0,1,1,1,0);
+    helix[996] = new THelix(0,0,0,1,1,1,0);
+    formatHelix(helix[993],1,1,1,0);
+    leg->AddEntry(helix[993],"Tracks in Leading Jet (#Delta R<0.8)","l");
+    formatHelix(helix[994],1,1,2,0);
+    leg->AddEntry(helix[994],"Tracks in Subleading Jet (#Delta R<0.8)","l");
+    formatHelix(helix[995],1,1,3,0);
+    leg->AddEntry(helix[995],"Tracks in Third Jet (#Delta R<0.8)","l");
+    formatHelix(helix[996],1,1,4,0);
+    leg->AddEntry(helix[996],"Tracks in Fourth Jet (#Delta R<0.8)","l");
+    formatHelix(helix[992],1,1,0,0);
+    leg->AddEntry(helix[992],"Other Tracks","l");
+       
+    
   }
 
   // Draw charged particles
@@ -150,15 +190,13 @@ void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/
 
     //jet tracks
     int trackColor = 0;
-    if(jet.jtpt[0]*TMath::CosH(jet.jteta[0])>5 && dR(jet.jteta[0],jet.jtphi[0],particle.eta[i],particle.phi[i])<0.8) trackColor = 1;
-    if(jet.jtpt[1]*TMath::CosH(jet.jteta[1])>5 && dR(jet.jteta[1],jet.jtphi[1],particle.eta[i],particle.phi[i])<0.8) trackColor = 2;
-    if(jet.jtpt[2]*TMath::CosH(jet.jteta[2])>5 && dR(jet.jteta[2],jet.jtphi[2],particle.eta[i],particle.phi[i])<0.8) trackColor = 3;
-    if(jet.jtpt[3]*TMath::CosH(jet.jteta[3])>5 && dR(jet.jteta[3],jet.jtphi[3],particle.eta[i],particle.phi[i])<0.8) trackColor = 4;
+    if(jet.jtpt[0]*TMath::CosH(jet.jteta[0])>0 && dR(jet.jteta[0],jet.jtphi[0],particle.eta[i],particle.phi[i])<0.8) trackColor = 1;
+    else if(jet.jtpt[1]*TMath::CosH(jet.jteta[1])>0 && dR(jet.jteta[1],jet.jtphi[1],particle.eta[i],particle.phi[i])<0.8) trackColor = 2;
+    else if(jet.jtpt[2]*TMath::CosH(jet.jteta[2])>0 && dR(jet.jteta[2],jet.jtphi[2],particle.eta[i],particle.phi[i])<0.8) trackColor = 3;
+    else if(jet.jtpt[3]*TMath::CosH(jet.jteta[3])>0 && dR(jet.jteta[3],jet.jtphi[3],particle.eta[i],particle.phi[i])<0.8) trackColor = 4;
     if(doWTA && boosted.pt[i]<0.01) trackColor = 5;
-    //std::cout <<  jteta[0] << " " << jtphi[0] <<" " <<  eta[i] << " " << phi[i] << std::endl;
-    //std::cout <<  dR(jteta[0],jtphi[0],eta[i],phi[i]) << std::endl;
-
-    //std::cout << i<<" "  << px<<" "  << py<<" " << pz<<" " << particle.charge[i] << " " << trackColor <<  std::endl; 
+    if (verbose) std::cout <<  jet.jteta[0] << " " << jet.jtphi[0] <<" " <<  particle.eta[i] << " " << particle.phi[i] << std::endl;
+    if (verbose) std::cout <<  dR(jet.jteta[0],jet.jtphi[0],particle.eta[i],particle.phi[i]) << std::endl;
 
     Float_t px,py,pz,pt;
     if(doWTA){
@@ -175,6 +213,8 @@ void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/
       pt = particle.pt[i];
     }
 
+    if (verbose) std::cout << i<<" "  << px<<" "  << py<<" " << pz<<" " << particle.charge[i] << " " << trackColor <<  std::endl; 
+
     helix[nHelix] = new THelix(0,0,0,px,py,pz,particle.charge[i]*1.5);
     formatHelix(helix[nHelix],pz,pt,trackColor,doWTA);
     c1->cd();
@@ -186,6 +226,23 @@ void EventDisplay(std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/
     nHelix++;
   }
 
+  c1->cd();
+  TLatex *l1 = new TLatex(-0.97,0.90,"Azimuthal View");
+  l1->SetTextColor(kWhite);
+  l1->Draw();
+  c2->cd();
+  TLatex *l2 = new TLatex(-0.97,0.90,"Side View");
+  l2->SetTextColor(kWhite);
+  l2->Draw();
+  c3->cd();
+//  TLatex *l3 = new TLatex(-0.97,0.90,"Azimuthal Thrust View");
+  TLatex *l3 = new TLatex(-0.97,0.90,"Front View");
+  l3->SetTextColor(kWhite);
+  l3->Draw();
+
+  c4->cd();
+  leg->Draw();
+  
 }
 
 int nextEvent(){
