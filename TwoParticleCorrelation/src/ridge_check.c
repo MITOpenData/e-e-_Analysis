@@ -251,9 +251,7 @@ int ridge_check( const std::string inFileName, 		// Input file
         if(histE.size() == 0) { std::cout<<"event energy does not fit in any of the specified ranges...skipping event"<<std::endl; continue;}
 
         // nTrk calculation
-        Int_t nTrk = 0;
-        if(!s.donTrkThrust) nTrk = s.ridge_eventSelection(data.event.passesWW, data.event.missP, data.particle.nParticle, data.jet.nref, data.jet.jtpt, data.jet.jteta, data.event.STheta, data.particle.mass, &data.particle);
-        if(s.donTrkThrust) nTrk = s.ridge_eventSelection(data.event.passesWW, data.event.missP, data.particle.nParticle, data.jet.nref, data.jet.jtpt, data.jet.jteta, data.event.STheta, data.particle.mass, &data.particle);
+        Int_t nTrk = s.ridge_eventSelection(&data.event, &data.jet, &data.particle);
         if( nTrk < 0) continue;
         //std::cout<<data.RunNo<<","<<data.EventNo<<std::endl;
         
@@ -278,8 +276,7 @@ int ridge_check( const std::string inFileName, 		// Input file
         /****************************************/
         for ( Int_t j=0;j<data.particle.nParticle;j++ )
         {
-            //if(!s.ridge_trackSelection(data.particle.ntpc[j],data.particle.theta[j],data.particle.pmag[j], data.particle.pt[j], data.particle.d0[j], data.particle.z0[j], data.particle.	pwflag[j])) continue;
-	    if (!trackSelector.highPurity(&data.particle,j)) continue;
+            if (!trackSelector.highPurity(&data.particle,j)) continue;
 	    h_phi->Fill(data.getPhi(j));
             h_eta->Fill(data.getEta(j));
             h_theta->Fill(data.getTheta(j));
@@ -349,8 +346,7 @@ int ridge_check( const std::string inFileName, 		// Input file
             jt_mix->GetEntry(selected);
         
             Int_t nTrk_mix=nTrk;
-            if(!s.donTrkThrust&&!doMixFile) nTrk_mix = s.ridge_eventSelection(mix.event.passesWW, mix.event.missP, mix.particle.nParticle, mix.jet.nref, mix.jet.jtpt, mix.jet.jteta, mix.event.STheta, mix.particle.mass, &mix.particle);
-            if(s.donTrkThrust&&!doMixFile) nTrk_mix = s.ridge_eventSelection(mix.event.passesWW, mix.event.missP, mix.particle.nParticle, mix.jet.nref, mix.jet.jtpt, mix.jet.jteta, mix.event.STheta, mix.particle.mass, &mix.particle);
+            if(!doMixFile) nTrk_mix = s.ridge_eventSelection(&mix.event, &mix.jet, &mix.particle);
 
             // find the event nTrk histogram(s)
             std::vector<Int_t> histNtrk_mix = s.histNtrk(nTrk_mix);
@@ -368,8 +364,7 @@ int ridge_check( const std::string inFileName, 		// Input file
                 side_t_mix->GetEntry(selected);
                 jt_mix->GetEntry(selected);
                 
-                if(!s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(mix.event.passesWW, mix.event.missP, mix.particle.nParticle, mix.jet.nref, mix.jet.jtpt, mix.jet.jteta, mix.event.STheta, mix.particle.mass, &mix.particle);
-                if(s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(mix.event.passesWW, mix.event.missP, mix.particle.nParticle, mix.jet.nref, mix.jet.jtpt, mix.jet.jteta, mix.event.STheta, mix.particle.mass, &mix.particle);
+                if(!s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(&mix.event, &mix.jet, &mix.particle);
                 // find the event nTrk histogram(s)
                 histNtrk_mix = s.histNtrk(nTrk_mix);
                 // loop over the background event nTrk histos and determine if the signal event has the same histos. If yes then leave the entry. If no then remove the entry from histNtrk_mix. 
