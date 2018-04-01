@@ -137,10 +137,10 @@ class Selection
         Float_t getDifferential();
         int ridge_eventSelection(eventData *event, jetData *jet, particleData *particle);
         bool isMixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta, Float_t jteta_mix, Float_t TTheta, Float_t TTheta_mix, Float_t TPhi, Float_t TPhi_mix);
-        std::vector<Int_t> histEnergy(Float_t Energy);
-        std::vector<Int_t> histNtrk(Int_t N);
-        std::vector<Int_t> histPt(Float_t pt);
-        std::vector<Int_t> histEta(Float_t eta);
+        void histEnergy(vector<Int_t> &hists, Float_t Energy);
+        void histNtrk(vector<Int_t> &hists, Int_t N);
+        void histPt(vector<Int_t> &hists, Float_t pt);
+        void histEta(vector<Int_t> &hists, Float_t eta);
         
     private:
 };
@@ -222,8 +222,9 @@ int Selection::ridge_trackSelection(Int_t j)
 /////// MUST UPDATE THE EVENT SELECTION BASED ON AXIS/THE 1990 PAPER/////////
 int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData *particle)
 {
+    if (doGen) return particle->nParticle;
     ///////// QCD Paper Selection /////////
-    if (particle->nParticle<nTrkMin) return -1;
+    if (particle->nParticle<nTrkMin || particle->nParticle<13) return -1;
 
     // Yen-Jie: probably need to update and apply neutral particle selection
 
@@ -288,47 +289,37 @@ bool Selection::isMixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta
 }
 
 // return int of histogram for event energy
-std::vector<Int_t> Selection::histEnergy(Float_t Energy)
+void Selection::histEnergy(vector<Int_t> &hists, Float_t Energy)
 {
-    std::vector<Int_t> hists;
     for (Int_t i = 0; i < nEnergyBins; ++i)
     {
         if (Energy >= energyBinsLow[i] && Energy < energyBinsHigh[i]) hists.push_back(i);
     }
-    return hists;
 }
 
 // return histogram number of the histogram corresponding to the multiplicity range
-std::vector<Int_t> Selection::histNtrk(Int_t N)
+void Selection::histNtrk(std::vector<Int_t> &hists, Int_t N)
 {
-    std::vector<Int_t> hists;
     // inclusive on low end to help statistics in higher multiplicity bins
     for (Int_t i = 0; i < nMultBins; ++i)
     {
         if (N >= multBinsLow[i] && N < multBinsHigh[i]) hists.push_back(i);
     }
-    return hists;
 }
 
 // return vector containing the histogram numbers to fill for pt
-std::vector<Int_t> Selection::histPt(Float_t pt)
+void Selection::histPt(std::vector<Int_t> &hists, Float_t pt)
 {
-    std::vector<Int_t> hists;
-    for (Int_t i = 0; i < nptBins; ++i)
-    {
+    for (Int_t i = 0; i < nptBins; ++i) {
         if (doThrust && (pt >= ptBinsLow_wrtThr[i] && pt < ptBinsHigh_wrtThr[i])) hists.push_back(i);
         else if (doWTA && (pt >= ptBinsLow_wrtThr[i] && pt < ptBinsHigh_wrtThr[i])) hists.push_back(i);
         else if (pt >= ptBinsLow_wrtBeam[i] && pt < ptBinsHigh_wrtBeam[i]) hists.push_back(i);
     }
-
-    return hists;
 }
 
 // return vector containing the histogram numbers to fill for eta
-std::vector<Int_t> Selection::histEta(Float_t eta)
+void Selection::histEta(std::vector<Int_t> &hists, Float_t eta)
 {
-    std::vector<Int_t> hists;
-    
     // we iterate backwards because we want to fill all of the bins with an eta fill less than or equal to the min 
     for (Int_t i = 0; i < netaBins; ++i)
     {
@@ -336,6 +327,5 @@ std::vector<Int_t> Selection::histEta(Float_t eta)
         else if (doWTA && (TMath::Abs(eta) < etaBinsLow_wrtThr[i])) hists.push_back(i);
         else if (TMath::Abs(eta) < etaBinsLow_wrtBeam[i]) hists.push_back(i);
     }
-    return hists;
 }
 #endif /* Selection.h */

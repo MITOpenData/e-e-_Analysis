@@ -64,22 +64,16 @@ int ridge_check( const std::string inFileName, 		// Input file
     // ROOT Global setting
     TH1::SetDefaultSumw2();    TH2::SetDefaultSumw2();
 
-    // Set up plots
+    // Setup event selection (Selection) and TrackSelector (TrackSelection)
     Selection s = Selection();
     TrackSelection trackSelector;
-    
-    if(inFileName.find("JobNum") != std::string::npos){   // Yen-Jie: Why do we need this?
-       if (verbose) cout <<"With file name containing JobNum, assume this is a MC"<<endl;      
-//       s.doNTPC = false; s.dod0 = false; s.doz0 = false; s.doWW = false;
-    } // for MC
-    
-    if(outFileName.find(".root") == std::string::npos) outFileName = outFileName + ".root";
-    
+        
     // Print general information
     cout <<"Input File : "<<inFileName<<endl;
     cout <<"Output File: "<<outFileName<<endl;
     cout <<"Mix File: "<<inMixFileName<<endl;
-    
+
+    // Check if the user overwrite the setting in Selection.h    
     if (overwrite) {
        cout <<"Overwrite the default value from Selection.h"<<endl;
        if (owThrust) s.doThrust = true; else s.doThrust = false;
@@ -92,10 +86,11 @@ int ridge_check( const std::string inFileName, 		// Input file
     if (s.doThrust) 	cout <<"Thrust axis analysis"<<endl;
     else if (s.doWTA) 	cout <<"WTA axis analysis"<<endl;
     else 		cout <<"Beam axis analysis"<<endl;
-    if (s.doThrust||s.doWTA) {
-       if (s.doPerp) cout <<"Reference axis rotated by 90 degree"<<endl;
-    }    
+    if ((s.doThrust||s.doWTA) && s.doPerp) cout <<"Reference axis rotated by 90 degree"<<endl;
+    if (s.doGen) cout <<"This is a generator level analysis, i.e., no track or event selection applied!"<<endl;    
     
+    
+    // Define the output file
     TFile * output = TFile::Open(outFileName.c_str(),"recreate");
     
     /// Initialize the histograms
@@ -183,7 +178,7 @@ int ridge_check( const std::string inFileName, 		// Input file
     TH1F * multiplicity = new TH1F("multiplicity",";nTrk;nEvents",200,0,200);
     
     /// Initialize the trees for use
-    // std::cout<<"Initializing trees for use..."<<std::endl;
+    std::cout<<"Initializing trees for use..."<<std::endl;
     std::string jtTreeName = "";
     if (s.jttree == 0) jtTreeName = "akR4ESchemeJetTree";
     if (s.jttree == 1) jtTreeName = "akR4WTAmodpSchemeJetTree";
@@ -200,13 +195,13 @@ int ridge_check( const std::string inFileName, 		// Input file
     
     // files and variables for input
     // get the correct tree for the analysis
-    std::string sideTree = "BoostedWTAR8Evt";
+    std::string boostTree = "BoostedWTAR8Evt";
     
     TChain * t = new TChain("t");       			t->Add(inFileName.c_str());
-    TChain * side_t = new TChain(sideTree.c_str());       	side_t->Add(inFileName.c_str());
+    TChain * boost_t = new TChain(boostTree.c_str());       	boost_t->Add(inFileName.c_str());
     TChain * jt = new TChain(jtTreeName.c_str());       	jt->Add(inFileName.c_str());
 
-    TPCNtupleData data(s.doBelle, s.doThrust, s.doWTA);      	data.setupTPCTree(t,side_t,jt);   
+    TPCNtupleData data(s.doBelle, s.doThrust, s.doWTA);      	data.setupTPCTree(t,boost_t,jt);   
     
     bool doMixFile=0;
 
@@ -221,16 +216,16 @@ int ridge_check( const std::string inFileName, 		// Input file
        t_mix->Add(inMixFileName.c_str());
     }
     
-    TChain * side_t_mix = new TChain(sideTree.c_str());       	side_t_mix->Add(inFileName.c_str());
+    TChain * boost_t_mix = new TChain(boostTree.c_str());      	boost_t_mix->Add(inFileName.c_str());
     TChain * jt_mix = new TChain(jtTreeName.c_str());       	jt_mix->Add(inFileName.c_str());
     
-    TPCNtupleData mix(s.doBelle, s.doThrust, s.doWTA, s.doPerp);       mix.setupTPCTree(t_mix,side_t_mix,jt_mix);        
+    TPCNtupleData mix(s.doBelle, s.doThrust, s.doWTA, s.doPerp);       mix.setupTPCTree(t_mix,boost_t_mix,jt_mix);        
     
     // analysis
     Int_t nevent = (Int_t)t->GetEntries();
     if(s.doOneEvent) nevent = s.numEvents;
 
-    // Progress bar
+    // Setup Progress bar
     ProgressBar Bar(cout, nevent);
     Bar.SetStyle(1);
 
@@ -240,27 +235,27 @@ int ridge_check( const std::string inFileName, 		// Input file
     // Main Event Loop
     /****************************************/
     for (Int_t i=0;i<nevent;i++) {
-        t->GetEntry(i);
-        side_t->GetEntry(i);
+        t->GetEntry(i); 
+        boost_t->GetEntry(i);
         jt->GetEntry(i);
 	Bar.Update(i);
         Bar.PrintWithMod(entryDiv);
         
-        // find the event energy histogram(s)
-        std::vector<Int_t> histE;
-        if(inFileName.find("JobNum") != std::string::npos) histE.push_back(0); // the PYTHIA8 is e+e-→Z on Z pole ~ 91.5 GeV
-        else histE = s.histEnergy(data.particle.Energy);
-        if(histE.size() == 0) { std::cout<<"event energy does not fit in any of the specified ranges...skipping event"<<std::endl; continue;}
-
         // nTrk calculation
         Int_t nTrk = s.ridge_eventSelection(&data.event, &data.jet, &data.particle);
 	
         if( nTrk < 0) continue;
         //std::cout<<data.RunNo<<","<<data.EventNo<<std::endl;
         
+	// find the event energy histogram(s)
+        std::vector<Int_t> histE;
+        s.histEnergy(histE,data.particle.Energy);
+        if(histE.size() == 0) { std::cout<<"event energy does not fit in any of the specified ranges...skipping event"<<std::endl; continue;}
+	
         // find the event nTrk histogram(s)
-        std::vector<Int_t> histNtrk = s.histNtrk(nTrk);
-	    if(histNtrk.size() == 0) { std::cout<<"calculated nTrk does not fit in any of the specified ranges...skipping event"<<std::endl; continue;}
+        std::vector<Int_t> histNtrk;
+	s.histNtrk(histNtrk, nTrk);
+	if(histNtrk.size() == 0) { std::cout<<"calculated nTrk does not fit in any of the specified ranges...skipping event"<<std::endl; continue;}
 
         h_eff->Fill(nTrk/data.particle.nParticle);
         h_Aj->Fill(s.fillAj);
@@ -286,8 +281,10 @@ int ridge_check( const std::string inFileName, 		// Input file
             h_pt->Fill(data.getPt(j));
 
             // Decide which pt and eta range to fill
-            std::vector<Int_t> histPt1 = s.histPt(data.getPt(j));
-            std::vector<Int_t> histEta1 = s.histEta(data.getEta(j));
+            std::vector<Int_t> histPt1;
+	    s.histPt(histPt1, data.getPt(j));
+            std::vector<Int_t> histEta1;
+	    s.histEta(histEta1, data.getEta(j));
             if(histPt1.size() == 0 || histEta1.size() == 0) continue; 
             //std::cout<<"1st particle "<<histEta1.size()<<std::endl;
             Float_t angle1;
@@ -301,8 +298,10 @@ int ridge_check( const std::string inFileName, 		// Input file
 	    
                 // Check if the second particle is in the same range of pt and eta 
 
-                std::vector<Int_t> histPt2 = s.histPt(data.getPt(k));
-                std::vector<Int_t> histEta2 = s.histEta(data.getEta(k));
+                std::vector<Int_t> histPt2;
+		s.histPt(histPt2, data.getPt(k));
+                std::vector<Int_t> histEta2;
+		s.histEta(histEta2, data.getEta(k));
                 //std::cout<<histEta2.size()<<std::endl;
                 //initial check that histPt2(Eta2) are not empty
                 if(histPt2.size() == 0 || histEta2.size() == 0) continue; 
@@ -345,35 +344,41 @@ int ridge_check( const std::string inFileName, 		// Input file
 	    if (selected >= t->GetEntries()) selected = 0;
             if (doMixFile==1) selected=i;
             t_mix->GetEntry(selected);
-            side_t_mix->GetEntry(selected);
+            boost_t_mix->GetEntry(selected);
             jt_mix->GetEntry(selected);
         
             Int_t nTrk_mix=nTrk;
-            if(!doMixFile) nTrk_mix = s.ridge_eventSelection(&mix.event, &mix.jet, &mix.particle);
+	    
+	    // Yen-Jie: if we use mixed file, we assume the mixed event has nTrk since the calculated nTrk_mix from mixed event doesn't work.. 
+            if(!doMixFile) nTrk_mix = s.ridge_eventSelection(&mix.event, &mix.jet, &mix.particle);  
 
             // find the event nTrk histogram(s)
-            std::vector<Int_t> histNtrk_mix = s.histNtrk(nTrk_mix);
+            std::vector<Int_t> histNtrk_mix;
+	    s.histNtrk(histNtrk_mix, nTrk_mix);
             // loop over the background event nTrk histos and determine if the signal event has the same histos. If yes then leave the entry. If no then remove the entry from histNtrk_mix. 
             for(unsigned int nI = 0; nI <histNtrk_mix.size(); nI++) if(std::find(histNtrk.begin(), histNtrk.end(), histNtrk_mix.at(nI)) == histNtrk.end()) histNtrk_mix.erase(histNtrk_mix.begin() + nI);
 
             // We continue to search until we find an event that passes the mixed event selection criteria and has a non-null histNtrk_mix intersection with histNtrk.
             // s.isMixedEvent returns false if the mixed event fails the criteria in which case we want to enter the while loop.
             // If the size of histNtrk_mix is 0 then the mixed event is a different nTrk range than the signal event and we do not want mix in which case we want to enter the while loop.
+	    // Yen-Jie: if we use mixed file, doMixFile will be 1, will not enter the loop.
             while (!doMixFile && (histNtrk_mix.size() == 0 || !s.isMixedEvent(nTrk, nTrk_mix, data.jet.jteta[0], mix.jet.jteta[0], data.getTTheta(), mix.getTTheta(), data.getTPhi(), mix.getTPhi())))
             {
                 selected++;
                 if (selected >= t->GetEntries()) selected = 0;
                 t_mix->GetEntry(selected);
-                side_t_mix->GetEntry(selected);
+                boost_t_mix->GetEntry(selected);
                 jt_mix->GetEntry(selected);
                 
                 if(!s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(&mix.event, &mix.jet, &mix.particle);
                 // find the event nTrk histogram(s)
-                histNtrk_mix = s.histNtrk(nTrk_mix);
+                histNtrk_mix;
+		s.histNtrk(histNtrk_mix, nTrk_mix);
                 // loop over the background event nTrk histos and determine if the signal event has the same histos. If yes then leave the entry. If no then remove the entry from histNtrk_mix. 
                 for(unsigned int nI = 0; nI <histNtrk_mix.size(); nI++) if(std::find(histNtrk.begin(), histNtrk.end(), histNtrk_mix.at(nI)) == histNtrk.end()) histNtrk_mix.erase(histNtrk_mix.begin() + nI);
             }           
-            if (doMixFile==1 && selected!=i) cout <<"ERROR MIXING"<<endl;           
+            if (doMixFile==1 && selected!=i) cout <<"ERROR MIXING"<<endl;
+	               
             
             // increment the number of background events bin for each nTrk histogram going to be filled (note that this should give the same result as the signal events increment)
             for(unsigned int nI = 0; nI < histNtrk.size(); ++nI) nBkgrndEvts[histNtrk.at(nI)] += 1;
@@ -381,12 +386,13 @@ int ridge_check( const std::string inFileName, 		// Input file
             for ( Int_t j=0;j<data.particle.nParticle;j++ )
             {
                 // decide if valid track
-//                if(!s.ridge_trackSelection(data.particle.ntpc[j],data.particle.theta[j],data.particle.pmag[j], data.particle.pt[j], data.particle.d0[j], data.particle.z0[j], data.particle.pwflag[j])) continue;
-               if (!trackSelector.highPurity(&data.particle,j)&&s.doGen==0) continue;
+                if (!trackSelector.highPurity(&data.particle,j)&&s.doGen==0) continue;
 	    
                 // Decide which pt and eta range to fill
-                std::vector<Int_t> histPt_bkg1 = s.histPt(data.getPt(j));
-                std::vector<Int_t> histEta_bkg1 = s.histEta(data.getEta(j));
+                std::vector<Int_t> histPt_bkg1;
+		s.histPt(histPt_bkg1, data.getPt(j));
+                std::vector<Int_t> histEta_bkg1;
+		s.histEta(histEta_bkg1, data.getEta(j));
                 if(histPt_bkg1.size() == 0 || histEta_bkg1.size() == 0) continue; 
 
                 // load the angles to be used
@@ -398,12 +404,13 @@ int ridge_check( const std::string inFileName, 		// Input file
                 for ( Int_t k=0;k<mix.particle.nParticle;k++ )
                 {
                     // decide if valid track
-                    //if(!s.ridge_trackSelection(mix.particle.ntpc[k],mix.particle.theta[k],mix.particle.pmag[k], mix.particle.pt[k], mix.particle.d0[k], mix.particle.z0[k], mix.particle.pwflag[k])) continue;
                     if (!trackSelector.highPurity(&mix.particle,k)&&s.doGen==0) continue;
 	    
                     // Check if the second particle is in the same range of pt and eta    
-                    std::vector<Int_t> histPt_bkg2 = s.histPt(mix.getPt(k));
-                    std::vector<Int_t> histEta_bkg2 = s.histEta(mix.getEta(k));
+                    std::vector<Int_t> histPt_bkg2;
+		    s.histPt(histPt_bkg2, mix.getPt(k));
+                    std::vector<Int_t> histEta_bkg2;
+		    s.histEta(histEta_bkg2, mix.getEta(k));
                     //initial check that histPt2(Eta2) are not empty
                     if(histPt_bkg2.size() == 0 || histEta_bkg2.size() == 0) continue; 
                     // Loop over elements of histPt1(Eta1) and check if the element is present in histPt2(Eta2). if yes then leave the element, if no then remove it. 
