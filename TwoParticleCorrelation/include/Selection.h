@@ -21,7 +21,10 @@
 
 //DataProcessing header
 #include "DataProcessing/include/trackSelection.h"
+#include "DataProcessing/include/neutralHadronSelection.h"
 #include "DataProcessing/include/particleData.h"
+#include "DataProcessing/include/eventData.h"
+#include "DataProcessing/include/jetData.h"
 
 inline float jtp(float pt, float eta){ return pt*TMath::CosH(eta);}
 
@@ -31,6 +34,7 @@ class Selection
     
         // Initial Setup
 	TrackSelection trackSelector;
+	NeutralHadronSelection neutralHadronSelector;
         bool doParallel = true;
         bool doOneEvent = false;     int numEvents = 50000;
         bool doBelle = false;
@@ -46,19 +50,10 @@ class Selection
         /* Detector Specific Cuts */
         
         // From 1990 "Properties of Hadronic Events in e+e- Annihilation at sqrt(s) = 91 GeV" ALEPH Collaboration paper
-/*
-            // Track Cuts
-        bool doNTPC = false;    Int_t nTPCMin = 4;  Int_t nTPCMax = 999;
-        bool doTheta = true;   Float_t thetaMin = 20*TMath::Pi()/180.;  Float_t thetaMax = 160*TMath::Pi()/180.;  // measured in radians
-        bool doP = false;   Float_t pMin = 0.2; // measured in GeV
-        bool doPt = true;   Float_t ptMin = 0.2; // measured in GeV
-        bool dod0 = false;     Float_t d0Cut = 3; // measured in cm
-        bool doz0 = false;   Float_t z0Cut = 5;  // measured in cm
-*/
-            // Event Cuts
+        // Event Cuts
         bool doE = true; Float_t TotalChrgEnergyMin = 15; // measured in GeV
         Float_t nTrkMin = 5;
-        bool doSTheta = false; Float_t SThetaMax = 0.8;  
+        bool doSTheta = true; Float_t SThetaMax = 0.82;  
         // end of 1990 cuts
         bool domissPCut = false;  Float_t missPCut = 20;  // measured in GeV
         /* Frame Dependent Cuts */
@@ -140,8 +135,7 @@ class Selection
         Selection();
         Float_t getEtaPlotRange();
         Float_t getDifferential();
-        //int ridge_trackSelection(Int_t nTPC, Float_t theta, Float_t p, Float_t pt, Float_t d0, Float_t z0, Int_t pwflag);
-        int ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticle, Int_t nref, Float_t jtpt[], Float_t jteta[], Float_t STheta, Float_t mass[], particleData *particle);
+        int ridge_eventSelection(eventData *event, jetData *jet, particleData *particle);
         bool isMixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta, Float_t jteta_mix, Float_t TTheta, Float_t TTheta_mix, Float_t TPhi, Float_t TPhi_mix);
         std::vector<Int_t> histEnergy(Float_t Energy);
         std::vector<Int_t> histNtrk(Int_t N);
@@ -173,14 +167,6 @@ Selection::Selection()
     {
         std::cout<<"Turning off event and track selection criteria..."<<std::endl;
         // nTrk is just the number of charged particles
-/*
-        doNTPC = false;
-        doTheta = false;
-        doP = false;
-        doPt = false;
-        dod0 = false;
-        doz0 = false;
-*/
         doWW = false;
         nTrkMin = 1;
         doE = false;
@@ -234,48 +220,57 @@ int Selection::ridge_trackSelection(Int_t j)
 
 
 /////// MUST UPDATE THE EVENT SELECTION BASED ON AXIS/THE 1990 PAPER/////////
-int Selection::ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticle, Int_t nref, Float_t jtpt[], Float_t jteta[], Float_t STheta, Float_t mass[],/* track selection */ particleData *particle)
+int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData *particle)
 {
-    
     ///////// QCD Paper Selection /////////
-    if (doWW && !passesWW) return -1;
+    if (particle->nParticle<nTrkMin) return -1;
+
+    // Yen-Jie: probably need to update and apply neutral particle selection
+
+    if (doWW && !event->passesWW) return -1;
+    if (doSTheta && TMath::Abs(cos(event->STheta))>=SThetaMax) return -1;
 
     // From 1990 "Properties of Hadronic Events in e+e- Annihilation at sqrt(s) = 91 GeV" ALEPH Collaboration paper
-    Int_t N = 0;
+    Int_t Nch = 0;
+    Int_t Neu = 0;
     Float_t E = 0;
 
-    for (Int_t j=0;j<nParticle;j++)
-    {
-        if (trackSelector.highPurity(particle,j))
-        {
-            N += 1;
-            E += sqrt(pow(particle->pmag[j],2) + pow(particle->mass[j],2));
+    for (Int_t j=0;j<particle->nParticle;j++) {
+        if (trackSelector.highPurity(particle,j)){
+            Nch++;
+            E += sqrt(particle->pmag[j]*particle->pmag[j] + particle->mass[j]*particle->mass[j]);
         }
+	if (neutralHadronSelector.highPurity(particle,j)) {
+	   Neu++;
+	}
     }
-    if (N < nTrkMin) return -1;
+
+    if (Nch < nTrkMin) return -1;
     // this is to ensure that we are able to find a mixed event
-    if( N >= 1000) return -1;
+    if( Nch >= 1000) return -1;
+    if ((Neu+Nch)<13) return -1;
 
     if (doE && E < TotalChrgEnergyMin) return -1;
-    if(doSTheta && TMath::Abs(cos(STheta))>=SThetaMax) return -1;
+
+
     //// End of 1990 cuts ////
 
     ///////// Missing Momentum /////////
-    if (domissPCut && missP > missPCut) return -1;
+    if (domissPCut && event->missP > missPCut) return -1;
     
     ///////// 3-Jet /////////
-    Float_t j12 = jtp(jtpt[0],jteta[0])+jtp(jtpt[1],jteta[1]);
-    fillAj = TMath::Abs(jtp(jtpt[0],jteta[0])-jtp(jtpt[1],jteta[1])) / j12;
-    if (nref>=2)
-    {
-        
-        // require 2 jets to be pretty equally balanced in momentum
-        if(doAjCut && fillAj > AjCut) return -1;
-        // require 3rd jet has low momentum relative to first two jets (take average momentum of jet 1 and 2)
-        if(do3jetEvtCut && nref > 2 && (2*jtp(jtpt[2],jteta[2]) / j12) > thirdJetCut ) return -1;
+    if (doAjCut&& jet->nref>=2) {
+       Float_t p1 = jtp(jet->jtpt[0],jet->jteta[0]);
+       Float_t p2 = jtp(jet->jtpt[1],jet->jteta[1]);
+       Float_t j12 = p1+p2;
+       fillAj = TMath::Abs(p1-p2) / j12;
+       // require 2 jets to be pretty equally balanced in momentum
+       if(doAjCut && fillAj > AjCut) return -1;
+       // require 3rd jet has low momentum relative to first two jets (take average momentum of jet 1 and 2)
+       if(do3jetEvtCut && jet->nref > 2 && (2*jtp(jet->jtpt[2],jet->jteta[2]) / j12) > thirdJetCut ) return -1;
     }
     
-    return N;
+    return Nch;
 }
 
 // return true if the event passes the criteria for a mixed event
