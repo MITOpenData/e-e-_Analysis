@@ -22,18 +22,21 @@ class TPCNtupleData{
     bool doThrust;
     bool doWTA;
     bool doPerp;
+    bool isMix;
      
        
-    TPCNtupleData(bool ana=0, bool thrust=0, bool wta=0, bool perp=0) {
+    TPCNtupleData(bool ana=0, bool thrust=0, bool wta=0, bool perp=0, bool mix=0) {
        isBelle = ana;
        doWTA=wta;
        doThrust=thrust;
        doPerp=perp;
+       isMix=0;
     }
     
     void setupTPCTree(TTree *tData, TTree *tBoost, TTree *tJet) {
        std::vector<std::string> listData;
        std::vector<std::string> list;
+       
        listData.push_back("nParticle");
        listData.push_back("Energy");
        listData.push_back("pt");
@@ -65,10 +68,11 @@ class TPCNtupleData{
        listJet.push_back("nref");
        listJet.push_back("jtpt");
        listJet.push_back("jteta");
+       listJet.push_back("jtphi");
        
        particle.SetStatusAndAddressRead(tData,listData);
-       event.SetStatusAndAddressRead(tData,list);
-       if (doWTA) boosted.SetStatusAndAddressRead(tBoost,list);
+       if (!isMix) event.SetStatusAndAddressRead(tData,list);
+       boosted.SetStatusAndAddressRead(tBoost,list);
        jet.SetStatusAndAddressRead(tJet,listJet);
     }	
     
