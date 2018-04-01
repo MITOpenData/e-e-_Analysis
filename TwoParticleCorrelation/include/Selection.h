@@ -19,6 +19,10 @@
 #include <TMath.h>
 #define PI 3.14159265358979
 
+//DataProcessing header
+#include "DataProcessing/include/trackSelection.h"
+#include "DataProcessing/include/particleData.h"
+
 inline float jtp(float pt, float eta){ return pt*TMath::CosH(eta);}
 
 class Selection
@@ -26,11 +30,12 @@ class Selection
     public:
     
         // Initial Setup
+	TrackSelection trackSelector;
         bool doParallel = true;
         bool doOneEvent = false;     int numEvents = 50000;
         bool doBelle = false;
         Int_t experiment = 0; // 0 ALEPH , 1 DELPHI, 2 BELLE, 3 CMS pp
-        Int_t jttree = 0; // 0 ak4ESchemeJetTree, 1 ak4WTAmodpSchemeJetTree, 2 ak8ESchemeJetTree, 3 ak8WTAmodpSchemeJetTree
+        Int_t jttree = 0; // 0 ak4ESchemeJetTree, 1 ak4WTAmodpSchemeJetTree, 2 ak8ESchemeJetTree, 3 ak8WTAmodpSchemeJetTree, 4 ktN2WTAmodpSchemeJetTree
         Int_t nbin = 20;
         Int_t bkgrd_runs = 1;
         enum SIMPLEPID {BELLE_PHOTON, BELLE_ELECTRON, BELLE_PION, BELLE_MUON, BELLE_KAON, BELLE_PROTON};    // BELLE Particle Definition
@@ -41,6 +46,7 @@ class Selection
         /* Detector Specific Cuts */
         
         // From 1990 "Properties of Hadronic Events in e+e- Annihilation at sqrt(s) = 91 GeV" ALEPH Collaboration paper
+/*
             // Track Cuts
         bool doNTPC = false;    Int_t nTPCMin = 4;  Int_t nTPCMax = 999;
         bool doTheta = true;   Float_t thetaMin = 20*TMath::Pi()/180.;  Float_t thetaMax = 160*TMath::Pi()/180.;  // measured in radians
@@ -48,6 +54,7 @@ class Selection
         bool doPt = true;   Float_t ptMin = 0.2; // measured in GeV
         bool dod0 = false;     Float_t d0Cut = 3; // measured in cm
         bool doz0 = false;   Float_t z0Cut = 5;  // measured in cm
+*/
             // Event Cuts
         bool doE = true; Float_t TotalChrgEnergyMin = 15; // measured in GeV
         Float_t nTrkMin = 5;
@@ -83,8 +90,8 @@ class Selection
         static const Int_t nptBins_wrtThr = 3;
         Float_t ptBinsLow_wrtThr[nptBins_wrtThr]  = {0.4,0.4,1.0};  // measured in GeV {1.0,0.4}
         Float_t ptBinsHigh_wrtThr[nptBins_wrtThr] = {100.0,4.0,3.0}; // {3.0,100.0}
-        static const Int_t netaBins_wrtThr = 2;
-        Float_t etaBinsLow_wrtThr[netaBins_wrtThr]  = {4.5,5.0}; //{4.5,5.0}
+        static const Int_t netaBins_wrtThr = 1;
+        Float_t etaBinsLow_wrtThr[netaBins_wrtThr]  = {4.5}; //{4.5,5.0}
         Float_t missPCut_wrtThr = 20;
         Float_t etaPlotRange_wrtThr = 3.2;
 
@@ -133,8 +140,8 @@ class Selection
         Selection();
         Float_t getEtaPlotRange();
         Float_t getDifferential();
-        int ridge_trackSelection(Int_t nTPC, Float_t theta, Float_t p, Float_t pt, Float_t d0, Float_t z0, Int_t pwflag);
-        int ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticle, Int_t nref, Float_t jtpt[], Float_t jteta[], Float_t STheta, Float_t mass[], Short_t nTPC[], Float_t theta[], Float_t pmag[], Float_t pt[], Float_t d0[], Float_t z0[], Short_t pwflag[]);
+        //int ridge_trackSelection(Int_t nTPC, Float_t theta, Float_t p, Float_t pt, Float_t d0, Float_t z0, Int_t pwflag);
+        int ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticle, Int_t nref, Float_t jtpt[], Float_t jteta[], Float_t STheta, Float_t mass[], particleData *particle);
         bool isMixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta, Float_t jteta_mix, Float_t TTheta, Float_t TTheta_mix, Float_t TPhi, Float_t TPhi_mix);
         std::vector<Int_t> histEnergy(Float_t Energy);
         std::vector<Int_t> histNtrk(Int_t N);
@@ -147,7 +154,7 @@ class Selection
 Selection::Selection()
 {
     std::cout << "Getting settings.." << std::endl;
-
+    if (getThetaAngle) std::cout << "THIS IS A THETA ANALYSIS!!!"<<std::endl;
     if(doPP)
     {
         multBinsLow[2] = 110;
@@ -166,12 +173,14 @@ Selection::Selection()
     {
         std::cout<<"Turning off event and track selection criteria..."<<std::endl;
         // nTrk is just the number of charged particles
+/*
         doNTPC = false;
         doTheta = false;
         doP = false;
         doPt = false;
         dod0 = false;
         doz0 = false;
+*/
         doWW = false;
         nTrkMin = 1;
         doE = false;
@@ -198,7 +207,11 @@ Float_t Selection::getDifferential()
 }
 // return 1 if the track passes the selection
 // otherwise return 0
-int Selection::ridge_trackSelection(Int_t nTPC, Float_t theta, Float_t p, Float_t pt, Float_t d0, Float_t z0, Int_t pwflag)
+
+/*
+Yen-Jie: merged with DataProcessing/include/trackSelection.h
+
+int Selection::ridge_trackSelection(Int_t j)
 {
     // only charged tracks
     if (pwflag != ALEPH_CHARGED_TRACK) return 0;
@@ -213,6 +226,7 @@ int Selection::ridge_trackSelection(Int_t nTPC, Float_t theta, Float_t p, Float_
 
     return 1;
 }
+*/
 
 // return -1 if does not pass event selection
 // return multiplicity
@@ -220,8 +234,7 @@ int Selection::ridge_trackSelection(Int_t nTPC, Float_t theta, Float_t p, Float_
 
 
 /////// MUST UPDATE THE EVENT SELECTION BASED ON AXIS/THE 1990 PAPER/////////
-int Selection::ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticle, Int_t nref, Float_t jtpt[], Float_t jteta[], Float_t STheta, Float_t mass[],/* track selection */ Short_t nTPC[], Float_t theta[], Float_t pmag[],
-Float_t pt[], Float_t d0[], Float_t z0[], Short_t pwflag[])
+int Selection::ridge_eventSelection(bool passesWW, Float_t missP, Int_t nParticle, Int_t nref, Float_t jtpt[], Float_t jteta[], Float_t STheta, Float_t mass[],/* track selection */ particleData *particle)
 {
     
     ///////// QCD Paper Selection /////////
@@ -233,10 +246,10 @@ Float_t pt[], Float_t d0[], Float_t z0[], Short_t pwflag[])
 
     for (Int_t j=0;j<nParticle;j++)
     {
-        if (ridge_trackSelection(nTPC[j],theta[j],pmag[j],pt[j], d0[j], z0[j], pwflag[j]))
+        if (trackSelector.highPurity(particle,j))
         {
             N += 1;
-            E += sqrt(pow(pmag[j],2) + pow(mass[j],2));
+            E += sqrt(pow(particle->pmag[j],2) + pow(particle->mass[j],2));
         }
     }
     if (N < nTrkMin) return -1;
