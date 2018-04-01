@@ -57,6 +57,7 @@ int ridge_check( const std::string inFileName, 		// Input file
 		       bool owThrust = false,		// overwrite the value of doThrust from selection.h
 		       bool owWTA = false,		// overwrite the value of doWTA from selection.h
 		       bool owPerp = false,		// overwrite the value of doPerp from selection.h
+		       bool owDoGen = false,            // overwrite the value of doGen from selection.h 
 		       int verbose = 1                 // Verbose level
                )
 {
@@ -83,7 +84,8 @@ int ridge_check( const std::string inFileName, 		// Input file
        cout <<"Overwrite the default value from Selection.h"<<endl;
        if (owThrust) s.doThrust = true; else s.doThrust = false;
        if (owWTA)    s.doWTA = true; else s.doWTA = false;
-       if (owPerp)    s.doPerp = true; else s.doPerp = false;
+       if (owPerp)   s.doPerp = true; else s.doPerp = false;
+       if (owDoGen)  s.doGen = true; else s.doGen = false;
     }
     
     if (s.doThrust && s.doWTA) { cout <<"Can't have both doWTA and doThrust on in Selection.h!"<<endl; return 0; }
@@ -252,6 +254,7 @@ int ridge_check( const std::string inFileName, 		// Input file
 
         // nTrk calculation
         Int_t nTrk = s.ridge_eventSelection(&data.event, &data.jet, &data.particle);
+	
         if( nTrk < 0) continue;
         //std::cout<<data.RunNo<<","<<data.EventNo<<std::endl;
         
@@ -276,7 +279,7 @@ int ridge_check( const std::string inFileName, 		// Input file
         /****************************************/
         for ( Int_t j=0;j<data.particle.nParticle;j++ )
         {
-            if (!trackSelector.highPurity(&data.particle,j)) continue;
+            if (!trackSelector.highPurity(&data.particle,j)&&s.doGen==0) continue;
 	    h_phi->Fill(data.getPhi(j));
             h_eta->Fill(data.getEta(j));
             h_theta->Fill(data.getTheta(j));
@@ -294,7 +297,7 @@ int ridge_check( const std::string inFileName, 		// Input file
             // Signal loop, calculate S correlation function
             for ( Int_t k=j+1;k<data.particle.nParticle;k++ )
             {
-		if (!trackSelector.highPurity(&data.particle,k)) continue;
+		if (!trackSelector.highPurity(&data.particle,k)&&s.doGen==0) continue;
 	    
                 // Check if the second particle is in the same range of pt and eta 
 
@@ -379,7 +382,7 @@ int ridge_check( const std::string inFileName, 		// Input file
             {
                 // decide if valid track
 //                if(!s.ridge_trackSelection(data.particle.ntpc[j],data.particle.theta[j],data.particle.pmag[j], data.particle.pt[j], data.particle.d0[j], data.particle.z0[j], data.particle.pwflag[j])) continue;
-               if (!trackSelector.highPurity(&data.particle,j)) continue;
+               if (!trackSelector.highPurity(&data.particle,j)&&s.doGen==0) continue;
 	    
                 // Decide which pt and eta range to fill
                 std::vector<Int_t> histPt_bkg1 = s.histPt(data.getPt(j));
@@ -396,7 +399,7 @@ int ridge_check( const std::string inFileName, 		// Input file
                 {
                     // decide if valid track
                     //if(!s.ridge_trackSelection(mix.particle.ntpc[k],mix.particle.theta[k],mix.particle.pmag[k], mix.particle.pt[k], mix.particle.d0[k], mix.particle.z0[k], mix.particle.pwflag[k])) continue;
-                    if (!trackSelector.highPurity(&mix.particle,k)) continue;
+                    if (!trackSelector.highPurity(&mix.particle,k)&&s.doGen==0) continue;
 	    
                     // Check if the second particle is in the same range of pt and eta    
                     std::vector<Int_t> histPt_bkg2 = s.histPt(mix.getPt(k));
