@@ -75,7 +75,7 @@ inline bool TrackSelection::passesP(float p){ return p>=pCut;}
 inline bool TrackSelection::passesPt(float pt){ return pt>=ptCut;}
 inline bool TrackSelection::passesD0(float d0){ return TMath::Abs(d0)<=d0Cut;}
 inline bool TrackSelection::passesZ0(float z0){ return TMath::Abs(z0)<=z0Cut;}
-inline bool TrackSelection::passesPWFlag(Short_t pwflag){ return pwflag==0;}
+inline bool TrackSelection::passesPWFlag(Short_t pwflag){ return pwflag<=2;}
 
 void TrackSelection::setnTPCCut(Short_t cut){ nTPCcut = cut;}
 void TrackSelection::setThetaCutLow(float cut){ thetaCutLow = cut;}
