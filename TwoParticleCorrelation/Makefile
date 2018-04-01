@@ -14,7 +14,8 @@ EVENTPARTICLEDATA=$(PWD)/../
 MKDIR_BIN=mkdir -p $(PWD)/bin
 MKDIR_PDFDIR=mkdir -p $(PWD)/pdfDir
 
-all: mkdirBin mkdirPdfdir plotDQC ridge_check histoHadd_TH1F findGlobalMaxMin
+#all: mkdirBin mkdirPdfdir plotDQC ridge_check histoHadd_TH1F findGlobalMaxMin
+all: mkdirBin mkdirPdfdir ridge_check histoHadd_TH1F findGlobalMaxMin
 
 mkdirBin:
 	$(MKDIR_BIN)
