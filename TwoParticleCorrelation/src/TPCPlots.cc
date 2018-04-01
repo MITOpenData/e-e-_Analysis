@@ -102,7 +102,7 @@ int TPCPlots(const std::string inFileName1,int doOneBin=0)
   TH2F * ratio2PC[nEnergyBins][nMultBins][nptBins][netaBins];
 
   TFile * f1 = TFile::Open(inFileName1.c_str(),"read");
-  TFile * fout = TFile::Open("output.root","recreate");
+  TFile * fout = TFile::Open(Form("2PC_%s",inFileName1.c_str()),"recreate");
 
   TH1D * nEvtSigHist1 = (TH1D*)f1->Get("nEvtSigHisto");
   TH1D * nEvtBkgHist1 = (TH1D*)f1->Get("nEvtSigHisto"); 
@@ -165,7 +165,7 @@ int TPCPlots(const std::string inFileName1,int doOneBin=0)
               h_deltaphi[j]  = (TH1F*) ratio2PC[e][m][p][et]->ProjectionY(Form("h_deltaphi%d_%d_%d_%d_%d_%d",j,e,s.multBinsLow[m],s.multBinsHigh[m],p,et),minbin,maxbin);
               h_deltaphi[j]->SetName(Form("h_deltaphi%d_%d_%d_%d_%d_%d",j,e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
               h_deltaphi[j]->GetXaxis()->SetTitle("#Delta#phi");
-              if (s.doTheta)  h_deltaphi[j]->SetTitle(Form("#Delta#phi, #Delta#theta (%1.1f, %1.1f), Multipliplicity (%1.1d, %1.1d)",etaranges[j],etaranges[j+1], s.multBinsLow[m],s.multBinsHigh[m]));
+              if (s.getThetaAngle)  h_deltaphi[j]->SetTitle(Form("#Delta#phi, #Delta#theta (%1.1f, %1.1f), Multipliplicity (%1.1d, %1.1d)",etaranges[j],etaranges[j+1], s.multBinsLow[m],s.multBinsHigh[m]));
               else            h_deltaphi[j]->SetTitle(Form("#Delta#phi, #Delta#eta (%1.1f, %1.1f), Multipliplicity (%d, %d)",etaranges[j],etaranges[j+1], s.multBinsLow[m],s.multBinsHigh[m]));
               h_deltaphi[j]->GetYaxis()->SetTitle("Y(#Delta#phi)");
               h_deltaphi[j]->Scale(1./(maxbin-minbin+1));
@@ -220,6 +220,7 @@ int TPCPlots(const std::string inFileName1,int doOneBin=0)
           
 	  cAll->cd(3);
 	  ratio2PC[e][m][p][et]->Draw("surf1 fb");
+	  ratio2PC[e][m][p][et]->Write();
           l->Draw("same");
             
           TCanvas * c2 = new TCanvas("c2","dphi",600,600);
@@ -246,6 +247,7 @@ int TPCPlots(const std::string inFileName1,int doOneBin=0)
 
           cAll->cd(4);
           h_deltaphi[0]->Draw();
+//	  h_deltaphi[0]->Write();
 	  delete c1;
           /*
 	  delete l;
