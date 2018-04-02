@@ -26,6 +26,8 @@
 #include "DataProcessing/include/eventData.h"
 #include "DataProcessing/include/jetData.h"
 
+using namespace std;
+
 inline float jtp(float pt, float eta){ return pt*TMath::CosH(eta);}
 
 class Selection
@@ -53,11 +55,11 @@ class Selection
         // Event Cuts
         bool doE = true; Float_t TotalChrgEnergyMin = 15; // measured in GeV
         Float_t nTrkMin = 5;
-        bool doSTheta = true; Float_t SThetaMax = 0.82;  
+        bool doSTheta = false; Float_t SThetaMax = 0.4;  
         // end of 1990 cuts
         bool domissPCut = false;  Float_t missPCut = 20;  // measured in GeV
-        /* Frame Dependent Cuts */
         
+	/* Frame Dependent Cuts */
         bool doWW = false;  // impose WW cut
         bool doMixedMultCut = false; // cut on |nTrk - nTrkMix|
         // jet cuts
@@ -137,10 +139,10 @@ class Selection
         Float_t getDifferential();
         int ridge_eventSelection(eventData *event, jetData *jet, particleData *particle);
         bool isMixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta, Float_t jteta_mix, Float_t TTheta, Float_t TTheta_mix, Float_t TPhi, Float_t TPhi_mix);
-        void histEnergy(vector<Int_t> &hists, Float_t Energy);
-        void histNtrk(vector<Int_t> &hists, Int_t N);
-        void histPt(vector<Int_t> &hists, Float_t pt);
-        void histEta(vector<Int_t> &hists, Float_t eta);
+        void histEnergy(std::vector<Int_t> &hists, Float_t Energy);
+        void histNtrk(std::vector<Int_t> &hists, Int_t N);
+        void histPt(std::vector<Int_t> &hists, Float_t pt);
+        void histEta(std::vector<Int_t> &hists, Float_t eta);
         
     private:
 };
