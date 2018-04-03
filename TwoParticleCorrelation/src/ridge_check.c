@@ -104,6 +104,9 @@ int ridge_check( const std::string inFileName, 		// Input file
     static const Int_t nptBins = s.nptBins;
     static const Int_t netaBins = s.netaBins;
 
+    TH1F *hMetaData = new TH1F("hMetaData","",100,0,100);
+    s.writeMetaData(hMetaData);
+    
     TH2F * signal2PC[nEnergyBins][nMultBins][nptBins][netaBins];
     TH2F * bkgrnd2PC[nEnergyBins][nMultBins][nptBins][netaBins];
     TH2F * ratio2PC[nEnergyBins][nMultBins][nptBins][netaBins];
@@ -500,6 +503,7 @@ int ridge_check( const std::string inFileName, 		// Input file
     h_eta->Write();
     h_phi->Write();
     multiplicity->Write();
+    hMetaData->Write();
     
     /********************************************************************************************************************/
     // cleanup
