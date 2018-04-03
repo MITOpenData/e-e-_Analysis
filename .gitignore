@@ -1,0 +1,27 @@
+# ignore files without extensions
+*
+!*.*
+!*/
+
+# root
+*_C.d
+*.so
+*.pcm
+*.d
+
+# output
+#*.root
+*.log
+*.out
+*.err
+
+# figures
+*.gif
+*.png
+*.pdf
+
+# other
+*.exe
+*.condor
+*.list
+
