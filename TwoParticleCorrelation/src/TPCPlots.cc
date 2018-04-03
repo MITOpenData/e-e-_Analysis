@@ -92,10 +92,17 @@ int TPCPlots(const std::string inFileName1,int doOneBin=0)
 
   /// Initialize the histograms
   std::cout<<"Initializing histograms..."<<std::endl;
-  static const Int_t nEnergyBins = s.nEnergyBins;
-  static const Int_t nMultBins = s.nMultBins;
-  static const Int_t nptBins = s.nptBins;
-  static const Int_t netaBins = s.netaBins;
+  Int_t nEnergyBins = s.nEnergyBins;
+  Int_t nMultBins = s.nMultBins;
+  Int_t nptBins = s.nptBins;
+  Int_t netaBins = s.netaBins;
+  Int_t experiment = s.experiment;
+  bool doThrust = s.doThrust;
+  bool doWTA = s.doWTA;
+  bool doPerp = s.doPerp;
+  bool doGen = s.doGen;
+  bool getThetaAngle = s.getThetaAngle;
+  
 
   TH2F * signal2PC[nEnergyBins][nMultBins][nptBins][netaBins];
   TH2F * bkgrnd2PC[nEnergyBins][nMultBins][nptBins][netaBins];
@@ -103,6 +110,21 @@ int TPCPlots(const std::string inFileName1,int doOneBin=0)
 
   TFile * f1 = TFile::Open(inFileName1.c_str(),"read");
   TFile * fout = TFile::Open(Form("2PC_%s",inFileName1.c_str()),"recreate");
+  
+  TH1F *hMetaData = (TH1F*) f1->Get("hMetaData");
+  if (hMetaData!=0){
+     cout <<"Read configuration from data file:"<<endl;
+     experiment = hMetaData->GetBinContent(1);
+     doThrust   = hMetaData->GetBinContent(2);
+     doWTA      = hMetaData->GetBinContent(3);
+     doPerp     = hMetaData->GetBinContent(4);
+     doGen      = hMetaData->GetBinContent(5);
+     getThetaAngle = hMetaData->GetBinContent(6);
+     nEnergyBins = hMetaData->GetBinContent(7);
+     nMultBins   = hMetaData->GetBinContent(8);
+     nptBins     = hMetaData->GetBinContent(9);
+     netaBins    = hMetaData->GetBinContent(10);
+  }
 
   TH1D * nEvtSigHist1 = (TH1D*)f1->Get("nEvtSigHisto");
   TH1D * nEvtBkgHist1 = (TH1D*)f1->Get("nEvtSigHisto"); 
@@ -114,7 +136,7 @@ int TPCPlots(const std::string inFileName1,int doOneBin=0)
   for(int e = 0; e<nEnergyBins; e++)
   {
     if (doOneBin&&e!=0) continue;
-    for(int m = 0; m<s.nMultBins; m++)
+    for(int m = 0; m<nMultBins; m++)
     {
       //if (doOneBin&&m!=0) continue;
       for(int p = 0; p<nptBins; p++)
@@ -130,20 +152,36 @@ int TPCPlots(const std::string inFileName1,int doOneBin=0)
           Float_t etaCut = 0;
           Float_t ptLow = 0;
           Float_t ptHigh = 0;
-          if(inFileName1.find("thrust") != std::string::npos) {etaCut = s.etaBinsLow_wrtThr[et]; ptLow = s.ptBinsLow_wrtThr[et]; ptHigh = s.ptBinsHigh_wrtThr[et];}
-          else if(inFileName1.find("wta") != std::string::npos) {etaCut = s.etaBinsLow_wrtWTA[et]; ptLow = s.ptBinsLow_wrtWTA[et]; ptHigh = s.ptBinsHigh_wrtWTA[et];}
-          else if(inFileName1.find("beam") != std::string::npos) {etaCut = s.etaBinsLow_wrtBeam[et]; ptLow = s.ptBinsLow_wrtBeam[et]; ptHigh = s.ptBinsHigh_wrtBeam[et];}
+	  Int_t ana=0;
+          if (hMetaData==0&&inFileName1.find("Perp") != std::string::npos ) doPerp=1;
+	  if ((hMetaData==0&&inFileName1.find("thrust") != std::string::npos) || doThrust) {ana=1; etaCut = s.etaBinsLow_wrtThr[et]; ptLow = s.ptBinsLow_wrtThr[p]; ptHigh = s.ptBinsHigh_wrtThr[p];}
+          else if((hMetaData==0&&inFileName1.find("wta") != std::string::npos) || doWTA) {ana=2;etaCut = s.etaBinsLow_wrtWTA[et]; ptLow = s.ptBinsLow_wrtWTA[p]; ptHigh = s.ptBinsHigh_wrtWTA[p];}
+          else if((hMetaData==0&&inFileName1.find("beam") != std::string::npos) || (doThrust==0&&doWTA==0)) {ana=3;etaCut = s.etaBinsLow_wrtBeam[et]; ptLow = s.ptBinsLow_wrtBeam[p]; ptHigh = s.ptBinsHigh_wrtBeam[p];}
           else {std::cout<<"Unknown axis type...breaking"<<std::endl; break;}
           TLegend * l = new TLegend(0.6,0.8,0.95,0.95);
           l->SetFillStyle(0);
-          if(s.experiment==0)  l->AddEntry((TObject*)0,Form("ALEPH e^{+}e^{-}, %s",sqrts.c_str()),"");
-          if(s.experiment==1)  l->AddEntry((TObject*)0,"DELPHI e^{+}e^{-}","");
-          if(s.experiment==2)  l->AddEntry((TObject*)0,"Belle e^{+}e^{-}","");
-          if(s.experiment==3)  l->AddEntry((TObject*)0,"CMS pp","");
+          if(experiment==0)  l->AddEntry((TObject*)0,Form("ALEPH e^{+}e^{-}, %s",sqrts.c_str()),"");
+          if(experiment==1)  l->AddEntry((TObject*)0,"DELPHI e^{+}e^{-}","");
+          if(experiment==2)  l->AddEntry((TObject*)0,"Belle e^{+}e^{-}","");
+          if(experiment==3)  l->AddEntry((TObject*)0,"CMS pp","");
           l->AddEntry((TObject*)0,Form("%d<=N^{trk}<%d",s.multBinsLow[m],s.multBinsHigh[m]),"");
           l->AddEntry((TObject*)0,Form("|#eta|<%1.1f",etaCut),"");
           l->AddEntry((TObject*)0,Form("%1.1f<p_{T}<%1.1f GeV",ptLow,ptHigh),"");
-
+	  if (ana==1) {
+	     if (doPerp) { 
+	        l->AddEntry((TObject*)0,"Thrust Perp Axis Analysis","");
+	     } else {
+	        l->AddEntry((TObject*)0,"Thrust Axis Analysis","");
+	     }	
+	  } else if (ana==2) {
+	     if (doPerp) {
+   	        l->AddEntry((TObject*)0,"WTA Axis Analysis","");
+             } else {
+	        l->AddEntry((TObject*)0,"WTA Perp Axis Analysis","");
+             }
+          } else if (ana==3) {
+	     l->AddEntry((TObject*)0,"Beam Axis Analysis","");
+          }
           // loading histograms
           signal2PC[e][m][p][et] = (TH2F*)f1->Get(Form("signal2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
           signal2PC[e][m][p][et]->Scale(1./nEvtSigHist1->GetBinContent(m+1)); // plus 1 because 0 is the underflow bin
@@ -165,7 +203,7 @@ int TPCPlots(const std::string inFileName1,int doOneBin=0)
               h_deltaphi[j]  = (TH1F*) ratio2PC[e][m][p][et]->ProjectionY(Form("h_deltaphi%d_%d_%d_%d_%d_%d",j,e,s.multBinsLow[m],s.multBinsHigh[m],p,et),minbin,maxbin);
               h_deltaphi[j]->SetName(Form("h_deltaphi%d_%d_%d_%d_%d_%d",j,e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
               h_deltaphi[j]->GetXaxis()->SetTitle("#Delta#phi");
-              if (s.getThetaAngle)  h_deltaphi[j]->SetTitle(Form("#Delta#phi, #Delta#theta (%1.1f, %1.1f), Multipliplicity (%1.1d, %1.1d)",etaranges[j],etaranges[j+1], s.multBinsLow[m],s.multBinsHigh[m]));
+              if (getThetaAngle)  h_deltaphi[j]->SetTitle(Form("#Delta#phi, #Delta#theta (%1.1f, %1.1f), Multipliplicity (%1.1d, %1.1d)",etaranges[j],etaranges[j+1], s.multBinsLow[m],s.multBinsHigh[m]));
               else            h_deltaphi[j]->SetTitle(Form("#Delta#phi, #Delta#eta (%1.1f, %1.1f), Multipliplicity (%d, %d)",etaranges[j],etaranges[j+1], s.multBinsLow[m],s.multBinsHigh[m]));
               h_deltaphi[j]->GetYaxis()->SetTitle("Y(#Delta#phi)");
               h_deltaphi[j]->Scale(1./(maxbin-minbin+1));
