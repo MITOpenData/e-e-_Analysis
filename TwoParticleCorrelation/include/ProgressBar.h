@@ -142,14 +142,19 @@ void ProgressBar::Print(double progress)
    {
       int AvailableColumn = Column - 2 - 5;
       int FilledColumn = (int)(AvailableColumn * (progress - Min) / (Max - Min));
-
       *Out << "\033[1G[";
       for(int i = 0; i < FilledColumn - 3; i++)
          *Out << " ";
-      if(FilledColumn >= 3)
+      if(FilledColumn >= 6)
          *Out << ">";
-      if(FilledColumn >= 2)
+      if(FilledColumn >= 5)
          *Out << "<";
+      if(FilledColumn >= 4)
+         *Out << "(";
+      if(FilledColumn >= 3)
+         *Out << "(";
+      if(FilledColumn >= 2)
+         *Out << "*";
       if(FilledColumn >= 1)
          *Out << ">";
       for(int i = 0; i < AvailableColumn - FilledColumn; i++)
