@@ -8,7 +8,7 @@ perp=0
 gen=0
 VERBOSE=1
 threejetrej=1
-jetcut=0.03
+threejetcut=0.05
 
 OUTPUTROOT=rootfiles/${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${threejetrej} ${threejetcut}).root
 OUTPUTHISTO=rootfiles/2PC_${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${threejetrej} ${threejetcut}).root
@@ -20,10 +20,9 @@ echo $OUTPUTROOT
 rm $OUTPUTHISTO
 rm -rf $FOLDERPLOTS
 mkdir $FOLDERPLOTS 
-
 rm $OUTPUTROOT
-./runHisto.sh $INPUTDATA $OUTPUTROOT $mix $overwrite $thrust $wta $perp $gen $VERBOSE $threejetrej $jetcut
 
+./runHisto.sh $INPUTDATA $OUTPUTROOT $mix $overwrite $thrust $wta $perp $gen $VERBOSE $threejetrej $threejetcut
 ./runplot.sh $OUTPUTROOT $OUTPUTHISTO $OUTPUTPLOTS 
 
 function float_to_string()
