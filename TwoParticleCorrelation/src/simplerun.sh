@@ -22,7 +22,7 @@ rm -rf $FOLDERPLOTS
 mkdir $FOLDERPLOTS 
 
 rm $OUTPUTROOT
-./runHisto.sh $INPUTDATA $OUTPUTROOT $domix $overwrite $thrust $WTA $PERP $DOGEN $VERBOSE $JETREJ $JETCUT
+./runHisto.sh $INPUTDATA $OUTPUTROOT $mix $overwrite $thrust $wta $perp $gen $VERBOSE $threejetrej $jetcut
 
 ./runplot.sh $OUTPUTROOT $OUTPUTHISTO $OUTPUTPLOTS 
 
