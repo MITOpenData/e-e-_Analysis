@@ -60,7 +60,7 @@ int ridge_check( const std::string inFileName, 		// Input file
 		       bool owDoGen = false,            // overwrite the value of doGen from selection.h 
 		       int verbose = 1,                 // Verbose level
 		       bool ow3jetEvtCut=false,      // three jet selection flag
-		       double _thirdJetCut=false     // three jet cut selection
+		       double _thirdJetCut=-1.0     // three jet cut selection
                )
 {
 
