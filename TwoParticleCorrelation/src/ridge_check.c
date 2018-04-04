@@ -58,9 +58,18 @@ int ridge_check( const std::string inFileName, 		// Input file
 		       bool owWTA = false,		// overwrite the value of doWTA from selection.h
 		       bool owPerp = false,		// overwrite the value of doPerp from selection.h
 		       bool owDoGen = false,            // overwrite the value of doGen from selection.h 
-		       int verbose = 1                 // Verbose level
+		       int verbose = 1,                 // Verbose level
+		       bool ow3jetEvtCut=false,      // three jet selection flag
+		       double _thirdJetCut=false     // three jet cut selection
                )
 {
+
+   cout<<"overwrite="<<overwrite<<endl;
+   cout<<"owThrust="<<owThrust<<endl;
+   cout<<"owWTA="<<owWTA<<endl;
+   cout<<"owPerp="<<owPerp<<endl;
+   cout<<"owDoGen="<<owDoGen<<endl;
+
     // ROOT Global setting
     TH1::SetDefaultSumw2();    TH2::SetDefaultSumw2();
 
@@ -80,7 +89,11 @@ int ridge_check( const std::string inFileName, 		// Input file
        if (owWTA)    s.doWTA = true; else s.doWTA = false;
        if (owPerp)   s.doPerp = true; else s.doPerp = false;
        if (owDoGen)  s.doGen = true; else s.doGen = false;
+       if (ow3jetEvtCut) {s.do3jetEvtCut = true; s.thirdJetCut=_thirdJetCut;}
+       else s.do3jetEvtCut = false;
     }
+    
+    
     
     if (verbose) {
       if (s.doThrust && s.doWTA) { cout <<"Can't have both doWTA and doThrust on in Selection.h!"<<endl; return 0; }
@@ -88,12 +101,14 @@ int ridge_check( const std::string inFileName, 		// Input file
       else if (s.doWTA) 	cout <<"WTA axis analysis"<<endl;
       else 		cout <<"Beam axis analysis"<<endl;
       if ((s.doThrust||s.doWTA) && s.doPerp) cout <<"Reference axis rotated by 90 degree"<<endl;
+      if (s.do3jetEvtCut) 	cout <<"Applying three jet rejection with value="<<s.thirdJetCut<<endl;
       if (s.doGen) cout <<"This is a generator level analysis, i.e., no track or event selection applied!"<<endl;    
     }
     
     /********************************************************************************************************************/
     // Define the output file
     /********************************************************************************************************************/
+
     TFile * output = TFile::Open(outFileName.c_str(),"recreate");
     
     /// Initialize the histograms
@@ -214,7 +229,7 @@ int ridge_check( const std::string inFileName, 		// Input file
     TChain * t_mix = new TChain("t"); 
           
 
-    if (inMixFileName=="") {   // no mix file specified
+    if (inMixFileName=="0"||inMixFileName=="") {   // no mix file specified
        cout <<"Perform analysis without mix file"<<endl;
        t_mix->Add(inFileName.c_str());
     } else {
