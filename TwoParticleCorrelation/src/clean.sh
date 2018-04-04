@@ -2,4 +2,4 @@ rm rootfiles/*.root
 rm *.d
 rm *.so
 rm *.pcm
-rm -rf plots/pl*
+rm -rf plots/plo*
