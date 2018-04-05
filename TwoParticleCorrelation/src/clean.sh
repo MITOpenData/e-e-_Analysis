@@ -1,6 +1,9 @@
-rm *.root
+rm rootfiles/*.root
 rm *.d
 rm *.so
 rm *.pcm
-rm ../summary/*.*
-rm ../pdfDir/*.*
+rm -rf plots/*pdf*
+rm -rf plots/*png*
+rm -rf plots/*/*pdf*
+rm -rf plots/*png*
+rm -rf plots/*/
