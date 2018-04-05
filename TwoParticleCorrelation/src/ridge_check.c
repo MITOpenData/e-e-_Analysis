@@ -44,6 +44,7 @@
 //
 /********************************************************************************************************************/
 
+
 using namespace std;
 
 /********************************************************************************************************************/
@@ -59,9 +60,11 @@ int ridge_check( const std::string inFileName, 		// Input file
 		       bool owPerp = false,		// overwrite the value of doPerp from selection.h
 		       bool owDoGen = false,            // overwrite the value of doGen from selection.h 
 		       int verbose = 1,                 // Verbose level
+		       bool owAjCut=false,      // dijet selection flag
+		       double _AjCut=-999,     // dijet  cut selection
 		       bool ow3jetEvtCut=false,      // three jet selection flag
-		       double _thirdJetCut=-1.0     // three jet cut selection
-               )
+		       double _thirdJetCut=-999     // three jet cut selection
+               ) 
 {
 
    cout<<"overwrite="<<overwrite<<endl;
@@ -69,6 +72,10 @@ int ridge_check( const std::string inFileName, 		// Input file
    cout<<"owWTA="<<owWTA<<endl;
    cout<<"owPerp="<<owPerp<<endl;
    cout<<"owDoGen="<<owDoGen<<endl;
+   cout<<"owAjCut="<<owAjCut<<endl;
+   cout<<"_AjCut="<<_AjCut<<endl;
+   cout<<"ow3jetEvtCut="<<ow3jetEvtCut<<endl;
+   cout<<"_thirdJetCut="<<_thirdJetCut<<endl;
 
     // ROOT Global setting
     TH1::SetDefaultSumw2();    TH2::SetDefaultSumw2();
@@ -89,10 +96,11 @@ int ridge_check( const std::string inFileName, 		// Input file
        if (owWTA)    s.doWTA = true; else s.doWTA = false;
        if (owPerp)   s.doPerp = true; else s.doPerp = false;
        if (owDoGen)  s.doGen = true; else s.doGen = false;
+       if (owAjCut) {s.doAjCut = true; s.AjCut=_AjCut;}
+       else s.doAjCut = false;
        if (ow3jetEvtCut) {s.do3jetEvtCut = true; s.thirdJetCut=_thirdJetCut;}
        else s.do3jetEvtCut = false;
     }
-    
     
     
     if (verbose) {
