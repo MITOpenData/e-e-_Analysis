@@ -1,6 +1,6 @@
 DOCENTRAL=1
-DOSTUDYVSDIJET=1
-DOCOPYPLOTS=1
+DOSTUDYVSDIJET=0
+DOCOPYPLOTS=0
 
 INPUTDATA="/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180322/LEP1Data1992_recons_aftercut-MERGED.root"
 OUTPUT="LEP1Data1992"
@@ -15,15 +15,16 @@ ajrej=0
 threejet=0
 ajrejcut=0
 threejetcut=0
+optionetasel=2
 
 #REGULAR ANALYSIS, CENTRAL VALUES
 
 if [ $DOCENTRAL -eq 1 ]; then      
 
-  OUTPUTROOT=rootfiles/${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut}).root
-  OUTPUTHISTO=rootfiles/2PC_${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut}).root
-  FOLDERPLOTS=plots/plots_${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut})
-  OUTPUTPLOTS=$FOLDERPLOTS/${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut})
+  OUTPUTROOT=rootfiles/${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${optionetasel}).root
+  OUTPUTHISTO=rootfiles/2PC_${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${optionetasel}).root
+  FOLDERPLOTS=plots/plots_${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${optionetasel})
+  OUTPUTPLOTS=$FOLDERPLOTS/${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${optionetasel})
   echo $OUTPUTROOT
   
   rm $OUTPUTHISTO
@@ -31,7 +32,7 @@ if [ $DOCENTRAL -eq 1 ]; then
   mkdir $FOLDERPLOTS 
   rm $OUTPUTROOT
   
-  root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$mix\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}")"
+  root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$mix\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${optionetasel}")"
   root -l -q -b "TPCPlots.cc+(\"$OUTPUTROOT\",\"$OUTPUTHISTO\",\"$OUTPUTPLOTS\")" 
   
 fi
@@ -39,6 +40,7 @@ fi
 ajrej=1
 threejet=1  
 ajrejcut=0.1
+optionetasel=0
 
 
 #STUDY VS ASYMMETRY
@@ -47,17 +49,17 @@ if [ $DOSTUDYVSDIJET -eq 1 ]; then
   for threejetcut in 0.02 0.03 0.05 0.1 0.2 0.5
   do 
 
-   OUTPUTROOT=rootfiles/${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut}).root
-   OUTPUTHISTO=rootfiles/2PC_${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut}).root
-   FOLDERPLOTS=plots/plots_${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut})
-   OUTPUTPLOTS=$FOLDERPLOTS/${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut})
+  OUTPUTROOT=rootfiles/${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${optionetasel}).root
+  OUTPUTHISTO=rootfiles/2PC_${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${optionetasel}).root
+  FOLDERPLOTS=plots/plots_${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${optionetasel})
+  OUTPUTPLOTS=$FOLDERPLOTS/${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${optionetasel})
     
     echo $OUTPUTROOT
     rm $OUTPUTHISTO
     rm -rf $FOLDERPLOTS
     mkdir $FOLDERPLOTS 
     rm $OUTPUTROOT
-    root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$mix\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}")"
+    root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$mix\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${optionetasel}")"
     root -l -q -b "TPCPlots.cc+(\"$OUTPUTROOT\",\"$OUTPUTHISTO\",\"$OUTPUTPLOTS\")" 
   done 
 fi
@@ -109,7 +111,7 @@ if [ $DOCOPYPLOTS -eq 1 ]; then
   
   cd ..
 fi
-
+ 
 
 function float_to_string()
 {
@@ -126,12 +128,12 @@ function float_to_string()
 
 function produce_postfix()
 {
-    if [[ $# -ne 9 ]]
+    if [[ $# -ne 10 ]]
     then
         echo -e "\033[1;31merror:${NC} invalid argument number - produce_postfix()"
         return 1
     fi
 
-    echo thrust${1}_mix${2}_wta${3}_perp${4}_gen${5}_ajrej${6}_ajrejcut$(float_to_string ${7})_threejet${8}_threejetcut$(float_to_string ${9})
+    echo thrust${1}_mix${2}_wta${3}_perp${4}_gen${5}_ajrej${6}_ajrejcut$(float_to_string ${7})_threejet${8}_threejetcut$(float_to_string ${9})_optionetasel${10}
 }
 
