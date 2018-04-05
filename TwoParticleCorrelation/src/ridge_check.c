@@ -64,7 +64,8 @@ int ridge_check( const std::string inFileName, 		// Input file
 		       double _AjCut=-999,     // dijet  cut selection
 		       bool ow3jetEvtCut=false,      // three jet selection flag
 		       double _thirdJetCut=-999,     // three jet cut selection
-		       int optionThrustSelection=0  // option==0 -> no eta selection on tracks, option==1 -> reject the tracks at small rapidity, option==2 -> reject the tracks at large rapidity
+		       int optionThrustSelection=0,  // option==0 -> no eta selection on tracks, option==1 -> reject the tracks at small rapidity, option==2 -> reject the tracks at large rapidity
+		       double etathrustselection=-1 
                ) 
 {
 
@@ -314,7 +315,7 @@ int ridge_check( const std::string inFileName, 		// Input file
             h_theta->Fill(data.getTheta(j));
             h_pt->Fill(data.getPt(j));
 
-            if (optionThrustSelection==1 && fabs(data.getEta(j))<2.0) continue;
+            if (optionThrustSelection==1 && fabs(data.getEta(j))<etathrustselection) continue;
             if (optionThrustSelection==2 && fabs(data.getEta(j))>2.0) continue;
 
             // Decide which pt and eta range to fill
@@ -332,8 +333,8 @@ int ridge_check( const std::string inFileName, 		// Input file
             for ( Int_t k=j+1;k<data.particle.nParticle;k++ )
             {
 		if (!trackSelector.highPurity(&data.particle,k)&&s.doGen==0) continue;
-        if (optionThrustSelection==1 && fabs(data.getEta(k))<2.0) continue;
-        if (optionThrustSelection==2 && fabs(data.getEta(k))>2.0) continue;
+        if (optionThrustSelection==1 && fabs(data.getEta(k))<etathrustselection) continue;
+        if (optionThrustSelection==2 && fabs(data.getEta(k))>etathrustselection) continue;
 
 	    
                 // Check if the second particle is in the same range of pt and eta 
@@ -436,8 +437,8 @@ int ridge_check( const std::string inFileName, 		// Input file
             {
                 // decide if valid track
                 if (!trackSelector.highPurity(&data.particle,j)&&s.doGen==0) continue;
-                if (optionThrustSelection==1 && fabs(data.getEta(j))<2.0) continue;
-                if (optionThrustSelection==2 && fabs(data.getEta(j))>2.0) continue;
+                if (optionThrustSelection==1 && fabs(data.getEta(j))<etathrustselection) continue;
+                if (optionThrustSelection==2 && fabs(data.getEta(j))>etathrustselection) continue;
                 
                 // Decide which pt and eta range to fill
                 std::vector<Int_t> histPt_bkg1;
@@ -456,8 +457,8 @@ int ridge_check( const std::string inFileName, 		// Input file
                 {
                     // decide if valid track
                     if (!trackSelector.highPurity(&mix.particle,k)&&s.doGen==0) continue;
-                    if (optionThrustSelection==1 && fabs(data.getEta(k))<2.0) continue;
-                    if (optionThrustSelection==2 && fabs(data.getEta(k))>2.0) continue;
+                    if (optionThrustSelection==1 && fabs(data.getEta(k))<etathrustselection) continue;
+                    if (optionThrustSelection==2 && fabs(data.getEta(k))>etathrustselection) continue;
                     // Check if the second particle is in the same range of pt and eta    
                     std::vector<Int_t> histPt_bkg2;
 		    s.histPt(histPt_bkg2, mix.getPt(k));
