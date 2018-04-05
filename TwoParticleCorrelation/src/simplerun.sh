@@ -1,5 +1,6 @@
 DOCENTRAL=1
 DOSTUDYVSDIJET=1
+DOCOPYPLOTS=1
 
 INPUTDATA="/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180322/LEP1Data1992_recons_aftercut-MERGED.root"
 OUTPUT="LEP1Data1992"
@@ -21,8 +22,8 @@ if [ $DOCENTRAL -eq 1 ]; then
 
   OUTPUTROOT=rootfiles/${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut}).root
   OUTPUTHISTO=rootfiles/2PC_${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut}).root
-  FOLDERPLOTS=plots/plots_${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut}).root
-  OUTPUTPLOTS=$FOLDERPLOTS/${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut}).root
+  FOLDERPLOTS=plots/plots_${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut})
+  OUTPUTPLOTS=$FOLDERPLOTS/${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut})
   echo $OUTPUTROOT
   
   rm $OUTPUTHISTO
@@ -31,7 +32,7 @@ if [ $DOCENTRAL -eq 1 ]; then
   rm $OUTPUTROOT
   
   root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$mix\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}")"
-    root -l -q -b "TPCPlots.cc+(\"$OUTPUTROOT\",\"$OUTPUTHISTO\",\"$OUTPUTPLOTS\")" 
+  root -l -q -b "TPCPlots.cc+(\"$OUTPUTROOT\",\"$OUTPUTHISTO\",\"$OUTPUTPLOTS\")" 
   
 fi
 
@@ -43,13 +44,13 @@ ajrejcut=0.1
 #STUDY VS ASYMMETRY
 if [ $DOSTUDYVSDIJET -eq 1 ]; then      
 
-  for threejetcut in 0.02 0.04 0.06
+  for threejetcut in 0.04 0.06
   do 
 
-    OUTPUTROOT=rootfiles/${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut}).root 
-    OUTPUTHISTO=rootfiles/2PC_${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut}).root
-    FOLDERPLOTS=plots/plots_${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut}).root
-    OUTPUTPLOTS=$FOLDERPLOTS/${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut}).root
+   OUTPUTROOT=rootfiles/${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut}).root
+   OUTPUTHISTO=rootfiles/2PC_${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut}).root
+   FOLDERPLOTS=plots/plots_${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut})
+   OUTPUTPLOTS=$FOLDERPLOTS/${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut})
     
     echo $OUTPUTROOT
     rm $OUTPUTHISTO
@@ -60,6 +61,55 @@ if [ $DOSTUDYVSDIJET -eq 1 ]; then
     root -l -q -b "TPCPlots.cc+(\"$OUTPUTROOT\",\"$OUTPUTHISTO\",\"$OUTPUTPLOTS\")" 
   done 
 fi
+
+
+if [ $DOCOPYPLOTS -eq 1 ]; then      
+
+  cd plots/
+  rm -rf summary
+  mkdir summary 
+  cd summary
+
+  for etaindex in 0 1 2 
+  do 
+    mkdir 0_20_$etaindex
+    cd 0_20_$etaindex
+    cp ../../plots*/*ASummary_0_0_20_$etaindex* .
+    rm *.pdf
+    cd ..
+  done
+  
+  for etaindex in 0 1 2 
+  do 
+    mkdir 20_30_$etaindex
+    cd 20_30_$etaindex
+    cp ../../plots*/*ASummary_0_20_30_$etaindex* .
+    rm *.pdf
+    cd ..
+  done
+
+  for etaindex in 0 1 2 
+  do 
+    mkdir 30_999_$etaindex
+    cd 30_999_$etaindex
+    cp ../../plots*/*ASummary_0_30_999_$etaindex* .
+    rm *.pdf
+    cd ..
+  done
+
+  for etaindex in 0 1 2 
+  do 
+    mkdir 35_999_$etaindex
+    cd 35_999_$etaindex
+    cp ../../plots*/*ASummary_0_35_999_$etaindex* .
+    rm *.pdf
+    cd ..
+  done
+
+  
+  cd ..
+fi
+
 
 function float_to_string()
 {
