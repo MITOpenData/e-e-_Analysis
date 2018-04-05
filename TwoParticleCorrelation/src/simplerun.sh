@@ -1,4 +1,4 @@
-DOCENTRAL=0
+DOCENTRAL=1
 DOSTUDYVSDIJET=1
 
 INPUTDATA="/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180322/LEP1Data1992_recons_aftercut-MERGED.root"
@@ -29,8 +29,9 @@ if [ $DOCENTRAL -eq 1 ]; then
   rm -rf $FOLDERPLOTS
   mkdir $FOLDERPLOTS 
   rm $OUTPUTROOT
-  ./runHisto.sh $INPUTDATA $OUTPUTROOT $mix $overwrite $thrust $wta $perp $gen $VERBOSE $ajrej $ajrejcut $threejet $threejetcut
-  ./runplot.sh $OUTPUTROOT $OUTPUTHISTO $OUTPUTPLOTS 
+  
+  root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$mix\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}")"
+    root -l -q -b "TPCPlots.cc+(\"$OUTPUTROOT\",\"$OUTPUTHISTO\",\"$OUTPUTPLOTS\")" 
   
 fi
 
@@ -55,8 +56,8 @@ if [ $DOSTUDYVSDIJET -eq 1 ]; then
     rm -rf $FOLDERPLOTS
     mkdir $FOLDERPLOTS 
     rm $OUTPUTROOT
-    ./runHisto.sh $INPUTDATA $OUTPUTROOT $mix $overwrite $thrust $wta $perp $gen $VERBOSE $ajrej $ajrejcut $threejet $threejetcut
-   # ./runplot.sh $OUTPUTROOT $OUTPUTHISTO $OUTPUTPLOTS 
+    root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$mix\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}")"
+    root -l -q -b "TPCPlots.cc+(\"$OUTPUTROOT\",\"$OUTPUTHISTO\",\"$OUTPUTPLOTS\")" 
   done 
 fi
 
