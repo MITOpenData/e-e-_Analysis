@@ -44,7 +44,7 @@ ajrejcut=0.1
 #STUDY VS ASYMMETRY
 if [ $DOSTUDYVSDIJET -eq 1 ]; then      
 
-  for threejetcut in 0.04 0.06
+  for threejetcut in 0.01 0.02 0.05
   do 
 
    OUTPUTROOT=rootfiles/${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut}).root
