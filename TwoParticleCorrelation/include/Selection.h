@@ -17,6 +17,7 @@
 
 //root dependencies
 #include <TMath.h>
+#include <TH1F.h>
 #define PI 3.14159265358979
 
 //DataProcessing header
@@ -80,7 +81,7 @@ class Selection
         static const Int_t netaBins_wrtBeam = 2;
         Float_t etaBinsLow_wrtBeam[netaBins_wrtBeam]  = {1.6, 1.8};
         Float_t missPCut_wrtBeam = 20;
-        Float_t etaPlotRange_wrtBeam = 3.2;
+        Float_t etaPlotRange_wrtBeam = 6.0;
 
         // Thrust Axis
         bool doThrust = true;  bool donTrkThrust = false; // false = use beam axis for nTrk calculation
@@ -90,7 +91,7 @@ class Selection
         static const Int_t netaBins_wrtThr = 1;
         Float_t etaBinsLow_wrtThr[netaBins_wrtThr]  = {4.5}; //{4.5,5.0}
         Float_t missPCut_wrtThr = 20;
-        Float_t etaPlotRange_wrtThr = 3.2;
+        Float_t etaPlotRange_wrtThr = 6.0;
 
         // WTA Axis
         bool doWTA = false;
@@ -100,7 +101,7 @@ class Selection
         static const Int_t netaBins_wrtWTA = 1;
         Float_t etaBinsLow_wrtWTA[netaBins_wrtWTA]  = {5.0};
         Float_t missPCut_wrtWTA = 20;
-        Float_t etaPlotRange_wrtWTA = 3.2;
+        Float_t etaPlotRange_wrtWTA = 6.0;
 
         // Use the perpendicular direction of WTA or Thrust axis?
 	bool doPerp = true;
@@ -143,6 +144,7 @@ class Selection
         void histNtrk(std::vector<Int_t> &hists, Int_t N);
         void histPt(std::vector<Int_t> &hists, Float_t pt);
         void histEta(std::vector<Int_t> &hists, Float_t eta);
+	void writeMetaData(TH1F *h);
         
     private:
 };
@@ -330,4 +332,36 @@ void Selection::histEta(std::vector<Int_t> &hists, Float_t eta)
         else if (TMath::Abs(eta) < etaBinsLow_wrtBeam[i]) hists.push_back(i);
     }
 }
+
+void Selection::writeMetaData(TH1F *h)
+{
+   h->SetBinContent(1,experiment);
+   h->SetBinContent(2,doThrust);
+   h->SetBinContent(3,doWTA);
+   h->SetBinContent(4,doPerp);
+   h->SetBinContent(5,doGen);
+   h->SetBinContent(6,getThetaAngle);
+   h->SetBinContent(7,nEnergyBins);
+   h->SetBinContent(8,nMultBins);
+   h->SetBinContent(9,nptBins);
+   h->SetBinContent(10,netaBins);
+      
+}
+
+/*
+void Selection::readMetaData(TH1F *h)
+{
+   experiment = h->GetBinContent(1);
+   doThrust   = h->SetBinContent(2);
+   doWTA      = h->GetBinContent(3);
+   doPerp     = h->GetBinContent(4);
+   doGen      = h->GetBinContent(5);
+   getThetaAngle = h->GetBinContent(6);
+   nEnergyBins = h->GetBinContent(7);
+   nMultBins   = h->GetBinContent(8);
+   nptBins     = h->GetBinContent(9);
+   netaBins    = h->GetBinContent(10);
+}
+*/
+
 #endif /* Selection.h */

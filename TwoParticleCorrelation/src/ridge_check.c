@@ -44,6 +44,7 @@
 //
 /********************************************************************************************************************/
 
+
 using namespace std;
 
 /********************************************************************************************************************/
@@ -58,9 +59,26 @@ int ridge_check( const std::string inFileName, 		// Input file
 		       bool owWTA = false,		// overwrite the value of doWTA from selection.h
 		       bool owPerp = false,		// overwrite the value of doPerp from selection.h
 		       bool owDoGen = false,            // overwrite the value of doGen from selection.h 
-		       int verbose = 1                 // Verbose level
-               )
+		       int verbose = 1,                 // Verbose level
+		       bool owAjCut=false,      // dijet selection flag
+		       double _AjCut=-999,     // dijet  cut selection
+		       bool ow3jetEvtCut=false,      // three jet selection flag
+		       double _thirdJetCut=-999,     // three jet cut selection
+		       int optionThrustSelection=0,  // option==0 -> no eta selection on tracks, option==1 -> reject the tracks at small rapidity, option==2 -> reject the tracks at large rapidity
+		       double etathrustselection=-1 
+               ) 
 {
+
+   cout<<"overwrite="<<overwrite<<endl;
+   cout<<"owThrust="<<owThrust<<endl;
+   cout<<"owWTA="<<owWTA<<endl;
+   cout<<"owPerp="<<owPerp<<endl;
+   cout<<"owDoGen="<<owDoGen<<endl;
+   cout<<"owAjCut="<<owAjCut<<endl;
+   cout<<"_AjCut="<<_AjCut<<endl;
+   cout<<"ow3jetEvtCut="<<ow3jetEvtCut<<endl;
+   cout<<"_thirdJetCut="<<_thirdJetCut<<endl;
+
     // ROOT Global setting
     TH1::SetDefaultSumw2();    TH2::SetDefaultSumw2();
 
@@ -69,28 +87,38 @@ int ridge_check( const std::string inFileName, 		// Input file
     TrackSelection trackSelector;
         
     // Print general information
-    cout <<"Input File : "<<inFileName<<endl;
-    cout <<"Output File: "<<outFileName<<endl;
-    cout <<"Mix File: "<<inMixFileName<<endl;
+    if (verbose) cout <<"Input File : "<<inFileName<<endl;
+    if (verbose) cout <<"Output File: "<<outFileName<<endl;
+    if (verbose) cout <<"Mix File: "<<inMixFileName<<endl;
 
     // Check if the user overwrite the setting in Selection.h    
     if (overwrite) {
-       cout <<"Overwrite the default value from Selection.h"<<endl;
+       if (verbose) cout <<"Overwrite the default value from Selection.h"<<endl;
        if (owThrust) s.doThrust = true; else s.doThrust = false;
        if (owWTA)    s.doWTA = true; else s.doWTA = false;
        if (owPerp)   s.doPerp = true; else s.doPerp = false;
        if (owDoGen)  s.doGen = true; else s.doGen = false;
+       if (owAjCut) {s.doAjCut = true; s.AjCut=_AjCut;}
+       else s.doAjCut = false;
+       if (ow3jetEvtCut) {s.do3jetEvtCut = true; s.thirdJetCut=_thirdJetCut;}
+       else s.do3jetEvtCut = false;
     }
     
-    if (s.doThrust && s.doWTA) { cout <<"Can't have both doWTA and doThrust on in Selection.h!"<<endl; return 0; }
-    if (s.doThrust) 	cout <<"Thrust axis analysis"<<endl;
-    else if (s.doWTA) 	cout <<"WTA axis analysis"<<endl;
-    else 		cout <<"Beam axis analysis"<<endl;
-    if ((s.doThrust||s.doWTA) && s.doPerp) cout <<"Reference axis rotated by 90 degree"<<endl;
-    if (s.doGen) cout <<"This is a generator level analysis, i.e., no track or event selection applied!"<<endl;    
     
+    if (verbose) {
+      if (s.doThrust && s.doWTA) { cout <<"Can't have both doWTA and doThrust on in Selection.h!"<<endl; return 0; }
+      if (s.doThrust) 	cout <<"Thrust axis analysis"<<endl;
+      else if (s.doWTA) 	cout <<"WTA axis analysis"<<endl;
+      else 		cout <<"Beam axis analysis"<<endl;
+      if ((s.doThrust||s.doWTA) && s.doPerp) cout <<"Reference axis rotated by 90 degree"<<endl;
+      if (s.do3jetEvtCut) 	cout <<"Applying three jet rejection with value="<<s.thirdJetCut<<endl;
+      if (s.doGen) cout <<"This is a generator level analysis, i.e., no track or event selection applied!"<<endl;    
+    }
     
+    /********************************************************************************************************************/
     // Define the output file
+    /********************************************************************************************************************/
+
     TFile * output = TFile::Open(outFileName.c_str(),"recreate");
     
     /// Initialize the histograms
@@ -101,6 +129,9 @@ int ridge_check( const std::string inFileName, 		// Input file
     static const Int_t nptBins = s.nptBins;
     static const Int_t netaBins = s.netaBins;
 
+    TH1F *hMetaData = new TH1F("hMetaData","",100,0,100);
+    s.writeMetaData(hMetaData);
+    
     TH2F * signal2PC[nEnergyBins][nMultBins][nptBins][netaBins];
     TH2F * bkgrnd2PC[nEnergyBins][nMultBins][nptBins][netaBins];
     TH2F * ratio2PC[nEnergyBins][nMultBins][nptBins][netaBins];
@@ -205,20 +236,24 @@ int ridge_check( const std::string inFileName, 		// Input file
     
     bool doMixFile=0;
 
-    TChain * t_mix = new TChain("t");       
+    TChain * t_mix = new TChain("t"); 
+          
 
-    if (inMixFileName=="") {   // no mix file specified
-       cout <<"Performan analysis without mix file"<<endl;
+    if (inMixFileName=="0"||inMixFileName=="") {   // no mix file specified
+       cout <<"Perform analysis without mix file"<<endl;
        t_mix->Add(inFileName.c_str());
     } else {
        doMixFile=1;
-       cout <<"Performan analysis with mix file = "<<inMixFileName<<endl;
+       cout <<"Perform analysis with mix file = "<<inMixFileName<<endl;
        t_mix->Add(inMixFileName.c_str());
     }
     
     TChain * boost_t_mix = new TChain(boostTree.c_str());      	boost_t_mix->Add(inFileName.c_str());
     TChain * jt_mix = new TChain(jtTreeName.c_str());       	jt_mix->Add(inFileName.c_str());
     
+    t_mix->LoadBaskets(4000000000);
+    jt_mix->LoadBaskets(4000000000);
+    boost_t_mix->LoadBaskets(4000000000);
     TPCNtupleData mix(s.doBelle, s.doThrust, s.doWTA, s.doPerp);       mix.setupTPCTree(t_mix,boost_t_mix,jt_mix);        
     
     // analysis
@@ -231,9 +266,9 @@ int ridge_check( const std::string inFileName, 		// Input file
 
     unsigned int entryDiv = (nevent > 200) ? nevent / 200 : 1;
  
-    /****************************************/
+    /********************************************************************************************************************/
     // Main Event Loop
-    /****************************************/
+    /********************************************************************************************************************/
     for (Int_t i=0;i<nevent;i++) {
         t->GetEntry(i); 
         boost_t->GetEntry(i);
@@ -280,6 +315,9 @@ int ridge_check( const std::string inFileName, 		// Input file
             h_theta->Fill(data.getTheta(j));
             h_pt->Fill(data.getPt(j));
 
+            if (optionThrustSelection==1 && fabs(data.getEta(j))<etathrustselection) continue;
+            if (optionThrustSelection==2 && fabs(data.getEta(j))>2.0) continue;
+
             // Decide which pt and eta range to fill
             std::vector<Int_t> histPt1;
 	    s.histPt(histPt1, data.getPt(j));
@@ -295,6 +333,9 @@ int ridge_check( const std::string inFileName, 		// Input file
             for ( Int_t k=j+1;k<data.particle.nParticle;k++ )
             {
 		if (!trackSelector.highPurity(&data.particle,k)&&s.doGen==0) continue;
+        if (optionThrustSelection==1 && fabs(data.getEta(k))<etathrustselection) continue;
+        if (optionThrustSelection==2 && fabs(data.getEta(k))>etathrustselection) continue;
+
 	    
                 // Check if the second particle is in the same range of pt and eta 
 
@@ -335,9 +376,9 @@ int ridge_check( const std::string inFileName, 		// Input file
             }
         }
 
-        /****************************************/
+	        /********************************************************************************************************************/
         // B calculation using multiplicity cut //
-        /****************************************/
+        /********************************************************************************************************************/
         for (Int_t nMix = 0; nMix<s.bkgrd_runs; nMix++)
         {
             Int_t selected=i+1;
@@ -356,8 +397,12 @@ int ridge_check( const std::string inFileName, 		// Input file
             std::vector<Int_t> histNtrk_mix;
 	    s.histNtrk(histNtrk_mix, nTrk_mix);
             // loop over the background event nTrk histos and determine if the signal event has the same histos. If yes then leave the entry. If no then remove the entry from histNtrk_mix. 
-            for(unsigned int nI = 0; nI <histNtrk_mix.size(); nI++) if(std::find(histNtrk.begin(), histNtrk.end(), histNtrk_mix.at(nI)) == histNtrk.end()) histNtrk_mix.erase(histNtrk_mix.begin() + nI);
-
+            for(unsigned int nI = 0; nI <histNtrk_mix.size(); nI++) {
+	      if(std::find(histNtrk.begin(), histNtrk.end(), histNtrk_mix.at(nI)) == histNtrk.end()) {
+	        histNtrk_mix.erase(histNtrk_mix.begin() + nI);
+		nI--;
+              }
+	    }
             // We continue to search until we find an event that passes the mixed event selection criteria and has a non-null histNtrk_mix intersection with histNtrk.
             // s.isMixedEvent returns false if the mixed event fails the criteria in which case we want to enter the while loop.
             // If the size of histNtrk_mix is 0 then the mixed event is a different nTrk range than the signal event and we do not want mix in which case we want to enter the while loop.
@@ -372,14 +417,19 @@ int ridge_check( const std::string inFileName, 		// Input file
                 
                 if(!s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(&mix.event, &mix.jet, &mix.particle);
                 // find the event nTrk histogram(s)
-                histNtrk_mix;
-		s.histNtrk(histNtrk_mix, nTrk_mix);
+                s.histNtrk(histNtrk_mix, nTrk_mix);
                 // loop over the background event nTrk histos and determine if the signal event has the same histos. If yes then leave the entry. If no then remove the entry from histNtrk_mix. 
-                for(unsigned int nI = 0; nI <histNtrk_mix.size(); nI++) if(std::find(histNtrk.begin(), histNtrk.end(), histNtrk_mix.at(nI)) == histNtrk.end()) histNtrk_mix.erase(histNtrk_mix.begin() + nI);
+                for(unsigned int nI = 0; nI <histNtrk_mix.size(); nI++){
+                   if(std::find(histNtrk.begin(), histNtrk.end(), histNtrk_mix.at(nI)) == histNtrk.end()) {
+		     histNtrk_mix.erase(histNtrk_mix.begin() + nI);
+		     nI--;
+		   }
+
+		}
             }           
             if (doMixFile==1 && selected!=i) cout <<"ERROR MIXING"<<endl;
+	    
 	               
-            
             // increment the number of background events bin for each nTrk histogram going to be filled (note that this should give the same result as the signal events increment)
             for(unsigned int nI = 0; nI < histNtrk.size(); ++nI) nBkgrndEvts[histNtrk.at(nI)] += 1;
 
@@ -387,7 +437,9 @@ int ridge_check( const std::string inFileName, 		// Input file
             {
                 // decide if valid track
                 if (!trackSelector.highPurity(&data.particle,j)&&s.doGen==0) continue;
-	    
+                if (optionThrustSelection==1 && fabs(data.getEta(j))<etathrustselection) continue;
+                if (optionThrustSelection==2 && fabs(data.getEta(j))>etathrustselection) continue;
+                
                 // Decide which pt and eta range to fill
                 std::vector<Int_t> histPt_bkg1;
 		s.histPt(histPt_bkg1, data.getPt(j));
@@ -405,7 +457,8 @@ int ridge_check( const std::string inFileName, 		// Input file
                 {
                     // decide if valid track
                     if (!trackSelector.highPurity(&mix.particle,k)&&s.doGen==0) continue;
-	    
+                    if (optionThrustSelection==1 && fabs(data.getEta(k))<etathrustselection) continue;
+                    if (optionThrustSelection==2 && fabs(data.getEta(k))>etathrustselection) continue;
                     // Check if the second particle is in the same range of pt and eta    
                     std::vector<Int_t> histPt_bkg2;
 		    s.histPt(histPt_bkg2, mix.getPt(k));
@@ -424,8 +477,7 @@ int ridge_check( const std::string inFileName, 		// Input file
                     Float_t angle_mix;
                     if (s.getThetaAngle) angle_mix = mix.getTheta(k); else angle_mix = mix.getEta(k);
                     Float_t phi_mix = mix.getPhi(k);
-
-                    for(unsigned int eI = 0; eI< histE.size(); eI++)
+		    for(unsigned int eI = 0; eI< histE.size(); eI++)
                     {
                         for(unsigned int nI = 0; nI< histNtrk_mix.size(); nI++) // histNtrk_mix contains the intersection of histNtrk_mix and histNtrk
                         {
@@ -447,7 +499,7 @@ int ridge_check( const std::string inFileName, 		// Input file
             //std::cout<<i<<" "<<selected<<" "<<nTrk<<" "<<nTrk_mix<<" "<<std::endl;
         } // end of nMix loop
     } // end of loop over events
-    
+    cout <<"after mix"<<endl;
     output->cd();
     // write the histograms
     for(int e = 0; e<nEnergyBins;e++)
@@ -485,8 +537,11 @@ int ridge_check( const std::string inFileName, 		// Input file
     h_eta->Write();
     h_phi->Write();
     multiplicity->Write();
+    hMetaData->Write();
     
+    /********************************************************************************************************************/
     // cleanup
+    /********************************************************************************************************************/
     delete h_Aj;
     delete h_Tphi;
     delete h_Ttheta;
