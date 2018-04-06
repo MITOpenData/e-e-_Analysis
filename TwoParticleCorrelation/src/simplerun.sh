@@ -1,6 +1,6 @@
-DOCENTRAL=1
+DOCENTRAL=0
 DOSTUDYVSDIJET=0
-DOCOPYPLOTS=0
+DOCOPYPLOTS=1
 
 mix="0"
 overwrite=1
@@ -19,6 +19,8 @@ etathrustselection=2.0
 AINPUT=( "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180322/LEP1Data1992_recons_aftercut-MERGED.root" "/data/cmcginn/StudyMultSamples/ALEPH/MC/20180323/alephMCRecoAfterCutPaths_1994.root" )
 AOUTPUT=( "LEP1Data1992" "LEP1MC1994_20180323" )
 
+sleep .5 
+
 if [ $DOCENTRAL -eq 1 ]; then       
   
   for i in 0 1
@@ -32,6 +34,8 @@ if [ $DOCENTRAL -eq 1 ]; then
       echo $OUTPUT
       suffix=${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${optionetasel} ${etathrustselection})
     
+      sleep .5 
+  
       OUTPUTROOT=rootfiles/${suffix}.root
       OUTPUTHISTO=rootfiles/2PC_${suffix}.root
       FOLDERPLOTS=plots/plots_${suffix}.root
