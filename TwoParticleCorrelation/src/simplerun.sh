@@ -2,8 +2,6 @@ DOCENTRAL=1
 DOSTUDYVSDIJET=0
 DOCOPYPLOTS=0
 
-INPUTDATA="/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180322/LEP1Data1992_recons_aftercut-MERGED.root"
-OUTPUT="LEP1Data1992"
 mix="0"
 overwrite=1
 thrust=1
@@ -15,53 +13,40 @@ ajrej=0
 threejet=0
 ajrejcut=0
 threejetcut=0
-optionetasel=2
+etathrustselection=2.0
 
 #REGULAR ANALYSIS, CENTRAL VALUES
+AINPUT=( "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180322/LEP1Data1992_recons_aftercut-MERGED.root" "/data/cmcginn/StudyMultSamples/ALEPH/MC/20180323/alephMCRecoAfterCutPaths_1994.root" )
+AOUTPUT=( "LEP1Data1992" "LEP1MC1994_20180323" )
 
-if [ $DOCENTRAL -eq 1 ]; then      
-
-  OUTPUTROOT=rootfiles/${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${optionetasel}).root
-  OUTPUTHISTO=rootfiles/2PC_${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${optionetasel}).root
-  FOLDERPLOTS=plots/plots_${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${optionetasel})
-  OUTPUTPLOTS=$FOLDERPLOTS/${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${optionetasel})
-  echo $OUTPUTROOT
+if [ $DOCENTRAL -eq 1 ]; then       
   
-  rm $OUTPUTHISTO
-  rm -rf $FOLDERPLOTS
-  mkdir $FOLDERPLOTS 
-  rm $OUTPUTROOT
-  
-  root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$mix\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${optionetasel}")"
-  root -l -q -b "TPCPlots.cc+(\"$OUTPUTROOT\",\"$OUTPUTHISTO\",\"$OUTPUTPLOTS\")" 
-  
-fi
-
-ajrej=1
-threejet=1  
-ajrejcut=0.1
-optionetasel=0
-
-
-#STUDY VS ASYMMETRY
-if [ $DOSTUDYVSDIJET -eq 1 ]; then      
-
-  for threejetcut in 0.02 0.03 0.05 0.1 0.2 0.5
-  do 
-
-  OUTPUTROOT=rootfiles/${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${optionetasel}).root
-  OUTPUTHISTO=rootfiles/2PC_${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${optionetasel}).root
-  FOLDERPLOTS=plots/plots_${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${optionetasel})
-  OUTPUTPLOTS=$FOLDERPLOTS/${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${optionetasel})
+  for i in 0 1
+  do
+    for optionetasel in 0 1 2
+    do  
+      INPUTDATA=${AINPUT[$i]}
+      OUTPUT=${AOUTPUT[$i]}
+      
+      echo $INPUTDATA
+      echo $OUTPUT
+      suffix=${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${optionetasel} ${etathrustselection})
     
-    echo $OUTPUTROOT
-    rm $OUTPUTHISTO
-    rm -rf $FOLDERPLOTS
-    mkdir $FOLDERPLOTS 
-    rm $OUTPUTROOT
-    root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$mix\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${optionetasel}")"
-    root -l -q -b "TPCPlots.cc+(\"$OUTPUTROOT\",\"$OUTPUTHISTO\",\"$OUTPUTPLOTS\")" 
-  done 
+      OUTPUTROOT=rootfiles/${suffix}.root
+      OUTPUTHISTO=rootfiles/2PC_${suffix}.root
+      FOLDERPLOTS=plots/plots_${suffix}.root
+      OUTPUTPLOTS=$FOLDERPLOTS/${suffix}.root
+      echo $OUTPUTROOT
+  
+      rm $OUTPUTHISTO
+      rm -rf $FOLDERPLOTS
+      mkdir $FOLDERPLOTS 
+      rm $OUTPUTROOT
+  
+      root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$mix\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${optionetasel}","${etathrustselection}")"
+      root -l -q -b "TPCPlots.cc+(\"$OUTPUTROOT\",\"$OUTPUTHISTO\",\"$OUTPUTPLOTS\")" 
+    done 
+  done
 fi
 
 
@@ -128,12 +113,12 @@ function float_to_string()
 
 function produce_postfix()
 {
-    if [[ $# -ne 10 ]]
+    if [[ $# -ne 11 ]]
     then
         echo -e "\033[1;31merror:${NC} invalid argument number - produce_postfix()"
         return 1
     fi
 
-    echo thrust${1}_mix${2}_wta${3}_perp${4}_gen${5}_ajrej${6}_ajrejcut$(float_to_string ${7})_threejet${8}_threejetcut$(float_to_string ${9})_optionetasel${10}
+    echo thrust${1}_mix${2}_wta${3}_perp${4}_gen${5}_ajrej${6}_ajrejcut$(float_to_string ${7})_threejet${8}_threejetcut$(float_to_string ${9})_optionetasel${10}_etathrustselection$(float_to_string ${11})
 }
 
