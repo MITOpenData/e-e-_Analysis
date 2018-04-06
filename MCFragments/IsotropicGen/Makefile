@@ -20,12 +20,12 @@ PROCPATH=../../DataProcessing/
 #programs to make
 
 #all: mkdirBin setpyt mainCustomZpole_ppAndee.exe
-all: mkdirBin mainIsotropic.exe
+all: mkdirBin bin/mainIsotropic.exe
 mkdirBin:
 	$(MKDIR_BIN)
 setpyt:
 	$(SETPYT)
-mainIsotropic.exe: src/mainIsotropic.cc $(PYTPATH)/lib/libpythia8.a
+bin/mainIsotropic.exe: src/mainIsotropic.cc $(PYTPATH)/lib/libpythia8.a
 	$(CXX) src/mainIsotropic.cc -o bin/mainIsotropic.exe  -I $(PYTPATH)/include -pedantic -W $(CXXFLAGS) -Wshadow -fPIC -L$(PYTPATH)/lib -Wl,-rpath,$(PYTPATH)/lib -lpythia8 -ldl $(ROOT) $(FASTJET) -I $(PWD) -I $(PROCPATH)
 
 clean:

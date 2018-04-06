@@ -1,7 +1,8 @@
 #MAKEFILE For thrust and reproduction of ALEPH results
 
+#-Werror turned off
 CXX = g++
-CXXFLAGS = -Wall -O2 -Wextra -Wno-unused-local-typedefs  -Werror -Wno-deprecated-declarations -std=c++11
+CXXFLAGS = -Wall -O2 -Wextra -Wno-unused-local-typedefs -Wno-deprecated-declarations -std=c++11
 
 ROOT=`root-config --cflags --glibs`
 
@@ -13,7 +14,7 @@ EVENTPARTICLEDATA=$(PWD)/../DataProcessing/
 MKDIR_BIN=mkdir -p $(PWD)/bin
 MKDIR_PDFDIR=mkdir -p $(PWD)/pdfDir
 
-all: mkdirBin mkdirPdfdir thrust_distribution multDist plotMultDist
+all: mkdirBin mkdirPdfdir bin/multDist.exe bin/plotMultDist.exe
 
 mkdirBin:
 	$(MKDIR_BIN)
@@ -21,13 +22,13 @@ mkdirBin:
 mkdirPdfdir:
 	$(MKDIR_PDFDIR)
 
-thrust_distribution: src/thrust_distribution.c
-	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -o bin/thrust_distribution.exe src/thrust_distribution.c
+#bin/thrust_distribution.exe: src/thrust_distribution.c
+#	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -o bin/thrust_distribution.exe src/thrust_distribution.c
 
-multDist: src/multDist.C
+bin/multDist.exe: src/multDist.C
 	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -o bin/multDist.exe src/multDist.C
 
-plotMultDist: src/plotMultDist.C
+bin/plotMultDist.exe: src/plotMultDist.C
 	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -o bin/plotMultDist.exe src/plotMultDist.C
 
 clean:

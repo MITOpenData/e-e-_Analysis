@@ -20,12 +20,12 @@ PROCPATH=../../DataProcessing/
 #programs to make
 
 #all: mkdirBin setpyt mainCustomZpole_ppAndee.exe
-all: mkdirBin mainCustomZpole_ppAndee.exe
+all: mkdirBin bin/mainCustomZpole_ppAndee.exe
 mkdirBin:
 	$(MKDIR_BIN)
 setpyt:
 	$(SETPYT)
-mainCustomZpole_ppAndee.exe: src/mainCustomZpole_ppAndee.cc $(PYTPATH)/lib/libpythia8.a
+bin/mainCustomZpole_ppAndee.exe: src/mainCustomZpole_ppAndee.cc $(PYTPATH)/lib/libpythia8.a
 	$(CXX) src/mainCustomZpole_ppAndee.cc -o bin/mainCustomZpole_ppAndee.exe  -I $(PYTPATH)/include -pedantic -W $(CXXFLAGS) -Wshadow -fPIC -L$(PYTPATH)/lib -Wl,-rpath,$(PYTPATH)/lib -lpythia8 -ldl $(ROOT) $(FASTJET) -I $(PWD) -I $(PROCPATH)
 
 clean:

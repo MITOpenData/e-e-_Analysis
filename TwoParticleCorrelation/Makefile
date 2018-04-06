@@ -18,7 +18,7 @@ MKDIR_PDFDIR=mkdir -p $(PWD)/pdfDir
 
 #all: mkdirBin mkdirPdfdir plotDQC ridge_check histoHadd_TH1F findGlobalMaxMin
 
-all: mkdirBin mkdirPdfdir ridge_check histoHadd_TH1F findGlobalMaxMin
+all: mkdirBin mkdirPdfdir bin/ridge_check.exe bin/histoHadd_TH1F.exe bin/findGlobalMaxMin.exe bin/plotDQC.exe
 
 mkdirBin:
 	$(MKDIR_BIN)
@@ -26,16 +26,16 @@ mkdirBin:
 mkdirPdfdir:
 	$(MKDIR_PDFDIR)
 
-plotDQC: src/plotDQC.cc
+bin/plotDQC.exe: src/plotDQC.cc
 	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -I $(DATAPROCESSING) -o bin/plotDQC.exe src/plotDQC.cc
 
-ridge_check: src/ridge_check.c
+bin/ridge_check.exe: src/ridge_check.c
 	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -I $(DATAPROCESSING) -o bin/ridge_check.exe src/ridge_check.c
 
-histoHadd_TH1F: src/histoHadd_TH1F.C
+bin/histoHadd_TH1F.exe: src/histoHadd_TH1F.C
 	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -I $(DATAPROCESSING) -o bin/histoHadd_TH1F.exe src/histoHadd_TH1F.C
 
-findGlobalMaxMin: src/findGlobalMaxMin.C
+bin/findGlobalMaxMin.exe: src/findGlobalMaxMin.C
 	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -I $(DATAPROCESSING) -o bin/findGlobalMaxMin.exe src/findGlobalMaxMin.C
 
 clean:
