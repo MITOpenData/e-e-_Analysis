@@ -1,6 +1,6 @@
-DOCENTRAL=0
+DOCENTRAL=1
 DOSTUDYVSDIJET=0
-DOCOPYPLOTS=1
+DOCOPYPLOTS=0
 
 mix="0"
 overwrite=1
@@ -90,6 +90,7 @@ if [ $DOCOPYPLOTS -eq 1 ]; then
   done
   done  
 fi
+cd ..
 cd ..
  
 
