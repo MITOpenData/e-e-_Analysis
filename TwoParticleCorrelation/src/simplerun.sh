@@ -9,11 +9,10 @@ ajrej=0
 threejet=0
 ajrejcut=0
 threejetcut=0
-etathrustselection=2.0
 
 listsample=(0) #data mc
-etaselection=(0 0.1 0.2 0.3) # no rejection, only inside jet, only outside jet
-activateetaselection=(0 1 1 1) # no rejection, only inside jet, only outside jet
+listetaselection=(1.1) #
+activiateetaselection=(0 1 1 1 1) #
 listgen=(0) #no gen selection, yes gen selection
 listaxis=(1) #0=beam, 1=thrust, 2=wta, 3=thrust perp, 4 =wta perp 
 
@@ -25,21 +24,13 @@ listaxis=(1) #0=beam, 1=thrust, 2=wta, 3=thrust perp, 4 =wta perp
 listthrust=(0 1 0 1 0)
 listtwta=(0 0 1 0 1)
 listtperp=(0 0 0 1 1)
-
-# list of axis choices
-listthrust=(0 1 0 1 0)
+#netaselection=(0 1 2)
 
 #REGULAR ANALYSIS, CENTRAL VALUES
 AINPUT=( "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180322/LEP1Data1992_recons_aftercut-MERGED.root" "/data/cmcginn/StudyMultSamples/ALEPH/MC/20180323/alephMCRecoAfterCutPaths_1994.root" )
 AOUTPUT=( "LEP1Data1992" "LEP1MC1994_20180323" )
 
 sleep .5 
-
-    #for icut in ${listetacut[@]}
-  #  do 
- #   if [ $icut -eq 0 ]; then netaoptions=0
- #   else netaoptions=2
-
 
 if [ $DOCENTRAL -eq 1 ]; then       
   for isample in ${listsample[@]}
@@ -52,21 +43,34 @@ if [ $DOCENTRAL -eq 1 ]; then
       
       for gen in ${listgen[@]}
         do  
-        INPUTDATA=${AINPUT[$isample]}
-        OUTPUT=${AOUTPUT[$isample]}
-        suffix=${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${ietarejection} ${etathrustselection})
-        sleep .5 
-        OUTPUTROOT=rootfiles/${suffix}.root
-        OUTPUTHISTO=rootfiles/2PC_${suffix}.root
-        FOLDERPLOTS=plots/plots_${suffix}
-        OUTPUTPLOTS=$FOLDERPLOTS/${suffix}
-        echo $OUTPUTROOT
-        rm $OUTPUTHISTO
-        rm -rf $FOLDERPLOTS
-        mkdir $FOLDERPLOTS 
-        rm $OUTPUTROOT
-        #root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$mix\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${ietarejection}","${etathrustselection}")"
-        #root -l -q -b "TPCPlots.cc+(\"$OUTPUTROOT\",\"$OUTPUTHISTO\",\"$OUTPUTPLOTS\")" 
+        for etacut in ${listetaselection[@]}
+          do 
+          echo $etacut
+          if [ $activiateetaselection -eq 0 ]; then netaselection=(0 1 2)
+          else netaselection=(0)
+          fi
+          
+          for etacutoption in ${netaselection[@]}
+            do 
+            echo "loop"
+            INPUTDATA=${AINPUT[$isample]}
+            OUTPUT=${AOUTPUT[$isample]}
+            suffix=${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${etacutoption} ${etacut})
+            sleep .5  
+            OUTPUTROOT=rootfiles/${suffix}.root
+            OUTPUTHISTO=rootfiles/2PC_${suffix}.root
+            FOLDERPLOTS=plots/plots_${suffix}
+            OUTPUTPLOTS=$FOLDERPLOTS/${suffix}
+            echo $OUTPUTROOT
+            rm $OUTPUTHISTO
+            rm -rf $FOLDERPLOTS
+            mkdir $FOLDERPLOTS 
+            rm $OUTPUTROOT
+            #root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$mix\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${etacutoption}","${etacut}")"
+            #root -l -q -b "TPCPlots.cc+(\"$OUTPUTROOT\",\"$OUTPUTHISTO\",\"$OUTPUTPLOTS\")" 
+            
+            done # with eta cut option
+          done # with eta selection
         done #done with gen 
       done #done with iaxis
     done #done with samples
@@ -130,6 +134,6 @@ function produce_postfix()
         return 1
     fi
 
-    echo thrust${1}_mix${2}_wta${3}_perp${4}_gen${5}_ajrej${6}_ajrejcut$(float_to_string ${7})_threejet${8}_threejetcut$(float_to_string ${9})_optionetasel${10}_etathrustselection$(float_to_string ${11})
+    echo thrust${1}_mix${2}_wta${3}_perp${4}_gen${5}_ajrej${6}_ajrejcut$(float_to_string ${7})_threejet${8}_threejetcut$(float_to_string ${9})_optionetasel${10}_etacut$(float_to_string ${11})
 }
 
