@@ -12,7 +12,7 @@ threejetcut=0
 
 listsample=(0) #data mc
 listetaselection=(1.1) #
-activiateetaselection=(0 1 1 1 1) #
+activiateetaselection=(1) #
 listgen=(0) #no gen selection, yes gen selection
 listaxis=(1) #0=beam, 1=thrust, 2=wta, 3=thrust perp, 4 =wta perp 
 
@@ -24,7 +24,6 @@ listaxis=(1) #0=beam, 1=thrust, 2=wta, 3=thrust perp, 4 =wta perp
 listthrust=(0 1 0 1 0)
 listtwta=(0 0 1 0 1)
 listtperp=(0 0 0 1 1)
-#netaselection=(0 1 2)
 
 #REGULAR ANALYSIS, CENTRAL VALUES
 AINPUT=( "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180322/LEP1Data1992_recons_aftercut-MERGED.root" "/data/cmcginn/StudyMultSamples/ALEPH/MC/20180323/alephMCRecoAfterCutPaths_1994.root" )
@@ -43,13 +42,15 @@ if [ $DOCENTRAL -eq 1 ]; then
       
       for gen in ${listgen[@]}
         do  
+        
         for etacut in ${listetaselection[@]}
           do 
+          
           echo $etacut
           if [ $activiateetaselection -eq 0 ]; then netaselection=(0 1 2)
           else netaselection=(0)
           fi
-          
+    
           for etacutoption in ${netaselection[@]}
             do 
             echo "loop"
