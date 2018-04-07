@@ -4,8 +4,8 @@ DOCOPYPLOTS=1
 
 mix="0"
 overwrite=1
-thrust=1
-wta=0
+thrust=0
+wta=1
 perp=0
 gen=0
 VERBOSE=1
@@ -54,6 +54,12 @@ if [ $DOCENTRAL -eq 1 ]; then
 fi
 
 
+
+multlow=( 0 20 30 35)
+multhigh=( 20 30 999 999)
+
+
+
 if [ $DOCOPYPLOTS -eq 1 ]; then      
 
   cd plots/
@@ -61,45 +67,30 @@ if [ $DOCOPYPLOTS -eq 1 ]; then
   mkdir summary 
   cd summary
 
+
   for etaindex in 0 1 2 
   do 
-    mkdir 0_20_$etaindex
-    cd 0_20_$etaindex
-    cp ../../plots*/*ASummary_0_0_20_$etaindex* .
-    rm *.pdf
-    cd ..
-  done
   
-  for etaindex in 0 1 2 
-  do 
-    mkdir 20_30_$etaindex
-    cd 20_30_$etaindex
-    cp ../../plots*/*ASummary_0_20_30_$etaindex* .
-    rm *.pdf
+    for indexmult in 0 1 2 3
+    do
+    folder=${multlow[$indexmult]}_${multhigh[$indexmult]}_$etaindex
+    mkdir $folder
+    cd $folder
+    cp ../../plots*/*ASummary_0_${folder}* .
+    rm *.png
+    mkdir thrust
+    cd thrust
+    mv ../*thrust1*.pdf .
+    cd ..
+    mkdir wta
+    cd wta
+    mv ../*wta1*.pdf .
+    cd ..
     cd ..
   done
-
-  for etaindex in 0 1 2 
-  do 
-    mkdir 30_999_$etaindex
-    cd 30_999_$etaindex
-    cp ../../plots*/*ASummary_0_30_999_$etaindex* .
-    rm *.pdf
-    cd ..
-  done
-
-  for etaindex in 0 1 2 
-  do 
-    mkdir 35_999_$etaindex
-    cd 35_999_$etaindex
-    cp ../../plots*/*ASummary_0_35_999_$etaindex* .
-    rm *.pdf
-    cd ..
-  done
-
-  
-  cd ..
+  done  
 fi
+cd ..
  
 
 function float_to_string()
