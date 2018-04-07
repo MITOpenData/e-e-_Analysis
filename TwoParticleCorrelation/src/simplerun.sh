@@ -10,9 +10,9 @@ threejet=0
 ajrejcut=0
 threejetcut=0
 
-listsample=(0) #data mc
-listetaselection=(1) #
-listgen=(0) #no gen selection, yes gen selection
+listsample=(0) #0=data, 1=mc
+listetaselection=(1) #from this list of values (0 0.05 0.1 0.3) 
+listgen=(0) #0=no gen selection, 1=gen selection
 listaxis=(1) #0=beam, 1=thrust, 2=wta, 3=thrust perp, 4 =wta perp 
 
 ################################################################
