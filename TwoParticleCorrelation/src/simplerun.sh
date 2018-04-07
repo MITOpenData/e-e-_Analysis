@@ -4,9 +4,6 @@ DOCOPYPLOTS=0
 
 mix="0"
 overwrite=1
-thrust=0
-wta=1
-perp=0
 VERBOSE=1
 ajrej=0
 threejet=0
@@ -14,13 +11,18 @@ ajrejcut=0
 threejetcut=0
 etathrustselection=2.0
 
-listsample=(0 1)
-listetarejection=(0 1 2)
-listgen=(0 1)
+listsample=(0) #data mc
+listetarejection=(0) # no rejection, only inside jet, only outside jet
+listgen=(0) #no gen selection, yes gen selection
+listaxis=(1) #0=beam, 1=thrust, 2=wta, 3=thrust perp, 4 =wta perp 
 
 ################################################################
 #### dont change anything below this if you dont know what you are doing #### 
 ################################################################
+
+listthrust=(0 1 0 1 0)
+listtwta=(0 0 1 0 1)
+listtperp=(0 0 0 1 1)
 
 #REGULAR ANALYSIS, CENTRAL VALUES
 AINPUT=( "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180322/LEP1Data1992_recons_aftercut-MERGED.root" "/data/cmcginn/StudyMultSamples/ALEPH/MC/20180323/alephMCRecoAfterCutPaths_1994.root" )
@@ -29,8 +31,16 @@ AOUTPUT=( "LEP1Data1992" "LEP1MC1994_20180323" )
 sleep .5 
 
 if [ $DOCENTRAL -eq 1 ]; then       
+
   for isample in ${listsample[@]}
   do
+  for iaxis in ${listaxis[@]}
+  do
+  
+    thrust=${listthrust[$iaxis]}
+    wta=${listtwta[$iaxis]}
+    perp=${listtperp[$iaxis]}
+        
     for ietarejection in ${listetarejection[@]}
     do  
     for gen in ${listgen[@]}
@@ -56,11 +66,12 @@ if [ $DOCENTRAL -eq 1 ]; then
       mkdir $FOLDERPLOTS 
       rm $OUTPUTROOT
   
-      root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$mix\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${ietarejection}","${etathrustselection}")"
-      root -l -q -b "TPCPlots.cc+(\"$OUTPUTROOT\",\"$OUTPUTHISTO\",\"$OUTPUTPLOTS\")" 
-    done 
+      #root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$mix\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${ietarejection}","${etathrustselection}")"
+      #root -l -q -b "TPCPlots.cc+(\"$OUTPUTROOT\",\"$OUTPUTHISTO\",\"$OUTPUTPLOTS\")" 
+  done 
   done
   done
+  done 
 fi
 
 
