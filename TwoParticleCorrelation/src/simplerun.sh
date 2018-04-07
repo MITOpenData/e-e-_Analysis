@@ -7,13 +7,20 @@ overwrite=1
 thrust=0
 wta=1
 perp=0
-gen=0
 VERBOSE=1
 ajrej=0
 threejet=0
 ajrejcut=0
 threejetcut=0
 etathrustselection=2.0
+
+listsample=(0 1)
+listetarejection=(0 1 2)
+listgen=(0 1)
+
+################################################################
+#### dont change anything below this if you dont know what you are doing #### 
+################################################################
 
 #REGULAR ANALYSIS, CENTRAL VALUES
 AINPUT=( "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180322/LEP1Data1992_recons_aftercut-MERGED.root" "/data/cmcginn/StudyMultSamples/ALEPH/MC/20180323/alephMCRecoAfterCutPaths_1994.root" )
@@ -22,11 +29,13 @@ AOUTPUT=( "LEP1Data1992" "LEP1MC1994_20180323" )
 sleep .5 
 
 if [ $DOCENTRAL -eq 1 ]; then       
-  
-  for isample in 0 1
+  for isample in ${listsample[@]}
   do
-    for ietarejection in 0 1 2
+    for ietarejection in ${listetarejection[@]}
     do  
+    for gen in ${listgen[@]}
+    do  
+
       INPUTDATA=${AINPUT[$isample]}
       OUTPUT=${AOUTPUT[$isample]}
       
@@ -38,8 +47,8 @@ if [ $DOCENTRAL -eq 1 ]; then
   
       OUTPUTROOT=rootfiles/${suffix}.root
       OUTPUTHISTO=rootfiles/2PC_${suffix}.root
-      FOLDERPLOTS=plots/plots_${suffix}.root
-      OUTPUTPLOTS=$FOLDERPLOTS/${suffix}.root
+      FOLDERPLOTS=plots/plots_${suffix}
+      OUTPUTPLOTS=$FOLDERPLOTS/${suffix}
       echo $OUTPUTROOT
   
       rm $OUTPUTHISTO
@@ -50,6 +59,7 @@ if [ $DOCENTRAL -eq 1 ]; then
       root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$mix\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${ietarejection}","${etathrustselection}")"
       root -l -q -b "TPCPlots.cc+(\"$OUTPUTROOT\",\"$OUTPUTHISTO\",\"$OUTPUTPLOTS\")" 
     done 
+  done
   done
 fi
 
@@ -89,10 +99,8 @@ if [ $DOCOPYPLOTS -eq 1 ]; then
     cd ..
   done
   done  
-fi
-cd ..
-cd ..
- 
+  cd ..
+fi 
 
 function float_to_string()
 {
