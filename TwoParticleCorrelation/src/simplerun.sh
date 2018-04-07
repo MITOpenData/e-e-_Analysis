@@ -23,16 +23,16 @@ sleep .5
 
 if [ $DOCENTRAL -eq 1 ]; then       
   
-  for i in 0 1
+  for isample in 0 1
   do
-    for optionetasel in 0 1 2
+    for ietarejection in 0 1 2
     do  
-      INPUTDATA=${AINPUT[$i]}
-      OUTPUT=${AOUTPUT[$i]}
+      INPUTDATA=${AINPUT[$isample]}
+      OUTPUT=${AOUTPUT[$isample]}
       
       echo $INPUTDATA
       echo $OUTPUT
-      suffix=${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${optionetasel} ${etathrustselection})
+      suffix=${OUTPUT}_$(produce_postfix ${thrust} ${mix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${ietarejection} ${etathrustselection})
     
       sleep .5 
   
@@ -47,7 +47,7 @@ if [ $DOCENTRAL -eq 1 ]; then
       mkdir $FOLDERPLOTS 
       rm $OUTPUTROOT
   
-      root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$mix\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${optionetasel}","${etathrustselection}")"
+      root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$mix\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${ietarejection}","${etathrustselection}")"
       root -l -q -b "TPCPlots.cc+(\"$OUTPUTROOT\",\"$OUTPUTHISTO\",\"$OUTPUTPLOTS\")" 
     done 
   done
