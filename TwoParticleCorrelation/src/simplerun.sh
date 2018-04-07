@@ -26,9 +26,8 @@ activateetacut=(0 1 1 1 1)
 
 listthirdjetcut=(0 0.05 0.1 0.3) 
 activatethirdjetcut=(0 1 1 1) 
-
-ajrejcut=0.0
-ajrej=0
+listactivateajrej=(0 1 1 1) 
+listajrejcut=(0 0.1 0.1 0.1) 
 
 #REGULAR ANALYSIS, CENTRAL VALUES
 AINPUT=( "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180322/LEP1Data1992_recons_aftercut-MERGED.root" "/data/cmcginn/StudyMultSamples/ALEPH/MC/20180323/alephMCRecoAfterCutPaths_1994.root" )
@@ -64,11 +63,8 @@ if [ $DOCENTRAL -eq 1 ]; then
             do 
               threejetcut=${listthirdjetcut[$ithird]}
               threejet=${activatethirdjetcut[$ithird]}
-
-              if [ $threejet -eq 1 ]; then 
-                ajrej=1
-                ajrejcut=0.1
-              fi
+              ajrejcut=${listajrejcut[$ithird]}
+              ajrej=${listactivateajrej[$ithird]}
         
               echo "loop"
               INPUTDATA=${AINPUT[$isample]}
