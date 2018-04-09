@@ -33,6 +33,33 @@ listajrejcut=(0 0.1 0.1 0.1)
 AINPUT=( "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180322/LEP1Data1992_recons_aftercut-MERGED.root" "/data/cmcginn/StudyMultSamples/ALEPH/MC/20180323/alephMCRecoAfterCutPaths_1994.root" )
 AOUTPUT=( "LEP1Data1992" "LEP1MC1994_20180323" )
 
+function float_to_string()
+{
+    if [[ $# -ne 1 ]]
+    then
+        echo -e "${ERRCOLOR}error:${NC} invalid argument number - float_to_string()"
+        return 1
+    fi
+    part1=`echo $1 | awk -F "." '{print $1}'`
+    part2=`echo $1 | awk -F "." '{print $2}'`
+    rt_float_to_string=${part1:-0}p${part2:-0}
+    echo $rt_float_to_string
+}
+
+function produce_postfix()
+{
+    if [[ $# -ne 11 ]]
+    then
+        echo -e "\033[1;31merror:${NC} invalid argument number - produce_postfix()"
+        return 1
+    fi
+
+    echo thrust${1}_mix${2}_wta${3}_perp${4}_gen${5}_ajrej${6}_ajrejcut$(float_to_string ${7})_threejet${8}_threejetcut$(float_to_string ${9})_optionetasel${10}_etacut$(float_to_string ${11})
+}
+
+
+
+
 sleep .5 
 
 if [ $DOCENTRAL -eq 1 ]; then       
@@ -126,28 +153,3 @@ if [ $DOCOPYPLOTS -eq 1 ]; then
   done  
   cd ..
 fi 
-
-function float_to_string()
-{
-    if [[ $# -ne 1 ]]
-    then
-        echo -e "${ERRCOLOR}error:${NC} invalid argument number - float_to_string()"
-        return 1
-    fi
-    part1=`echo $1 | awk -F "." '{print $1}'`
-    part2=`echo $1 | awk -F "." '{print $2}'`
-    rt_float_to_string=${part1:-0}p${part2:-0}
-    echo $rt_float_to_string
-}
-
-function produce_postfix()
-{
-    if [[ $# -ne 11 ]]
-    then
-        echo -e "\033[1;31merror:${NC} invalid argument number - produce_postfix()"
-        return 1
-    fi
-
-    echo thrust${1}_mix${2}_wta${3}_perp${4}_gen${5}_ajrej${6}_ajrejcut$(float_to_string ${7})_threejet${8}_threejetcut$(float_to_string ${9})_optionetasel${10}_etacut$(float_to_string ${11})
-}
-
