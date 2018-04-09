@@ -1,12 +1,12 @@
 DOCENTRAL=1
 DOSTUDYVSDIJET=0
-DOCOPYPLOTS=0
+DOCOPYPLOTS=1
 
 mix="0"
 overwrite=1
 VERBOSE=1
 
-listsample=(0) #0=data, 1=mc
+listsample=(1) #0=data, 1=mc
 listetaselection=(4) #from this list of values (0 0.3 0.5 1.0 2.0) 
 listgen=(0 1) #0=no gen selection, 1=gen selection
 listaxis=(1) #0=beam, 1=thrust, 2=wta, 3=thrust perp, 4 =wta perp 
