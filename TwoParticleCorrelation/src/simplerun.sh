@@ -73,13 +73,16 @@ if [ $DOCENTRAL -eq 1 ]; then
       
       for gen in ${listgen[@]}
         do  
-        
+        if [ $isample -eq 0 and $gen -eq 1  ]; then       
+        continue
+        fi
+
         for ietacut in ${listetaselection[@]}
           do 
           etacut=${listetacuts[$ietacut]}
           acivateetacut=${activateetacut[$ietacut]}
           
-          if [ $acivateetacut -eq 1 ]; then netaselection=(0 1 2)
+          if [ $acivateetacut -eq 1 ]; then netaselection=(1 2)
           else netaselection=(0)
           fi
     
