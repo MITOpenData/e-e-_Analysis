@@ -73,7 +73,7 @@ if [ $DOCENTRAL -eq 1 ]; then
       
       for gen in ${listgen[@]}
         do  
-        if [ $isample -eq 0 and $gen -eq 1  ]; then       
+        if [ $isample -eq 0 -a $gen -eq 1  ]; then       
         continue
         fi
 
