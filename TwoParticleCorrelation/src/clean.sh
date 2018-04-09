@@ -1,4 +1,3 @@
-rm rootfiles/*.root
 rm *.d
 rm *.so
 rm *.pcm
