@@ -6,11 +6,11 @@ mix="0"
 overwrite=1
 VERBOSE=1
 
-listsample=(0 1) #0=data, 1=mc
-listetaselection=(0 1 2 3 4) #from this list of values (0 0.3 0.5 1.0 2.0) 
+listsample=(0) #0=data, 1=mc
+listetaselection=(4) #from this list of values (0 0.3 0.5 1.0 2.0) 
 listgen=(0 1) #0=no gen selection, 1=gen selection
 listaxis=(1) #0=beam, 1=thrust, 2=wta, 3=thrust perp, 4 =wta perp 
-listthirdjet=(0 1) #from this list of values (0 0.05 0.1 0.3) 
+listthirdjet=(0 1 2 3) #from this list of values (0 0.05 0.1 0.3) 
 
 ################################################################
 #### dont change anything below this if you dont know what you are doing #### 
