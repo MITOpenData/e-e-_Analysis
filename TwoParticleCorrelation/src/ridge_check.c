@@ -457,8 +457,8 @@ int ridge_check( const std::string inFileName, 		// Input file
                 {
                     // decide if valid track
                     if (!trackSelector.highPurity(&mix.particle,k)&&s.doGen==0) continue;
-                    if (optionThrustSelection==1 && fabs(data.getEta(k))<etathrustselection) continue;
-                    if (optionThrustSelection==2 && fabs(data.getEta(k))>etathrustselection) continue;
+                    if (optionThrustSelection==1 && fabs(mix.getEta(k))<etathrustselection) continue;
+                    if (optionThrustSelection==2 && fabs(mix.getEta(k))>etathrustselection) continue;
                     // Check if the second particle is in the same range of pt and eta    
                     std::vector<Int_t> histPt_bkg2;
 		    s.histPt(histPt_bkg2, mix.getPt(k));
