@@ -135,11 +135,22 @@ class Selection
         Float_t missPCut_pp = 20;
         Float_t etaPlotRange_pp = 6.0;
         
-    
+        /*Selection of the barrel region*/
+        
+        enum listtypemultiplicity{ kMultAllEvent, kMultInBarrelThrust, kMultOutBarrelThrust};
+        enum listtypeEnergyBarrelThrustSel{ kNoEBarrelThrustSel, kEInBarrelThrustSel, kEOutBarrelThrustSel};
+        enum listanalysisregion{ kAnaTypeAllDetector, kAnaTypeInBarrelThrust, kAnaTypeOutBarrelThrust};
+        
+        int typemultiplicity=kMultAllEvent;
+        int typeEnergyBarrelSel=kNoEBarrelThrustSel;
+        int anatyperegion=kAnaTypeInBarrelThrust;
+	    double maxrelenergyinsidebarrel=0.;        
+	    double etabarrelcut=-1;
+
         Selection();
         Float_t getEtaPlotRange();
         Float_t getDifferential();
-        int ridge_eventSelection(eventData *event, jetData *jet, particleData *particle, bool, double, double);
+        int ridge_eventSelection(eventData *event, jetData *jet, particleData *particle);
         bool isMixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta, Float_t jteta_mix, Float_t TTheta, Float_t TTheta_mix, Float_t TPhi, Float_t TPhi_mix);
         void histEnergy(std::vector<Int_t> &hists, Float_t Energy);
         void histNtrk(std::vector<Int_t> &hists, Int_t N);
@@ -225,7 +236,7 @@ int Selection::ridge_trackSelection(Int_t j)
 
 
 /////// MUST UPDATE THE EVENT SELECTION BASED ON AXIS/THE 1990 PAPER/////////
-int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData *particle, bool applyEbarrelcut=false, double maxrelenergyinsidebarrel=0.2, double Ebarreletacut=2.0)
+int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData *particle)
 {
     if (doGen) return particle->nParticle;
     ///////// QCD Paper Selection /////////
@@ -278,7 +289,7 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
     
     ///////////// barrel energy cut //////////////
     
-    if(applyEbarrelcut){
+    if(typeEnergyBarrelSel==1){
       double totalenergy=0.;
       double totalenergyinbarrel=0.;
     
@@ -286,7 +297,7 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
         if (trackSelector.highPurity(particle,j) || neutralHadronSelector.highPurity(particle,j)){
           totalenergy += sqrt(particle->pmag[j]*particle->pmag[j] + particle->mass[j]*particle->mass[j]);
           //std::cout<<"eta"<<particle->eta_wrtThr[j]<<std::endl;
-          if(fabs(particle->eta_wrtThr[j])<Ebarreletacut){
+          if(fabs(particle->eta_wrtThr[j])<etabarrelcut){
             totalenergyinbarrel += sqrt(particle->pmag[j]*particle->pmag[j] + particle->mass[j]*particle->mass[j]);
           }
         }

@@ -64,10 +64,12 @@ int ridge_check( const std::string inFileName, 		// Input file
 		       double _AjCut=-999,     // dijet  cut selection
 		       bool ow3jetEvtCut=false,      // three jet selection flag
 		       double _thirdJetCut=-999,     // three jet cut selection
-		       int optionThrustSelection=0,  // option==0 -> no eta selection on tracks, option==1 -> reject the tracks at small rapidity, option==2 -> reject the tracks at large rapidity
-		       double etabarrelselection=-1,
-		       bool applyEbarrelcut=false,
-		       double maxrelenergyinsidebarrel=0.
+		       bool owBarrel = false,            // overwrite the values related to barrel selection and barrel multiplicity 
+		       int _anatyperegion=0,  // option==0 -> no eta selection on tracks, option==1 -> reject the tracks at small rapidity, option==2 -> reject the tracks at large rapidity
+		       double _etabarrelcut=-1,
+		       int _typeEnergyBarrelSel=false,
+		       double _maxrelenergyinsidebarrel=0.,
+		       int _typemultiplicity=0
                ) 
 {
 
@@ -80,7 +82,13 @@ int ridge_check( const std::string inFileName, 		// Input file
    cout<<"_AjCut="<<_AjCut<<endl;
    cout<<"ow3jetEvtCut="<<ow3jetEvtCut<<endl;
    cout<<"_thirdJetCut="<<_thirdJetCut<<endl;
-   cout<<"applyEbarrelcut="<<applyEbarrelcut<<endl;
+   cout<<"owBarrel="<<owBarrel<<endl;
+   cout<<"_anatyperegion="<<_anatyperegion<<endl;
+   cout<<"_etabarrelcut="<<_etabarrelcut<<endl;
+   cout<<"_typeEnergyBarrelSel="<<_typeEnergyBarrelSel<<endl;
+   cout<<"_maxrelenergyinsidebarrel="<<_maxrelenergyinsidebarrel<<endl;
+   cout<<"_typemultiplicity="<<_typemultiplicity<<endl;
+   
 
     // ROOT Global setting
     TH1::SetDefaultSumw2();    TH2::SetDefaultSumw2();
@@ -105,6 +113,13 @@ int ridge_check( const std::string inFileName, 		// Input file
        else s.doAjCut = false;
        if (ow3jetEvtCut) {s.do3jetEvtCut = true; s.thirdJetCut=_thirdJetCut;}
        else s.do3jetEvtCut = false;
+       if (owBarrel){
+         s.anatyperegion=_anatyperegion;
+         s.etabarrelcut=_etabarrelcut;
+         s.typeEnergyBarrelSel=_typeEnergyBarrelSel;
+         s.maxrelenergyinsidebarrel=_maxrelenergyinsidebarrel;
+         s.typemultiplicity=_typemultiplicity;
+       }
     }
     
     
@@ -116,6 +131,13 @@ int ridge_check( const std::string inFileName, 		// Input file
       if ((s.doThrust||s.doWTA) && s.doPerp) cout <<"Reference axis rotated by 90 degree"<<endl;
       if (s.do3jetEvtCut) 	cout <<"Applying three jet rejection with value="<<s.thirdJetCut<<endl;
       if (s.doGen) cout <<"This is a generator level analysis, i.e., no track or event selection applied!"<<endl;    
+      if (owBarrel){
+        cout <<"you are modifying the parameters of the barrel selection"<<endl;    
+        cout<<"_anatyperegion="<<s.anatyperegion<<endl;
+        cout<<"_etabarrelcut="<<s.etabarrelcut<<endl;
+        cout<<"_typeEnergyBarrelSel="<<s.typeEnergyBarrelSel<<endl;
+        cout<<"_maxrelenergyinsidebarrel="<<s.maxrelenergyinsidebarrel<<endl;
+        }
     }
     
     /********************************************************************************************************************/
@@ -272,6 +294,7 @@ int ridge_check( const std::string inFileName, 		// Input file
     /********************************************************************************************************************/
     // Main Event Loop
     /********************************************************************************************************************/
+    //nevent=5000;
     for (Int_t i=0;i<nevent;i++) {
         t->GetEntry(i); 
         boost_t->GetEntry(i);
@@ -280,7 +303,7 @@ int ridge_check( const std::string inFileName, 		// Input file
         Bar.PrintWithMod(entryDiv);
         
         // nTrk calculation
-        Int_t nTrk = s.ridge_eventSelection(&data.event, &data.jet, &data.particle,applyEbarrelcut,maxrelenergyinsidebarrel,etabarrelselection);
+        Int_t nTrk = s.ridge_eventSelection(&data.event, &data.jet, &data.particle);
 	
         if( nTrk < 0) continue;
         //std::cout<<data.RunNo<<","<<data.EventNo<<std::endl;
@@ -318,8 +341,8 @@ int ridge_check( const std::string inFileName, 		// Input file
             h_theta->Fill(data.getTheta(j));
             h_pt->Fill(data.getPt(j));
 
-            if (optionThrustSelection==1 && fabs(data.getEta(j))<etabarrelselection) continue;
-            if (optionThrustSelection==2 && fabs(data.getEta(j))>etabarrelselection) continue;
+            if (s.anatyperegion==1 && fabs(data.getEta(j))<s.etabarrelcut) continue;
+            if (s.anatyperegion==2 && fabs(data.getEta(j))>s.etabarrelcut) continue;
 
             // Decide which pt and eta range to fill
             std::vector<Int_t> histPt1;
@@ -336,8 +359,8 @@ int ridge_check( const std::string inFileName, 		// Input file
             for ( Int_t k=j+1;k<data.particle.nParticle;k++ )
             {
 		if (!trackSelector.highPurity(&data.particle,k)&&s.doGen==0) continue;
-        if (optionThrustSelection==1 && fabs(data.getEta(k))<etabarrelselection) continue;
-        if (optionThrustSelection==2 && fabs(data.getEta(k))>etabarrelselection) continue;
+        if (s.anatyperegion==1 && fabs(data.getEta(k))<s.etabarrelcut) continue;
+        if (s.anatyperegion==2 && fabs(data.getEta(k))>s.etabarrelcut) continue;
 
 	    
                 // Check if the second particle is in the same range of pt and eta 
@@ -394,7 +417,7 @@ int ridge_check( const std::string inFileName, 		// Input file
             Int_t nTrk_mix=nTrk;
 	    
 	    // Yen-Jie: if we use mixed file, we assume the mixed event has nTrk since the calculated nTrk_mix from mixed event doesn't work.. 
-            if(!doMixFile) nTrk_mix = s.ridge_eventSelection(&mix.event, &mix.jet, &mix.particle,applyEbarrelcut,maxrelenergyinsidebarrel,etabarrelselection);
+            if(!doMixFile) nTrk_mix = s.ridge_eventSelection(&mix.event, &mix.jet, &mix.particle);
 
             // find the event nTrk histogram(s)
             std::vector<Int_t> histNtrk_mix;
@@ -418,7 +441,7 @@ int ridge_check( const std::string inFileName, 		// Input file
                 boost_t_mix->GetEntry(selected);
                 jt_mix->GetEntry(selected);
                 
-                if(!s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(&mix.event, &mix.jet, &mix.particle,applyEbarrelcut,maxrelenergyinsidebarrel,etabarrelselection);
+                if(!s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(&mix.event, &mix.jet, &mix.particle);
                 // find the event nTrk histogram(s)
                 s.histNtrk(histNtrk_mix, nTrk_mix);
                 // loop over the background event nTrk histos and determine if the signal event has the same histos. If yes then leave the entry. If no then remove the entry from histNtrk_mix. 
@@ -440,8 +463,8 @@ int ridge_check( const std::string inFileName, 		// Input file
             {
                 // decide if valid track
                 if (!trackSelector.highPurity(&data.particle,j)&&s.doGen==0) continue;
-                if (optionThrustSelection==1 && fabs(data.getEta(j))<etabarrelselection) continue;
-                if (optionThrustSelection==2 && fabs(data.getEta(j))>etabarrelselection) continue;
+                if (s.anatyperegion==1 && fabs(data.getEta(j))<s.etabarrelcut) continue;
+                if (s.anatyperegion==2 && fabs(data.getEta(j))>s.etabarrelcut) continue;
                 
                 // Decide which pt and eta range to fill
                 std::vector<Int_t> histPt_bkg1;
@@ -460,8 +483,8 @@ int ridge_check( const std::string inFileName, 		// Input file
                 {
                     // decide if valid track
                     if (!trackSelector.highPurity(&mix.particle,k)&&s.doGen==0) continue;
-                    if (optionThrustSelection==1 && fabs(mix.getEta(k))<etabarrelselection) continue;
-                    if (optionThrustSelection==2 && fabs(mix.getEta(k))>etabarrelselection) continue;
+                    if (s.anatyperegion==1 && fabs(mix.getEta(k))<s.etabarrelcut) continue;
+                    if (s.anatyperegion==2 && fabs(mix.getEta(k))>s.etabarrelcut) continue;
                     // Check if the second particle is in the same range of pt and eta    
                     std::vector<Int_t> histPt_bkg2;
 		    s.histPt(histPt_bkg2, mix.getPt(k));
