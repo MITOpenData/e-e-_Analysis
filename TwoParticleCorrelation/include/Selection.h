@@ -137,7 +137,7 @@ class Selection
         
         /*Selection of the barrel region*/
         
-        enum listtypemultiplicity{ kMultAllEvent, kMultInBarrelThrust, kMultOutBarrelThrust};
+        enum listtypemultiplicity{ kMultAllEvent, kMultInBarrelThrust};
         enum listtypeEnergyBarrelThrustSel{ kNoEBarrelThrustSel, kEInBarrelThrustSel, kEOutBarrelThrustSel};
         enum listanalysisregion{ kAnaTypeAllDetector, kAnaTypeInBarrelThrust, kAnaTypeOutBarrelThrust};
         
@@ -249,6 +249,7 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
     if (doSTheta && TMath::Abs(cos(event->STheta))>=SThetaMax) return -1;
 
     // From 1990 "Properties of Hadronic Events in e+e- Annihilation at sqrt(s) = 91 GeV" ALEPH Collaboration paper
+    Int_t returnNch=-1;
     Int_t Nch = 0;
     Int_t Neu = 0;
     Float_t E = 0;
@@ -308,7 +309,20 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
       if (typeEnergyBarrelSel==2 && totalenergyinbarrel/totalenergy<maxrelenergyinsidebarrel) return -1;
     }
     
-    return Nch;
+    returnNch=Nch;
+    
+    if (typemultiplicity==kMultInBarrelThrust) {
+    Int_t NchBarrel = 0;
+      for (Int_t j=0;j<particle->nParticle;j++) {
+        if (trackSelector.highPurity(particle,j)){
+          if(fabs(particle->eta_wrtThr[j])<etabarrelcutforEselection){
+            NchBarrel++;
+          }
+        }  
+     }
+     returnNch=NchBarrel;
+   }
+   return returnNch;
 }
 
 // return true if the event passes the criteria for a mixed event

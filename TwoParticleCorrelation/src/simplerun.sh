@@ -9,8 +9,8 @@ owbarrel=1
 VERBOSE=1
 
 typeEnergyBarrelSel=1
-maxrelenergyinsidebarrel=0.15 
-typemultiplicity=0
+maxrelenergyinsidebarrel=0.6
+typemultiplicity=1
 etabarrelcutforEselection=2.0
 
 listsample=(0) #0=data, 1=mc
