@@ -2,12 +2,17 @@ DOCENTRAL=1
 DOSTUDYVSDIJET=0
 DOCOPYPLOTS=1
 
-domix=1
+domix=0
 overwrite=1
 VERBOSE=1
 
+
+applyEbarrelcut=1
+maxrelenergyinsidebarrel=1.0 
+Ebarreletacut=2.0
+
 listsample=(0) #0=data, 1=mc
-listetaselection=(0) #from this list of values (0 0.3 0.5 1.0 2.0) 
+listetaselection=(4) #from this list of values (0 0.3 0.5 1.0 2.0) 
 listgen=(0) #0=no gen selection, 1=gen selection
 listaxis=(1) #0=beam, 1=thrust, 2=wta, 3=thrust perp, 4 =wta perp 
 listthirdjet=(0) #from this list of values (0 0.05 0.1 0.3) 
@@ -49,13 +54,13 @@ function float_to_string()
 
 function produce_postfix()
 {
-    if [[ $# -ne 11 ]]
+    if [[ $# -ne 14 ]]
     then
         echo -e "\033[1;31merror:${NC} invalid argument number - produce_postfix()"
         return 1
     fi
 
-    echo thrust${1}_mix${2}_wta${3}_perp${4}_gen${5}_ajrej${6}_ajrejcut$(float_to_string ${7})_threejet${8}_threejetcut$(float_to_string ${9})_optionetasel${10}_etacut$(float_to_string ${11})
+    echo thrust${1}_mix${2}_wta${3}_perp${4}_gen${5}_ajrej${6}_ajrejcut$(float_to_string ${7})_threejet${8}_threejetcut$(float_to_string ${9})_optionetasel${10}_etacut$(float_to_string ${11})_applyEbarrelcut${12}_maxrelenergyinsidebarrel$(float_to_string ${13})_Ebarreletacut$(float_to_string ${14})
 }
 
 
@@ -106,7 +111,7 @@ if [ $DOCENTRAL -eq 1 ]; then
               
                OUTPUT=${AOUTPUT[$isample]}
                            
-              suffix=${OUTPUT}_$(produce_postfix ${thrust} ${domix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${etacutoption} ${etacut})
+              suffix=${OUTPUT}_$(produce_postfix ${thrust} ${domix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${etacutoption} ${etacut} ${applyEbarrelcut} ${maxrelenergyinsidebarrel} ${Ebarreletacut})
               sleep .5  
               OUTPUTROOT=rootfiles/${suffix}.root
               OUTPUTHISTO=rootfiles/2PC_${suffix}.root
@@ -117,7 +122,7 @@ if [ $DOCENTRAL -eq 1 ]; then
               rm -rf $FOLDERPLOTS
               mkdir $FOLDERPLOTS 
               rm $OUTPUTROOT
-              root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$INPUTDATAMIX\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${etacutoption}","${etacut}")"
+              root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$INPUTDATAMIX\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${etacutoption}","${etacut}","${applyEbarrelcut}","${maxrelenergyinsidebarrel}","${Ebarreletacut}")"
               root -l -q -b "TPCPlots.cc+(\"$OUTPUTROOT\",\"$OUTPUTHISTO\",\"$OUTPUTPLOTS\")" 
               done # with three jets
             done # with eta cut option

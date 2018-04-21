@@ -134,11 +134,12 @@ class Selection
         Float_t etaBinsLow_pp[netaBins_pp]  = {4.5,5.0};
         Float_t missPCut_pp = 20;
         Float_t etaPlotRange_pp = 6.0;
+        
     
         Selection();
         Float_t getEtaPlotRange();
         Float_t getDifferential();
-        int ridge_eventSelection(eventData *event, jetData *jet, particleData *particle);
+        int ridge_eventSelection(eventData *event, jetData *jet, particleData *particle, bool, double, double);
         bool isMixedEvent(Int_t nParticle, Int_t nParticle_mix, Float_t jteta, Float_t jteta_mix, Float_t TTheta, Float_t TTheta_mix, Float_t TPhi, Float_t TPhi_mix);
         void histEnergy(std::vector<Int_t> &hists, Float_t Energy);
         void histNtrk(std::vector<Int_t> &hists, Int_t N);
@@ -224,7 +225,7 @@ int Selection::ridge_trackSelection(Int_t j)
 
 
 /////// MUST UPDATE THE EVENT SELECTION BASED ON AXIS/THE 1990 PAPER/////////
-int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData *particle)
+int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData *particle, bool applyEbarrelcut=false, double maxrelenergyinsidebarrel=0.2, double Ebarreletacut=2.0)
 {
     if (doGen) return particle->nParticle;
     ///////// QCD Paper Selection /////////
@@ -273,6 +274,25 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
        if(doAjCut && fillAj > AjCut) return -1;
        // require 3rd jet has low momentum relative to first two jets (take average momentum of jet 1 and 2)
        if(do3jetEvtCut && jet->nref > 2 && (2*jtp(jet->jtpt[2],jet->jteta[2]) / j12) > thirdJetCut ) return -1;
+    }
+    
+    ///////////// barrel energy cut //////////////
+    
+    if(applyEbarrelcut){
+      double totalenergy=0.;
+      double totalenergyinbarrel=0.;
+    
+      for (Int_t j=0;j<particle->nParticle;j++) {
+        if (trackSelector.highPurity(particle,j) || neutralHadronSelector.highPurity(particle,j)){
+          totalenergy += sqrt(particle->pmag[j]*particle->pmag[j] + particle->mass[j]*particle->mass[j]);
+          //std::cout<<"eta"<<particle->eta_wrtThr[j]<<std::endl;
+          if(fabs(particle->eta_wrtThr[j])<Ebarreletacut){
+            totalenergyinbarrel += sqrt(particle->pmag[j]*particle->pmag[j] + particle->mass[j]*particle->mass[j]);
+          }
+        }
+      }
+      //std::cout<<"ratio"<<totalenergyinbarrel/totalenergy<<std::endl;
+      if (totalenergyinbarrel/totalenergy>maxrelenergyinsidebarrel) return -1;
     }
     
     return Nch;
