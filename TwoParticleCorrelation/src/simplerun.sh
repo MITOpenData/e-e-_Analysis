@@ -54,13 +54,13 @@ function float_to_string()
 
 function produce_postfix()
 {
-    if [[ $# -ne 14 ]]
+    if [[ $# -ne 13 ]]
     then
         echo -e "\033[1;31merror:${NC} invalid argument number - produce_postfix()"
         return 1
     fi
 
-    echo thrust${1}_mix${2}_wta${3}_perp${4}_gen${5}_ajrej${6}_ajrejcut$(float_to_string ${7})_threejet${8}_threejetcut$(float_to_string ${9})_optionetasel${10}_etacut$(float_to_string ${11})_applyEbarrelcut${12}_maxrelenergyinsidebarrel$(float_to_string ${13})_Ebarreletacut$(float_to_string ${14})
+    echo thrust${1}_mix${2}_wta${3}_perp${4}_gen${5}_ajrej${6}_ajrejcut$(float_to_string ${7})_threejet${8}_threejetcut$(float_to_string ${9})_optionetasel${10}_etacut$(float_to_string ${11})_applyEbarrelcut${12}_maxrelenergyinsidebarrel$(float_to_string ${13})
 }
 
 
@@ -111,7 +111,7 @@ if [ $DOCENTRAL -eq 1 ]; then
               
                OUTPUT=${AOUTPUT[$isample]}
                            
-              suffix=${OUTPUT}_$(produce_postfix ${thrust} ${domix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${etacutoption} ${etacut} ${applyEbarrelcut} ${maxrelenergyinsidebarrel} ${Ebarreletacut})
+              suffix=${OUTPUT}_$(produce_postfix ${thrust} ${domix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${etacutoption} ${etacut} ${applyEbarrelcut} ${maxrelenergyinsidebarrel})
               sleep .5  
               OUTPUTROOT=rootfiles/${suffix}.root
               OUTPUTHISTO=rootfiles/2PC_${suffix}.root
@@ -122,7 +122,7 @@ if [ $DOCENTRAL -eq 1 ]; then
               rm -rf $FOLDERPLOTS
               mkdir $FOLDERPLOTS 
               rm $OUTPUTROOT
-              root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$INPUTDATAMIX\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${etacutoption}","${etacut}","${applyEbarrelcut}","${maxrelenergyinsidebarrel}","${Ebarreletacut}")"
+              root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$INPUTDATAMIX\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${etacutoption}","${etacut}","${applyEbarrelcut}","${maxrelenergyinsidebarrel}")"
               root -l -q -b "TPCPlots.cc+(\"$OUTPUTROOT\",\"$OUTPUTHISTO\",\"$OUTPUTPLOTS\")" 
               done # with three jets
             done # with eta cut option
