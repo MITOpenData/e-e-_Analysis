@@ -290,7 +290,7 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
     
     ///////////// barrel energy cut //////////////
     
-    if(typeEnergyBarrelSel==1){
+    if(typeEnergyBarrelSel==1 || typeEnergyBarrelSel==2){
       double totalenergy=0.;
       double totalenergyinbarrel=0.;
     
@@ -304,7 +304,8 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
         }
       }
       //std::cout<<"ratio"<<totalenergyinbarrel/totalenergy<<std::endl;
-      if (totalenergyinbarrel/totalenergy>maxrelenergyinsidebarrel) return -1;
+      if (typeEnergyBarrelSel==1 && totalenergyinbarrel/totalenergy>maxrelenergyinsidebarrel) return -1;
+      if (typeEnergyBarrelSel==2 && totalenergyinbarrel/totalenergy<maxrelenergyinsidebarrel) return -1;
     }
     
     return Nch;

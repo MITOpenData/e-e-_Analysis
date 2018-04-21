@@ -14,7 +14,7 @@ typemultiplicity=0
 etabarrelcutforEselection=2.0
 
 listsample=(0) #0=data, 1=mc
-listetaselection=(0 4) #from this list of values (0 0.3 0.5 1.0 2.0) 
+listetaselection=(4) #from this list of values (0 0.3 0.5 1.0 2.0) 
 listgen=(0) #0=no gen selection, 1=gen selection
 listaxis=(1) #0=beam, 1=thrust, 2=wta, 3=thrust perp, 4 =wta perp 
 listthirdjet=(0) #from this list of values (0 0.05 0.1 0.3) 
@@ -90,7 +90,7 @@ if [ $DOCENTRAL -eq 1 ]; then
           etabarrelcut=${listetacuts[$ietacut]}
           acivateetacut=${activateetacut[$ietacut]}
           
-          if [ $acivateetacut -eq 1 ]; then netaselection=(1 2)
+          if [ $acivateetacut -eq 1 ]; then netaselection=(2)
           else netaselection=(0)
           fi
     
