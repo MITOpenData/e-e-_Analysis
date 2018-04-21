@@ -68,6 +68,7 @@ int ridge_check( const std::string inFileName, 		// Input file
 		       int _anatyperegion=0,  // option==0 -> no eta selection on tracks, option==1 -> reject the tracks at small rapidity, option==2 -> reject the tracks at large rapidity
 		       double _etabarrelcut=-1,
 		       int _typeEnergyBarrelSel=false,
+		       double _etabarrelcutforEselection=2.0,
 		       double _maxrelenergyinsidebarrel=0.,
 		       int _typemultiplicity=0
                ) 
@@ -86,6 +87,7 @@ int ridge_check( const std::string inFileName, 		// Input file
    cout<<"_anatyperegion="<<_anatyperegion<<endl;
    cout<<"_etabarrelcut="<<_etabarrelcut<<endl;
    cout<<"_typeEnergyBarrelSel="<<_typeEnergyBarrelSel<<endl;
+   cout<<"_etabarrelcutforEselection="<<_etabarrelcutforEselection<<endl;
    cout<<"_maxrelenergyinsidebarrel="<<_maxrelenergyinsidebarrel<<endl;
    cout<<"_typemultiplicity="<<_typemultiplicity<<endl;
    
@@ -117,6 +119,7 @@ int ridge_check( const std::string inFileName, 		// Input file
          s.anatyperegion=_anatyperegion;
          s.etabarrelcut=_etabarrelcut;
          s.typeEnergyBarrelSel=_typeEnergyBarrelSel;
+         s.etabarrelcutforEselection=_etabarrelcutforEselection;
          s.maxrelenergyinsidebarrel=_maxrelenergyinsidebarrel;
          s.typemultiplicity=_typemultiplicity;
        }
@@ -136,6 +139,7 @@ int ridge_check( const std::string inFileName, 		// Input file
         cout<<"_anatyperegion="<<s.anatyperegion<<endl;
         cout<<"_etabarrelcut="<<s.etabarrelcut<<endl;
         cout<<"_typeEnergyBarrelSel="<<s.typeEnergyBarrelSel<<endl;
+        cout<<"_etabarrelcutforEselection="<<s.etabarrelcutforEselection<<endl;
         cout<<"_maxrelenergyinsidebarrel="<<s.maxrelenergyinsidebarrel<<endl;
         }
     }

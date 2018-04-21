@@ -146,6 +146,7 @@ class Selection
         int anatyperegion=kAnaTypeInBarrelThrust;
 	    double maxrelenergyinsidebarrel=0.;        
 	    double etabarrelcut=-1;
+	    double etabarrelcutforEselection=2.0;
 
         Selection();
         Float_t getEtaPlotRange();
@@ -297,7 +298,7 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
         if (trackSelector.highPurity(particle,j) || neutralHadronSelector.highPurity(particle,j)){
           totalenergy += sqrt(particle->pmag[j]*particle->pmag[j] + particle->mass[j]*particle->mass[j]);
           //std::cout<<"eta"<<particle->eta_wrtThr[j]<<std::endl;
-          if(fabs(particle->eta_wrtThr[j])<etabarrelcut){
+          if(fabs(particle->eta_wrtThr[j])<etabarrelcutforEselection){
             totalenergyinbarrel += sqrt(particle->pmag[j]*particle->pmag[j] + particle->mass[j]*particle->mass[j]);
           }
         }

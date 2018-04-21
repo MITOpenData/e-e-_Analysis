@@ -8,10 +8,10 @@ owbarrel=1
 
 VERBOSE=1
 
-anatyperegion=0
-typeEnergyBarrelSel=0
-maxrelenergyinsidebarrel=0.0
+typeEnergyBarrelSel=1
+maxrelenergyinsidebarrel=0.15 
 typemultiplicity=0
+etabarrelcutforEselection=2.0
 
 listsample=(0) #0=data, 1=mc
 listetaselection=(0 4) #from this list of values (0 0.3 0.5 1.0 2.0) 
@@ -56,13 +56,13 @@ function float_to_string()
 
 function produce_postfix()
 {
-    if [[ $# -ne 15 ]]
+    if [[ $# -ne 16 ]]
     then
         echo -e "\033[1;31merror:${NC} invalid argument number - produce_postfix()"
         return 1
     fi
 
-    echo thrust${1}_mix${2}_wta${3}_perp${4}_gen${5}_ajrej${6}_ajrejcut$(float_to_string ${7})_threejet${8}_threejetcut$(float_to_string ${9})_owbarrel${10}_anatyperegion${11}_etabarrelcut$(float_to_string ${12})_typeEnergyBarrelSel${13}_maxrelenergyinsidebarrel$(float_to_string ${14}_typemultiplicity${15})
+    echo thrust${1}_mix${2}_wta${3}_perp${4}_gen${5}_ajrej${6}_ajrejcut$(float_to_string ${7})_threejet${8}_threejetcut$(float_to_string ${9})_owbarrel${10}_anatyperegion${11}_etabarrelcut$(float_to_string ${12})_typeEnergyBarrelSel${13}_etabarrelcutforEselection$(float_to_string ${14})_maxrelenergyinsidebarrel$(float_to_string ${15})_typemultiplicity${16}
 }
 
 
@@ -112,7 +112,7 @@ if [ $DOCENTRAL -eq 1 ]; then
               fi
               
                OUTPUT=${AOUTPUT[$isample]}                           
-              suffix=${OUTPUT}_$(produce_postfix ${thrust} ${domix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${owbarrel} ${anatyperegion} ${etabarrelcut} ${typeEnergyBarrelSel} ${maxrelenergyinsidebarrel} ${typemultiplicity})
+              suffix=${OUTPUT}_$(produce_postfix ${thrust} ${domix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${owbarrel} ${anatyperegion} ${etabarrelcut} ${typeEnergyBarrelSel} ${etabarrelcutforEselection} ${maxrelenergyinsidebarrel} ${typemultiplicity})
               sleep .5  
               OUTPUTROOT=rootfiles/${suffix}.root
               OUTPUTHISTO=rootfiles/2PC_${suffix}.root
@@ -123,7 +123,7 @@ if [ $DOCENTRAL -eq 1 ]; then
               rm -rf $FOLDERPLOTS
               mkdir $FOLDERPLOTS 
               rm $OUTPUTROOT
-              root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$INPUTDATAMIX\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${owbarrel}","${anatyperegion}","${etabarrelcut}","${typeEnergyBarrelSel}","${maxrelenergyinsidebarrel}","${typemultiplicity}")"
+              root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$INPUTDATAMIX\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${owbarrel}","${anatyperegion}","${etabarrelcut}","${typeEnergyBarrelSel}","${etabarrelcutforEselection}","${maxrelenergyinsidebarrel}","${typemultiplicity}")"
               root -l -q -b "TPCPlots.cc+(\"$OUTPUTROOT\",\"$OUTPUTHISTO\",\"$OUTPUTPLOTS\")" 
               done # with three jets
             done # with eta cut option
