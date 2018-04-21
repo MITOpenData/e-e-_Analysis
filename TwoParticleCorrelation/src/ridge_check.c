@@ -313,7 +313,7 @@ int ridge_check( const std::string inFileName, 		// Input file
         /****************************************/
         for ( Int_t j=0;j<data.particle.nParticle;j++ )
         {
-            if (!q.highPurity(&data.particle,j)&&s.doGen==0) continue;
+            if (!trackSelector.highPurity(&data.particle,j)&&s.doGen==0) continue;
 	    h_phi->Fill(data.getPhi(j));
             h_eta->Fill(data.getEta(j));
             h_theta->Fill(data.getTheta(j));
