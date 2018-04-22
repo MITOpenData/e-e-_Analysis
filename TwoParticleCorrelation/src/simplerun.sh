@@ -1,5 +1,4 @@
-DOCENTRAL=1
-DOSTUDYVSDIJET=0
+DOCENTRAL=0
 DOCOPYPLOTS=1
 
 domix=0
@@ -8,16 +7,15 @@ owbarrel=1
 
 VERBOSE=1
 
-typeEnergyBarrelSel=1
-maxrelenergyinsidebarrel=0.6
-typemultiplicity=1
-etabarrelcutforEselection=2.0
-
-listsample=(0) #0=data, 1=mc
+listsample=(1) #0=data, 1=mc
 listetaselection=(4) #from this list of values (0 0.3 0.5 1.0 2.0) 
 listgen=(0) #0=no gen selection, 1=gen selection
 listaxis=(1) #0=beam, 1=thrust, 2=wta, 3=thrust perp, 4 =wta perp 
+listmultiplicitytype=(0 1)  #0=standard multiplicity, multiplicity in barrel
+listtypeEnergyBarrelSel=(0 1) #0=no rejection, 1=rejecting high energy in barrel, 2=rejecting high energy our of barrel
+listvalueEnergyBarrelSel=(0 3) #(1.0 0.8 0.6 0.4 0.2)
 listthirdjet=(0) #from this list of values (0 0.05 0.1 0.3) 
+listetaselectionEnergyBarrelSel=(4) #from this list of values (0 0.3 0.5 1.0 2.0) 
 
 ################################################################
 #### dont change anything below this if you dont know what you are doing #### 
@@ -35,6 +33,12 @@ listthirdjetcut=(0 0.05 0.1 0.3)
 activatethirdjetcut=(0 1 1 1) 
 listactivateajrej=(0 1 1 1) 
 listajrejcut=(0 0.1 0.1 0.1) 
+
+
+listetacutsEnergyBarrelSel=(0 0.3 0.5 1.0 2.0) 
+listEnergyBarrelSel=(1.0 0.8 0.6 0.4 0.2) #5
+
+
 
 #REGULAR ANALYSIS, CENTRAL VALUES
 AINPUT=( "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180402YJTest/LEP1Data1993_recons_aftercut-MERGED.root" "/data/cmcginn/StudyMultSamples/ALEPH/MC/20180323/alephMCRecoAfterCutPaths_1994.root" )
@@ -110,31 +114,44 @@ if [ $DOCENTRAL -eq 1 ]; then
               if [ $domix -eq 1 ]; then      
                INPUTDATAMIX=${AINPUTMIX[$isample]}
               fi
-              
-               OUTPUT=${AOUTPUT[$isample]}                           
-              suffix=${OUTPUT}_$(produce_postfix ${thrust} ${domix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${owbarrel} ${anatyperegion} ${etabarrelcut} ${typeEnergyBarrelSel} ${etabarrelcutforEselection} ${maxrelenergyinsidebarrel} ${typemultiplicity})
-              sleep .5  
-              OUTPUTROOT=rootfiles/${suffix}.root
-              OUTPUTHISTO=rootfiles/2PC_${suffix}.root
-              FOLDERPLOTS=plots/plots_${suffix}
-              OUTPUTPLOTS=$FOLDERPLOTS/${suffix}
-              echo $OUTPUTROOT
-              rm $OUTPUTHISTO
-              rm -rf $FOLDERPLOTS
-              mkdir $FOLDERPLOTS 
-              rm $OUTPUTROOT
-              root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$INPUTDATAMIX\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${owbarrel}","${anatyperegion}","${etabarrelcut}","${typeEnergyBarrelSel}","${etabarrelcutforEselection}","${maxrelenergyinsidebarrel}","${typemultiplicity}")"
-              root -l -q -b "TPCPlots.cc+(\"$OUTPUTROOT\",\"$OUTPUTHISTO\",\"$OUTPUTPLOTS\")" 
-              done # with three jets
-            done # with eta cut option
-          done # with eta selection
-        done #done with gen 
-      done #done with iaxis
-    done #done with samples
+              for typeEnergyBarrelSel in ${listtypeEnergyBarrelSel[@]}
+              do 
+                for typemultiplicity in ${listmultiplicitytype[@]}
+                do 
+                  for ietacutbarrel in ${listetaselectionEnergyBarrelSel[@]}
+                  do 
+                    etabarrelcutforEselection=${listetacutsEnergyBarrelSel[$ietacutbarrel]}
+                    for ievaluebarrelcut in ${listvalueEnergyBarrelSel[@]}
+                    do 
+                      maxrelenergyinsidebarrel=${listEnergyBarrelSel[$ievaluebarrelcut]}
+                      OUTPUT=${AOUTPUT[$isample]}                           
+                      suffix=${OUTPUT}_$(produce_postfix ${thrust} ${domix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${owbarrel} ${anatyperegion} ${etabarrelcut} ${typeEnergyBarrelSel} ${etabarrelcutforEselection} ${maxrelenergyinsidebarrel} ${typemultiplicity})
+                      sleep .5  
+                      OUTPUTROOT=rootfiles/${suffix}.root
+                      OUTPUTHISTO=rootfiles/2PC_${suffix}.root
+                      FOLDERPLOTS=plots/plots_${suffix}
+                      OUTPUTPLOTS=$FOLDERPLOTS/${suffix}
+                      echo $OUTPUTROOT
+                      rm $OUTPUTHISTO
+                      rm -rf $FOLDERPLOTS
+                      mkdir $FOLDERPLOTS 
+                      rm $OUTPUTROOT
+                      root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$INPUTDATAMIX\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${owbarrel}","${anatyperegion}","${etabarrelcut}","${typeEnergyBarrelSel}","${etabarrelcutforEselection}","${maxrelenergyinsidebarrel}","${typemultiplicity}")"
+                      root -l -q -b "TPCPlots.cc+(\"$OUTPUTROOT\",\"$OUTPUTHISTO\",\"$OUTPUTPLOTS\")" 
+                    done # with E cut selection in barrel
+                  done # with eta barrel selection for E cut
+                done # with type of multiplicity
+              done # with type of energy selection
+            done # with three jets
+          done # with eta cut option
+        done # with eta selection
+      done #done with gen 
+    done #done with iaxis
+  done #done with samples
 fi
 
-multlow=( 0 20 30 35)
-multhigh=( 20 30 999 999)
+multlow=( 0 20 30 35 0 5 10 15 20 25 )
+multhigh=( 10 30 999 999 5 10 15 20 25 30)
 
 
 
@@ -149,7 +166,7 @@ if [ $DOCOPYPLOTS -eq 1 ]; then
   for etaindex in 0 1 2 
   do 
   
-    for indexmult in 0 1 2 3
+    for indexmult in 0 1 2 3 4 5 6 7 8 9 
     do
     folder=${multlow[$indexmult]}_${multhigh[$indexmult]}_$etaindex
     mkdir $folder

@@ -111,9 +111,9 @@ class Selection
         Float_t energyBinsLow[nEnergyBins] = {0}; // {0,100}
         Float_t energyBinsHigh[nEnergyBins] = {100}; // {100,999}
 
-        static const Int_t nMultBins = 4;
-        Int_t multBinsLow[nMultBins]  = {0 , 20, 30, 35};
-        Int_t multBinsHigh[nMultBins] = {20, 30, 999, 999};
+        static const Int_t nMultBins = 10;
+        Int_t multBinsLow[nMultBins]  = {0 , 20, 30, 35, 0, 5, 10, 15, 20, 25};
+        Int_t multBinsHigh[nMultBins] = {10, 30, 999, 999, 5, 10, 15, 20, 25, 30};
 
         /* Plotting */
         Float_t dEtaBins = 20; //keep even
@@ -315,7 +315,6 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
           }
         }
       }
-      //std::cout<<"ratio"<<totalenergyinbarrel/totalenergy<<std::endl;
       if (typeEnergyBarrelSel==1 && totalenergyinbarrel/totalenergy>maxrelenergyinsidebarrel) return -1;
       if (typeEnergyBarrelSel==2 && totalenergyinbarrel/totalenergy<maxrelenergyinsidebarrel) return -1;
     }
