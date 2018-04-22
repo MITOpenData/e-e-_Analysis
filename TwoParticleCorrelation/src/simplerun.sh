@@ -1,5 +1,4 @@
 DOCENTRAL=1
-DOSTUDYVSDIJET=0
 DOCOPYPLOTS=1
 
 domix=0
@@ -9,7 +8,7 @@ owbarrel=1
 VERBOSE=1
 
 typeEnergyBarrelSel=1
-maxrelenergyinsidebarrel=0.6
+maxrelenergyinsidebarrel=0.4
 typemultiplicity=1
 etabarrelcutforEselection=2.0
 
@@ -133,8 +132,8 @@ if [ $DOCENTRAL -eq 1 ]; then
     done #done with samples
 fi
 
-multlow=( 0 20 30 35)
-multhigh=( 20 30 999 999)
+multlow=( 0 20 30 35 0 5 10 15 20 25 )
+multhigh=( 20 30 999 999 5 10 15 20 25 30)
 
 
 
@@ -149,7 +148,7 @@ if [ $DOCOPYPLOTS -eq 1 ]; then
   for etaindex in 0 1 2 
   do 
   
-    for indexmult in 0 1 2 3
+    for indexmult in ${multlow[@]}
     do
     folder=${multlow[$indexmult]}_${multhigh[$indexmult]}_$etaindex
     mkdir $folder
