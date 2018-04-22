@@ -65,12 +65,12 @@ int ridge_check( const std::string inFileName, 		// Input file
 		       bool ow3jetEvtCut=false,      // three jet selection flag
 		       double _thirdJetCut=-999,     // three jet cut selection
 		       bool owBarrel = false,            // overwrite the values related to barrel selection and barrel multiplicity 
-		       int _anatyperegion=0,  // option==0 -> no eta selection on tracks, option==1 -> reject the tracks at small rapidity, option==2 -> reject the tracks at large rapidity
-		       double _etabarrelcut=-1,
-		       int _typeEnergyBarrelSel=false,
-		       double _etabarrelcutforEselection=2.0,
-		       double _maxrelenergyinsidebarrel=0.,
-		       int _typemultiplicity=0
+		       int _anatyperegion=0,  // option==0 -> no eta selection on tracks, option==1 -> reject the tracks at small eta, option==2 -> reject the tracks at large rapidity
+		       double _etabarrelcut=-1,  // eta cut values that defines the three regions defined above
+		       int _typeEnergyBarrelSel=0,      // type of selection on the total energy inside the barrel vs total. 0=no selection, 1=rejecting events with large energy in barrel, 2= rejecting events with small energy in barrel 
+		       double _etabarrelcutforEselection=2.0, //define the eta region for the Ebarrel selection
+		       double _maxrelenergyinsidebarrel=0., // define the cut on the Ebarrel, _maxrelenergyinsidebarrel=Ebarrel/Etotal 
+		       int _typemultiplicity=0 // 0=total charged track multiplicity, 1=charged track multiplicity in barrel
                ) 
 {
 
@@ -80,16 +80,16 @@ int ridge_check( const std::string inFileName, 		// Input file
    cout<<"owPerp="<<owPerp<<endl;
    cout<<"owDoGen="<<owDoGen<<endl;
    cout<<"owAjCut="<<owAjCut<<endl;
-   cout<<"_AjCut="<<_AjCut<<endl;
+   cout<<"AjCut="<<_AjCut<<endl;
    cout<<"ow3jetEvtCut="<<ow3jetEvtCut<<endl;
-   cout<<"_thirdJetCut="<<_thirdJetCut<<endl;
+   cout<<"thirdJetCut="<<_thirdJetCut<<endl;
    cout<<"owBarrel="<<owBarrel<<endl;
-   cout<<"_anatyperegion="<<_anatyperegion<<endl;
-   cout<<"_etabarrelcut="<<_etabarrelcut<<endl;
-   cout<<"_typeEnergyBarrelSel="<<_typeEnergyBarrelSel<<endl;
-   cout<<"_etabarrelcutforEselection="<<_etabarrelcutforEselection<<endl;
-   cout<<"_maxrelenergyinsidebarrel="<<_maxrelenergyinsidebarrel<<endl;
-   cout<<"_typemultiplicity="<<_typemultiplicity<<endl;
+   cout<<"anatyperegion="<<_anatyperegion<<endl;
+   cout<<"etabarrelcut="<<_etabarrelcut<<endl;
+   cout<<"typeEnergyBarrelSel="<<_typeEnergyBarrelSel<<endl;
+   cout<<"etabarrelcutforEselection="<<_etabarrelcutforEselection<<endl;
+   cout<<"maxrelenergyinsidebarrel="<<_maxrelenergyinsidebarrel<<endl;
+   cout<<"typemultiplicity="<<_typemultiplicity<<endl;
    
 
     // ROOT Global setting
@@ -122,6 +122,7 @@ int ridge_check( const std::string inFileName, 		// Input file
          s.etabarrelcutforEselection=_etabarrelcutforEselection;
          s.maxrelenergyinsidebarrel=_maxrelenergyinsidebarrel;
          s.typemultiplicity=_typemultiplicity;
+         if(owThrust==false) {std::cout<<"the barrel selection and multiplicity is defined now in the thrust axis only!!!"<<std::endl; return 0;} 
        }
     }
     

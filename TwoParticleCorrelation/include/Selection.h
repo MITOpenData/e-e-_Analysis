@@ -322,7 +322,8 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
     
     returnNch=Nch;
     
-    if (typemultiplicity==kMultInBarrelThrust) {
+    if (typemultiplicity==kMultInBarrelThrust) { 
+    /* here we define a new version of the multiplicity that considers only tracks inside the barrel region defined by etabarrelcutforEselection*/
     Int_t NchBarrel = 0;
       for (Int_t j=0;j<particle->nParticle;j++) {
         if (trackSelector.highPurity(particle,j)){
