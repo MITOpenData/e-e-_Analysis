@@ -134,7 +134,31 @@ class Selection
         Float_t etaBinsLow_pp[netaBins_pp]  = {4.5,5.0};
         Float_t missPCut_pp = 20;
         Float_t etaPlotRange_pp = 6.0;
-    
+        
+
+        /*In this section we define the variables used to perform an analysis inside and outside what we call "barrel" that is a cilindrical region around the thrust axis.
+        The variable listanalysisregion is a selector that allows to decide whether to perform an thrust analysis in the entire space, in a barrel region around of thrust axis of eta limits = etabarrelcut*/
+        
+        enum listanalysisregion{ kAnaTypeAllDetector, kAnaTypeInBarrelThrust, kAnaTypeOutBarrelThrust};
+        int anatyperegion=kAnaTypeInBarrelThrust;
+	    double etabarrelcut=-1;
+
+        /*In this section we define the variables needed to perform a selection with respect to the ratio of the energy of particles (charged and neutral) inside the barrel divided by the total energy
+        The variable is indeed EnergyInBarrel/Total energy. The barrel around the thrust axis is defined by 	double etabarrelcutforEselection. The cut on the relative energy is defined by maxrelenergyinsidebarrel.
+        Three options are available:
+        1) kNoEBarrelThrustSel = no selection
+        2) kEInBarrelThrustSel selecting events with a small fraction of energy in barrel
+        3) kEOutBarrelThrustSel selecting events with a large fraction of energy in barrel 
+        With typemultiplicity, one can choose to use as multiplicity variable to study the multiplicity dependent of the right the total event multiplicity of charged track or the total multiplicity of charged track in the 
+        barrel defined by etabarrelcutforEselection as well.*/
+          
+        enum listtypeEnergyBarrelThrustSel{ kNoEBarrelThrustSel, kEInBarrelThrustSel, kEOutBarrelThrustSel};        
+        int typeEnergyBarrelSel=kNoEBarrelThrustSel;
+	    double maxrelenergyinsidebarrel=0.;        
+	    double etabarrelcutforEselection=2.0;
+        enum listtypemultiplicity{ kMultAllEvent, kMultInBarrelThrust};
+        int typemultiplicity=kMultAllEvent;
+
         Selection();
         Float_t getEtaPlotRange();
         Float_t getDifferential();
@@ -236,6 +260,7 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
     if (doSTheta && TMath::Abs(cos(event->STheta))>=SThetaMax) return -1;
 
     // From 1990 "Properties of Hadronic Events in e+e- Annihilation at sqrt(s) = 91 GeV" ALEPH Collaboration paper
+    Int_t returnNch=-1;
     Int_t Nch = 0;
     Int_t Neu = 0;
     Float_t E = 0;
@@ -275,7 +300,41 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
        if(do3jetEvtCut && jet->nref > 2 && (2*jtp(jet->jtpt[2],jet->jteta[2]) / j12) > thirdJetCut ) return -1;
     }
     
-    return Nch;
+    ///////////// barrel energy cut //////////////
+    
+    if(typeEnergyBarrelSel==1 || typeEnergyBarrelSel==2){
+      double totalenergy=0.;
+      double totalenergyinbarrel=0.;
+    
+      for (Int_t j=0;j<particle->nParticle;j++) {
+        if (trackSelector.highPurity(particle,j) || neutralHadronSelector.highPurity(particle,j)){
+          totalenergy += sqrt(particle->pmag[j]*particle->pmag[j] + particle->mass[j]*particle->mass[j]);
+          //std::cout<<"eta"<<particle->eta_wrtThr[j]<<std::endl;
+          if(fabs(particle->eta_wrtThr[j])<etabarrelcutforEselection){
+            totalenergyinbarrel += sqrt(particle->pmag[j]*particle->pmag[j] + particle->mass[j]*particle->mass[j]);
+          }
+        }
+      }
+      //std::cout<<"ratio"<<totalenergyinbarrel/totalenergy<<std::endl;
+      if (typeEnergyBarrelSel==1 && totalenergyinbarrel/totalenergy>maxrelenergyinsidebarrel) return -1;
+      if (typeEnergyBarrelSel==2 && totalenergyinbarrel/totalenergy<maxrelenergyinsidebarrel) return -1;
+    }
+    
+    returnNch=Nch;
+    
+    if (typemultiplicity==kMultInBarrelThrust) { 
+    /* here we define a new version of the multiplicity that considers only tracks inside the barrel region defined by etabarrelcutforEselection*/
+    Int_t NchBarrel = 0;
+      for (Int_t j=0;j<particle->nParticle;j++) {
+        if (trackSelector.highPurity(particle,j)){
+          if(fabs(particle->eta_wrtThr[j])<etabarrelcutforEselection){
+            NchBarrel++;
+          }
+        }  
+     }
+     returnNch=NchBarrel;
+   }
+   return returnNch;
 }
 
 // return true if the event passes the criteria for a mixed event
