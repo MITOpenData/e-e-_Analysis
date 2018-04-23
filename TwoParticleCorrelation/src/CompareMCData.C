@@ -25,11 +25,15 @@ void CompareMCData(){
    gethists(files[0], files[1], "hist");
 
   Plotting*myplotLeg=new Plotting();
+  TH2F*hempty1D[nvariables1D] [nsteps];
+
 
     for(int i=0;i<nvariables1D;i++) {
         for(int j=0;j<nsteps;j++) {
+           hempty1D[i][j]=(TH2F*)myplotLeg->GetEmpty(namehistoempty1D[i][j].Data(),xnamelabelhisto1D[i].Data(),ynamelabelhisto1D[i].Data(),xlowerbin1D[i],xupperbin1D[i],ylowerbin1D[i],yupperbin1D[i]);
            canvasVariables[i][j]=new TCanvas(canvasname[i][j].Data(),canvasname[i][j].Data(),500,500);
            hempty1D[i][j]->Draw();
+           //hVariable1DData[i][j]->SetMaximum(hVariable1DData[i][j]->GetMaximum()*2.);
            hVariable1DData[i][j]->SetLineColor(1);
            hVariable1DMC[i][j]->SetLineColor(2);
            hVariable1DMC[i][j]->SetMarkerColor(2);
