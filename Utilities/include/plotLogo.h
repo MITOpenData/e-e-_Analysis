@@ -3,10 +3,15 @@
 #include <TStyle.h>
 #include <iostream>
 
-void plotLogo( Float_t v_scale, Float_t skew )
+void plotLogo( Float_t v_scale=1, Float_t skew=1.6, bool preliminary=1 )
  {
  
-    TImage *img = TImage::Open("../../AnalysisNote/ALEPH/images/Logo/MODLogo.jpg");
+    TImage *img;
+    if (preliminary) 
+       img = TImage::Open("../../AnalysisNote/ALEPH/images/Logo/MODLogo-Preliminary.jpg");
+    else 
+       img = TImage::Open("../../AnalysisNote/ALEPH/images/Logo/MODLogo.jpg");
+    
     if (!img) {
        cout << "+++ Could not open image MODLogo.gif" << endl;
        return;
