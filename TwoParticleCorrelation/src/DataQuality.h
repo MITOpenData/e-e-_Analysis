@@ -6,7 +6,7 @@
 #include <TH2F.h>
 #include <TF1.h>
 #include <TString.h>
-#include "Plotting.h"
+#include "Plotting.cpp"
 #include "include/TPCNtupleData.h"
 
 int const nsteps=5;
@@ -120,6 +120,7 @@ int gethists(TFile* infData, TFile* infMC, Option_t* option)
            namehistoempty1D[i][j]=Form("histoempty%s%s",namevariable1D[i].Data(),namestep[j].Data());
            hempty1D[i][j]=(TH2F*)myplot->GetEmpty(namehistoempty1D[i][j].Data(),xnamelabelhisto1D[i].Data(),ynamelabelhisto1D[i].Data(),xlowerbin1D[i],xupperbin1D[i],ylowerbin1D[i],yupperbin1D[i]);
            canvasname[i][j]=Form("canvas%s%s",namevariable1D[i].Data(),namestep[j].Data());
+           leg[i][j]=new TLegend(0.4205154,0.7232817,0.8200301,0.8721362);
          } 
       }
     for(int i=0;i<nvariables2D;i++) {
