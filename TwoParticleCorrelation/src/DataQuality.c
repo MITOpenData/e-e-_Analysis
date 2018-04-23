@@ -28,11 +28,11 @@
 
 //local headers
 #include "include/fourier.h"
-#include "include/TPCNtupleData.h"
 #include "include/Selection.h"
 #include "DataProcessing/include/trackSelection.h"
 #include "include/smartJetName.h"
 #include "include/ProgressBar.h"
+#include "DataQuality.h"
 
 /********************************************************************************************************************/
 // Two particle correlation analysis
@@ -148,20 +148,10 @@ int DataQuality( const std::string inFileName, 		// Input file
     /********************************************************************************************************************/
     // Define the output file
     /********************************************************************************************************************/
-
+    if(createhists("savehist")) return -1;
+    
     TFile * output = TFile::Open(outFileName.c_str(),"recreate");
-    
-    /// Initialize the histograms
-    std::cout<<"Initializing histograms..."<<std::endl;
-    TH1D * h_phi = new TH1D("phi","phi",100,-TMath::Pi(),TMath::Pi());
-    TH1D * h_eta = new TH1D("eta","eta",100,-5,5);
-    TH1D * h_theta = new TH1D("theta","theta",100,0,TMath::Pi());
-    TH1D * h_pt = new TH1D("pt","pt",100,0,10);
-    TH1D * h_Ttheta = new TH1D("T_theta","T_theta",100,0,TMath::Pi());
-    TH1D * h_Tphi = new TH1D("T_phi","T_phi",100,-TMath::Pi(),TMath::Pi());
-    TH1D * h_Aj = new TH1D("h_Aj","h_Aj",50,0,0.5);
-    TH1F * multiplicity = new TH1F("multiplicity",";nTrk;nEvents",200,0,200);
-    
+        
     /// Initialize the trees for use
     std::cout<<"Initializing trees for use..."<<std::endl;
     std::string jtTreeName = "";
@@ -203,49 +193,68 @@ int DataQuality( const std::string inFileName, 		// Input file
     /********************************************************************************************************************/
     // Main Event Loop
     /********************************************************************************************************************/
+    nevent=60000;
     for (Int_t i=0;i<nevent;i++) {
         t->GetEntry(i); 
         boost_t->GetEntry(i);
         jt->GetEntry(i);
 	    Bar.Update(i);
         Bar.PrintWithMod(entryDiv);
-        
-        // nTrk calculation
-        Int_t nTrk = s.ridge_eventSelection(&data.event, &data.jet, &data.particle);
-	
-        if( nTrk < 0) continue;
-        //std::cout<<data.RunNo<<","<<data.EventNo<<std::endl;
-        multiplicity->Fill(nTrk);        
-        h_Ttheta->Fill(data.getTTheta());
-        h_Tphi->Fill(data.getTPhi());
 
-        Float_t fillNumerator = 1.0;
 
         for ( Int_t j=0;j<data.particle.nParticle;j++ )
         {
-            if (!trackSelector.highPurity(&data.particle,j)&&s.doGen==0) continue;
-	        h_phi->Fill(data.getPhi(j));
-            h_eta->Fill(data.getEta(j));
-            h_theta->Fill(data.getTheta(j));
-            h_pt->Fill(data.getPt(j));
+	       fillHisto(data,j,0);
+        }
+        
+        // nTrk calculation
+        s.domissPCut=false;
+        s.doAjCut=false;
+        s.doE=false;
+        s.typeEnergyBarrelSel=0;
+        s.typemultiplicity=0;
+        Int_t nTrk= s.ridge_eventSelection(&data.event, &data.jet, &data.particle);
+        if( nTrk < 0) continue;
+        
+        for ( Int_t j=0;j<data.particle.nParticle;j++ )
+        {
+	       fillHisto(data,j,1);
+        }
+        
+        s.typeEnergyBarrelSel=1;
+        s.etabarrelcutforEselection=2.0;
+        s.maxrelenergyinsidebarrel=0.4;
+        s.anatyperegion=1;
+        s.etabarrelcut=2.0;
 
+        nTrk= s.ridge_eventSelection(&data.event, &data.jet, &data.particle);
+        if( nTrk < 0) continue;
+        
+        for ( Int_t j=0;j<data.particle.nParticle;j++ )
+        {
+	       fillHisto(data,j,2);
+        }
+        
+        s.typemultiplicity=1;
+        Int_t nTrkBarrel= s.ridge_eventSelection(&data.event, &data.jet, &data.particle);
+        if( nTrkBarrel < 0) continue;
+    
+
+        for ( Int_t j=0;j<data.particle.nParticle;j++ )
+        {  
+            if (!trackSelector.highPurity(&data.particle,j)&&s.doGen==0) continue;
+	         fillHisto(data,j,3);
             if (s.anatyperegion==1 && fabs(data.getEta(j))<s.etabarrelcut) continue;
-            if (s.anatyperegion==2 && fabs(data.getEta(j))>s.etabarrelcut) continue;
-            
+	         fillHisto(data,j,4);
         }      
     }
+    
     output->cd();
-    h_Tphi->Write();
-    h_Ttheta->Write();
-    h_pt->Write();
-    h_theta->Write();
-    h_eta->Write();
-    h_phi->Write();
-    multiplicity->Write();
-
+    if(writehists("savehist")) return -1;
     delete jt;
     delete t;
     output->Close();
     delete output;
     return 0;
 }
+
