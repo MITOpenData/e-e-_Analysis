@@ -12,25 +12,21 @@
 int const nsteps=5;
 TString namestep[nsteps]={"PreES","AfterESQCD","AfterESQCDBarrelCut","AfterESQCDBarrelCutHighPur","AfterESQCDBarrelCutHighPurEtaCut"};
 
-int const nvariables1D=3;
-TString namevariable1D[nvariables1D]={"Phi","eta","pt"};
+int const nvariables1D=11;
+TString namevariable1D[nvariables1D]={"Energy","pt","pmag","mass","pwflag","eta","theta","phi","d0","z0","ntpc"};
 TString namehisto1D[nvariables1D] [nsteps];
-TString namelabelhisto1D[nvariables1D]={";#phi;Entries",";#eta;Entries",";p_{T};Entries"};
-TString xnamelabelhisto1D[nvariables1D]={"#phi","#eta","p_{T}"};
-TString ynamelabelhisto1D[nvariables1D]={"Entries","Entries","Entries"};
+TString namelabelhisto1D[nvariables1D]={";Energy;Entries",";p_{T};Entries",";p_{mag};Entries",";mass;Entries",";pwflag;Entries",";#eta;Entries",";#theta;Entries",";d_{0};Entries",";z_{0};Entries",";#;Entries",";ntpc;Entries",};
+TString xnamelabelhisto1D[nvariables1D]={"Energy","p_{T}","p_{mag}","mass","pwflag","#eta","#theta","d_{0}","z_{0}","#","ntpc"};
+TString ynamelabelhisto1D[nvariables1D]={"Entries","Entries","Entries","Entries","Entries","Entries","Entries","Entries","Entries","Entries","Entries"};
 
 TH1F*hVariable1D[nvariables1D] [nsteps];
-int nbins1D[nvariables1D]={100,100,100};
-double xlowerbin1D[nvariables1D]={-3.14,-3.14,0.};
-double xupperbin1D[nvariables1D]={3.14,3.14,10};
-double ylowerbin1D[nvariables1D]={0., 0.,0.};
-double yupperbin1D[nvariables1D]={10000, 10000,10000};
-
-
+int nbins1D[nvariables1D]={100,100,100,100,100,100,100,100,100,100,100};
+double xlowerbin1D[nvariables1D]={0.,0.,0.,0.,0.,-3.14,-3.14,-3.14,0.,0.,0.};
+double xupperbin1D[nvariables1D]={20.,10.,10.,2.,10.,3.14,3.14,-3.14,1.,1.,30.};
+double ylowerbin1D[nvariables1D]={0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.};
+double yupperbin1D[nvariables1D]={1e8, 1e8,1e8,1e8,1e8,1e8,1e8,1e8,1e8,1e8,1e8};
 
 // CHANGE UP TO HERE ONLY.
-
-
 
 int const nvariables2D=1;
 TString namevariable2D[nvariables2D]={"Phi_eta"};
@@ -50,8 +46,6 @@ TH1F*hVariable1DMC[nvariables1D] [nsteps];
 TH2F*hVariable2DData[nvariables2D] [nsteps];
 TH2F*hVariable2DMC[nvariables2D] [nsteps];
 
-
-TH2F*hempty1D[nvariables1D] [nsteps];
 TString namehistoempty1D[nvariables1D][nsteps];
 TCanvas*canvasVariables[nvariables1D] [nsteps];
 TLegend*leg[nvariables1D] [nsteps];
@@ -118,7 +112,6 @@ int gethists(TFile* infData, TFile* infMC, Option_t* option)
            hVariable1DData[i][j] = (TH1F*)infData->Get(Form("histo%s%s",namevariable1D[i].Data(),namestep[j].Data()));
            hVariable1DMC[i][j] = (TH1F*)infMC->Get(Form("histo%s%s",namevariable1D[i].Data(),namestep[j].Data()));
            namehistoempty1D[i][j]=Form("histoempty%s%s",namevariable1D[i].Data(),namestep[j].Data());
-           hempty1D[i][j]=(TH2F*)myplot->GetEmpty(namehistoempty1D[i][j].Data(),xnamelabelhisto1D[i].Data(),ynamelabelhisto1D[i].Data(),xlowerbin1D[i],xupperbin1D[i],ylowerbin1D[i],yupperbin1D[i]);
            canvasname[i][j]=Form("canvas%s%s",namevariable1D[i].Data(),namestep[j].Data());
            leg[i][j]=new TLegend(0.4205154,0.7232817,0.8200301,0.8721362);
          } 
