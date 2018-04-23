@@ -26,6 +26,9 @@
 // Unfolding
 #include "bayesianUnfold.h"
 
+// logo 
+#include "../../Utilities/include/plotLogo.h"
+
 // Constants
 #define CanvasSizeX 400
 #define CanvasSizeY 400
@@ -44,6 +47,8 @@ Double_t smear (Double_t xt)
 
 void UnfoldThrust()
 {
+  gStyle->SetPadTopMargin(0.08);
+
   // Use the output ntople from thrust_distribution.     
   TFile *infMC = new TFile("outFile_LEP1MC_0_9999.root");
   TTree *tMC = (TTree*)infMC->Get("nt");
@@ -203,6 +208,7 @@ void UnfoldThrust()
   hM->Draw("same hist");
   
   
+  
   TLegend *leg = new TLegend(0.68,0.7,0.93,0.9);
   leg->SetBorderSize(0);
   leg->SetFillColor(0);
@@ -226,6 +232,7 @@ void UnfoldThrust()
   hRatioU->SetXTitle("Unfolded / Truth");
   hRatioU->Draw();
   hM->Write();
+  
   
   TH1D *hFinalResult = (TH1D*)hU->Clone("hFinalResult");
 //  hFinalResult->Divide(hEff);
@@ -284,7 +291,10 @@ void UnfoldThrust()
 //  hFinalResult->Rebin(4);
   Double_t scale = 1.0/( hFinalResult->GetXaxis()->GetBinWidth(1)*hFinalResult->Integral());
   hFinalResult->Sumw2();
-  hFinalResult->Scale(scale);    
+  hFinalResult->Scale(scale);
+  hFinalResult->SetMarkerSize(1);    
+  hFinalResult->GetXaxis()->CenterTitle();
+  hFinalResult->GetYaxis()->CenterTitle();
 
 
   TCanvas *cRatio = new TCanvas("cRatio","Result /HEP",600,600);
@@ -302,23 +312,24 @@ void UnfoldThrust()
    hep->Draw("hist SAME");
  //  hppe96->Draw("hist same");
    TLine* line_thrust = new TLine();
-   TLegend *leg2 = new TLegend(0.3,0.5,0.7,0.9);
+   TLegend *leg2 = new TLegend(0.2,0.7,0.7,0.9);
    leg2->SetBorderSize(0);
    leg2->SetFillStyle(0);
-   leg2->AddEntry(hU,"ALEPH archived data (LEP1)","pl");
+   leg2->AddEntry(hU,"e^{+} e^{-} #sqrt{s}= 91 GeV","t");
+   leg2->AddEntry(hU,"ALEPH Archived Data","p");
 //   leg2->AddEntry(hppe96,"PR294(1998)1","l");
    leg2->AddEntry(hep,"EPJC35(2004)457","l");
-   leg2->Draw();   
+   leg2->Draw();
 
    for (int i=1;i<=hFinalResult->GetNbinsX();i++) {
       double errSize = sqrt(hE1->GetBinContent(i)*hE1->GetBinContent(i)+hE2->GetBinContent(i)*hE2->GetBinContent(i)+hE3->GetBinContent(i)*hE3->GetBinContent(i));
       TBox *b = new TBox(hFinalResult->GetBinLowEdge(i),hep->GetBinContent(i)-errSize,hFinalResult->GetBinLowEdge(i+1),hep->GetBinContent(i)+errSize);
       b->SetFillColor(kGray);
       b->Draw();
-      
    }
    hep->Draw("hist Same");
    hFinalResult->Draw("same");
+   plotLogo(1,1,1);   
    
    cout <<hep->Integral()<<endl;
    cout <<hep->Integral()<<endl;
