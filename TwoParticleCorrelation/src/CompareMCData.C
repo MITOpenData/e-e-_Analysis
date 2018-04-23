@@ -27,14 +27,23 @@ void CompareMCData(){
 
   Plotting*myplot=new Plotting();
 
-   hVariable1DData[0][0]->Draw();
-   hVariable1DMC[0][0]->Draw("same");
-
-   TCanvas*c=new TCanvas("c","c",500,400);
-    for(int i=0;i<nvariables2D;i++) {
+    for(int i=0;i<nvariables1D;i++) {
         for(int j=0;j<nsteps;j++) {
-        
-        
+           canvasVariables[i][j]=new TCanvas(canvasname[i][j].Data(),canvasname[i][j].Data(),500,500);
+           hempty1D[i][j]->Draw();
+           hVariable1DData[i][j]->SetLineColor(1);
+           hVariable1DMC[i][j]->SetLineColor(2);
+           hVariable1DMC[i][j]->SetMarkerColor(2);
+           hVariable1DData[i][j]->SetLineWidth(3);
+           hVariable1DMC[i][j]->SetLineWidth(2);
+           hVariable1DMC[i][j]->SetMarkerColor(2);
+           hVariable1DData[i][j]->Draw("same");
+           hVariable1DMC[i][j]->Draw("same");
+           leg[i][j]=(TLegend*)myplot->GetLegend(0.4205154,0.7232817,0.8200301,0.8721362);
+           leg[i][j]->AddEntry(hVariable1DData[i][j],"DATA","pl");
+           leg[i][j]->AddEntry(hVariable1DMC[i][j],"MC","pl");
+           leg[i][j]->Draw();
+           canvasVariables[i][j]->SaveAs(Form("datamc/%s.pdf",canvasname[i][j].Data()));
         }
      }
   }

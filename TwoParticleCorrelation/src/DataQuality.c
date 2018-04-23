@@ -244,7 +244,7 @@ int DataQuality( const std::string inFileName, 		// Input file
         {  
             if (!trackSelector.highPurity(&data.particle,j)&&s.doGen==0) continue;
 	         fillHisto(data,j,3);
-            if (s.anatyperegion==1 && fabs(data.getEta(j))<s.etabarrelcut) continue;
+            if (s.anatyperegion==1 && fabs(data.getEta(j))>s.etabarrelcut) continue;
 	         fillHisto(data,j,4);
         }      
     }
