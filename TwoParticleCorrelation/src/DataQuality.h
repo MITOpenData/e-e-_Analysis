@@ -138,10 +138,10 @@ int gethists(TFile* infData, TFile* infMC, Option_t* option)
 
 
 void fillHisto(TPCNtupleData data, int indexcandidate, int step=0){
-      hVariable1D[0][step]->Fill(data.getPhi(indexcandidate));
-      hVariable1D[1][step]->Fill(data.getEta(indexcandidate));
-      hVariable1D[2][step]->Fill(data.getPt(indexcandidate));
+      hVariable1D[0][step]->Fill(data.particle.phi_wrtThr[indexcandidate]);
+      hVariable1D[1][step]->Fill(data.particle.eta_wrtThr[indexcandidate]);
+      hVariable1D[2][step]->Fill(data.particle.pt_wrtThr[indexcandidate]);
       
            
-      hVariable2D[0][step]->Fill(data.getEta(indexcandidate),data.getPhi(indexcandidate));
+      hVariable2D[0][step]->Fill(data.particle.eta_wrtThr[indexcandidate],data.particle.phi_wrtThr[indexcandidate]);
 }
