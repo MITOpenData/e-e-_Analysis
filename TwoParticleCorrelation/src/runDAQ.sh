@@ -1,7 +1,8 @@
-INPUTDATA="/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180402YJTest/LEP1Data1993_recons_aftercut-MERGED.root"
-OUTPUTROOTData="samplevalidationDataThrust.root"
-INPUTMC="/data/cmcginn/StudyMultSamples/ALEPH/MC/20180323/alephMCRecoAfterCutPaths_1994.root"
-OUTPUTROOTMC="samplevalidationMCThrust.root"
+AINPUT=( "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180423/LEP1Data1993_recons_aftercut-MERGED.root" "/data/cmcginn/StudyMultSamples/ALEPH/MC/20180423/alephMCRecoAfterCutPaths_1994.root" )
+AINPUTMIX=( "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180423/LEP1Data1993_recons_aftercut-MERGED_Mix.root" "/data/cmcginn/StudyMultSamples/ALEPH/MC/20180423/alephMCRecoAfterCutPaths_1994_mix.root" )
+AOUTPUT=( "DataQualityLEP1Data1992" "DataQualityLEP1MC1994_20180423" )
+AOUTPUTMIX=( "DataQualityLEP1Data1992_Mixed" "DataQualityLEP1MC1994_20180423_Mixed" )
+
 NPUTDATAMIX="0"
 overwrite=1
 thrust=1
@@ -20,7 +21,61 @@ typeEnergyBarrelSel=1
 etabarrelcutforEselection=2.0
 maxrelenergyinsidebarrel=0.2
 typemultiplicity=1
+domix=0
 
-root -l -q -b "DataQuality.c+(\"$INPUTDATA\",\"$OUTPUTROOTData\",\"$INPUTDATAMIX\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${owbarrel}","${anatyperegion}","${etabarrelcut}","${typeEnergyBarrelSel}","${etabarrelcutforEselection}","${maxrelenergyinsidebarrel}","${typemultiplicity}")"
-root -l -q -b "DataQuality.c+(\"$INPUTMC\",\"$OUTPUTROOTMC\",\"$INPUTDATAMIX\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${owbarrel}","${anatyperegion}","${etabarrelcut}","${typeEnergyBarrelSel}","${etabarrelcutforEselection}","${maxrelenergyinsidebarrel}","${typemultiplicity}")"
 
+
+studyMixedevent=0
+
+listsample=(0) #0=data, 1=mc
+
+
+function float_to_string()
+{
+    if [[ $# -ne 1 ]]
+    then
+        echo -e "${ERRCOLOR}error:${NC} invalid argument number - float_to_string()"
+        return 1
+    fi
+    part1=`echo $1 | awk -F "." '{print $1}'`
+    part2=`echo $1 | awk -F "." '{print $2}'`
+    rt_float_to_string=${part1:-0}p${part2:-0}
+    echo $rt_float_to_string
+}
+
+function produce_postfix()
+{
+    if [[ $# -ne 16 ]]
+    then
+        echo -e "\033[1;31merror:${NC} invalid argument number - produce_postfix()"
+        return 1
+    fi
+
+    echo thrust${1}_mix${2}_wta${3}_perp${4}_gen${5}_ajrej${6}_ajrejcut$(float_to_string ${7})_threejet${8}_threejetcut$(float_to_string ${9})_owbarrel${10}_anatyperegion${11}_etabarrelcut$(float_to_string ${12})_typeEnergyBarrelSel${13}_etabarrelcutforEselection$(float_to_string ${14})_maxrelenergyinsidebarrel$(float_to_string ${15})_typemultiplicity${16}
+}
+
+
+
+  for isample in ${listsample[@]}
+  do
+
+    INPUTDATA=${AINPUT[$isample]}
+    OUTPUT=${AOUTPUT[$isample]} 
+
+    if [ $studyMixedevent -eq 1 ]; then      
+      INPUTDATA=${AINPUTMIX[$isample]}
+      OUTPUT=${AOUTPUTMIX[$isample]} 
+    fi
+
+    suffix=${OUTPUT}_$(produce_postfix ${thrust} ${domix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${owbarrel} ${anatyperegion} ${etabarrelcut} ${typeEnergyBarrelSel} ${etabarrelcutforEselection} ${maxrelenergyinsidebarrel} ${typemultiplicity})
+    sleep .5  
+    OUTPUTROOT=rootfilesDataQuality/${suffix}.root
+    FOLDERPLOTS=plotsDataQuality/plots_${suffix}
+    OUTPUTPLOTS=$FOLDERPLOTS/${suffix}
+    echo $OUTPUTROOT
+    rm -rf $FOLDERPLOTS
+    mkdir $FOLDERPLOTS 
+    rm $OUTPUTROOT
+
+    root -l -q -b "DataQuality.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$INPUTDATAMIX\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${owbarrel}","${anatyperegion}","${etabarrelcut}","${typeEnergyBarrelSel}","${etabarrelcutforEselection}","${maxrelenergyinsidebarrel}","${typemultiplicity}")"
+  done
