@@ -10,7 +10,7 @@
 #include "include/TPCNtupleData.h"
 
 int const nsteps=5;
-TString namestep[nsteps]={"PreES","AfterESQCD","AfterESQCDBarrelCut","AfterESQCDBarrelCutHighPur","AfterESQCDBarrelCutHighPurEtaCut"};
+TString namestep[nsteps]={"PreES","AfterESQCD","AfterESQCDEtaCut","AfterESQCDEtaCutHighPurity","AfterESQCDEtaCutHighPurityEbarrelcut"};
 
 int const nvariables1D=3;
 TString namevariable1D[nvariables1D]={"Phi","eta","pt"};

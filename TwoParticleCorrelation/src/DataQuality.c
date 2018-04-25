@@ -54,6 +54,7 @@ using namespace std;
 int DataQuality( const std::string inFileName, 		// Input file
                        std::string outFileName,    	// Output file
       		       std::string inMixFileName="", 	// Input mix file
+      		       int mixedsample=0,
 		       bool overwrite = false,		// if we overwrite the doWTA, doThrust and doPerp from selection.h
 		       bool owThrust = false,		// overwrite the value of doThrust from selection.h
 		       bool owWTA = false,		// overwrite the value of doWTA from selection.h
@@ -193,7 +194,7 @@ int DataQuality( const std::string inFileName, 		// Input file
     /********************************************************************************************************************/
     // Main Event Loop
     /********************************************************************************************************************/
-    nevent=10000;
+    nevent=5000;
     for (Int_t i=0;i<nevent;i++) {
         t->GetEntry(i); 
         boost_t->GetEntry(i);
@@ -214,39 +215,39 @@ int DataQuality( const std::string inFileName, 		// Input file
         s.typeEnergyBarrelSel=0;
         s.typemultiplicity=0;
         Int_t nTrk= s.ridge_eventSelection(&data.event, &data.jet, &data.particle);
-        if( nTrk < 0) continue;
+        if( nTrk < 0 && !mixedsample) continue;
         
         for ( Int_t j=0;j<data.particle.nParticle;j++ )
         {
 	       fillHisto(data,j,1);
         }
-        
-        s.typeEnergyBarrelSel=1;
-        s.etabarrelcutforEselection=2.0;
-        s.maxrelenergyinsidebarrel=0.4;
-        s.anatyperegion=1;
-        s.etabarrelcut=2.0;
 
-        nTrk= s.ridge_eventSelection(&data.event, &data.jet, &data.particle);
-        if( nTrk < 0) continue;
-        
-        for ( Int_t j=0;j<data.particle.nParticle;j++ )
-        {
-	       fillHisto(data,j,2);
-        }
-        
-        s.typemultiplicity=1;
-        Int_t nTrkBarrel= s.ridge_eventSelection(&data.event, &data.jet, &data.particle);
-        if( nTrkBarrel < 0) continue;
-    
+        s.anatyperegion=2;
+        s.etabarrelcut=2.0;
 
         for ( Int_t j=0;j<data.particle.nParticle;j++ )
         {  
-            if (!trackSelector.highPurity(&data.particle,j)&&s.doGen==0) continue;
+            if (!trackSelector.highPurityBit(&data.particle,j)&&s.doGen==0) continue;
+	         fillHisto(data,j,2);
+            if (s.anatyperegion==2 && fabs(data.getEta(j))>s.etabarrelcut) continue;
 	         fillHisto(data,j,3);
-            if (s.anatyperegion==1 && fabs(data.getEta(j))>s.etabarrelcut) continue;
-	         fillHisto(data,j,4);
         }      
+
+        s.typeEnergyBarrelSel=1;
+        s.etabarrelcutforEselection=2.0;
+        s.maxrelenergyinsidebarrel=0.4;
+
+        nTrk= s.ridge_eventSelection(&data.event, &data.jet, &data.particle);
+        if( nTrk < 0 && !mixedsample) continue;
+        
+        for ( Int_t j=0;j<data.particle.nParticle;j++ )
+        {
+	       fillHisto(data,j,4);
+        }
+        
+        //s.typemultiplicity=1;
+        //Int_t nTrkBarrel= s.ridge_eventSelection(&data.event, &data.jet, &data.particle);
+    
     }
     
     output->cd();

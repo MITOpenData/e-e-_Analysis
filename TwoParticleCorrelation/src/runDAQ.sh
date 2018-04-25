@@ -1,8 +1,5 @@
-AINPUT=( "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180423/LEP1Data1993_recons_aftercut-MERGED.root" "/data/cmcginn/StudyMultSamples/ALEPH/MC/20180423/alephMCRecoAfterCutPaths_1994.root" )
-AINPUTMIX=( "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180423/LEP1Data1993_recons_aftercut-MERGED_Mix.root" "/data/cmcginn/StudyMultSamples/ALEPH/MC/20180423/alephMCRecoAfterCutPaths_1994_mix.root" )
-AOUTPUT=( "DataQualityLEP1Data1992" "DataQualityLEP1MC1994_20180423" )
-AOUTPUTMIX=( "DataQualityLEP1Data1992_Mixed" "DataQualityLEP1MC1994_20180423_Mixed" )
-
+AINPUT=( "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180423/LEP1Data1993_recons_aftercut-MERGED.root" "/data/cmcginn/StudyMultSamples/ALEPH/MC/20180423/alephMCRecoAfterCutPaths_1994.root" "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180423/LEP1Data1993_recons_aftercut-MERGED_Mix.root" "/data/cmcginn/StudyMultSamples/ALEPH/MC/20180423/alephMCRecoAfterCutPaths_1994_mix.root" )
+AOUTPUT=( "DataQualityLEP1Data1992" "DataQualityLEP1MC1994_20180423", "DataQualityLEP1Data1992_Mixed" "DataQualityLEP1MC1994_20180423_Mixed" )
 NPUTDATAMIX="0"
 overwrite=1
 thrust=1
@@ -17,17 +14,18 @@ threejetcut=0
 owbarrel=1
 anatyperegion=2
 etabarrelcut=2.0
-typeEnergyBarrelSel=1
+typeEnergyBarrelSel=0
 etabarrelcutforEselection=2.0
 maxrelenergyinsidebarrel=0.2
 typemultiplicity=1
-domix=0
 
+mixedsample=0
 
+listsample=(0 2) #0=data, 1=mc
 
-studyMixedevent=0
+############################### DONT MODIFY BELOW THIS LINE ###############################
 
-listsample=(0) #0=data, 1=mc
+listismixed=(0 0 1 1) 
 
 
 function float_to_string()
@@ -51,7 +49,7 @@ function produce_postfix()
         return 1
     fi
 
-    echo thrust${1}_mix${2}_wta${3}_perp${4}_gen${5}_ajrej${6}_ajrejcut$(float_to_string ${7})_threejet${8}_threejetcut$(float_to_string ${9})_owbarrel${10}_anatyperegion${11}_etabarrelcut$(float_to_string ${12})_typeEnergyBarrelSel${13}_etabarrelcutforEselection$(float_to_string ${14})_maxrelenergyinsidebarrel$(float_to_string ${15})_typemultiplicity${16}
+    echo thrust${1}_mixedsample${2}_wta${3}_perp${4}_gen${5}_ajrej${6}_ajrejcut$(float_to_string ${7})_threejet${8}_threejetcut$(float_to_string ${9})_owbarrel${10}_anatyperegion${11}_etabarrelcut$(float_to_string ${12})_typeEnergyBarrelSel${13}_etabarrelcutforEselection$(float_to_string ${14})_maxrelenergyinsidebarrel$(float_to_string ${15})_typemultiplicity${16}
 }
 
 
@@ -61,13 +59,9 @@ function produce_postfix()
 
     INPUTDATA=${AINPUT[$isample]}
     OUTPUT=${AOUTPUT[$isample]} 
+    mixedsample=${listismixed[$isample]}
 
-    if [ $studyMixedevent -eq 1 ]; then      
-      INPUTDATA=${AINPUTMIX[$isample]}
-      OUTPUT=${AOUTPUTMIX[$isample]} 
-    fi
-
-    suffix=${OUTPUT}_$(produce_postfix ${thrust} ${domix} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${owbarrel} ${anatyperegion} ${etabarrelcut} ${typeEnergyBarrelSel} ${etabarrelcutforEselection} ${maxrelenergyinsidebarrel} ${typemultiplicity})
+    suffix=${OUTPUT}_$(produce_postfix ${thrust} ${mixedsample} ${wta} ${perp} ${gen} ${ajrej} ${ajrejcut} ${threejet} ${threejetcut} ${owbarrel} ${anatyperegion} ${etabarrelcut} ${typeEnergyBarrelSel} ${etabarrelcutforEselection} ${maxrelenergyinsidebarrel} ${typemultiplicity})
     sleep .5  
     OUTPUTROOT=rootfilesDataQuality/${suffix}.root
     FOLDERPLOTS=plotsDataQuality/plots_${suffix}
@@ -77,5 +71,5 @@ function produce_postfix()
     mkdir $FOLDERPLOTS 
     rm $OUTPUTROOT
 
-    root -l -q -b "DataQuality.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$INPUTDATAMIX\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${owbarrel}","${anatyperegion}","${etabarrelcut}","${typeEnergyBarrelSel}","${etabarrelcutforEselection}","${maxrelenergyinsidebarrel}","${typemultiplicity}")"
+    root -l -q -b "DataQuality.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$INPUTDATAMIX\","${mixedsample}","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${owbarrel}","${anatyperegion}","${etabarrelcut}","${typeEnergyBarrelSel}","${etabarrelcutforEselection}","${maxrelenergyinsidebarrel}","${typemultiplicity}")"
   done
