@@ -127,7 +127,7 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
   TH1D * nEvtBkgHist1 = (TH1D*)f1->Get("nEvtSigHisto"); 
 
   Float_t etaPlotRange = s.getEtaPlotRange();
-  double etaranges[8]={2,10,2.2,10,2.4,10,2.6,10};
+  double etaranges[8]={1.5,2.5,2.2,10,2.4,10,2.6,10};
   Int_t minbin,maxbin;
   Int_t nCanvas=0;
   for(int e = 0; e<nEnergyBins; e++)
@@ -262,6 +262,7 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
           //c2->Divide(2,2);
           
           // Fourier decomposition
+          TLatex* texv2;
           TF1 *f1 = new TF1("f1","[0]*(1+2*([1]*cos(1*x)+[2]*cos(2*x)+[3]*cos(3*x)+[4]*cos(4*x)+[5]*cos(5*x)+[6]*cos(6*x)))");
           for (Int_t j=0;j<4;j++) {
             //c2->cd(j+1);
@@ -278,6 +279,8 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
                h_deltaphi[0]->Fit("f1");
                h_deltaphi[0]->Fit("f1");
                h_deltaphi[0]->SetStats(0);
+               texv2 = new TLatex(1, h_deltaphi[0]->GetMaximum(), Form("v_{2}=%.3f #pm %.3f",f1->GetParameter(2),f1->GetParError(2)));
+               std::cout<<"ELLIPTIC FLOW"<<f1->GetParameter(1)<<std::endl;
               }
               */
             c2->SaveAs(Form("%s_deltaphi_%d_%d_%d_%d_%d_%d.png",plotsname.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et,j));
@@ -289,6 +292,7 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
 
           cAll->cd(4);
           h_deltaphi[0]->Draw();
+          texv2->Draw();
 //	  h_deltaphi[0]->Write();
 	  delete c1;
           /*
