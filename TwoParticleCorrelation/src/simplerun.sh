@@ -1,21 +1,21 @@
-DOCENTRAL=0
+DOCENTRAL=1
 DOCOPYPLOTS=1
 
-domix=0
+domix=1
 overwrite=1
 owbarrel=1
 
 VERBOSE=1
 
-listsample=(1) #0=data, 1=mc
+listsample=(0) #0=data, 1=mc
 listetaselection=(4) #from this list of values (0 0.3 0.5 1.0 2.0) 
 listgen=(0) #0=no gen selection, 1=gen selection
 listaxis=(1) #0=beam, 1=thrust, 2=wta, 3=thrust perp, 4 =wta perp 
-listmultiplicitytype=(0 1)  #0=standard multiplicity, multiplicity in barrel
-listtypeEnergyBarrelSel=(0 1) #0=no rejection, 1=rejecting high energy in barrel, 2=rejecting high energy our of barrel
-listvalueEnergyBarrelSel=(0 3) #(1.0 0.8 0.6 0.4 0.2)
+listmultiplicitytype=(0)  #0=standard multiplicity, multiplicity in barrel
+listtypeEnergyBarrelSel=(0) #0=no rejection, 1=rejecting high energy in barrel, 2=rejecting high energy our of barrel
+listvalueEnergyBarrelSel=(0) #(1.0 0.8 0.6 0.4 0.2)
 listthirdjet=(0) #from this list of values (0 0.05 0.1 0.3) 
-listetaselectionEnergyBarrelSel=(4) #from this list of values (0 0.3 0.5 1.0 2.0) 
+listetaselectionEnergyBarrelSel=(0) #from this list of values (0 0.3 0.5 1.0 2.0) 
 
 ################################################################
 #### dont change anything below this if you dont know what you are doing #### 
@@ -41,8 +41,8 @@ listEnergyBarrelSel=(1.0 0.8 0.6 0.4 0.2) #5
 
 
 #REGULAR ANALYSIS, CENTRAL VALUES
-AINPUT=( "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180402YJTest/LEP1Data1993_recons_aftercut-MERGED.root" "/data/cmcginn/StudyMultSamples/ALEPH/MC/20180323/alephMCRecoAfterCutPaths_1994.root" )
-AINPUTMIX=( "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180402YJTest/LEP1Data1993_recons_aftercut-MERGED_Mix.root" "/data/cmcginn/StudyMultSamples/ALEPH/MC/20180323/alephMCRecoAfterCutPaths_1994.root" )
+AINPUT=( "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180423/LEP1Data1993_recons_aftercut-MERGED.root" "/data/cmcginn/StudyMultSamples/ALEPH/MC/20180423/alephMCRecoAfterCutPaths_1994.root" )
+AINPUTMIX=( "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180423/LEP1Data1993_recons_aftercut-MERGED_Mix.root" "/data/cmcginn/StudyMultSamples/ALEPH/MC/20180423/alephMCRecoAfterCutPaths_1994.root" )
 AOUTPUT=( "LEP1Data1992" "LEP1MC1994_20180323" )
 
 function float_to_string()
@@ -151,7 +151,7 @@ if [ $DOCENTRAL -eq 1 ]; then
 fi
 
 multlow=( 0 20 30 35 0 5 10 15 20 25 )
-multhigh=( 10 30 999 999 5 10 15 20 25 30)
+multhigh=( 20 30 999 999 5 10 15 20 25 30)
 
 
 

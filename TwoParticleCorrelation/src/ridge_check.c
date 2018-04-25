@@ -299,6 +299,7 @@ int ridge_check( const std::string inFileName, 		// Input file
     /********************************************************************************************************************/
     // Main Event Loop
     /********************************************************************************************************************/
+    //nevent=1000;
     for (Int_t i=0;i<nevent;i++) {
         t->GetEntry(i); 
         boost_t->GetEntry(i);
@@ -339,7 +340,7 @@ int ridge_check( const std::string inFileName, 		// Input file
         /****************************************/
         for ( Int_t j=0;j<data.particle.nParticle;j++ )
         {
-            if (!trackSelector.highPurity(&data.particle,j)&&s.doGen==0) continue;
+            if (!trackSelector.highPurityBit(&data.particle,j)&&s.doGen==0) continue;
 	    h_phi->Fill(data.getPhi(j));
             h_eta->Fill(data.getEta(j));
             h_theta->Fill(data.getTheta(j));
@@ -362,7 +363,7 @@ int ridge_check( const std::string inFileName, 		// Input file
             // Signal loop, calculate S correlation function
             for ( Int_t k=j+1;k<data.particle.nParticle;k++ )
             {
-		if (!trackSelector.highPurity(&data.particle,k)&&s.doGen==0) continue;
+		if (!trackSelector.highPurityBit(&data.particle,k)&&s.doGen==0) continue;
         if (s.anatyperegion==1 && fabs(data.getEta(k))<s.etabarrelcut) continue;
         if (s.anatyperegion==2 && fabs(data.getEta(k))>s.etabarrelcut) continue;
 
@@ -466,7 +467,7 @@ int ridge_check( const std::string inFileName, 		// Input file
             for ( Int_t j=0;j<data.particle.nParticle;j++ )
             {
                 // decide if valid track
-                if (!trackSelector.highPurity(&data.particle,j)&&s.doGen==0) continue;
+                if (!trackSelector.highPurityBit(&data.particle,j)&&s.doGen==0) continue;
                 if (s.anatyperegion==1 && fabs(data.getEta(j))<s.etabarrelcut) continue;
                 if (s.anatyperegion==2 && fabs(data.getEta(j))>s.etabarrelcut) continue;
                 
@@ -486,7 +487,7 @@ int ridge_check( const std::string inFileName, 		// Input file
                 for ( Int_t k=0;k<mix.particle.nParticle;k++ )
                 {
                     // decide if valid track
-                    if (!trackSelector.highPurity(&mix.particle,k)&&s.doGen==0) continue;
+                    if (!trackSelector.highPurityBit(&mix.particle,k)&&s.doGen==0) continue;
                     if (s.anatyperegion==1 && fabs(mix.getEta(k))<s.etabarrelcut) continue;
                     if (s.anatyperegion==2 && fabs(mix.getEta(k))>s.etabarrelcut) continue;
                     // Check if the second particle is in the same range of pt and eta    
