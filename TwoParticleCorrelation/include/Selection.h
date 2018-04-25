@@ -113,7 +113,7 @@ class Selection
 
         static const Int_t nMultBins = 10;
         Int_t multBinsLow[nMultBins]  = {0 , 20, 30, 35, 0, 5, 10, 15, 20, 25};
-        Int_t multBinsHigh[nMultBins] = {10, 30, 999, 999, 5, 10, 15, 20, 25, 30};
+        Int_t multBinsHigh[nMultBins] = {20, 30, 999, 999, 5, 10, 15, 20, 25, 30};
 
         /* Plotting */
         Float_t dEtaBins = 20; //keep even

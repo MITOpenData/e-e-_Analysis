@@ -38,6 +38,7 @@ class TrackSelection{
    inline bool passesPWFlag(Short_t pwflag);
 
    bool highPurity(particleData * p, int indx);
+   bool highPurityBit(particleData * p, int indx);
    void fillHighPurity(particleData * p); 
  private:
    Short_t nTPCcut = 4;
@@ -60,6 +61,12 @@ bool TrackSelection::highPurity(particleData * p, int indx){
 
   return true;
 }
+
+bool TrackSelection::highPurityBit(particleData * p, int indx){
+  if(!(p->highPurity[indx])) return false;
+  return true;
+}
+
 
 void TrackSelection::fillHighPurity(particleData * p){
   for(int i = 0; i<p->nParticle; i++){
