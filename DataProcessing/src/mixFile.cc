@@ -119,6 +119,10 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
   outTree1_p->SetDirectory(output);
   pdataMix.SetBranchWrite(outTree1_p);
 
+  //evt info
+  eventData edataMix;
+  edataMix.SetBranchWrite(outTree1_p);
+
   //wta trees
   boostedEvtData bDataMix[nBoostedTrees];
   TTree * outTree1_b[nBoostedTrees];
@@ -147,8 +151,8 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
     //set temp variables for signal event if needed
     //get thrust axes
     TVector3 thrustAxis, thrustAxis_ch;
-    thrustAxis.SetMagThetaPhi(1, edataSig.TTheta, edataSig.TPhi);  
-    thrustAxis_ch.SetMagThetaPhi(1, edataSig.TTheta_charged, edataSig.TPhi_charged);  
+    thrustAxis.SetMagThetaPhi(edataSig.Thrust, edataSig.TTheta, edataSig.TPhi);  
+    thrustAxis_ch.SetMagThetaPhi(edataSig.Thrust_charged, edataSig.TTheta_charged, edataSig.TPhi_charged);  
    
     int signalMultiplicity = edataSig.nChargedHadronsHP; 
     int signalProcess = pdataSig.process;
@@ -178,7 +182,7 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
       //if we check the entire file and haven't found enough mixed events, give up and mix it with itself.  Warning if it passes evt sel
       if(i==j){
         if(edataSig.passesAll) std::cout << "Warning! Only " << mixedEventsFound << "/" << nEvts2Mix << " found in file for event index " <<  i << "!  Giving up with less than the requested number of mixed events..." << std::endl;
-        appendMixEvt(&pdataMix, &pdataSig, thrustAxis, thrustAxis_ch, (float)mixedEventsFound);
+        appendMixEvt(&edataMix, &pdataMix, &pdataSig, thrustAxis, thrustAxis_ch, (float)mixedEventsFound);
         for(Int_t jI = 0; jI < nBoostedTrees; ++jI) appendMixEvtBoosted(&bDataMix[jI], &pdataSig, WTAAxis[jI], WTABoost[jI], (float)mixedEventsFound);
         break;
       }
@@ -191,7 +195,7 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
       else continue;
 
       //particle loop is in here
-      appendMixEvt(&pdataMix, &pdataSig, thrustAxis, thrustAxis_ch, (float)mixedEventsFound);
+      appendMixEvt(&edataMix, &pdataMix, &pdataSig, thrustAxis, thrustAxis_ch, (float)mixedEventsFound);
       for(Int_t jI = 0; jI < nBoostedTrees; ++jI) appendMixEvtBoosted(&bDataMix[jI], &pdataSig, WTAAxis[jI], WTABoost[jI], (float)mixedEventsFound);
     }
     pdataMix.preFillClean();
