@@ -127,7 +127,7 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
   TH1D * nEvtBkgHist1 = (TH1D*)f1->Get("nEvtSigHisto"); 
 
   Float_t etaPlotRange = s.getEtaPlotRange();
-  double etaranges[8]={1.5,2.5,2.2,10,2.4,10,2.6,10};
+  double etaranges[8]={1.5,2.5,2.5,5,1.5,5,2.6,10};
   Int_t minbin,maxbin;
   Int_t nCanvas=0;
   for(int e = 0; e<nEnergyBins; e++)
@@ -209,8 +209,8 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
           // drawing plots
 	  nCanvas++;
 	  
-          TCanvas * cAll = new TCanvas(Form("c_%d",nCanvas),Form("Summary%d",nCanvas),800,800);
-	  cAll->Divide(2,2);
+          TCanvas * cAll = new TCanvas(Form("c_%d",nCanvas),Form("Summary%d",nCanvas),1200,800);
+	  cAll->Divide(3,2);
 	  for (Int_t iCanvas = 1; iCanvas<4; iCanvas++) setupCanvas(cAll->GetPad(iCanvas));
           
 	  TCanvas * c1 = new TCanvas("c1","c1",800,800);
@@ -262,7 +262,6 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
           c2->Divide(2,2);
           
           // Fourier decomposition
-          TLatex* texv2;
           TF1 *f1 = new TF1("f1","[0]*(1+2*([1]*cos(1*x)+[2]*cos(2*x)+[3]*cos(3*x)+[4]*cos(4*x)+[5]*cos(5*x)+[6]*cos(6*x)))");
           for (Int_t j=0;j<4;j++) {
             c2->cd(j+1);
@@ -275,8 +274,6 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
                h_deltaphi[0]->Fit("f1");
                h_deltaphi[0]->Fit("f1");
                h_deltaphi[0]->SetStats(0);
-               texv2 = new TLatex(1, h_deltaphi[0]->GetMaximum(), Form("v_{2}=%.3f #pm %.3f",f1->GetParameter(2),f1->GetParError(2)));
-               std::cout<<"ELLIPTIC FLOW"<<f1->GetParameter(1)<<std::endl;
               }
             }
             c2->SaveAs(Form("%s_deltaphi_%d_%d_%d_%d_%d.png",plotsname.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
@@ -284,8 +281,38 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
             //c2->SaveAs(Form("%s_longRangeYield1_%d_%d.C",plotsname.c_str(),s.multBinsLow[m],s.multBinsHigh[m]));
 
           cAll->cd(4);
+          h_deltaphi[0]->Fit("f1");
+          h_deltaphi[0]->Fit("f1");
           h_deltaphi[0]->Draw();
-          texv2->Draw();
+          TLatex*texv1_0 = new TLatex(1, (h_deltaphi[0]->GetMaximum()), Form("v_{1}=%.3f #pm %.3f",f1->GetParameter(1),f1->GetParError(1)));
+          TLatex*texv2_0 = new TLatex(1, 0.97*(h_deltaphi[0]->GetMaximum()), Form("v_{2}=%.3f #pm %.3f",f1->GetParameter(2),f1->GetParError(2)));
+          TLatex*texv3_0 = new TLatex(1, 0.94*(h_deltaphi[0]->GetMaximum()), Form("v_{3}=%.3f #pm %.3f",f1->GetParameter(3),f1->GetParError(3)));
+          texv1_0->Draw();
+          texv2_0->Draw();
+          texv3_0->Draw();
+      
+          cAll->cd(5);
+          h_deltaphi[2]->Fit("f1");
+          h_deltaphi[2]->Fit("f1");
+          h_deltaphi[2]->Draw();
+          TLatex*texv1_1 = new TLatex(1, (h_deltaphi[2]->GetMaximum()), Form("v_{1}=%.3f #pm %.3f",f1->GetParameter(1),f1->GetParError(1)));
+          TLatex*texv2_1 = new TLatex(1, 0.97*(h_deltaphi[2]->GetMaximum()), Form("v_{2}=%.3f #pm %.3f",f1->GetParameter(2),f1->GetParError(2)));
+          TLatex*texv3_1 = new TLatex(1, 0.94*(h_deltaphi[2]->GetMaximum()), Form("v_{3}=%.3f #pm %.3f",f1->GetParameter(3),f1->GetParError(3)));
+          texv1_1->Draw();
+          texv2_1->Draw();
+          texv3_1->Draw();
+    
+          cAll->cd(6);
+          h_deltaphi[4]->Fit("f1");
+          h_deltaphi[4]->Fit("f1");
+          h_deltaphi[4]->Draw();
+          TLatex*texv1_2 = new TLatex(1, (h_deltaphi[4]->GetMaximum()), Form("v_{1}=%.3f #pm %.3f",f1->GetParameter(1),f1->GetParError(1)));
+          TLatex*texv2_2 = new TLatex(1, 0.97*(h_deltaphi[4]->GetMaximum()), Form("v_{2}=%.3f #pm %.3f",f1->GetParameter(2),f1->GetParError(2)));
+          TLatex*texv3_2 = new TLatex(1, 0.94*(h_deltaphi[4]->GetMaximum()), Form("v_{3}=%.3f #pm %.3f",f1->GetParameter(3),f1->GetParError(3)));
+          texv1_2->Draw();
+          texv2_2->Draw();
+          texv3_2->Draw();
+
 //	  h_deltaphi[0]->Write();
 	  delete c1;
           /*
