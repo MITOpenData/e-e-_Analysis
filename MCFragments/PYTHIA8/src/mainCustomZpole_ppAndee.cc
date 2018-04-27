@@ -20,6 +20,9 @@
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/PseudoJet.hh"
 
+//mixing
+#include "src/mixFile.cc"
+
 //local dependencies
 #include "include/jetData.h"
 #include "include/particleData.h"
@@ -30,14 +33,6 @@
 #include "include/doGlobalDebug.h"
 #include "include/processJets.h"
 
-double get_wall_time(){
-  struct timeval time;
-  if (gettimeofday(&time,NULL)){
-    //  Handle error
-    return 0;
-  }
-  return (double)time.tv_sec + (double)time.tv_usec * .000001;
-}
 
 int main(int argc, char* argv[])
 {
@@ -406,6 +401,10 @@ int main(int argc, char* argv[])
   double endTime = get_wall_time();
 
   std::cout << "Start to end: " << startTime << ", " << endTime << std::endl;
+
+  std::cout << "Mixing File..." << std::endl;
+  makeMixFile(outFileName, "", 1);
+  std::cout << "Job done" << std::endl;
 
   return 0;
 }
