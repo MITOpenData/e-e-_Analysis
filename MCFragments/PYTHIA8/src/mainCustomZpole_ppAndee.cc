@@ -151,6 +151,7 @@ int main(int argc, char* argv[])
 
   Pythia8::Pythia pythia;
   double mZ = pythia.particleData.m0(23);
+  double Energy=0;
   if(isSysPP){
     pythia.readString("Beams:idA = 2212");
     pythia.readString("Beams:idB = 2212");
@@ -159,6 +160,7 @@ int main(int argc, char* argv[])
     if(!doBiasPthat){
       pythia.readString("PhaseSpace:pTHatMin = 1.0");
       pythia.settings.parm("Beams:eCM", mZ);
+      Energy = mZ;
     }
     else if(doBiasPthat){
       std::cout << "pthatbias is on" << std::endl;
@@ -167,6 +169,7 @@ int main(int argc, char* argv[])
       //      pythia.readString("PhaseSpace:bias2SelectionPow = 3");
       //      pythia.readString("PhaseSpace:bias2SelectionRef  = 1.0");
       pythia.readString("Beams:eCM = 7000.0");
+      Energy = 7000;
     }
   }
   else{
@@ -177,6 +180,7 @@ int main(int argc, char* argv[])
     pythia.readString("PhaseSpace:pTHatMin = 0.0");
     pythia.readString("PhaseSpace:pTHatMax = -1");
     pythia.settings.parm("Beams:eCM", mZ);
+    Energy = mZ;
   }
 
   const Int_t seedStart = 55217;//Chosen by drawing cards from a deck, will be used to do versioning validation from now on
@@ -237,6 +241,7 @@ int main(int argc, char* argv[])
     pthatWeight_ = pythia.info.weight();
     pData.nParticle = 0;
     bData.nParticle = 0;
+    pData.Energy = Energy;
     eData.nChargedHadrons = 0;
     eData.nChargedHadrons_GT0p4 = 0;
     eData.nChargedHadrons_GT0p4Thrust = 0;
