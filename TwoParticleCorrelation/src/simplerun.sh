@@ -1,16 +1,16 @@
 DOCENTRAL=1
 DOCOPYPLOTS=1
 
-domix=1
+domix=0
 overwrite=1
-owbarrel=1
+owbarrel=0
 
 VERBOSE=1
 
-listsample=(0) #0=data, 1=mc
-listetaselection=(4) #from this list of values (0 0.3 0.5 1.0 2.0) 
+listsample=(0 1) #0=data, 1=mc
+listetaselection=(0) #from this list of values (0 0.3 0.5 1.0 2.0) 
 listgen=(0) #0=no gen selection, 1=gen selection
-listaxis=(1) #0=beam, 1=thrust, 2=wta, 3=thrust perp, 4 =wta perp 
+listaxis=(0) #0=beam, 1=thrust, 2=wta, 3=thrust perp, 4 =wta perp 
 listmultiplicitytype=(0)  #0=standard multiplicity, multiplicity in barrel
 listtypeEnergyBarrelSel=(0) #0=no rejection, 1=rejecting high energy in barrel, 2=rejecting high energy our of barrel
 listvalueEnergyBarrelSel=(0) #(1.0 0.8 0.6 0.4 0.2)
@@ -135,7 +135,6 @@ if [ $DOCENTRAL -eq 1 ]; then
                       rm $OUTPUTHISTO
                       rm -rf $FOLDERPLOTS
                       mkdir $FOLDERPLOTS 
-                      rm $OUTPUTROOT
                       root -l -q -b "ridge_check.c+(\"$INPUTDATA\",\"$OUTPUTROOT\",\"$INPUTDATAMIX\","$overwrite","$thrust","$wta","$perp","$gen","$VERBOSE","${ajrej}","${ajrejcut}","${threejet}","${threejetcut}","${owbarrel}","${anatyperegion}","${etabarrelcut}","${typeEnergyBarrelSel}","${etabarrelcutforEselection}","${maxrelenergyinsidebarrel}","${typemultiplicity}")"
                       root -l -q -b "TPCPlots.cc+(\"$OUTPUTROOT\",\"$OUTPUTHISTO\",\"$OUTPUTPLOTS\")" 
                     done # with E cut selection in barrel
@@ -180,6 +179,10 @@ if [ $DOCOPYPLOTS -eq 1 ]; then
     mkdir wta
     cd wta
     mv ../*wta1*.pdf .
+    cd ..
+    mkdir beam
+    cd beam
+    mv ../*.pdf .
     cd ..
     cd ..
   done
