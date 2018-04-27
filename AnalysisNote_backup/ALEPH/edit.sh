@@ -1,0 +1,1 @@
+nedit *.tex *.bib&

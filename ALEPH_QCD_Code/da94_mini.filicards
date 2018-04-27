@@ -1,0 +1,83 @@
+*
+* CARDS generated on Monday 28-MAY-2001 at 18:18
+*
+* typedat=>Real DATA
+* institute=>CERN
+* wantwhat=>List of Real Data cartridges and creation of FILI cards
+* data_type=>MINI
+* DataYear=>1994
+* runorfill=>
+* selby=>YEAR
+* RunOrCart=>
+* Kinlist=> 5300            HVFL5N        1954            462
+* Kingal_conds=> 400    40  : q qbar at Z peak
+* McYear=>1994
+* kinMass=>Unknown
+* PhysGroups=>F_____________%
+* energy_Lep=>     ANY
+* filisorted=>No
+* specpar=>
+* Runquality=>PERF or MAYB
+* OutputType=>Normal output
+* processings=>   Last         60      19990215 to 19990224   305    202     Yes
+* EdirYesno=>Yes
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_4.edir   | EDIR'  ! MINI 20.2 Z0  25566 PROD 990215 RUNS 25911 --> 25982
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_12.edir  | EDIR'  ! MINI 20.2 Z0  30598 PROD 990216 RUNS 25933 --> 26781
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_5.edir   | EDIR'  ! MINI 20.2 Z0  24467 PROD 990216 RUNS 25983 --> 26896
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_6.edir   | EDIR'  ! MINI 20.2 Z0  24655 PROD 990216 RUNS 26048 --> 26156
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_7.edir   | EDIR'  ! MINI 20.2 Z0  25969 PROD 990216 RUNS 26157 --> 26377
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_8.edir   | EDIR'  ! MINI 20.2 Z0  28528 PROD 990216 RUNS 26378 --> 26438
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_9.edir   | EDIR'  ! MINI 20.2 Z0  29629 PROD 990216 RUNS 26439 --> 30324
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_10.edir  | EDIR'  ! MINI 20.2 Z0  29893 PROD 990216 RUNS 26501 --> 26574
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_11.edir  | EDIR'  ! MINI 20.2 Z0  30869 PROD 990216 RUNS 26575 --> 26710
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_13.edir  | EDIR'  ! MINI 20.2 Z0  30870 PROD 990216 RUNS 26782 --> 26836
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_14.edir  | EDIR'  ! MINI 20.2 Z0  30036 PROD 990217 RUNS 26845 --> 26907
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_21.edir  | EDIR'  ! MINI 20.2 Z0  28663 PROD 990217 RUNS 26859 --> 27450
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_63.edir  | EDIR'  ! MINI 20.2 Z0  24541 PROD 990224 RUNS 26870 --> 30353
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_15.edir  | EDIR'  ! MINI 20.2 Z0  28681 PROD 990217 RUNS 26908 --> 27095
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_16.edir  | EDIR'  ! MINI 20.2 Z0  27943 PROD 990217 RUNS 27096 --> 27142
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_17.edir  | EDIR'  ! MINI 20.2 Z0  28082 PROD 990217 RUNS 27143 --> 27208
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_24.edir  | EDIR'  ! MINI 20.2 Z0  28063 PROD 990217 RUNS 27151 --> 27586
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_18.edir  | EDIR'  ! MINI 20.2 Z0  26484 PROD 990217 RUNS 27209 --> 27286
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_19.edir  | EDIR'  ! MINI 20.2 Z0  28225 PROD 990217 RUNS 27287 --> 27350
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_20.edir  | EDIR'  ! MINI 20.2 Z0  28727 PROD 990217 RUNS 27351 --> 27412
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_22.edir  | EDIR'  ! MINI 20.2 Z0  28181 PROD 990217 RUNS 27451 --> 27504
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_23.edir  | EDIR'  ! MINI 20.2 Z0  27820 PROD 990217 RUNS 27505 --> 27549
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_25.edir  | EDIR'  ! MINI 20.2 Z0  28772 PROD 990218 RUNS 27587 --> 27637
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_26.edir  | EDIR'  ! MINI 20.2 Z0  28445 PROD 990218 RUNS 27638 --> 27808
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_30.edir  | EDIR'  ! MINI 20.2 Z0  27526 PROD 990218 RUNS 27767 --> 30329
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_27.edir  | EDIR'  ! MINI 20.2 Z0  27975 PROD 990218 RUNS 27809 --> 27873
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_28.edir  | EDIR'  ! MINI 20.2 Z0  28228 PROD 990218 RUNS 27874 --> 27928
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_29.edir  | EDIR'  ! MINI 20.2 Z0  27890 PROD 990218 RUNS 27929 --> 27986
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_31.edir  | EDIR'  ! MINI 20.2 Z0  27984 PROD 990218 RUNS 28030 --> 28094
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_32.edir  | EDIR'  ! MINI 20.2 Z0  27587 PROD 990218 RUNS 28095 --> 28151
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_33.edir  | EDIR'  ! MINI 20.2 Z0  28204 PROD 990218 RUNS 28152 --> 28194
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_34.edir  | EDIR'  ! MINI 20.2 Z0  27197 PROD 990218 RUNS 28195 --> 28234
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_35.edir  | EDIR'  ! MINI 20.2 Z0  26927 PROD 990218 RUNS 28235 --> 28438
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_36.edir  | EDIR'  ! MINI 20.2 Z0  27441 PROD 990219 RUNS 28439 --> 28494
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_39.edir  | EDIR'  ! MINI 20.2 Z0  27709 PROD 990219 RUNS 28471 --> 28681
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_37.edir  | EDIR'  ! MINI 20.2 Z0  27374 PROD 990219 RUNS 28495 --> 28572
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_38.edir  | EDIR'  ! MINI 20.2 Z0  26957 PROD 990219 RUNS 28573 --> 28639
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_40.edir  | EDIR'  ! MINI 20.2 Z0  27926 PROD 990219 RUNS 28678 --> 28725
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_41.edir  | EDIR'  ! MINI 20.2 Z0  27710 PROD 990219 RUNS 28726 --> 28869
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_42.edir  | EDIR'  ! MINI 20.2 Z0  27584 PROD 990219 RUNS 28870 --> 28920
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_43.edir  | EDIR'  ! MINI 20.2 Z0  26905 PROD 990219 RUNS 28921 --> 28972
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_44.edir  | EDIR'  ! MINI 20.2 Z0  27719 PROD 990219 RUNS 28973 --> 29023
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_45.edir  | EDIR'  ! MINI 20.2 Z0  28635 PROD 990219 RUNS 29024 --> 29065
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_46.edir  | EDIR'  ! MINI 20.2 Z0  27393 PROD 990219 RUNS 29066 --> 29152
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_47.edir  | EDIR'  ! MINI 20.2 Z0  28103 PROD 990219 RUNS 29153 --> 29196
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_48.edir  | EDIR'  ! MINI 20.2 Z0  28531 PROD 990220 RUNS 29197 --> 29243
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_49.edir  | EDIR'  ! MINI 20.2 Z0  27320 PROD 990220 RUNS 29248 --> 29304
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_50.edir  | EDIR'  ! MINI 20.2 Z0  23038 PROD 990220 RUNS 29305 --> 29361
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_51.edir  | EDIR'  ! MINI 20.2 Z0  28829 PROD 990220 RUNS 29363 --> 29411
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_52.edir  | EDIR'  ! MINI 20.2 Z0  28053 PROD 990220 RUNS 29412 --> 29476
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_53.edir  | EDIR'  ! MINI 20.2 Z0  28535 PROD 990220 RUNS 29477 --> 29529
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_54.edir  | EDIR'  ! MINI 20.2 Z0  27799 PROD 990222 RUNS 29530 --> 29579
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_55.edir  | EDIR'  ! MINI 20.2 Z0  28350 PROD 990222 RUNS 29580 --> 29622
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_56.edir  | EDIR'  ! MINI 20.2 Z0  29269 PROD 990222 RUNS 29623 --> 29661
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_57.edir  | EDIR'  ! MINI 20.2 Z0  28561 PROD 990222 RUNS 29662 --> 29708
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_58.edir  | EDIR'  ! MINI 20.2 Z0  28721 PROD 990222 RUNS 29709 --> 29752
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_59.edir  | EDIR'  ! MINI 20.2 Z0  23330 PROD 990222 RUNS 29753 --> 30115
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_61.edir  | EDIR'  ! MINI 20.2 Z0  26061 PROD 990222 RUNS 30073 --> 30215
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_60.edir  | EDIR'  ! MINI 20.2 Z0  26632 PROD 990222 RUNS 30116 --> 30179
+FILI '/afs/cern.ch/aleph/shared/edirlink/y15224_62.edir  | EDIR'  ! MINI 20.2 Z0  25816 PROD 990223 RUNS 30216 --> 30309

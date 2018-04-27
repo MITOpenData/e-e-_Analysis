@@ -1,0 +1,64 @@
+*
+* CARDS generated on Monday 28-MAY-2001 at 18:17
+*
+* typedat=>MC DATA
+* institute=>CERN
+* wantwhat=>List of Real Data cartridges and creation of FILI cards
+* data_type=>MINI
+* DataYear=>2000
+* runorfill=>
+* selby=>YEAR
+* RunOrCart=>
+* Kinlist=> 5300            HVFL5N        1954            462
+* Kingal_conds=> 400    40  : q qbar at Z peak
+* McYear=>1994
+* kinMass=>Unknown
+* PhysGroups=>F_%
+* energy_Lep=> 91250
+* filisorted=>No
+* specpar=>ANY
+* Runquality=>
+* OutputType=>Normal output
+* mcDatasets=>   309    313   205          40
+* EdirYesno=>Yes
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_43.edir  | EDIR'  ! MINI 205 RUN 10 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_44.edir  | EDIR'  ! MINI 205 RUN 20 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_45.edir  | EDIR'  ! MINI 205 RUN 30 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_46.edir  | EDIR'  ! MINI 205 RUN 40 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_47.edir  | EDIR'  ! MINI 205 RUN 50 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_48.edir  | EDIR'  ! MINI 205 RUN 60 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_49.edir  | EDIR'  ! MINI 205 RUN 70 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_50.edir  | EDIR'  ! MINI 205 RUN 80 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_51.edir  | EDIR'  ! MINI 205 RUN 90 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_52.edir  | EDIR'  ! MINI 205 RUN 100 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_53.edir  | EDIR'  ! MINI 205 RUN 110 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_54.edir  | EDIR'  ! MINI 205 RUN 120 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_55.edir  | EDIR'  ! MINI 205 RUN 130 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_56.edir  | EDIR'  ! MINI 205 RUN 140 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_57.edir  | EDIR'  ! MINI 205 RUN 150 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_58.edir  | EDIR'  ! MINI 205 RUN 160 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_59.edir  | EDIR'  ! MINI 205 RUN 170 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_60.edir  | EDIR'  ! MINI 205 RUN 180 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_61.edir  | EDIR'  ! MINI 205 RUN 190 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_62.edir  | EDIR'  ! MINI 205 RUN 200 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_63.edir  | EDIR'  ! MINI 205 RUN 210 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_64.edir  | EDIR'  ! MINI 205 RUN 220 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_65.edir  | EDIR'  ! MINI 205 RUN 230 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_66.edir  | EDIR'  ! MINI 205 RUN 240 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_67.edir  | EDIR'  ! MINI 205 RUN 250 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_68.edir  | EDIR'  ! MINI 205 RUN 260 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_69.edir  | EDIR'  ! MINI 205 RUN 270 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_70.edir  | EDIR'  ! MINI 205 RUN 280 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_71.edir  | EDIR'  ! MINI 205 RUN 290 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_72.edir  | EDIR'  ! MINI 205 RUN 300 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_73.edir  | EDIR'  ! MINI 205 RUN 310 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_74.edir  | EDIR'  ! MINI 205 RUN 320 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_75.edir  | EDIR'  ! MINI 205 RUN 330 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_76.edir  | EDIR'  ! MINI 205 RUN 340 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_77.edir  | EDIR'  ! MINI 205 RUN 350 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_78.edir  | EDIR'  ! MINI 205 RUN 360 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_79.edir  | EDIR'  ! MINI 205 RUN 370 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_80.edir  | EDIR'  ! MINI 205 RUN 380 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_81.edir  | EDIR'  ! MINI 205 RUN 390 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_82.edir  | EDIR'  ! MINI 205 RUN 400 HQQZ94  91.2 G9400 J313.2+G309.2 310#25000
+****==> Explanation of keyword HqqZ94 in the above comment : q qbar at Z peak

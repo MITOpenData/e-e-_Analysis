@@ -12,13 +12,13 @@
 #include "TCanvas.h"
 #include "TPad.h"
 
-#include "../../DataProcessing/include/particleData.h"
-#include "../../DataProcessing/include/eventData.h"
-#include "../../DataProcessing/include/jetData.h"
-#include "../../DataProcessing/include/returnRootFileContentsList.h"
-#include "../../DataProcessing/include/removeVectorDuplicates.h"
-#include "../../DataProcessing/include/histDefUtility.h"
-#include "../include/handleMultipleFiles.h"
+#include "DataProcessing/include/particleData.h"
+#include "DataProcessing/include/eventData.h"
+#include "DataProcessing/include/jetData.h"
+#include "DataProcessing/include/returnRootFileContentsList.h"
+#include "DataProcessing/include/removeVectorDuplicates.h"
+#include "DataProcessing/include/histDefUtility.h"
+#include "include/handleMultipleFiles.h"
 #include "include/Selection.h"
 // hist_p = {hist1_p,hist2_p, ... , histN_p}
 // histDelta_p[] = {hist_Delta1From2,hist_Delta1From3, ... , hist_Delta1FromN, hist_Delta2From3, ... , hist_Delta2FromN, ... , hist_DeltaN-1FromN}
@@ -139,7 +139,7 @@ void formatTH1F(TH1F * h)
     h->GetXaxis()->SetTitleOffset(h->GetXaxis()->GetTitleOffset()*3.);
 }
 
-int plotDQC(const std::string inFileName, std::string outFileName = "", int drawHist = 0)
+int plotDQC(const std::string inFileName, std::string outFileName = "", int doECut = 0, int drawHist = 0)
 {
     
   ///// check if there are multiple files /////
@@ -184,87 +184,71 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
       inTree.push_back(inTree_p);
   }
     
-   
-  std::vector< std::map<ULong64_t, Int_t> > RunEvtToEntry;
 
   ///////// LOADING THE VARIABLES TO PLOT FROM THE FILES /////////
     
   /////// LOADING THE INITIAL BRANCHES/RANGES FROM FILE 1 ///////
-    for(unsigned int i = 0; i<fileList.size();++i)std::cout<<fileList.at(i).c_str()<<std::endl;
-    
+  for(unsigned int i = 0; i<fileList.size();++i)std::cout<<fileList.at(i).c_str()<<std::endl;
+  
   inFile.at(0) = new TFile(fileList.at(0).c_str(), "READ");
   inTree.at(0) = (TTree*)inFile.at(0)->Get("t");
-    // turn on only the runNo and EventNo branches
+  // turn on only the runNo and EventNo branches
   //inTree.at(0)->SetBranchStatus("*", 0);
   //inTree.at(0)->SetBranchStatus("RunNo", 1);
   //inTree.at(0)->SetBranchStatus("EventNo", 1);
   inTree.at(0)->SetBranchAddress("RunNo", &pData.at(0).RunNo);
   inTree.at(0)->SetBranchAddress("EventNo", &pData.at(0).EventNo);
-
-    // matching an event between files
-  std::map<ULong64_t, Int_t> f1RunEvtToEntry;
-  for(Int_t entry = 0; entry < inTree.at(0)->GetEntries(); ++entry){
-    inTree.at(0)->GetEntry(entry);
-
-    ULong64_t key = pData.at(0).RunNo*10000000 + pData.at(0).EventNo;
-    if(f1RunEvtToEntry.find(key) != f1RunEvtToEntry.end()){
-      std::cout << "Uhoh key duplication \'" << key << "\'..." << std::endl;
-    }
-    f1RunEvtToEntry[key] = entry;
-  }
-  RunEvtToEntry.push_back(f1RunEvtToEntry);
-    
-    // load the master branch list from the first tree from file 1
+  
+  // load the master branch list from the first tree from file 1
   std::cout<<"Initializing Mins and Maxs..."<<std::endl;
   TObjArray* list1_p = (TObjArray*)inTree.at(0)->GetListOfBranches();
   for(Int_t i = 0; i < list1_p->GetEntries(); ++i){
     listOfCompBranches.push_back(list1_p->At(i)->GetName());
-      // load in the minimum and maximums from the branches
+    // load in the minimum and maximums from the branches
     branchMins.push_back(inTree.at(0)->GetMinimum(list1_p->At(i)->GetName()));
     branchMaxs.push_back(inTree.at(0)->GetMaximum(list1_p->At(i)->GetName()));
     //std::cout << listOfCompBranches.at(i)<<" "<< branchMins.at(i) << " "<< inTree.at(0)->GetMinimum(list1_p->At(i)->GetName()) << ", " << branchMaxs.at(i) << " "<<inTree.at(0)->GetMaximum(list1_p->At(i)->GetName()) <<std::endl;
   }
-
-    // get the list of jet trees in the file
-    
+  
+  // get the list of jet trees in the file
+  
   std::vector<std::string> listOfJetTrees1 = returnRootFileContentsList(inFile.at(0), "TTree", "JetTree");
   removeVectorDuplicates(&listOfJetTrees1);
   std::vector< std::vector<std::string> > listOfJetTreeBranches;
-    // for the minimum and maximum of the jet trees
+  // for the minimum and maximum of the jet trees
   std::vector< std::vector<double> > listOfJetTreeMins;
   std::vector< std::vector<double> > listOfJetTreeMaxs;
   for(unsigned int jI = 0; jI < listOfJetTrees1.size(); ++jI){
-      // load the temporary jet tree
+    // load the temporary jet tree
     TTree* tempTree_p = (TTree*)inFile.at(0)->Get(listOfJetTrees1.at(jI).c_str());
     TObjArray* tempList = (TObjArray*)tempTree_p->GetListOfBranches();
     std::vector<std::string> tempV;
     std::vector<double> tempMins;
     std::vector<double> tempMaxs;
-
-      // load the mins and maxs from that tree
+    
+    // load the mins and maxs from that tree
     for(Int_t i = 0; i < tempList->GetEntries(); ++i){
       tempV.push_back(tempList->At(i)->GetName());
       tempMins.push_back(tempTree_p->GetMinimum(tempList->At(i)->GetName()));
       tempMaxs.push_back(tempTree_p->GetMaximum(tempList->At(i)->GetName()));
     }
-
+    
     listOfJetTreeBranches.push_back(tempV);
     listOfJetTreeMins.push_back(tempMins);
     listOfJetTreeMaxs.push_back(tempMaxs);
   }
-
-    // clean up
+  
+  // clean up
   inFile.at(0)->Close();
   delete inFile.at(0);
-
+  
   ////////////////////// DONE LOADING FROM FILE 1 //////////////////////
-    
-    
+  
+  
   ////////////////////// LOOP OVER OTHER FILES //////////////////////
-    
+  
   for (unsigned int fI = 1; fI < fileList.size(); ++fI)
-  {
-      std::map<ULong64_t, Int_t> f2RunEvtToEntry;
+    {
       inFile.at(fI) = new TFile(fileList.at(fI).c_str(), "READ");
       inTree.at(fI) = (TTree*)inFile.at(fI)->Get("t");
       TObjArray* list2_p = (TObjArray*)inTree.at(fI)->GetListOfBranches();
@@ -274,17 +258,6 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
       inTree.at(fI)->SetBranchStatus("EventNo", 1);
       inTree.at(fI)->SetBranchAddress("RunNo", &pData.at(fI).RunNo);
       inTree.at(fI)->SetBranchAddress("EventNo", &pData.at(fI).EventNo);
-      
-      for(Int_t entry = 0; entry < inTree.at(fI)->GetEntries(); ++entry){
-          inTree.at(fI)->GetEntry(entry);
-          
-          ULong64_t key = pData.at(fI).RunNo*10000000 + pData.at(fI).EventNo;
-          if(f2RunEvtToEntry.find(key) != f2RunEvtToEntry.end()){
-              std::cout << "Uhoh key duplication \'" << key << "\'..." << std::endl;
-          }
-          f2RunEvtToEntry[key] = entry;
-      }
-      RunEvtToEntry.push_back(f2RunEvtToEntry);
       
       unsigned int pos = 0;
       while(pos < listOfCompBranches.size()){
@@ -498,7 +471,7 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
   }
   
     
-    
+  const Int_t nBins = 1000;  
   // check that the brachMax and brachMin are not equal and add a little bit of space to make the plot look nicer
   for(Int_t i = 0; i < nVarToComp; ++i){
     double tempInterval = branchMaxs.at(i) - branchMins.at(i);
@@ -511,21 +484,22 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
     }
     //std::cout << listOfCompBranches.at(i)<<" "<< branchMins.at(i) << ", " << branchMaxs.at(i) << std::endl;
   // initialize the histograms for the particle data
+    
     unsigned int loc = 0;
     for(unsigned int hI = 0; hI < fileList.size(); ++hI)
     {
-        hist.at(hI).at(i) = new TH1F(Form((listOfCompBranches.at(i) + "_file%d_h").c_str(),hI), (";" + listOfCompBranches.at(i) + ";Counts").c_str(), 100, branchMins.at(i), branchMaxs.at(i));
+        hist.at(hI).at(i) = new TH1F(Form((listOfCompBranches.at(i) + "_file%d_h").c_str(),hI), (";" + listOfCompBranches.at(i) + ";Counts").c_str(), nBins, branchMins.at(i), branchMaxs.at(i));
         for(unsigned int hII = hI+1; hII < fileList.size(); ++hII)
         {
-            histRat.at(loc).at(i) = new TH1F(Form((listOfCompBranches.at(i) + "_file_Rat%dOver%d_h").c_str(),hI,hII), (";" + listOfCompBranches.at(i) + Form(";File%d/File%d",hI,hII)).c_str(), 100, branchMins.at(i), branchMaxs.at(i));
-            histDelta.at(loc).at(i) = new TH1F(Form((listOfCompBranches.at(i) + "_Delta%dFrom%d_EvtByEvt_h").c_str(),hI,hII), (";" + listOfCompBranches.at(i) + Form("_{File %d}",hI) + "-" + listOfCompBranches.at(i) + Form("_{File %d};Counts",hII)).c_str(), 100, -1, 1);
+            histRat.at(loc).at(i) = new TH1F(Form((listOfCompBranches.at(i) + "_file_Rat%dOver%d_h").c_str(),hI,hII), (";" + listOfCompBranches.at(i) + Form(";File%d/File%d",hI,hII)).c_str(), nBins, branchMins.at(i), branchMaxs.at(i));
+            histDelta.at(loc).at(i) = new TH1F(Form((listOfCompBranches.at(i) + "_Delta%dFrom%d_EvtByEvt_h").c_str(),hI,hII), (";" + listOfCompBranches.at(i) + Form("_{File %d}",hI) + "-" + listOfCompBranches.at(i) + Form("_{File %d};Counts",hII)).c_str(), nBins, -1, 1);
             centerTitles({histRat.at(loc).at(i), histDelta.at(loc).at(i)});
             ++loc;
         }
         centerTitles(hist.at(hI).at(i));
     }
     if ( (loc) != nTriangNum ) std::cout<<"Incorrect number of delta and ratio histograms initialized"<<std::endl;
-    //hist1_p[i] = new TH1F((listOfCompBranches.at(i) + "_file1_h").c_str(), (";" + listOfCompBranches.at(i) + ";Counts").c_str(), 100, branchMins.at(i), branchMaxs.at(i));
+    //hist1_p[i] = new TH1F((listOfCompBranches.at(i) + "_file1_h").c_str(), (";" + listOfCompBranches.at(i) + ";Counts").c_str(), nBins, branchMins.at(i), branchMaxs.at(i));
   }
   
   for(Int_t jI = 0; jI < nJetTrees; ++jI)
@@ -553,11 +527,11 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
       for (unsigned int hI = 0; hI < fileList.size(); ++hI)
       {
           // at(file).at(jet Tree).at(branch)
-          hist_Jet.at(hI).at(jI).at(bI) = new TH1F(Form((nameStr + "_file%d_h").c_str(),hI), (";" + brStr + " (" + jetStr + ");Counts").c_str(), 100, tempMin, tempMax);
+          hist_Jet.at(hI).at(jI).at(bI) = new TH1F(Form((nameStr + "_file%d_h").c_str(),hI), (";" + brStr + " (" + jetStr + ");Counts").c_str(), nBins, tempMin, tempMax);
           for (unsigned int hII = hI+1; hII < fileList.size(); ++hII)
           {
-              histRat_Jet.at(loc).at(jI).at(bI) = new TH1F(Form((nameStr + "_file_Rat%dOver%d_h").c_str(),hI,hII), (";" + brStr + " (" + jetStr + Form(");File%d/File%d",hI,hII)).c_str(), 100, tempMin, tempMax);
-              histDelta_Jet.at(loc).at(jI).at(bI) = new TH1F(Form((nameStr + "_Delta%dFrom%d_EvtByEvt_h").c_str(),hI,hII), (";" + brStr + Form("_{File %d}",hI) + "-" + brStr + Form("_{File %d}",hII) + " (" + jetStr + ");Counts").c_str(), 100, -1, 1);
+              histRat_Jet.at(loc).at(jI).at(bI) = new TH1F(Form((nameStr + "_file_Rat%dOver%d_h").c_str(),hI,hII), (";" + brStr + " (" + jetStr + Form(");File%d/File%d",hI,hII)).c_str(), nBins, tempMin, tempMax);
+              histDelta_Jet.at(loc).at(jI).at(bI) = new TH1F(Form((nameStr + "_Delta%dFrom%d_EvtByEvt_h").c_str(),hI,hII), (";" + brStr + Form("_{File %d}",hI) + "-" + brStr + Form("_{File %d}",hII) + " (" + jetStr + ");Counts").c_str(), nBins, -1, 1);
               centerTitles({histRat_Jet.at(loc).at(jI).at(bI), histDelta_Jet.at(loc).at(jI).at(bI)});
               ++loc;
           }
@@ -604,6 +578,9 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
     
     inTree.at(0)->GetEntry(entry);
     
+    // look at around the 91.5 GeV range for LEP2
+    if (doECut & (pData.at(0).Energy > 100.0)) continue; 
+
     // apply the event selection criteria
     Int_t nTrk = 0;
     if(!s.donTrkThrust) nTrk = s.ridge_eventSelection(eData.at(0).passesWW, eData.at(0).missP, pData.at(0).nParticle, jData.at(0).at(0).nref, jData.at(0).at(0).jtpt, jData.at(0).at(0).jteta, eData.at(0).STheta, pData.at(0).mass, pData.at(0).ntpc, pData.at(0).theta, pData.at(0).pmag, pData.at(0).d0, pData.at(0).z0, pData.at(0).pwflag);
@@ -614,30 +591,12 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
     if(inFileName.find("LEP2") != std::string::npos && eData.at(0).passesWW == 0) continue;
     for(Int_t jI = 0; jI < nJetTrees; ++jI){jetTree.at(0)[jI]->GetEntry(entry);}
     // check if the key is in the list
-    ULong64_t key = pData.at(0).RunNo*10000000 + pData.at(0).EventNo;
-    bool keyPasses = true;
-    
-    for( unsigned int fI = 0; fI < fileList.size(); ++fI)
-    {
-          if(RunEvtToEntry.at(fI).find(key) == RunEvtToEntry.at(fI).end())
-          {
-              std::cout << Form("Uhoh missing key in file %d\'",fI) << key << "\'..." << std::endl;
-              keyPasses = false;
-              continue;
-          }
-          if(!keyPasses)break;
-    }
-    
-    if(!keyPasses)continue;
+
     // load the remaining trees and apply the event selection
     for( unsigned int fI = 1; fI < fileList.size(); ++fI)
     {
-        inTree.at(fI)->GetEntry(RunEvtToEntry.at(fI)[key]);
-        for(Int_t jI = 0; jI < nJetTrees; ++jI){jetTree.at(fI).at(jI)->GetEntry(RunEvtToEntry.at(fI)[key]);}
+        inTree.at(fI)->GetEntry(entry);
     }
-    
-    
-
     /////// FILLING THE HISTOGRAMS ////////
     for(unsigned int lI = 0; lI < listOfCompBranches.size(); ++lI){
       std::string tempS = listOfCompBranches.at(lI);
@@ -1333,7 +1292,7 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
         canv_p->SetLeftMargin(0.01);
         canv_p->SetBottomMargin(0.01);
         
-        TPad* pad1 = new TPad("pad1", "pad1", 0.0, splitPoint, 0.5, 1.0);
+        pad1 = new TPad("pad1", "pad1", 0.0, splitPoint, 0.5, 1.0);
         pad1->Draw();
         pad1->SetTopMargin(0.01);
         pad1->SetRightMargin(0.01);
@@ -1541,16 +1500,18 @@ int plotDQC(const std::string inFileName, std::string outFileName = "", int draw
   return 0;
 }
 
-                           /*
+                           
 int main(int argc, char* argv[])
 {
-  if(argc != 4 && argc != 5){
-    std::cout << "Usage ./doComparison.exe <inFileName1> <inFileName2> <inFileName3> <outFileName-optional>" << std::endl;
+  if(argc != 2 && argc != 3 && argc != 4){
+    std::cout << "Usage ./plotDQC.exe <inFileName1> <outFileName>" << std::endl;
     return 1;
   }
 
   int retVal = 0;
-  if(argc == 4) retVal += doComparison(argv[1], argv[2], argv[3]);
-  else if(argc == 5) retVal += doComparison(argv[1], argv[2], argv[3], argv[4]);
+  if(argc == 2) retVal += plotDQC(argv[1]);
+  else if(argc == 3) retVal += plotDQC(argv[1], argv[2]);
+  else if(argc == 4) retVal += plotDQC(argv[1], argv[2], atoi(argv[3]));
+  else if(argc == 5) retVal += plotDQC(argv[1], argv[2], atoi(argv[3]), atoi(argv[4]));
   return retVal;
-} */
+}

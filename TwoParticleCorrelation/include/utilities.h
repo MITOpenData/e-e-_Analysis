@@ -102,7 +102,7 @@ enum SIMPLEPWFLAG {ALEPH_CHARGED_TRACK, ALEPH_CHARGED_LEPTONS1, ALEPH_CHARGED_LE
 int calculateRatio(TH2F *h_2D, TH2F *h_2Dmix, TH2F *h_ratio)
 {
     
-    double normalization = h_2D->GetXaxis()->GetBinWidth(1)*h_2D->GetYaxis()->GetBinWidth(1);
+    //double normalization = h_2D->GetXaxis()->GetBinWidth(1)*h_2D->GetYaxis()->GetBinWidth(1);
     double ratio = 0;
     double errrel_ratio = 0;
     double errrel_num = 0;
@@ -141,7 +141,6 @@ int calculateRatio(TH2F *h_2D, TH2F *h_2Dmix, TH2F *h_ratio)
 }
 
 void getLongRangeYield(Selection s, TH2F * h, TH1F * g){
-    float binArea = (4*s.etaPlotRange/(float)s.dEtaBins)*(2*TMath::Pi()/(float)s.dPhiBins);
     
     for(int i = 0; i<s.dPhiBins; i++){
         float sum = 0;

@@ -8,6 +8,10 @@
 #ifndef handleMultipleFiles_h
 #define handleMultipleFiles_h
 
+#include <string>
+#include <vector>
+#include <fstream>
+
 // used to return a vector of strings if the input is a text file containing file name
 // or just the single root file if that was what was passed in
 std::vector<std::string> handleMultipleFiles(const std::string inFileName)

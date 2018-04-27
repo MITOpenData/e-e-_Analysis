@@ -1,52 +1,52 @@
-This is BibTeX, Version 0.99d (TeX Live 2015/Debian)
+This is BibTeX, Version 0.99d (TeX Live 2013/Debian)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: main.aux
 The style file: lucas_unsrt.bst
 Database file #1: mainNotes.bib
 Database file #2: main.bib
-Repeated entry---line 225 of file main.bib
+Repeated entry---line 251 of file main.bib
  : @article{Aamodt:2010pa
  :                       ,
 I'm skipping whatever remains of this entry
-You've used 17 entries,
+You've used 19 entries,
             2537 wiz_defined-function locations,
-            782 strings with 9029 characters,
-and the built_in function-call counts, 6329 in all, are:
-= -- 741
-> -- 89
+            801 strings with 9400 characters,
+and the built_in function-call counts, 7001 in all, are:
+= -- 821
+> -- 91
 < -- 0
-+ -- 35
++ -- 37
 - -- 18
-* -- 606
-:= -- 736
-add.period$ -- 35
-call.type$ -- 17
+* -- 670
+:= -- 812
+add.period$ -- 39
+call.type$ -- 19
 change.case$ -- 0
 chr.to.int$ -- 0
-cite$ -- 17
-duplicate$ -- 401
-empty$ -- 626
+cite$ -- 19
+duplicate$ -- 441
+empty$ -- 700
 format.name$ -- 18
-if$ -- 1697
+if$ -- 1879
 int.to.chr$ -- 0
-int.to.str$ -- 17
-missing$ -- 51
-newline$ -- 92
+int.to.str$ -- 19
+missing$ -- 57
+newline$ -- 102
 num.names$ -- 7
-pop$ -- 80
+pop$ -- 90
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 258
+skip$ -- 280
 stack$ -- 0
-substring$ -- 298
-swap$ -- 190
+substring$ -- 344
+swap$ -- 206
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 32
-width$ -- 19
-write$ -- 248
+while$ -- 36
+width$ -- 21
+write$ -- 274
 (There was 1 error message)

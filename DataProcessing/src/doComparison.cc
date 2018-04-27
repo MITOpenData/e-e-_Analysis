@@ -13,6 +13,7 @@
 #include "TPad.h"
 
 #include "include/particleData.h"
+#include "include/particleDataOLD.h"
 #include "include/eventData.h"
 #include "include/jetData.h"
 #include "include/boostedEvtData.h"
@@ -38,6 +39,28 @@ void doFill(TH1F* hist1_p, TH1F* hist2_p, TH1F* histDelta_p, Bool_t val1, Bool_t
 }
 
 void doFill(TH1F* hist1_p, TH1F* hist2_p, TH1F* histDelta_p, Int_t val1, Int_t val2)
+{
+  hist1_p->Fill(val1);
+  hist2_p->Fill(val2);
+  if(val1-val2 > histDelta_p->GetBinLowEdge(histDelta_p->GetNbinsX())) histDelta_p->Fill(histDelta_p->GetBinCenter(histDelta_p->GetNbinsX()-1));
+  else if(val1-val2 < histDelta_p->GetBinLowEdge(2)) histDelta_p->Fill(histDelta_p->GetBinCenter(2));
+  else histDelta_p->Fill(val1-val2);
+	  
+  return;
+}
+
+void doFill(TH1F* hist1_p, TH1F* hist2_p, TH1F* histDelta_p, Short_t val1, Short_t val2)
+{
+  hist1_p->Fill(val1);
+  hist2_p->Fill(val2);
+  if(val1-val2 > histDelta_p->GetBinLowEdge(histDelta_p->GetNbinsX())) histDelta_p->Fill(histDelta_p->GetBinCenter(histDelta_p->GetNbinsX()-1));
+  else if(val1-val2 < histDelta_p->GetBinLowEdge(2)) histDelta_p->Fill(histDelta_p->GetBinCenter(2));
+  else histDelta_p->Fill(val1-val2);
+	  
+  return;
+}
+
+void doFill(TH1F* hist1_p, TH1F* hist2_p, TH1F* histDelta_p, ULong64_t val1, ULong64_t val2)
 {
   hist1_p->Fill(val1);
   hist2_p->Fill(val2);
@@ -87,6 +110,51 @@ void doFillArr(TH1F* hist1_p, TH1F* hist2_p, TH1F* histDelta_p, Int_t size1, Int
   return;
 }
 
+void doFillArr(TH1F* hist1_p, TH1F* hist2_p, TH1F* histDelta_p, Int_t size1, Int_t size2, Short_t val1[], Short_t val2[])
+{
+  for(Int_t pI = 0; pI < size1; ++pI){hist1_p->Fill(val1[pI]);}
+  for(Int_t pI = 0; pI < size2; ++pI){hist2_p->Fill(val2[pI]);}
+  if(size1 == size2){
+    for(Int_t pI = 0; pI < size1; ++pI){
+      if(val1[pI]-val2[pI] > histDelta_p->GetBinLowEdge(histDelta_p->GetNbinsX())) histDelta_p->Fill(histDelta_p->GetBinCenter(histDelta_p->GetNbinsX()-1));
+      else if(val1[pI]-val2[pI] < histDelta_p->GetBinLowEdge(2)) histDelta_p->Fill(histDelta_p->GetBinCenter(2));
+      else histDelta_p->Fill(val1[pI]-val2[pI]);      
+    }
+  }
+  return;
+}
+
+void doFillArr(TH1F* hist1_p, TH1F* hist2_p, TH1F* histDelta_p, Int_t size1, Int_t size2, float val1[], Short_t val2[])
+{
+  for(Int_t pI = 0; pI < size1; ++pI){hist1_p->Fill(val1[pI]);}
+  for(Int_t pI = 0; pI < size2; ++pI){hist2_p->Fill(val2[pI]);}
+  if(size1 == size2){
+    for(Int_t pI = 0; pI < size1; ++pI){
+      if(val1[pI]-val2[pI] > histDelta_p->GetBinLowEdge(histDelta_p->GetNbinsX())) histDelta_p->Fill(histDelta_p->GetBinCenter(histDelta_p->GetNbinsX()-1));
+      else if(val1[pI]-val2[pI] < histDelta_p->GetBinLowEdge(2)) histDelta_p->Fill(histDelta_p->GetBinCenter(2));
+      else histDelta_p->Fill(val1[pI]-val2[pI]);      
+    }
+  }
+  return;
+}
+
+
+void doFillArr(TH1F* hist1_p, TH1F* hist2_p, TH1F* histDelta_p, Int_t size1, Int_t size2, Int_t val1[], Short_t val2[])
+{
+  for(Int_t pI = 0; pI < size1; ++pI){hist1_p->Fill(val1[pI]);}
+  for(Int_t pI = 0; pI < size2; ++pI){hist2_p->Fill(val2[pI]);}
+  if(size1 == size2){
+    for(Int_t pI = 0; pI < size1; ++pI){
+      if(val1[pI]-val2[pI] > histDelta_p->GetBinLowEdge(histDelta_p->GetNbinsX())) histDelta_p->Fill(histDelta_p->GetBinCenter(histDelta_p->GetNbinsX()-1));
+      else if(val1[pI]-val2[pI] < histDelta_p->GetBinLowEdge(2)) histDelta_p->Fill(histDelta_p->GetBinCenter(2));
+      else histDelta_p->Fill(val1[pI]-val2[pI]);      
+    }
+  }
+  return;
+}
+
+
+
 
 int doComparison(const std::string inFileName1, const std::string inFileName2, const bool isMC, std::string outFileName = "")
 {
@@ -115,7 +183,7 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
   std::vector<double> branchMins;
   std::vector<double> branchMaxs;
 
-  particleData pData1;
+  particleDataOLD pData1;
   particleData pData2;
 
   eventData eData1;
@@ -131,15 +199,16 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
 
   TFile* inFile1_p = new TFile(inFileName1.c_str(), "READ");
   TTree* inTree1_p = (TTree*)inFile1_p->Get("t");
-
-  inTree1_p->SetBranchStatus("*", 0);
-  inTree1_p->SetBranchStatus("RunNo", 1);
-  inTree1_p->SetBranchStatus("EventNo", 1);
-  inTree1_p->SetBranchStatus("process", 1);
+  
+  //inTree1_p->SetBranchStatus("*", 0);
+  //  inTree1_p->SetBranchStatus("RunNo", 1);
+  //  inTree1_p->SetBranchStatus("EventNo", 1);
+  //  inTree1_p->SetBranchStatus("process", 1);
 
   inTree1_p->SetBranchAddress("RunNo", &(pData1.RunNo));
   inTree1_p->SetBranchAddress("EventNo", &(pData1.EventNo));
   inTree1_p->SetBranchAddress("process", &(pData1.process));
+
 
   bool doProcess = inTree1_p->GetMaximum("process") >= 0;
   bool doSubDir = isMC;
@@ -164,9 +233,11 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
   for(Int_t entry = 0; entry < inTree1_p->GetEntries(); ++entry){
     inTree1_p->GetEntry(entry);
 
+    /*
     if(entry < 10){
       std::cout << pData1.RunNo << ", " << pData1.EventNo << std::endl;
     }
+    */
 
     ULong64_t key = (pData1.RunNo)*10000000 + pData1.EventNo;
     if(doProcess) key += (pData1.process)*10000000000000;
@@ -189,11 +260,12 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
     else f1RunEvtToEntry[key] = entry;
   }
 
+  inFile1_p->cd();
   TObjArray* list1_p = (TObjArray*)inTree1_p->GetListOfBranches();
   for(Int_t i = 0; i < list1_p->GetEntries(); ++i){
     listOfCompBranches.push_back(list1_p->At(i)->GetName());
-    branchMins.push_back(inTree1_p->GetMinimum(list1_p->At(i)->GetName()));
-    branchMaxs.push_back(inTree1_p->GetMaximum(list1_p->At(i)->GetName()));
+    branchMins.push_back(inTree1_p->GetMinimum(listOfCompBranches.at(i).c_str()));
+    branchMaxs.push_back(inTree1_p->GetMaximum(listOfCompBranches.at(i).c_str()));
   }
 
   if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
@@ -520,7 +592,7 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
       branchMaxs.at(i) += 1;
       branchMins.at(i) -= 1;
     }
-    std::cout << branchMins.at(i) << ", " << branchMaxs.at(i) << std::endl;
+    std::cout << listOfCompBranches.at(i) << ", " << branchMins.at(i) << ", " << branchMaxs.at(i) << std::endl;
 
     hist1_p[i] = new TH1F((listOfCompBranches.at(i) + "_file1_h").c_str(), (";" + listOfCompBranches.at(i) + ";Counts").c_str(), 100, branchMins.at(i), branchMaxs.at(i));
     hist2_p[i] = new TH1F((listOfCompBranches.at(i) + "_file2_h").c_str(), (";" + listOfCompBranches.at(i) + ";Counts").c_str(), 100, branchMins.at(i), branchMaxs.at(i));
@@ -705,8 +777,11 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
       else if(tempS.find("year") != std::string::npos && tempS.size() == std::string("year").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.year, pData2.year);
       else if(tempS.find("subDir") != std::string::npos && tempS.size() == std::string("subDir").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.subDir, pData2.subDir);
       else if(tempS.find("process") != std::string::npos && tempS.size() == std::string("process").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.process, pData2.process);
+      else if(tempS.find("isMC") != std::string::npos && tempS.size() == std::string("isMC").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.isMC, pData2.isMC);
+      else if(tempS.find("uniqueID") != std::string::npos && tempS.size() == std::string("uniqueID").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.uniqueID, pData2.uniqueID);
       else if(tempS.find("Energy") != std::string::npos && tempS.size() == std::string("Energy").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.Energy, pData2.Energy);
       else if(tempS.find("bFlag") != std::string::npos && tempS.size() == std::string("bFlag").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.bFlag, pData2.bFlag);
+      else if(tempS.find("particleWeight") != std::string::npos && tempS.size() == std::string("particleWeight").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.particleWeight, pData2.particleWeight);
       else if(tempS.find("bx") != std::string::npos && tempS.size() == std::string("bx").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.bx, pData2.bx);
       else if(tempS.find("by") != std::string::npos && tempS.size() == std::string("by").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.by, pData2.by);
       else if(tempS.find("ebx") != std::string::npos && tempS.size() == std::string("ebx").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.ebx, pData2.ebx);
@@ -737,11 +812,21 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
       else if(tempS.find("rap_wrtThr") != std::string::npos && tempS.size() == std::string("rap_wrtThr").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.rap_wrtThr, pData2.rap_wrtThr);
       else if(tempS.find("theta_wrtThr") != std::string::npos && tempS.size() == std::string("theta_wrtThr").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.theta_wrtThr, pData2.theta_wrtThr);
       else if(tempS.find("phi_wrtThr") != std::string::npos && tempS.size() == std::string("phi_wrtThr").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.phi_wrtThr, pData2.phi_wrtThr);
+      else if(tempS.find("pt_wrtThrPerp") != std::string::npos && tempS.size() == std::string("pt_wrtThrPerp").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.pt_wrtThrPerp, pData2.pt_wrtThrPerp);
+      else if(tempS.find("eta_wrtThrPerp") != std::string::npos && tempS.size() == std::string("eta_wrtThrPerp").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.eta_wrtThrPerp, pData2.eta_wrtThrPerp);
+      else if(tempS.find("rap_wrtThrPerp") != std::string::npos && tempS.size() == std::string("rap_wrtThrPerp").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.rap_wrtThrPerp, pData2.rap_wrtThrPerp);
+      else if(tempS.find("theta_wrtThrPerp") != std::string::npos && tempS.size() == std::string("theta_wrtThrPerp").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.theta_wrtThrPerp, pData2.theta_wrtThrPerp);
+      else if(tempS.find("phi_wrtThrPerp") != std::string::npos && tempS.size() == std::string("phi_wrtThrPerp").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.phi_wrtThrPerp, pData2.phi_wrtThrPerp);
       else if(tempS.find("pt_wrtChThr") != std::string::npos && tempS.size() == std::string("pt_wrtChThr").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.pt_wrtChThr, pData2.pt_wrtChThr);
       else if(tempS.find("eta_wrtChThr") != std::string::npos && tempS.size() == std::string("eta_wrtChThr").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.eta_wrtChThr, pData2.eta_wrtChThr);
       else if(tempS.find("rap_wrtChThr") != std::string::npos && tempS.size() == std::string("rap_wrtChThr").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.rap_wrtChThr, pData2.rap_wrtChThr);
       else if(tempS.find("theta_wrtChThr") != std::string::npos && tempS.size() == std::string("theta_wrtChThr").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.theta_wrtChThr, pData2.theta_wrtChThr);
       else if(tempS.find("phi_wrtChThr") != std::string::npos && tempS.size() == std::string("phi_wrtChThr").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.phi_wrtChThr, pData2.phi_wrtChThr);
+      else if(tempS.find("pt_wrtChThrPerp") != std::string::npos && tempS.size() == std::string("pt_wrtChThrPerp").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.pt_wrtChThrPerp, pData2.pt_wrtChThrPerp);
+      else if(tempS.find("eta_wrtChThrPerp") != std::string::npos && tempS.size() == std::string("eta_wrtChThrPerp").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.eta_wrtChThrPerp, pData2.eta_wrtChThrPerp);
+      else if(tempS.find("rap_wrtChThrPerp") != std::string::npos && tempS.size() == std::string("rap_wrtChThrPerp").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.rap_wrtChThrPerp, pData2.rap_wrtChThrPerp);
+      else if(tempS.find("theta_wrtChThrPerp") != std::string::npos && tempS.size() == std::string("theta_wrtChThrPerp").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.theta_wrtChThrPerp, pData2.theta_wrtChThrPerp);
+      else if(tempS.find("phi_wrtChThrPerp") != std::string::npos && tempS.size() == std::string("phi_wrtChThrPerp").size()) doFillArr(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], pData1.nParticle, pData2.nParticle, pData1.phi_wrtChThrPerp, pData2.phi_wrtChThrPerp);
       else if(tempS.find("passesWW") != std::string::npos && tempS.size() == std::string("passesWW").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], eData1.passesWW, eData2.passesWW);
       else if(tempS.find("missP") != std::string::npos && tempS.size() == std::string("missP").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], eData1.missP, eData2.missP);
       else if(tempS.find("missPt") != std::string::npos && tempS.size() == std::string("missPt").size()) doFill(hist1_p[lI], hist2_p[lI], hist_Delta1From2_EvtByEvt_p[lI], eData1.missPt, eData2.missPt);
@@ -790,16 +875,22 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
 	std::string tempS = listOfBoostedTreeBranches.at(jI).at(bI);
 	if(tempS.find("nParticle") != std::string::npos && tempS.size() == std::string("nParticle").size()) doFill(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].nParticle, bData2[jI].nParticle);
 	else if(tempS.find("WTAAxis_Theta") != std::string::npos && tempS.size() == std::string("WTAAxis_Theta").size()) doFill(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].WTAAxis_Theta, bData2[jI].WTAAxis_Theta);
+	else if(tempS.find("WTAAxis_ThetaPerp") != std::string::npos && tempS.size() == std::string("WTAAxis_ThetaPerp").size()) doFill(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].WTAAxis_ThetaPerp, bData2[jI].WTAAxis_ThetaPerp);
 	else if(tempS.find("WTAAxis_Phi") != std::string::npos && tempS.size() == std::string("WTAAxis_Phi").size()) doFill(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].WTAAxis_Phi, bData2[jI].WTAAxis_Phi);
 	else if(tempS.find("pt") != std::string::npos && tempS.size() == std::string("pt").size()) doFillArr(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].nParticle, bData2[jI].nParticle, bData1[jI].pt, bData2[jI].pt);
 	else if(tempS.find("pmag") != std::string::npos && tempS.size() == std::string("pmag").size()) doFillArr(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].nParticle, bData2[jI].nParticle, bData1[jI].pmag, bData2[jI].pmag);
 	else if(tempS.find("eta") != std::string::npos && tempS.size() == std::string("eta").size()) doFillArr(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].nParticle, bData2[jI].nParticle, bData1[jI].eta, bData2[jI].eta);
 	else if(tempS.find("theta") != std::string::npos && tempS.size() == std::string("theta").size()) doFillArr(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].nParticle, bData2[jI].nParticle, bData1[jI].theta, bData2[jI].theta);
 	else if(tempS.find("phi") != std::string::npos && tempS.size() == std::string("phi").size()) doFillArr(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].nParticle, bData2[jI].nParticle, bData1[jI].phi, bData2[jI].phi);
+	else if(tempS.find("pt_Perp") != std::string::npos && tempS.size() == std::string("pt_Perp").size()) doFillArr(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].nParticle, bData2[jI].nParticle, bData1[jI].pt_Perp, bData2[jI].pt_Perp);
+	else if(tempS.find("eta_Perp") != std::string::npos && tempS.size() == std::string("eta_Perp").size()) doFillArr(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].nParticle, bData2[jI].nParticle, bData1[jI].eta_Perp, bData2[jI].eta_Perp);
+	else if(tempS.find("theta_Perp") != std::string::npos && tempS.size() == std::string("theta_Perp").size()) doFillArr(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].nParticle, bData2[jI].nParticle, bData1[jI].theta_Perp, bData2[jI].theta_Perp);
+	else if(tempS.find("phi_Perp") != std::string::npos && tempS.size() == std::string("phi_Perp").size()) doFillArr(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].nParticle, bData2[jI].nParticle, bData1[jI].phi_Perp, bData2[jI].phi_Perp);
 	else if(tempS.find("boostx") != std::string::npos && tempS.size() == std::string("boostx").size()) doFill(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].boostx, bData2[jI].boostx);
 	else if(tempS.find("boosty") != std::string::npos && tempS.size() == std::string("boosty").size()) doFill(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].boosty, bData2[jI].boosty);
 	else if(tempS.find("boostz") != std::string::npos && tempS.size() == std::string("boostz").size()) doFill(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].boostz, bData2[jI].boostz);
 	else if(tempS.find("boost") != std::string::npos && tempS.size() == std::string("boost").size()) doFill(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].boost, bData2[jI].boost);
+	else if(tempS.find("particleWeight") != std::string::npos && tempS.size() == std::string("particleWeight").size()) doFill(hist1_Boosted_p.at(jI).at(bI), hist2_Boosted_p.at(jI).at(bI), hist_Delta1From2_EvtByEvt_Boosted_p.at(jI).at(bI), bData1[jI].particleWeight, bData2[jI].particleWeight);
       }
     }
   }
@@ -903,6 +994,8 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
     hist1_p[i]->GetYaxis()->SetTitleOffset(hist1_p[i]->GetYaxis()->GetTitleOffset()*3.);
     hist_Rat1Over2_p[i]->GetYaxis()->SetTitleOffset(hist1_p[i]->GetYaxis()->GetTitleOffset());
     hist_Rat1Over2_p[i]->GetXaxis()->SetTitleOffset(hist_Rat1Over2_p[i]->GetXaxis()->GetTitleOffset()*3.);
+
+    hist1_p[i]->SetMaximum(1.2*TMath::Max(hist1_p[i]->GetMaximum(), hist2_p[i]->GetMaximum()));
 
     hist1_p[i]->DrawCopy("HIST E1");
     hist2_p[i]->DrawCopy("SAME *HIST E1");
@@ -1021,6 +1114,7 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
       hist_Rat1Over2_Jet_p.at(jI).at(i)->GetYaxis()->SetTitleOffset(hist1_Jet_p.at(jI).at(i)->GetYaxis()->GetTitleOffset());
       hist_Rat1Over2_Jet_p.at(jI).at(i)->GetXaxis()->SetTitleOffset(hist_Rat1Over2_Jet_p.at(jI).at(i)->GetXaxis()->GetTitleOffset()*3.);
       
+      hist1_Jet_p.at(jI).at(i)->SetMaximum(1.2*TMath::Max(hist1_Jet_p.at(jI).at(i)->GetMaximum(), hist2_Jet_p.at(jI).at(i)->GetMaximum()));
       hist1_Jet_p.at(jI).at(i)->DrawCopy("HIST E1");
       hist2_Jet_p.at(jI).at(i)->DrawCopy("SAME *HIST E1");
       
@@ -1139,6 +1233,7 @@ int doComparison(const std::string inFileName1, const std::string inFileName2, c
       hist_Rat1Over2_Boosted_p.at(jI).at(i)->GetYaxis()->SetTitleOffset(hist1_Boosted_p.at(jI).at(i)->GetYaxis()->GetTitleOffset());
       hist_Rat1Over2_Boosted_p.at(jI).at(i)->GetXaxis()->SetTitleOffset(hist_Rat1Over2_Boosted_p.at(jI).at(i)->GetXaxis()->GetTitleOffset()*3.);
       
+      hist1_Boosted_p.at(jI).at(i)->SetMaximum(1.2*TMath::Max(hist1_Boosted_p.at(jI).at(i)->GetMaximum(), hist2_Boosted_p.at(jI).at(i)->GetMaximum()));
       hist1_Boosted_p.at(jI).at(i)->DrawCopy("HIST E1");
       hist2_Boosted_p.at(jI).at(i)->DrawCopy("SAME *HIST E1");
       

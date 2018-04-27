@@ -1,0 +1,4 @@
+/data/flowex/Datasamples/LEP2_REPROCESS_20180216/1995/LEP2MC1995YDATAEMINI_recons_aftercut-001.aleph
+/data/flowex/Datasamples/LEP2_REPROCESS_20180216/1995/LEP2MC1995YDATAEMINI_recons_aftercut-002.aleph
+/data/flowex/Datasamples/LEP2_REPROCESS_20180216/1995/LEP2MC1995YDATAEMINI_recons_aftercut-003.aleph
+/data/flowex/Datasamples/LEP2_REPROCESS_20180216/1995/LEP2MC1995YDATAEMINI_recons_aftercut-004.aleph

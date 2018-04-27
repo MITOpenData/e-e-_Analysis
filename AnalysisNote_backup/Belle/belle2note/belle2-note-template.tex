@@ -1,0 +1,136 @@
+\documentclass[preprint,prd,tightenlines]{revtex4}
+
+\usepackage{graphicx} % Include figure files
+\usepackage{dcolumn}  % Align table columns on decimal point
+\usepackage{colordvi}
+\usepackage{color}
+\usepackage{epstopdf}
+\usepackage{amssymb}
+\usepackage{url}
+\graphicspath{{ps}}
+\usepackage{hyperref}
+\usepackage{tabularx}
+
+\renewcommand{\arraystretch}{1.1}
+
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\thesubsection.\arabic{subsubsection}}
+
+\input ../belle2sym.tex
+
+\begin{document}
+
+%place for definitions and newcommands
+\def\belletwo {\it {Belle}}
+
+
+
+\vspace*{-3\baselineskip}
+\resizebox{!}{3cm}{\includegraphics{belle-logo.eps}}
+
+\vspace*{-5\baselineskip}
+\begin{flushright}
+BELLE2-NOTE-XX-YYYY-ZZZ\\
+DRAFT Version 1.0 \\
+\today
+\end{flushright}
+
+
+\title { \quad\\[0.5cm] Title of Belle Note}
+
+
+\author{X.~ZYW}
+\email{XZYW@belle2.kek.jp}
+\affiliation{Institute, city, country}% add more lines in case of multiple authors
+
+\author{A.~EIO}
+\email{AEIO@belle2.kek.jp}
+\affiliation{Institute, city, country}% add more lines in case of multiple authors
+
+
+\collaboration{The Belle Collaboration}
+\noaffiliation
+
+\begin{abstract}
+Abstract of B2N... 
+
+\keywords{Belle, ...}
+\end{abstract}
+
+\pacs{}
+
+\maketitle
+
+{\renewcommand{\thefootnote}{\fnsymbol{footnote}}}
+\setcounter{footnote}{0}
+
+\tableofcontents
+
+\section{Introduction}
+
+This is a template for {\belletwo} internal notes. See some notes on usage of 
+references in~\ref{sec:ref}, compilation (\ref{sec:com}) and figures (\ref{sec:fig}). 
+
+\subsection{References}
+\label{sec:ref}
+
+Use BibTex for references. Usage:\\
+at the end of the main {\tt .tex} file, before {\tt $\backslash$end\{document\}}, 
+put:\\
+{\tt 
+$\backslash$bibliography\{bibfile\}\\
+$\backslash$bibliographystyle\{unsrt\}},\\
+where {\tt bibfile.bib} is the file in which the references are listed (see example {\tt bib2.bib}), 
+and {\tt unsrt} is the style providing for the references to appear in the numbered order 
+(i.e. starting from [1]; this is not true, though, for the footnotes, which appear at the 
+end of references). The format of each reference in the {\tt bibfile.bib} is directly provided 
+by inSPIRE, clicking on the BibTeX link. 
+
+In the bibliography example file the {\belletwo} TDR \cite{Abe:2010sj} reference is included, as well as 
+the Geant 4 \cite{Agostinelli:2002hh} and the physics case paper \cite{Aushev:2010bq} references. A bibliography style file has been included in this package for consistent formatting of references, and to include full length titles.
+
+\subsection{Compiling}
+\label{sec:com}
+
+In order to produce a {\tt .pdf} file one needs to:\\
+{\tt 
+- pdflatex filename.tex\\
+- bibtex filename.aux (repeat 2x or 3x)\\
+- pdflatex filename.tex\\
+}
+
+\subsection{Figures}
+\label{sec:fig}
+
+Figures are included as usually, shown in the example of Fig.~\ref{fig1} below. Beside the pdf also jpg and eps 
+formats can be used. Specifiy the figure files in \\
+{\tt 
+$\backslash$includegraphics[width=8cm]\{belle-logo.eps\}\\
+}
+without extensions ({\tt pdflatex} command will take care of that, by using {\tt epstopdf} package 
+for the eps files, for example). 
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=8cm]{belle-logo.eps}
+  \caption{Some figure.}
+  \label{fig1}
+\end{center}
+\end{figure}
+
+If you are creating figures from Root, your are advised to use the Belle2 style files under \url{documents/belle2style}. A README file contained in the repository provides instructions for their use.
+
+\subsection{Standard symbols for use in Belle notes and papers}
+\label{sec:sym}
+A file containing standard symbols is provided in the package \url{belle2sym.tex}, used as follows: \epem \ra \epemg. This is the recommended symbol file for use in Belle notes.
+
+\bibliography{belle2}
+\bibliographystyle{belle2-note}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

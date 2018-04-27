@@ -11,6 +11,7 @@
 #include "TLorentzVector.h"
 #include "TVector3.h"
 #include "TNamed.h"
+#include "TDatime.h"
 
 //fastjet dependencies
 #include "fastjet/ClusterSequence.hh"
@@ -20,6 +21,7 @@
 #include "include/doLocalDebug.h"
 #include "include/checkMakeDir.h"
 #include "include/particleData.h"
+#include "include/trackSelection.h"
 #include "include/eventSelection.h"
 #include "include/eventData.h"
 #include "include/jetData.h"
@@ -28,6 +30,8 @@
 #include "include/boostTools.h"
 #include "include/sphericityTools.h"
 #include "include/processJets.h"
+#include "include/uniqueIDTools.h"
+#include "src/mixFile.cc"
 
 bool getIsMC(std::string inStr)
 {
@@ -85,6 +89,7 @@ std::vector<std::string> processAlephString(std::string inStr)
   if(inStr.find("ALEPH_DATA") != std::string::npos) addDummy = true;
   if(inStr.find("MC_RECO") != std::string::npos) addDummy = true;
   if(inStr.find("MC_TRUE_AFTER_CUT") != std::string::npos) addDummy = true;
+  if(inStr.find("MC_TRUE_BEFORE_CUT") != std::string::npos) addDummy = true;
   if(inStr.find("Primary vertex info") != std::string::npos) addDummy2 = true;
 
   const Int_t nSpecialRemoveStr = 2;
@@ -132,12 +137,109 @@ bool check998(std::string inStr){return checkGeneral(inStr, "-998.");}
 //isNewInfo was originally for introduction of ntpc, etc.
 //isNewInfo2 is for nitc, nvdet
 
-int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, std::string outFileName="")
+void initVal(Int_t* in, Int_t set){(*in) = set; return;}
+void initVal(Short_t* in, Short_t set){(*in) = set; return;}
+void initVal(Float_t* in, Float_t set){(*in) = set; return;}
+void initVal(Double_t* in, Double_t set){(*in) = set; return;}
+void initVal(std::vector<Int_t*> in, Int_t set)
 {
+  for(unsigned int i = 0; i < in.size(); ++i){
+    if(in.at(i) == NULL) continue;
+    initVal(in.at(i), set);
+  }
+  return;
+}
+void initVal(std::vector<Short_t*> in, Short_t set)
+{
+  for(unsigned int i = 0; i < in.size(); ++i){
+    if(in.at(i) == NULL) continue;
+    initVal(in.at(i), set);
+  }
+  return;
+}
+void initVal(std::vector<Float_t*> in, Float_t set)
+{
+  for(unsigned int i = 0; i < in.size(); ++i){
+    if(in.at(i) == NULL) continue;
+    initVal(in.at(i), set);
+  }
+  return;
+}
+void initVal(std::vector<Double_t*> in, Float_t set)
+{
+  for(unsigned int i = 0; i < in.size(); ++i){
+    if(in.at(i) == NULL) continue;
+    initVal(in.at(i), set);
+  }
+  return;
+}
+void initTVector3(TVector3* in){(*in) = TVector3(0,0,0); return;}
+void initTVector3(std::vector<TVector3*> in)
+{
+  for(unsigned int i = 0; i < in.size(); ++i){initTVector3(in.at(i));}
+  return;
+}
+
+void doEndEvent(particleData* pData_p, eventData* eData_p, std::vector<boostedEvtData*> bData_p, Int_t counterParticles, Int_t nTrk, Int_t nTrk_HP, Int_t nTrk_GT0p4, Int_t nTrk_GT0p4Thrust, TVector3 netP, TVector3 netP_charged)
+{
+  pData_p->nParticle=counterParticles;
+  
+  for(unsigned int jI = 0; jI < bData_p.size(); ++jI){bData_p.at(jI)->nParticle = counterParticles;}
+
+  TVector3 thrust, thrust_charged;
+  initTVector3({&thrust, &thrust_charged});
+  
+  thrust = getThrust(pData_p->nParticle, pData_p->px, pData_p->py, pData_p->pz, THRUST::OPTIMAL);
+  thrust_charged = getChargedThrust(pData_p->nParticle, pData_p->px, pData_p->py, pData_p->pz, pData_p->pwflag, THRUST::OPTIMAL);
+  eData_p->nChargedHadrons = nTrk;
+  eData_p->nChargedHadronsHP = nTrk_HP;
+  eData_p->nChargedHadrons_GT0p4 = nTrk_GT0p4;
+  eData_p->nChargedHadrons_GT0p4Thrust = nTrk_GT0p4Thrust;
+  setThrustVariables(pData_p, eData_p, thrust, thrust_charged);
+  eData_p->Thrust = thrust.Mag();
+  eData_p->TTheta = thrust.Theta();
+  eData_p->TPhi = thrust.Phi();
+  eData_p->Thrust_charged = thrust_charged.Mag();
+  eData_p->TTheta_charged = thrust_charged.Theta();
+  eData_p->TPhi_charged = thrust_charged.Phi();
+  eData_p->missP = netP.Mag();
+  eData_p->missPt = netP.Perp();
+  eData_p->missTheta = netP.Theta();
+  eData_p->missPhi = netP.Phi();
+  eData_p->missChargedP = netP_charged.Mag();
+  eData_p->missChargedPt = netP_charged.Perp();
+  eData_p->missChargedTheta = netP_charged.Theta();
+  eData_p->missChargedPhi = netP_charged.Phi();
+
+  Sphericity spher = Sphericity(pData_p->nParticle, pData_p->px, pData_p->py, pData_p->pz, pData_p->pwflag, true);
+  spher.setTree(eData_p);
+
+  eventSelection eSelection;
+  eSelection.setEventSelection(pData_p, eData_p);
+
+  eData_p->passesTotalChgEnergyMin = eSelection.getPassesTotalChgEnergyMin();
+  eData_p->passesNTrkMin = eSelection.getPassesNTrkMin();
+  eData_p->passesSTheta = eSelection.getPassesSTheta();
+  eData_p->passesMissP = eSelection.getPassesMissP();
+
+  eData_p->passesISR = eSelection.getPassesISR();
+  eData_p->passesWW = eSelection.getPassesWW();
+
+  eData_p->passesAll = (eData_p->passesNTupleAfterCut && eData_p->passesTotalChgEnergyMin && eData_p->passesNTrkMin && eData_p->passesSTheta && eData_p->passesMissP && eData_p->passesISR && eData_p->passesWW);
+
+  return;
+}
+
+int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInfo2, std::string outFileName="")
+{
+  std::cout << "Gets Here" << std::endl;
+
   if(!checkFile(inFileName)){
     std::cout << "Given inFileName \'" << inFileName << "\' is invalid, return 1." << std::endl;
     return 1;
   }
+
+  uniqueIDTools idMaker;
 
   std::vector<std::string> fileList;
   if(inFileName.size() < 5){
@@ -203,10 +305,13 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 
   const std::string partTreeName = "t";
   const std::string genPartTreeName = "tgen";
+  const std::string genPartTreeBeforeName = "tgenBefore";
   std::string jetTreeName[nJtAlgo];
   std::string genJetTreeName[nJtAlgo];
+  std::string genJetTreeBeforeName[nJtAlgo];
   std::string boostedTreeName[nJtAlgo];
   std::string genboostedTreeName[nJtAlgo];
+  std::string genboostedTreeBeforeName[nJtAlgo];
 
   for(int i = 0; i < nJtAlgo; ++i){
     std::string recombSchemeStr = "EScheme";
@@ -217,16 +322,20 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 
     jetTreeName[i] = rOrJetStr + recombSchemeStr + "JetTree";
     genJetTreeName[i] = rOrJetStr + recombSchemeStr + "GenJetTree";
+    genJetTreeBeforeName[i] = rOrJetStr + recombSchemeStr + "GenJetBeforeTree";
 
     boostedTreeName[i] = "Boosted" + recombSchemeStr + rOrJetStr + "Evt";
     genboostedTreeName[i] = "genBoosted" + recombSchemeStr + rOrJetStr + "Evt";
+    genboostedTreeBeforeName[i] = "genBoosted" + recombSchemeStr + rOrJetStr + "BeforeEvt";
     if(recombSchemeStr.find("modpScheme") != std::string::npos){
       boostedTreeName[i].replace(boostedTreeName[i].find("modpScheme"), std::string("modpScheme").size(), "");
       genboostedTreeName[i].replace(genboostedTreeName[i].find("modpScheme"), std::string("modpScheme").size(), "");
+      genboostedTreeBeforeName[i].replace(genboostedTreeBeforeName[i].find("modpScheme"), std::string("modpScheme").size(), "");
     }
     if(rOrJetStr.find("ak") != std::string::npos){
       boostedTreeName[i].replace(boostedTreeName[i].find("ak"), std::string("ak").size(), "");
       genboostedTreeName[i].replace(genboostedTreeName[i].find("ak"), std::string("ak").size(), "");
+      genboostedTreeBeforeName[i].replace(genboostedTreeBeforeName[i].find("ak"), std::string("ak").size(), "");
     }
   }
 
@@ -257,20 +366,34 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
   TTree *bgout[nJtAlgo];
   TTree *jgout[nJtAlgo];
 
+  TTree *tgBeforeout = 0;
+  TTree *bgBeforeout[nJtAlgo];
+  TTree *jgBeforeout[nJtAlgo];
+
   if(isRecons && isMC){
     tgout = new TTree(genPartTreeName.c_str(), genPartTreeName.c_str());
+    tgBeforeout = new TTree(genPartTreeBeforeName.c_str(), genPartTreeBeforeName.c_str());
+
     for(int i = 0; i < nJtAlgo; ++i){
       jgout[i] = NULL;
       jgout[i] = new TTree(genJetTreeName[i].c_str(), genJetTreeName[i].c_str());
 
+      jgBeforeout[i] = NULL;
+      jgBeforeout[i] = new TTree(genJetTreeBeforeName[i].c_str(), genJetTreeBeforeName[i].c_str());
+
       bgout[i] = NULL;
+      bgBeforeout[i] = NULL;
       if(recombScheme[i] == fastjet::WTA_modp_scheme){
-	if(rParamIs8[i] || nFinalClust[i] == 2) bgout[i] = new TTree(genboostedTreeName[i].c_str(), genboostedTreeName[i].c_str());
+	if(rParamIs8[i] || nFinalClust[i] == 2){
+	  bgout[i] = new TTree(genboostedTreeName[i].c_str(), genboostedTreeName[i].c_str());
+	  bgBeforeout[i] = new TTree(genboostedTreeBeforeName[i].c_str(), genboostedTreeBeforeName[i].c_str());
+	}
       }
     }
   }
 
   eventSelection eSelection;
+  TrackSelection trkSelection = TrackSelection();
 
   particleData pData;
   jetData jData[nJtAlgo];
@@ -278,11 +401,15 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
   boostedEvtData bData[nJtAlgo];
 
   eventSelection egSelection;
-
   particleData pgData;
   jetData jgData[nJtAlgo];
   eventData egData;
   boostedEvtData bgData[nJtAlgo];
+
+  particleData pgBeforeData;
+  jetData jgBeforeData[nJtAlgo];
+  eventData egBeforeData;
+  boostedEvtData bgBeforeData[nJtAlgo];
 
   pData.SetBranchWrite(tout);
   eData.SetBranchWrite(tout);
@@ -299,10 +426,14 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
     pgData.SetBranchWrite(tgout);
     egData.SetBranchWrite(tgout);
 
+    pgBeforeData.SetBranchWrite(tgBeforeout);
+    egBeforeData.SetBranchWrite(tgBeforeout);
+
     for(int i = 0; i < nJtAlgo; ++i){
       jgData[i].SetBranchWrite(jgout[i]);
+      jgBeforeData[i].SetBranchWrite(jgBeforeout[i]);
       if(recombScheme[i] == fastjet::WTA_modp_scheme){
-	if(rParamIs8[i] || nFinalClust[i] == 2) bgData[i].SetBranchWrite(bgout[i]);
+	if(rParamIs8[i] || nFinalClust[i] == 2){bgData[i].SetBranchWrite(bgout[i]); bgBeforeData[i].SetBranchWrite(bgBeforeout[i]);}
       }
     }
   }
@@ -323,11 +454,11 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 
     std::vector<int> runNo;
     std::vector<int> evtNo;
-    TVector3 netP = TVector3(0,0,0);
-    TVector3 thrust = TVector3(0,0,0);
-    TVector3 netP_charged = TVector3(0,0,0);
-    TVector3 thrust_charged = TVector3(0,0,0);
+    TVector3 netP, netP_charged;
+    initTVector3({&netP, &netP_charged});
+
     int nTrk=0;
+    int nTrk_HP=0;
     int nTrk_GT0p4=0;
     int nTrk_GT0p4Thrust=0;
 
@@ -351,10 +482,12 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	
 	if(isMC && isRecons){
 	  delete tgout;
+	  delete tgBeforeout;
 	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	    delete jgout[jIter];
+	    delete jgBeforeout[jIter];
 	    if(recombScheme[jIter] == fastjet::WTA_modp_scheme){
-	      if(rParamIs8[jIter] || nFinalClust[jIter] == 2) delete bgout[jIter];
+	      if(rParamIs8[jIter] || nFinalClust[jIter] == 2){delete bgout[jIter]; delete bgBeforeout[jIter];}
 	    }
 	  }
 	}
@@ -366,39 +499,12 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
       }
     
       if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2))/* not all files do four 999 && check999(num.at(3)*/){
-	pData.nParticle=counterParticles;
+	std::vector<boostedEvtData*> bDataTempVect;
+	for(Int_t jI = 0; jI < nJtAlgo; ++jI){bDataTempVect.push_back(&(bData[jI]));}
+	doEndEvent(&pData, &eData, bDataTempVect, counterParticles, nTrk, nTrk_HP, nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
+	bDataTempVect.clear();
 
-	for(Int_t jI = 0; jI < nJtAlgo; ++jI){bData[jI].nParticle=counterParticles;}        
-
-        thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz, THRUST::OPTIMAL); 
-        thrust_charged = getChargedThrust(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag, THRUST::OPTIMAL);
-	eData.nChargedHadrons = nTrk;
-	eData.nChargedHadrons_GT0p4 = nTrk_GT0p4; 
-	eData.nChargedHadrons_GT0p4Thrust = nTrk_GT0p4Thrust; 
-        setThrustVariables(&pData, &eData, thrust, thrust_charged);
-        eData.Thrust = thrust.Mag();
-        eData.TTheta = thrust.Theta();
-        eData.TPhi = thrust.Phi();
-        eData.Thrust_charged = thrust_charged.Mag();
-        eData.TTheta_charged = thrust_charged.Theta();
-        eData.TPhi_charged = thrust_charged.Phi();
-	eData.missP = netP.Mag();
-	eData.missPt = netP.Perp();
-	eData.missTheta = netP.Theta();
-	eData.missPhi = netP.Phi();
-	eData.missChargedP = netP_charged.Mag();
-	eData.missChargedPt = netP_charged.Perp();
-	eData.missChargedTheta = netP_charged.Theta();
-	eData.missChargedPhi = netP_charged.Phi();
-
-        Sphericity spher = Sphericity(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag, true);
-        spher.setTree(&eData);
-
-	eSelection.setEventSelection(&pData);
-	eData.passesWW = eSelection.getPassesWW();
-      
-	if(counterEntries>0) tout->Fill(); 
-	
+	if(counterEntries>0){pData.preFillClean(); tout->Fill();}
 	//Processing particles->jets
 	for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	  processJets(particles, jDef[jIter], jDefReclust[jIter], &(jData[jIter]), jtPtCut, rParam[jIter], nFinalClust[jIter]);
@@ -406,6 +512,7 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 
 	if(counterEntries>0){
 	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){
+	    jData[jIter].preFillClean();
 	    jout[jIter]->Fill();
 	    if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
 	      if(rParamIs8[jIter] || nFinalClust[jIter] == 2){
@@ -414,6 +521,7 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 		  TVector3 wtaBoost = findBack2BackBoost(jData[jIter].fourJet[0],jData[jIter].fourJet[1]);
 		  setBoostedVariables(true, &pData, &(bData[jIter]), jData[jIter].fourJet[0], wtaBoost);
 		}
+		bData[jIter].preFillClean();
 		bout[jIter]->Fill();
 	      }
             }
@@ -433,28 +541,30 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	pData.year = year;
 	pData.subDir = subDir;
 	pData.process = process;
+	pData.isMC = isMC;
+
 	pData.RunNo = std::stoi(num.at(runPos));
 	pData.EventNo= std::stoi(num.at(evtPos));
 	pData.Energy= std::stof(num.at(ePos));
 
-	pData.bFlag = -999;
-	pData.bx = -999.;
-	pData.by = -999.;
-	pData.ebx = -999.;
-	pData.eby = -999.;
-      
+	int tempSubDir = subDir;
+	if(tempSubDir < 0) tempSubDir = 0;
+	int tempProcess = process;
+	if(tempProcess < 0) tempProcess = 15;
+	 
+	pData.uniqueID = idMaker.getID(isMC, tempProcess, tempSubDir, year, pData.RunNo, pData.EventNo);
+
+	eData.passesNTupleAfterCut = true;
+
+	initVal(&(pData.bFlag), -999.);
+	initVal({&(pData.bx), &(pData.by), &(pData.ebx), &(pData.eby)}, -999.);
+
 	runNo.push_back(pData.RunNo);
 	evtNo.push_back(pData.EventNo);
       
-        netP = TVector3(0,0,0);
-        thrust = TVector3(0,0,0);
-        netP_charged = TVector3(0,0,0);
-        thrust_charged = TVector3(0,0,0);
-        nTrk=0;
-        nTrk_GT0p4=0;
-        nTrk_GT0p4Thrust=0;
+	initTVector3({&netP, &netP_charged});
+	initVal({&nTrk, &nTrk_HP ,&nTrk_GT0p4, &nTrk_GT0p4Thrust, &counterParticles}, 0);
 
-	counterParticles=0;   
 	++counterEntries;	
 	
 	continue;
@@ -491,10 +601,12 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 
 	if(isMC && isRecons){
 	  delete tgout;
+	  delete tgBeforeout;
 	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	    delete jgout[jIter];
+	    delete jgBeforeout[jIter];
 	    if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
-	      if(rParamIs8[jIter] || nFinalClust[jIter] == 2) delete bgout[jIter];
+	      if(rParamIs8[jIter] || nFinalClust[jIter] == 2){delete bgout[jIter]; delete bgBeforeout[jIter];}
 	    }
 	  }
 	}
@@ -510,7 +622,7 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
       float _py = std::stof(num.at(1));
       float _pz = std::stof(num.at(2));
       float _m = std::stof(num.at(3));
-      float _charge = std::stof(num.at(4));
+      Short_t _charge = std::stoi(num.at(4));
       int _pwflag = std::stoi(num.at(5));
 
       if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
@@ -549,24 +661,19 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	  pData.nvdet[counterParticles] =  std::stoi(num.at(10 + posOffset));	
 	}
 	else{
-	  pData.nitc[counterParticles] = -999;
-	  pData.nvdet[counterParticles] = -999;
+	  pgData.nitc[counterParticles] = -127;
+	  pgData.nvdet[counterParticles] = -127;
+	  //initVal({&(pData.nitc[counterParticles]), &(pData.nvdet[counterParticles])}, -127);
 	}
       }
       else{
-	pData.d0[counterParticles] = -999.;
-	pData.z0[counterParticles] = -999.;
-	pData.ntpc[counterParticles] = -999;
-	pData.nitc[counterParticles] = -999;
-	pData.nvdet[counterParticles] = -999;
+	initVal({&(pData.d0[counterParticles]), &(pData.z0[counterParticles]), NULL}, -999);
+	pData.ntpc[counterParticles] = -127;
+	pData.nitc[counterParticles] = -127;
+	pData.nvdet[counterParticles] = -127;
+	//	initVal({&(pData.ntpc[counterParticles]), &(pData.nitc[counterParticles]), &(pData.nvdet[counterParticles])}, -127);
       }
-    
-      pData.vx[counterParticles] = -999.;
-      pData.vy[counterParticles] = -999.;
-      pData.vz[counterParticles] = -999.;
-
-      if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-
+      initVal({&(pData.vx[counterParticles]), &(pData.vy[counterParticles]), &(pData.vz[counterParticles])}, -999.);
       //missing momentum calculation and multiplicity calculation
       netP -= TVector3(_px,_py,_pz);
       if(_pwflag==0){
@@ -575,50 +682,27 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
         if(v.Pt()>0.4) nTrk_GT0p4++; 
         if(v.Pt()>0.4) nTrk_GT0p4Thrust++; 
       } 
- 
+      pData.highPurity[counterParticles] = trkSelection.highPurity(&pData, counterParticles);
+      if(pData.highPurity[counterParticles]) nTrk_HP++;
+
       ++counterParticles;	
     }
 
     if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
   
     //Have to fill one last time since the condition for fill is dependent on NEXT EVENT existing, else we would lose last event per file
-    pData.nParticle=counterParticles;
-    thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz, THRUST::OPTIMAL); 
-    thrust_charged = getChargedThrust(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag, THRUST::OPTIMAL);
-
-    eData.nChargedHadrons = nTrk;
-    eData.nChargedHadrons_GT0p4 = nTrk_GT0p4; 
-    eData.nChargedHadrons_GT0p4Thrust = nTrk_GT0p4Thrust; 
-    setThrustVariables(&pData, &eData, thrust, thrust_charged);
-    eData.Thrust = thrust.Mag();
-    eData.TTheta = thrust.Theta();
-    eData.TPhi = thrust.Phi();
-    eData.Thrust_charged = thrust_charged.Mag();
-    eData.TTheta_charged = thrust_charged.Theta();
-    eData.TPhi_charged = thrust_charged.Phi();
-    eData.missP = netP.Mag();
-    eData.missPt = netP.Perp();
-    eData.missTheta = netP.Theta();
-    eData.missPhi = netP.Phi();
-    eData.missChargedP = netP_charged.Mag();
-    eData.missChargedPt = netP_charged.Perp();
-    eData.missChargedTheta = netP_charged.Theta();
-    eData.missChargedPhi = netP_charged.Phi();
-        
-    Sphericity spher = Sphericity(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag, true);
-    spher.setTree(&eData);
-	
-    eSelection.setEventSelection(&pData);
-    eData.passesWW = eSelection.getPassesWW();
-
-    if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+    std::vector<boostedEvtData*> bDataTempVect;
+    for(Int_t jI = 0; jI < nJtAlgo; ++jI){bDataTempVect.push_back(&(bData[jI]));}
+    doEndEvent(&pData, &eData, bDataTempVect, counterParticles, nTrk, nTrk_HP, nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
+    bDataTempVect.clear();
     
-    if(counterEntries>0) tout->Fill(); 
+    if(counterEntries>0){pData.preFillClean(); tout->Fill();}
     for(int jIter = 0; jIter < nJtAlgo; ++jIter){
       processJets(particles, jDef[jIter], jDefReclust[jIter], &(jData[jIter]), jtPtCut, rParam[jIter], nFinalClust[jIter]);
     }
     if(counterEntries>0){
       for(int jIter = 0; jIter < nJtAlgo; ++jIter){
+	jData[jIter].preFillClean();
 	jout[jIter]->Fill();
 	if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
 	  if(rParamIs8[jIter] || nFinalClust[jIter] == 2){
@@ -627,6 +711,7 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	      TVector3 wtaBoost = findBack2BackBoost(jData[jIter].fourJet[0],jData[jIter].fourJet[1]);
 	      setBoostedVariables(true, &pData, &(bData[jIter]), jData[jIter].fourJet[0], wtaBoost);
 	    }
+	    bData[jIter].preFillClean();
 	    bout[jIter]->Fill();
 	  }
         }
@@ -643,15 +728,8 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
       if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
       std::ifstream fileGen(genFileStr.c_str());
-      counterEntries=0;
-      counterParticles=0;
-      netP = TVector3(0,0,0);
-      thrust = TVector3(0,0,0);
-      netP_charged = TVector3(0,0,0);
-      thrust_charged = TVector3(0,0,0);
-      nTrk=0;
-      nTrk_GT0p4=0;
-      nTrk_GT0p4Thrust=0;
+      initTVector3({&netP, &netP_charged});
+      initVal({&nTrk, &nTrk_HP ,&nTrk_GT0p4, &nTrk_GT0p4Thrust, &counterParticles, &counterEntries}, 0);
 
       while(std::getline(fileGen,getStr)){
 	if(getStr.size() == 0) continue;
@@ -659,6 +737,8 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	else if(getStr.find("END_EVENT") != std::string::npos) continue;
 	else if(getStr.find("END_FILE") != std::string::npos) continue;
 	std::vector<std::string> num = processAlephString(getStr);
+
+	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
 	if(num.size() < 5){
 	  std::cout << "Number of columns for line \'" << getStr << "\' is invalid, size \'" << num.size() << "\'. return 1" << std::endl;
@@ -671,12 +751,15 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	    }
 	  }
 
+	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
 	  if(isMC && isRecons){
 	    delete tgout;
+	    delete tgBeforeout;
 	    for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	      delete jgout[jIter];
 	      if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
-		if(rParamIs8[jIter] || nFinalClust[jIter] == 2) delete bgout[jIter];
+		if(rParamIs8[jIter] || nFinalClust[jIter] == 2){delete bgout[jIter]; delete bgBeforeout[jIter];}
 	      }
 	    }
 	  }
@@ -688,45 +771,18 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	}
 
 	if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2)) /* && check999(num.at(3))*/){ 
-	  pgData.nParticle=counterParticles;
+	  std::vector<boostedEvtData*> bgDataTempVect;
+	  for(Int_t jI = 0; jI < nJtAlgo; ++jI){bgDataTempVect.push_back(&(bgData[jI]));}
+	  doEndEvent(&pgData, &egData, bgDataTempVect, counterParticles, nTrk, nTrk_HP, nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
+	  bgDataTempVect.clear();
 
-	  for(Int_t jI = 0; jI < nJtAlgo; ++jI){bgData[jI].nParticle=counterParticles;}
-          
-          thrust = getThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, THRUST::OPTIMAL); 
-          thrust_charged = getChargedThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag, THRUST::OPTIMAL);
-	  egData.nChargedHadrons = nTrk;
-	  egData.nChargedHadrons_GT0p4 = nTrk_GT0p4; 
-	  egData.nChargedHadrons_GT0p4Thrust = nTrk_GT0p4Thrust; 
-          setThrustVariables(&pgData, &egData, thrust, thrust_charged);
-          egData.Thrust = thrust.Mag();
-          egData.TTheta = thrust.Theta();
-          egData.TPhi = thrust.Phi();
-          egData.Thrust_charged = thrust_charged.Mag();
-          egData.TTheta_charged = thrust_charged.Theta();
-          egData.TPhi_charged = thrust_charged.Phi();
-	  egData.missP = netP.Mag();
-	  egData.missPt = netP.Perp();
-	  egData.missTheta = netP.Theta();
-	  egData.missPhi = netP.Phi();
-	  egData.missChargedP = netP_charged.Mag();
-	  egData.missChargedPt = netP_charged.Perp();
-	  egData.missChargedTheta = netP_charged.Theta();
-	  egData.missChargedPhi = netP_charged.Phi();
-        
-          Sphericity spher = Sphericity(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag, true);
-          spher.setTree(&egData);
-
-	  egSelection.setEventSelection(&pgData);
-	  egData.passesWW = egSelection.getPassesWW();
-
-	  if(counterEntries>0) tgout->Fill(); 
-
-	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;	
+	  if(counterEntries>0){pgData.preFillClean(); tgout->Fill();}
 
 	  //Processing particles->jets
 	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	    processJets(particles, jDef[jIter], jDefReclust[jIter], &(jgData[jIter]), jtPtCut, rParam[jIter], nFinalClust[jIter]);
 	    if(counterEntries>0){
+	      jgData[jIter].preFillClean();
 	      jgout[jIter]->Fill();
 	      if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
 		if(rParamIs8[jIter] || nFinalClust[jIter] == 2){
@@ -735,6 +791,7 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 		    TVector3 wtaBoost = findBack2BackBoost(jgData[jIter].fourJet[0],jgData[jIter].fourJet[1]);
 		    setBoostedVariables(true, &pgData, &(bgData[jIter]), jgData[jIter].fourJet[0], wtaBoost);
 		  }
+		  bgData[jIter].preFillClean();
 		  bgout[jIter]->Fill();
 		}
 	      }		
@@ -753,33 +810,31 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	  //	  if(check999(num.at(4))){runPos++; evtPos++; ePos++;}
 
 	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-
+	
 	  pgData.year = year;
 	  pgData.subDir = subDir;
 	  pgData.process = process;
+	  pgData.isMC = isMC;
 	  pgData.RunNo = std::stoi(num.at(runPos));
 	  pgData.EventNo= std::stoi(num.at(evtPos));
 	  pgData.Energy= std::stof(num.at(ePos));
-
-	  pgData.bFlag = -999;
-	  pgData.bx = -999.;
-	  pgData.by = -999.;
-	  pgData.ebx = -999.;
-	  pgData.eby = -999.;
+       
+	  int tempSubDir = subDir;
+	  if(tempSubDir < 0) tempSubDir = 0;
+	  int tempProcess = process;
+	  if(tempProcess < 0) tempProcess = 15;
 	  
-          netP = TVector3(0,0,0);
-          thrust = TVector3(0,0,0);
-          netP_charged = TVector3(0,0,0);
-          thrust_charged = TVector3(0,0,0);
-          nTrk=0;
-          nTrk_GT0p4=0;
-          nTrk_GT0p4Thrust=0;
+	  pgData.uniqueID = idMaker.getID(isMC, tempProcess, tempSubDir, year, pgData.RunNo, pgData.EventNo);
 
-	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << ", " << genFileStr << ", " << counterEntries << ", " << evtNo.size() << std::endl;
-	  if(doLocalDebug) std::cout << pgData.RunNo << ", " << pgData.EventNo << std::endl;
-	  if(doLocalDebug) std::cout << runNo.at(counterEntries) << ", " << evtNo.at(counterEntries) << std::endl;
+	  egData.passesNTupleAfterCut = true;
+
+
+	  initVal(&(pData.bFlag), -999.);
+	  initVal({&(pData.bx), &(pData.by), &(pData.ebx), &(pData.eby)}, -999.);	 
+	  initTVector3({&netP, &netP_charged});
+	  initVal({&nTrk, &nTrk_HP, &nTrk_GT0p4, &nTrk_GT0p4Thrust, &counterParticles}, 0);
 	  
-	  if(pgData.RunNo != runNo.at(counterEntries) && pgData.EventNo != evtNo.at(counterEntries)){
+	  if(pgData.RunNo != runNo.at(counterEntries) || pgData.EventNo != evtNo.at(counterEntries)){
 	    std::cout << "Gen entries dont match reco for file \'" << genFileStr << "\'. return 1" << std::endl;
 	    //gotta cleanup before return
 	    delete tout;
@@ -796,10 +851,12 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 
 	    if(isMC && isRecons){
 	      delete tgout;
+	      delete tgBeforeout;
 	      for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 		delete jgout[jIter];
+		delete jgBeforeout[jIter];
 		if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
-		  if(rParamIs8[jIter] || nFinalClust[jIter] == 2) delete bgout[jIter];
+		  if(rParamIs8[jIter] || nFinalClust[jIter] == 2){delete bgout[jIter]; delete bgBeforeout[jIter];}
 		}
 	      }
 	    }
@@ -811,12 +868,6 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	    
 	    return 1;
 	  }
-
-	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
-
-	  counterParticles=0;   
-
-	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 	  
 	  ++counterEntries;	
 
@@ -853,10 +904,12 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 
 	  if(isMC && isRecons){
 	    delete tgout;
+	    delete tgBeforeout;
 	    for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	      delete jgout[jIter];
+	      delete jgBeforeout[jIter];
               if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
-                if(rParamIs8[jIter] || nFinalClust[jIter] == 2) delete bout[jIter];
+                if(rParamIs8[jIter] || nFinalClust[jIter] == 2){delete bgout[jIter]; delete bgBeforeout[jIter];}
               }
 	    }
 	  }
@@ -876,7 +929,7 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	float _py = std::stof(num.at(1));
 	float _pz = std::stof(num.at(2));
 	float _m = std::stof(num.at(3));
-	float _charge = std::stof(num.at(4));
+	Short_t _charge = std::stoi(num.at(4));
 	int _pwflag = std::stoi(num.at(5));
 
 	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
@@ -912,37 +965,19 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 	  pgData.vy[counterParticles] = std::stof(num.at(7+posOffset));
 	  pgData.vz[counterParticles] = std::stof(num.at(8+posOffset));
 
-	  pgData.d0[counterParticles] = -999.;
-          pgData.z0[counterParticles] = -999.;
-          pgData.ntpc[counterParticles] = -999;
-          pgData.nitc[counterParticles] = -999;
-          pgData.nvdet[counterParticles] = -999;
+	  initVal({&(pgData.d0[counterParticles]), &(pgData.z0[counterParticles]), NULL}, -999);
 
-	  /*
-	  pgData.d0[counterParticles] = std::stof(num.at(6 + posOffset));
-	  pgData.z0[counterParticles] = std::stof(num.at(7 + posOffset));
-	  pgData.ntpc[counterParticles] =  std::stoi(num.at(8 + posOffset));	
-
-	  if(isNewInfo2){
-	    pgData.nitc[counterParticles] =  std::stoi(num.at(9 + posOffset));	
-	    pgData.nvdet[counterParticles] =  std::stoi(num.at(10 + posOffset));	
-	  }
-	  else{
-	    pgData.nitc[counterParticles] = -999;
-	    pgData.nvdet[counterParticles] = -999;
-	  }
-	  */
+	  pgData.ntpc[counterParticles] = -127;
+	  pgData.nitc[counterParticles] = -127;
+	  pgData.nvdet[counterParticles] = -127;
+	  //	  initVal({&(pgData.ntpc[counterParticles]), &(pgData.nitc[counterParticles]), &(pgData.nvdet[counterParticles])}, -127);
 	}
 	else{
-	  pgData.vx[counterParticles] = -999.;
-          pgData.vy[counterParticles] = -999.;
-          pgData.vz[counterParticles] = -999.;
-
-	  pgData.d0[counterParticles] = -999.;
-	  pgData.z0[counterParticles] = -999.;
-	  pgData.ntpc[counterParticles] = -999;
-	  pgData.nitc[counterParticles] = -999;
-	  pgData.nvdet[counterParticles] = -999;
+	  initVal({&(pgData.vx[counterParticles]), &(pgData.vy[counterParticles]), &(pgData.vz[counterParticles]), &(pgData.d0[counterParticles]), &(pgData.z0[counterParticles])}, -999);
+	  pgData.ntpc[counterParticles] = -127;
+	  pgData.nitc[counterParticles] = -127;
+	  pgData.nvdet[counterParticles] = -127;
+	  //	  initVal({&(pgData.ntpc[counterParticles]), &(pgData.nitc[counterParticles]), &(pgData.nvdet[counterParticles])}, -127);
 	}
 	
 	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
@@ -954,6 +989,7 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
           nTrk++;
           if(v.Pt()>0.4) nTrk_GT0p4++; 
           if(v.Pt()>0.4) nTrk_GT0p4Thrust++; 
+          if(pgData.highPurity[counterParticles]) nTrk_HP++;
         } 
       
 	++counterParticles;	
@@ -963,38 +999,18 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
       //Have to fill one last time since the condition for fill is dependent on NEXT EVENT existing, else we would lose last event per file
       if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
-      pgData.nParticle=counterParticles;
-      thrust = getThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, THRUST::OPTIMAL); 
-      thrust_charged = getChargedThrust(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag, THRUST::OPTIMAL );
-      egData.nChargedHadrons = nTrk;
-      egData.nChargedHadrons_GT0p4 = nTrk_GT0p4; 
-      egData.nChargedHadrons_GT0p4Thrust = nTrk_GT0p4Thrust; 
-      setThrustVariables(&pgData, &egData, thrust, thrust_charged);
-      egData.Thrust = thrust.Mag();
-      egData.TTheta = thrust.Theta();
-      egData.TPhi = thrust.Phi();
-      egData.Thrust_charged = thrust_charged.Mag();
-      egData.TTheta_charged = thrust_charged.Theta();
-      egData.TPhi_charged = thrust_charged.Phi();
-      egData.missP = netP.Mag();
-      egData.missPt = netP.Perp();
-      egData.missTheta = netP.Theta();
-      egData.missPhi = netP.Phi();
-      egData.missChargedP = netP_charged.Mag();
-      egData.missChargedPt = netP_charged.Perp();
-      egData.missChargedTheta = netP_charged.Theta();
-      egData.missChargedPhi = netP_charged.Phi();
-        
-      Sphericity spher = Sphericity(pgData.nParticle, pgData.px, pgData.py, pgData.pz, pgData.pwflag, true);
-      spher.setTree(&egData);
+      std::vector<boostedEvtData*> bgDataTempVect;
+      for(Int_t jI = 0; jI < nJtAlgo; ++jI){bgDataTempVect.push_back(&(bgData[jI]));}
+      doEndEvent(&pgData, &egData, bgDataTempVect, counterParticles, nTrk, nTrk_HP, nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
+      bgDataTempVect.clear();
+      
+      if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
-      egSelection.setEventSelection(&pgData);
-      egData.passesWW = egSelection.getPassesWW();
-
-      if(counterEntries>0) tgout->Fill(); 
+      if(counterEntries>0){pgData.preFillClean(); tgout->Fill();}
       for(int jIter = 0; jIter < nJtAlgo; ++jIter){
 	processJets(particles, jDef[jIter], jDefReclust[jIter], &(jgData[jIter]), jtPtCut, rParam[jIter], nFinalClust[jIter]);
 	if(counterEntries>0){
+	  jgData[jIter].preFillClean();
 	  jgout[jIter]->Fill();
 	  if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
 	    if(rParamIs8[jIter] || nFinalClust[jIter] == 2){
@@ -1003,11 +1019,343 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 		TVector3 wtaBoost = findBack2BackBoost(jgData[jIter].fourJet[0],jgData[jIter].fourJet[1]);
 		setBoostedVariables(true, &pgData, &(bgData[jIter]), jgData[jIter].fourJet[0], wtaBoost);
 	      }
+	      bgData[jIter].preFillClean();
 	      bgout[jIter]->Fill();
 	    }
 	  }
 	}
       }
+      if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+      fileGen.close();
+    }
+
+    
+    if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+
+    if(isRecons && isMC){
+      if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+      std::string genFileStr = fileList.at(fI);
+      genFileStr.replace(genFileStr.find("_recons_"), 8, "_mctrue_");
+      genFileStr.replace(genFileStr.find("_aftercut-"), 10, "_beforecut-");
+
+      if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+      std::ifstream fileGen(genFileStr.c_str());
+      initTVector3({&netP, &netP_charged});
+      initVal({&nTrk, &nTrk_HP ,&nTrk_GT0p4, &nTrk_GT0p4Thrust, &counterParticles, &counterEntries}, 0);
+
+      while(std::getline(fileGen,getStr)){
+	if(getStr.size() == 0) continue;
+	else if(getStr.find("******") != std::string::npos) continue;
+	else if(getStr.find("END_EVENT") != std::string::npos) continue;
+	else if(getStr.find("END_FILE") != std::string::npos) continue;
+	std::vector<std::string> num = processAlephString(getStr);
+
+	if(num.size() < 5){
+	  std::cout << "Number of columns for line \'" << getStr << "\' is invalid, size \'" << num.size() << "\'. return 1" << std::endl;
+	  //gotta cleanup before return
+	  delete tout;
+	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){
+	    delete jout[jIter];
+	    if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
+	      if(rParamIs8[jIter] || nFinalClust[jIter] == 2) delete bout[jIter];
+	    }
+	  }
+
+	  if(isMC && isRecons){
+	    delete tgout;
+	    delete tgBeforeout;
+	    for(int jIter = 0; jIter < nJtAlgo; ++jIter){
+	      delete jgout[jIter];
+	      if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
+		if(rParamIs8[jIter] || nFinalClust[jIter] == 2){delete bgout[jIter]; delete bgBeforeout[jIter];}
+	      }
+	    }
+	  }
+
+	  hf->Close();
+	  delete hf;
+	
+	  return 1;
+	}
+
+	if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2)) /* && check999(num.at(3))*/){ 
+	  std::vector<boostedEvtData*> bgBeforeDataTempVect;
+	  for(Int_t jI = 0; jI < nJtAlgo; ++jI){bgBeforeDataTempVect.push_back(&(bgBeforeData[jI]));}
+	  doEndEvent(&pgBeforeData, &egBeforeData, bgBeforeDataTempVect, counterParticles, nTrk, nTrk_HP , nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
+	  bgBeforeDataTempVect.clear();
+
+	  if(counterEntries>0){pgBeforeData.preFillClean(); tgBeforeout->Fill();}
+
+	  //Processing particles->jets
+	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){
+	    processJets(particles, jDef[jIter], jDefReclust[jIter], &(jgBeforeData[jIter]), jtPtCut, rParam[jIter], nFinalClust[jIter]);
+	    if(counterEntries>0){
+	      jgBeforeData[jIter].preFillClean();
+	      jgBeforeout[jIter]->Fill();
+	      if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
+		if(rParamIs8[jIter] || nFinalClust[jIter] == 2){
+		  if(jgBeforeData[jIter].nref<2) setBoostedVariables(false, &pgBeforeData, &(bgBeforeData[jIter]));
+		  else{
+		    TVector3 wtaBoost = findBack2BackBoost(jgBeforeData[jIter].fourJet[0],jgBeforeData[jIter].fourJet[1]);
+		    setBoostedVariables(true, &pgBeforeData, &(bgBeforeData[jIter]), jgBeforeData[jIter].fourJet[0], wtaBoost);
+		  }
+		  bgBeforeData[jIter].preFillClean();
+		  bgBeforeout[jIter]->Fill();
+		}
+	      }		
+	    }
+	  }
+	  //clear particles for next iteration clustering
+	  particles.clear();
+
+	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+	  unsigned int runPos = 3;
+	  unsigned int evtPos = 4;
+	  unsigned int ePos = 5;
+	  
+	  if(check999(num.at(3))){runPos++; evtPos++; ePos++;}
+	  //	  if(check999(num.at(4))){runPos++; evtPos++; ePos++;}
+
+	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+	  pgBeforeData.year = year;
+	  pgBeforeData.subDir = subDir;
+	  pgBeforeData.process = process;
+	  pgBeforeData.isMC = isMC;
+	  pgBeforeData.RunNo = std::stoi(num.at(runPos));
+	  pgBeforeData.EventNo= std::stoi(num.at(evtPos));
+	  pgBeforeData.Energy= std::stof(num.at(ePos));
+	  
+	  int tempSubDir = subDir;
+	  if(tempSubDir < 0) tempSubDir = 0;
+	  int tempProcess = process;
+	  if(tempProcess < 0) tempProcess = 15;
+	  
+	  pgBeforeData.uniqueID = idMaker.getID(isMC, tempProcess, tempSubDir, year, pgBeforeData.RunNo, pgBeforeData.EventNo);
+
+	  bool passesNTupleAfterCut = false;
+	  for(unsigned int rI = 0; rI < runNo.size(); ++rI){
+	    if(pgBeforeData.RunNo == runNo.at(rI) && pgBeforeData.EventNo == evtNo.at(rI)){
+	      passesNTupleAfterCut = true;
+	      break;
+	    }
+	  }
+
+	  egBeforeData.passesNTupleAfterCut = passesNTupleAfterCut;
+
+	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+	  initVal(&(pData.bFlag), -999.);
+	  initVal({&(pData.bx), &(pData.by), &(pData.ebx), &(pData.eby)}, -999.);	 
+	  initTVector3({&netP, &netP_charged});
+	  initVal({&nTrk, &nTrk_HP ,&nTrk_GT0p4, &nTrk_GT0p4Thrust, &counterParticles}, 0);
+	  
+	  if(doLocalDebug){
+	    std::cout << __FILE__ << ", " << __LINE__ << ", " << num.size() << ", " << counterEntries << std::endl;
+	    std::cout << pgBeforeData.RunNo << ", " << pgBeforeData.EventNo << std::endl;
+	    std::cout << runNo.size() << ", " << evtNo.size() << std::endl;
+	  }
+
+	  /*
+	  if(pgBeforeData.RunNo != runNo.at(counterEntries) || pgBeforeData.EventNo != evtNo.at(counterEntries)){
+	    std::cout << "Gen entries dont match reco for file \'" << genFileStr << "\'. return 1" << std::endl;
+	    //gotta cleanup before return
+	    delete tout;
+
+	    for(int jIter = 0; jIter < nJtAlgo; ++jIter){
+	      delete jout[jIter];
+	      
+	      if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
+		if(rParamIs8[jIter] || nFinalClust[jIter] == 2) delete bout[jIter];
+	      }
+	    }
+
+	    if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+	    if(isMC && isRecons){
+	      delete tgout;
+	      delete tgBeforeout;
+	      for(int jIter = 0; jIter < nJtAlgo; ++jIter){
+		delete jgout[jIter];
+		delete jgBeforeout[jIter];
+		if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
+		  if(rParamIs8[jIter] || nFinalClust[jIter] == 2){delete bgout[jIter]; delete bgBeforeout[jIter];}
+		}
+	      }
+	    }
+
+	    if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+	    hf->Close();
+	    delete hf;
+	    
+	    return 1;
+	  }
+	  */
+	  if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+	  
+	  ++counterEntries;	
+
+	  continue;
+	}
+	else if(check998(num.at(0)) && check998(num.at(1)) && check998(num.at(2))){
+	  pgBeforeData.bFlag = std::stoi(num.at(4));
+	  pgBeforeData.bx = std::stof(num.at(5));
+	  pgBeforeData.by = std::stof(num.at(6));
+	  pgBeforeData.ebx = std::stof(num.at(7));
+	  pgBeforeData.eby = std::stof(num.at(8));
+
+	  continue;
+	}
+
+	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+	
+	// check the number of columns before assigning values
+	bool assumePID = false;
+	if(!isNewInfo && num.size() == 6) assumePID = false; 
+	else if(isNewInfo && num.size() == 9) assumePID = false; 
+	else if(isNewInfo2 && num.size() == 11) assumePID = false; 
+	else if(!isNewInfo && (num.size() == 7 || num.size() == 8)) assumePID = true; 
+	else if(isNewInfo && (num.size() == 10 || num.size() == 11)) assumePID = true; 
+	else if(isNewInfo2 && (num.size() == 12 || num.size() == 13)) assumePID = true; 
+	else{//return, this is an invalid format (or fix code here if format valid
+	  std::cout << "Number of columns for line \'" << getStr << "\' is invalid, size \'" << num.size() << "\'. return 1" << std::endl;
+	  //gotta cleanup before return
+	  delete tout;
+	  for(int jIter = 0; jIter < nJtAlgo; ++jIter){
+	    delete jout[jIter];
+	    if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
+	      if(rParamIs8[jIter] || nFinalClust[jIter] == 2) delete bout[jIter];
+	    }
+	  }
+
+	  if(isMC && isRecons){
+	    delete tgout;
+	    delete tgBeforeout;
+	    for(int jIter = 0; jIter < nJtAlgo; ++jIter){
+	      delete jgout[jIter];
+	      delete jgBeforeout[jIter];
+              if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
+                if(rParamIs8[jIter] || nFinalClust[jIter] == 2){delete bgout[jIter]; delete bgBeforeout[jIter];}
+              }
+	    }
+	  }
+
+	  hf->Close();
+	  delete hf;
+	
+	  return 1;
+	}
+
+	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+      
+
+	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+	float _px = std::stof(num.at(0));
+	float _py = std::stof(num.at(1));
+	float _pz = std::stof(num.at(2));
+	float _m = std::stof(num.at(3));
+	Short_t _charge = std::stoi(num.at(4));
+	int _pwflag = std::stoi(num.at(5));
+
+	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+	
+	pgBeforeData.px[counterParticles]=_px;
+	pgBeforeData.py[counterParticles]=_py;
+	pgBeforeData.pz[counterParticles]=_pz;
+	pgBeforeData.mass[counterParticles]=_m;
+	v.SetXYZM(_px,_py,_pz,_m);
+	fastjet::PseudoJet particle(_px,_py,_pz,v.E());
+	particle.set_user_index(_pwflag);
+	particles.push_back(particle);
+	pgBeforeData.pt[counterParticles]=v.Pt();
+	pgBeforeData.pmag[counterParticles]=v.Rho(); //Added later on
+	pgBeforeData.rap[counterParticles]=v.Rapidity();
+	pgBeforeData.eta[counterParticles]=v.PseudoRapidity();
+	pgBeforeData.theta[counterParticles]=v.Theta();
+	pgBeforeData.phi[counterParticles]=v.Phi();
+
+	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+	
+	pgBeforeData.charge[counterParticles]=_charge;
+	pgBeforeData.pwflag[counterParticles]=_pwflag;
+	//check before assigning PID
+	if(assumePID) pgBeforeData.pid[counterParticles]=std::stoi(num.at(6));
+	else pgBeforeData.pid[counterParticles]=-999;
+      
+	if((isNewInfo || isNewInfo2) && _pwflag < 4){
+	  int posOffset = 0;
+	  if(assumePID) posOffset += 1;
+	  
+	  pgBeforeData.vx[counterParticles] = std::stof(num.at(6+posOffset));
+	  pgBeforeData.vy[counterParticles] = std::stof(num.at(7+posOffset));
+	  pgBeforeData.vz[counterParticles] = std::stof(num.at(8+posOffset));
+
+	  initVal({&(pgBeforeData.d0[counterParticles]), &(pgBeforeData.z0[counterParticles]), NULL}, -999);
+	  
+	  pgBeforeData.ntpc[counterParticles] = -127;
+	  pgBeforeData.nitc[counterParticles] = -127;
+	  pgBeforeData.nvdet[counterParticles] = -127;
+	  //	  initVal({&(pgBeforeData.ntpc[counterParticles]), &(pgBeforeData.nitc[counterParticles]), &(pgBeforeData.nvdet[counterParticles])}, -127);
+	}
+	else{
+	  initVal({&(pgBeforeData.vx[counterParticles]), &(pgBeforeData.vy[counterParticles]), &(pgBeforeData.vz[counterParticles]), &(pgBeforeData.d0[counterParticles]), &(pgBeforeData.z0[counterParticles])}, -999);
+
+	  pgBeforeData.ntpc[counterParticles] = -127;
+	  pgBeforeData.nitc[counterParticles] = -127;
+	  pgBeforeData.nvdet[counterParticles] = -127;
+	  //	  initVal({&(pgBeforeData.ntpc[counterParticles]), &(pgBeforeData.nitc[counterParticles]), &(pgBeforeData.nvdet[counterParticles])}, -127);
+	}
+	
+	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+
+        //missing momentum calculation and multiplicity calculation
+        netP -= TVector3(_px,_py,_pz);
+        if(_pwflag==0){
+          netP_charged -= TVector3(_px,_py,_pz);
+          nTrk++;
+          if(v.Pt()>0.4) nTrk_GT0p4++; 
+          if(v.Pt()>0.4) nTrk_GT0p4Thrust++; 
+          if(pgBeforeData.highPurity[counterParticles]) nTrk_HP++;
+        } 
+      
+	++counterParticles;	
+
+	if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
+      }
+      //Have to fill one last time since the condition for fill is dependent on NEXT EVENT existing, else we would lose last event per file
+      std::vector<boostedEvtData*> bgBeforeDataTempVect;
+      for(Int_t jI = 0; jI < nJtAlgo; ++jI){bgBeforeDataTempVect.push_back(&(bgBeforeData[jI]));}
+      doEndEvent(&pgBeforeData, &egBeforeData, bgBeforeDataTempVect, counterParticles, nTrk, nTrk_HP,nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
+      bgBeforeDataTempVect.clear();
+      
+      if(counterEntries>0){pgBeforeData.preFillClean(); tgBeforeout->Fill();}
+      for(int jIter = 0; jIter < nJtAlgo; ++jIter){
+	processJets(particles, jDef[jIter], jDefReclust[jIter], &(jgBeforeData[jIter]), jtPtCut, rParam[jIter], nFinalClust[jIter]);
+	if(counterEntries>0){
+	  jgBeforeData[jIter].preFillClean();
+	  jgBeforeout[jIter]->Fill();
+	  if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
+	    if(rParamIs8[jIter] || nFinalClust[jIter] == 2){
+	      if(jgBeforeData[jIter].nref<2) setBoostedVariables(false, &pgBeforeData, &(bgBeforeData[jIter]));
+	      else{
+		TVector3 wtaBoost = findBack2BackBoost(jgBeforeData[jIter].fourJet[0],jgBeforeData[jIter].fourJet[1]);
+		setBoostedVariables(true, &pgBeforeData, &(bgBeforeData[jIter]), jgBeforeData[jIter].fourJet[0], wtaBoost);
+	      }
+	      bgBeforeData[jIter].preFillClean();
+	      bgBeforeout[jIter]->Fill();
+	    }
+	  }
+	}
+      }
+
+
       fileGen.close();
     }
 
@@ -1038,13 +1386,20 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
     tgout->Write("", TObject::kOverwrite);
     delete tgout;
 
+    tgBeforeout->Write("", TObject::kOverwrite);
+    delete tgBeforeout;
+
     for(int jIter = 0; jIter < nJtAlgo; ++jIter){
       jgout[jIter]->Write("", TObject::kOverwrite);
       delete jgout[jIter];
+      jgBeforeout[jIter]->Write("", TObject::kOverwrite);
+      delete jgBeforeout[jIter];
       if(recombScheme[jIter]==fastjet::WTA_modp_scheme){
 	if(rParamIs8[jIter] || nFinalClust[jIter] == 2){
 	  bgout[jIter]->Write("", TObject::kOverwrite);
 	  delete bgout[jIter];
+	  bgBeforeout[jIter]->Write("", TObject::kOverwrite);
+	  delete bgBeforeout[jIter];
 	}
       }    
     }
@@ -1060,14 +1415,52 @@ int scan(std::string inFileName, const bool isNewInfo, const bool isNewInfo2, st
 
 int main(int argc, char *argv[])
 {
+  TDatime* date = new TDatime();
+
+  std::cout << "START DATE, TIME: " << date->GetDate() << ", " << date->GetTime() << std::endl;
+
   if(argc != 4 && argc != 5){
     std::cout << "Usage: ./bin/scan.exe <inFileName> <isNewInfo> <isNewInfo2> <OPT-outFileName>" << std::endl;
     return 1;
   }
 
+  std::vector<std::string> fileListTemp;
+  std::string inFileName = argv[1];
+
+  int nMix = -1;
+
+  if(inFileName.substr(inFileName.size()-4, 4).find(".txt") != std::string::npos){
+    std::ifstream pathFile(inFileName.c_str());
+    std::string paths;
+    while(std::getline(pathFile, paths)){
+      if(paths.size() == 0) continue;
+      fileListTemp.push_back(paths);
+    }
+    pathFile.close();
+  }
+  else if(inFileName.substr(inFileName.size()-5, 5).find(".list") != std::string::npos) fileListTemp.push_back(inFileName);
+  else if(inFileName.substr(inFileName.size()-6, 6).find(".aleph") != std::string::npos) fileListTemp.push_back(inFileName);
+  else{
+    std::cout << "WARNING: inFileName \'" << inFileName << "\' cannot determine MC or Data, mixing 1 event only." << std::endl;
+    nMix = 1;
+  }
+
+  if(nMix < 0){
+    if(getIsMC(fileListTemp.at(0))) nMix = 1;
+    else nMix = 3;
+  }
+
   std::cout << "Begin processing..." << std::endl;
   int retVal = 0;
-  if(argc == 4) retVal += scan(argv[1], std::stoi(argv[2]), std::stoi(argv[3]));
-  else if(argc == 5) retVal += scan(argv[1], std::stoi(argv[2]), std::stoi(argv[3]), argv[4]);
+  if(argc == 4) retVal += scan(argv[1], argv[2], argv[3]);
+  else if(argc == 5) retVal += scan(argv[1], argv[2], argv[3], argv[4]);
+  
+  std::cout << "Making mixing file..." << std::endl;
+  if(argc == 5) retVal += makeMixFile(argv[4], argv[4], nMix);
+  else          retVal += makeMixFile(argv[1], "", nMix);
+
+  std::cout << "END DATE, TIME: " << date->GetDate() << ", " << date->GetTime() << std::endl;
+  delete date;
+
   return retVal;
 }

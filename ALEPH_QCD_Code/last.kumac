@@ -1,0 +1,58 @@
+*** Begin of history file: Wed May 30 12:03:36 2001
+h/fil 1 qcdana_da_94_1.hbook
+h/fil 2 qcdana_mc_94_1.hbook
+h/pl //lun1/810
+opt stat
+h/pl //lun1/810
+h/pl //lun1/820
+h/pl //lun1/830
+h/pl //lun1/810
+h/pl //lun2/810
+h/pl //lun2/820
+h/pl //lun2/830
+h/pl //lun2/510
+h/pl //lun1/510
+opt logy
+h/pl //lun1/510
+h/pl //lun2/510
+h/pl //lun1/510
+xcomp 510
+xcomp 520
+xcomp 530
+xcomp 540
+xcomp 550
+xcomp 610
+opt liny
+xcomp 610
+xcomp 620
+xcomp 630
+xcomp 710
+xcomp 720
+xcomp 810
+xcomp 820
+xcomp 410
+xcomp 420
+xcomp 430
+xcomp 440
+xcomp 310
+xcomp 300
+h/lis
+xcomp 100
+opt logy
+xcomp 100
+xcomp 110
+xcomp 120
+xcomp 130
+xcomp 140
+xcomp 150
+xcomp 160
+xcomp 170
+xcomp 180
+xcomp 181
+xcomp 182
+xcomp 183
+h/lis
+xcomp 200
+xcomp 830
+quit
+*** End   of history file: Wed May 30 12:08:05 2001

@@ -1,0 +1,337 @@
+\section{Two-Particle Correlation Function}
+\makeatletter
+\DeclareRobustCommand{\textsupsub}[2]{{%
+  \m@th\ensuremath{%
+    ^{\mbox{\fontsize\sf@size\z@#1}}%
+    _{\mbox{\fontsize\sf@size\z@#2}}%
+  }%
+}}
+\makeatother
+
+In this analysis with ALEPH open data, charged particles with transverse momentum between 0.1 and 4.0 GeV/$c$ 
+are selected for the correlation function analysis. High multiplicity events are sampled using the total number of selected proton, 
+pions and kaons (hadron multiplicity $N$) in each event. The first step in extracting the correlation function was to divide the sample 
+into bins in the hadron multiplicity. For each hadron multiplicity class, ``trigger" particles are defined as charged hadrons in the selected transverse momentum range (0.1 and 4.0 GeV/$c$). Particle pairs are then formed by associating every trigger particle with the remaining charged hadrons in the same $p_{\rm T}$ interval as the trigger particle. The per-trigger-particle associated yield is defined as:
+\begin{eqnarray}
+\label{eq:associatedyield}
+\frac{1}{N_{\rm trig}}\frac{\rm d^2N^{pair}}{d\Delta\eta  \rm d\Delta\phi}= B(0,0) \times \frac{S(\Delta\eta, \Delta\phi)}{B(\Delta\eta, \Delta\phi)}
+\end{eqnarray}
+where $N_{trig}$ is the number of trigger particles in the event, $\Delta\eta$ and $\Delta\phi$ are the differences in $\eta$ and $\phi$ of the pair. The signal distribution, $S(\Delta\eta, \Delta\phi)$, 
+is the per-trigger-particle yield of particle pairs in the same event: 
+\begin{eqnarray}
+\label{eq:S}
+S(\Delta\eta,\Delta\phi) = \frac{1}{N_{trig}}\frac{\rm d^2 N^{\rm same}}{\rm d\Delta\eta \rm d\Delta\phi}
+\end{eqnarray}
+The mixed-event background distribution, used to account for random combinatorial background, is defined as 
+\begin{eqnarray}
+\label{eq:B}
+B(\Delta\eta,\Delta\phi) = \frac{1}{N_{trig}}\frac{\rm d^2 N^{\rm mix}}{\rm d\Delta\eta \rm d\Delta\phi}
+\end{eqnarray}
+and is constructing by pairing the trigger particles from two random events in the same hadron multiplicity interval.
+The symbol $N^{mix}$ denotes the number of pairs taken from the mixed event, while $B(0,0)$ represents the mixed-event associated yield for both particles of the pair going in the same direction and thus having full pair acceptance. Therefore, 
+the ratio $B(0,0)/B(\Delta\eta,\Delta\phi)$ represents the pair-acceptance correction factor used to derive the corrected per-trigger-particle
+associated yield distribution.  The signal and background distributions are first calculated for each event and then averaged over all the events within the track multiplicity class. 
+
+In the full data analysis, a matching between particles and the primary vertex should be performed so that the studies are done with primary hadrons from a single primary vertex. This matching requirement is not yet included in this preliminary analysis due to the limited information in the Belle open data. 
+
+\begin{table*}[h!]\centering
+\ra{1.3}
+
+\begin{tabular}{ccccccccc}\toprule
+Date & Axis & ${p_{T}}$ & $|\eta|$ & $\theta$ & ${p}$ & $|dxy|$ & $|dz|$ & nTPC\\
+\midrule
+\rowcolor{black!20}2018.01.26 & Beam & $\geq$0.4 & $<$1.8 & off & off & off & off & off \\
+& Thrust & $\geq$0.4 & $<$5.0 & off & off & off & off & off \\
+\rowcolor{black!20} & WTA & $\geq$0.4 & $<$5.0 & off & off & off & off & off \\
+2018.02.XX & Beam & $\geq$0.4 & $<$1.8 & [20,160] & $>$0.2 & $<$3.0 & $<$5.0 & $\geq$4.0 \\
+\rowcolor{black!20}& Thrust & $\geq$0.4 & $<$5.0 & [20,160] & $>$0.2 & $<$3.0 & $<$5.0 & $\geq$4.0 \\
+& WTA & $\geq$0.4 & $<$5.0 & [20,160] & $>$0.2 & $<$3.0 & $<$5.0 & $\geq$4.0 \\
+\bottomrule
+\end{tabular}
+\caption{Track cuts for Beam, Thrust, and WTA axes.}
+\end{table*}
+
+\begin{table*}[h!]\centering
+\ra{1.3}
+
+\begin{tabular}{ccccccc}\toprule
+Date & Axis & WW & ${p^{miss}}$ & 2-Jet ${p^{rel}}$ & 3rd-Jet ${p^{rel}_{1,2}}$ &
+$N_{trk}$ \\
+\midrule
+\rowcolor{black!20}2018.01.26 & Beam & off & off & off & off & $>$1 \\
+& Thrust & off & off & off & off & $>$1 \\
+\rowcolor{black!20} & WTA & off & off & off & off & $>$1 \\
+2018.02.XX & Beam & off & $\leq$20 & 0.1 & 0.03 & $>$1 \\
+\rowcolor{black!20}& Thrust & off & $\leq$20 & 0.1 & 0.03 & $>$1 \\
+& WTA & off & $\leq$20 & 0.1 & 0.03 & $>$1 \\
+\bottomrule
+\end{tabular}
+\caption{Event cuts for Beam, Thrust, and WTA axes.}
+\end{table*}
+
+Two particle correlation functions for the LEP1 and LEP2 data sets analyzed in the beam, thrust, and winner-take-all (WTA) axes are shown below. The first row contains events with nTrk $<$ 20, the second with 20 $\leq$ nTrk $<$ 30, and third with 30 $\leq$ nTrk.
+
+%%%% LEP file 1 = LEP1, file 2 = LEP2 && PYTHIA8 file 1 = normal, file 2 = Rope Walk 
+
+%%% ratio plots comparing Austin and Anthony's are in the appendix with file 1 being Austin and file 2 is Anthony in the below plots outputed by TPCPlots.cc %%%%
+
+\subsection{Analysis for 2018.01.26 production}
+
+
+%%%%%% BEAM AXIS %%%%%% 
+\begin{figure}[H]
+\centering
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background2_0_20.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background2_0_20.pdf}}\hfill %% end of row1 (0 - 20)
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background2_20_30.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background2_20_30.pdf}}\hfill %% end of row2 (20 - 30)
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_background2_30_999.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_background2_30_999.pdf}} \\ %% end of row2 (30 - 999)
+\caption{Background function for beam axis. Left to right: LEP1, LEP2, PYTHIA8, PYTHIA8 rope walk. Top to bottom: multiplicity 0-20, 20-30, 30-999.}
+\label{fig:test}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal2_0_20.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal2_0_20.pdf}}\hfill %% end of row1 (0 - 20)
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal2_20_30.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal2_20_30.pdf}}\hfill %% end of row2 (20 - 30)
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_signal2_30_999.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_signal2_30_999.pdf}} \\ %% end of row2 (30 - 999)
+\caption{Signal function for beam axis. Left to right: LEP1, LEP2, PYTHIA8, PYTHIA8 rope walk. Top to bottom: multiplicity 0-20, 20-30, 30-999.}
+\label{fig:test}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio2_0_20.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio2_0_20.pdf}}\hfill %% end of row1 (0 - 20)
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio2_20_30.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio2_20_30.pdf}}\hfill %% end of row2 (20 - 30)
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_ratio2_30_999.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_ratio2_30_999.pdf}} \\ %% end of row2 (30 - 999)
+\caption{Ratio function for beam axis. Left to right: LEP1, LEP2, PYTHIA8, PYTHIA8 rope walk. Top to bottom: multiplicity 0-20, 20-30, 30-999.}
+\label{fig:test}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\subfloat{\label{sfig:a}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield2_0_20.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield2_0_20.pdf}} \\%% end of row1 (0 - 20)
+\caption{Long range yield function for beam axis. Top row is LEP1 and LEP2, bottom row PYTHIA8 and PYTHIA8 rope walk. Multiplicity 0-20.}
+\label{fig:test}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\subfloat{\label{sfig:a}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield2_20_30.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield2_20_30.pdf}}\\ %% end of row2 (20 - 30)
+\caption{Long range yield function for beam axis. Top row is LEP1 and LEP2, bottom row PYTHIA8 and PYTHIA8 rope walk. Multiplicity 20-30.}
+\label{fig:test}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\subfloat{\label{sfig:a}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/LEP_BEAM_longRangeYield2_30_999.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/BEAM/PYTHIA8_BEAM_longRangeYield2_30_999.pdf}} \\ %% end of row2 (30 - 999)
+\caption{Long range yield function for beam axis. Top row is LEP1 and LEP2, bottom row PYTHIA8 and PYTHIA8 rope walk. Multiplicity 30-999.}
+\label{fig:test}
+\end{figure}
+
+
+%%%%%% THRUST AXIS %%%%%% 
+\begin{figure}[H]
+\centering
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background2_0_20.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background2_0_20.pdf}}\hfill %% end of row1 (0 - 20)
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background2_20_30.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background2_20_30.pdf}}\hfill %% end of row2 (20 - 30)
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_background2_30_999.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_background2_30_999.pdf}} \\ %% end of row2 (30 - 999)
+\caption{Background function for thrust axis. Left to right: LEP1, LEP2, PYTHIA8, PYTHIA8 rope walk. Top to bottom: multiplicity 0-20, 20-30, 30-999.}
+\label{fig:test}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal2_0_20.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal2_0_20.pdf}}\hfill %% end of row1 (0 - 20)
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal2_20_30.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal2_20_30.pdf}}\hfill %% end of row2 (20 - 30)
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_signal2_30_999.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_signal2_30_999.pdf}} \\ %% end of row2 (30 - 999)
+\caption{Signal function for thrust axis. Left to right: LEP1, LEP2, PYTHIA8, PYTHIA8 rope walk. Top to bottom: multiplicity 0-20, 20-30, 30-999.}
+\label{fig:test}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio2_0_20.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio2_0_20.pdf}}\hfill %% end of row1 (0 - 20)
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio2_20_30.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio2_20_30.pdf}}\hfill %% end of row2 (20 - 30)
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_ratio2_30_999.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_ratio2_30_999.pdf}} \\ %% end of row2 (30 - 999)
+\caption{Ratio function for thrust axis. Left to right: LEP1, LEP2, PYTHIA8, PYTHIA8 rope walk. Top to bottom: multiplicity 0-20, 20-30, 30-999.}
+\label{fig:test}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\subfloat{\label{sfig:a}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield2_0_20.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYield1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYield2_0_20.pdf}} \\%% end of row1 (0 - 20)
+\caption{Long range yield function for thrust axis. Top row is LEP1 and LEP2, bottom row PYTHIA8 and PYTHIA8 rope walk. Multiplicity 0-20.}
+\label{fig:test}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\subfloat{\label{sfig:a}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield2_20_30.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYield1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYield2_20_30.pdf}}\\ %% end of row2 (20 - 30)
+\caption{Long range yield function for thrust axis. Top row is LEP1 and LEP2, bottom row PYTHIA8 and PYTHIA8 rope walk. Multiplicity 20-30.}
+\label{fig:test}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\subfloat{\label{sfig:a}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/LEP_THRUST_longRangeYield2_30_999.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYield1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/THRUST/PYTHIA8_THRUST_longRangeYield2_30_999.pdf}} \\ %% end of row2 (30 - 999)
+\caption{Long range yield function for thrust axis. Top row is LEP1 and LEP2, bottom row PYTHIA8 and PYTHIA8 rope walk. Multiplicity 30-999.}
+\label{fig:test}
+\end{figure}
+
+%%%%%% WTA axis %%%%%% 
+\begin{figure}[H]
+\centering
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background2_0_20.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background2_0_20.pdf}}\hfill %% end of row1 (0 - 20)
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background2_20_30.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background2_20_30.pdf}}\hfill %% end of row2 (20 - 30)
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_background2_30_999.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_background2_30_999.pdf}} \\ %% end of row2 (30 - 999)
+\caption{Background function for WTA axis. Left to right: LEP1, LEP2, PYTHIA8, PYTHIA8 rope walk. Top to bottom: multiplicity 0-20, 20-30, 30-999.}
+\label{fig:test}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal2_0_20.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal2_0_20.pdf}}\hfill %% end of row1 (0 - 20)
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal2_20_30.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal2_20_30.pdf}}\hfill %% end of row2 (20 - 30)
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_signal2_30_999.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_signal2_30_999.pdf}} \\ %% end of row2 (30 - 999)
+\caption{Signal function for WTA axis. Left to right: LEP1, LEP2, PYTHIA8, PYTHIA8 rope walk. Top to bottom: multiplicity 0-20, 20-30, 30-999.}
+\label{fig:test}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio2_0_20.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio2_0_20.pdf}}\hfill %% end of row1 (0 - 20)
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio2_20_30.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio2_20_30.pdf}}\hfill %% end of row2 (20 - 30)
+\subfloat{\label{sfig:a}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_ratio2_30_999.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.25\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_ratio2_30_999.pdf}} \\ %% end of row2 (30 - 999)
+\caption{Ratio function for WTA axis. Left to right: LEP1, LEP2, PYTHIA8, PYTHIA8 rope walk. Top to bottom: multiplicity 0-20, 20-30, 30-999. Note that the bottom left corner plot for LEP1 is zoomed out substantially from the plot to its right for LEP2 to show the difference in plotting that we may want to consider for the paper. The extremely high peaks at high $\Delta\eta$ and small $\Delta\phi$ are artifacts of the lack of a clear definition for the $\eta$ cut in the WTA axis.}
+\label{fig:test}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\subfloat{\label{sfig:a}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield2_0_20.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield1_0_20.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield2_0_20.pdf}} \\%% end of row1 (0 - 20)
+\caption{Long range yield function for WTA axis. Top row is LEP1 and LEP2, bottom row PYTHIA8 and PYTHIA8 rope walk. Multiplicity 0-20.}
+\label{fig:test}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\subfloat{\label{sfig:a}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield2_20_30.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield1_20_30.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield2_20_30.pdf}}\\ %% end of row2 (20 - 30)
+\caption{Long range yield function for WTA axis. Top row is LEP1 and LEP2, bottom row PYTHIA8 and PYTHIA8 rope walk. Multiplicity 20-30.}
+\label{fig:test}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\subfloat{\label{sfig:a}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:b}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/WTA/LEP_WTA_longRangeYield2_30_999.pdf}}\hfill
+\subfloat{\label{sfig:c}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield1_30_999.pdf}}\hfill
+\subfloat{\label{sfig:d}\includegraphics[width=.5\textwidth]{images/TwoParticleCorrelation/20180126/WTA/PYTHIA8_WTA_longRangeYield2_30_999.pdf}} \\ %% end of row2 (30 - 999)
+\caption{Long range yield function for WTA axis. Top row is LEP1 and LEP2, bottom row PYTHIA8 and PYTHIA8 rope walk. Multiplicity 30-999.}
+\label{fig:test}
+\end{figure}
+
+\subsection{Analysis for 2018.02.XX production}

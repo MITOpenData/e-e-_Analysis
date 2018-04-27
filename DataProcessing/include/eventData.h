@@ -5,7 +5,17 @@
 
 class eventData{
  public:
+  Bool_t passesNTupleAfterCut;
+  Bool_t passesTotalChgEnergyMin;
+  Bool_t passesNTrkMin;
+  Bool_t passesSTheta;
+  Bool_t passesMissP;
+
+  Bool_t passesISR;
   Bool_t passesWW;
+
+  Bool_t passesAll;
+
   Float_t missP;
   Float_t missPt;
   Float_t missTheta;
@@ -15,6 +25,7 @@ class eventData{
   Float_t missChargedTheta;
   Float_t missChargedPhi;
   Int_t nChargedHadrons;
+  Int_t nChargedHadronsHP;
   Int_t nChargedHadrons_GT0p4;
   Int_t nChargedHadrons_GT0p4Thrust;
 
@@ -38,8 +49,15 @@ class eventData{
   Float_t C_linearized;
   Float_t D_linearized;
 
-  static const int nVar = 28;
-  std::string varStr[nVar] = {"passesWW",
+  static const int nVar = 36;
+  std::string varStr[nVar] = {"passesNTupleAfterCut",
+			      "passesTotalChgEnergyMin",
+			      "passesNTrkMin",
+			      "passesSTheta",
+			      "passesMissP",
+			      "passesISR",
+			      "passesWW",
+			      "passesAll",
 			      "missP",
 			      "missPt",
 			      "missTheta",
@@ -49,6 +67,7 @@ class eventData{
 			      "missChargedTheta",
 			      "missChargedPhi",
 			      "nChargedHadrons",
+			      "nChargedHadronsHP",
 			      "nChargedHadrons_GT0p4",
 			      "nChargedHadrons_GT0p4Thrust",
 			      "Thrust",
@@ -78,7 +97,14 @@ class eventData{
 
 eventData::eventData()
 {
+  passesNTupleAfterCut = false;
+  passesTotalChgEnergyMin = false;
+  passesNTrkMin = false;
+  passesSTheta = false;
+  passesMissP = false;
+  passesISR = false;
   passesWW = false;
+  passesAll = false;
   missP = -999;
   missPt = -999;
   missTheta = -999;
@@ -88,6 +114,7 @@ eventData::eventData()
   missChargedTheta = -999;
   missChargedPhi = -999;
   nChargedHadrons = -999;
+  nChargedHadronsHP = -999;
   nChargedHadrons_GT0p4 = -999;
   nChargedHadrons_GT0p4Thrust = -999;
   Thrust = -999;
@@ -131,41 +158,56 @@ void eventData::SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::string
     if(varIsGood[i]) inTree_p->SetBranchStatus(varStr[i].c_str(), 1);
   }
 
-  if(varIsGood[0]) inTree_p->SetBranchAddress("passesWW", &passesWW);
-  if(varIsGood[1]) inTree_p->SetBranchAddress("missP", &missP);
-  if(varIsGood[2]) inTree_p->SetBranchAddress("missPt", &missPt);
-  if(varIsGood[3]) inTree_p->SetBranchAddress("missTheta", &missTheta);
-  if(varIsGood[4]) inTree_p->SetBranchAddress("missPhi", &missPhi);
-  if(varIsGood[5]) inTree_p->SetBranchAddress("missChargedP", &missChargedP);
-  if(varIsGood[6]) inTree_p->SetBranchAddress("missChargedPt", &missChargedPt);
-  if(varIsGood[7]) inTree_p->SetBranchAddress("missChargedTheta", &missChargedTheta);
-  if(varIsGood[8]) inTree_p->SetBranchAddress("missChargedPhi", &missChargedPhi);
-  if(varIsGood[9]) inTree_p->SetBranchAddress("nChargedHadrons", &nChargedHadrons);
-  if(varIsGood[10]) inTree_p->SetBranchAddress("nChargedHadrons_GT0p4", &nChargedHadrons_GT0p4);
-  if(varIsGood[11]) inTree_p->SetBranchAddress("nChargedHadrons_GT0p4Thrust", &nChargedHadrons_GT0p4Thrust);
-  if(varIsGood[12]) inTree_p->SetBranchAddress("Thrust", &Thrust);
-  if(varIsGood[13]) inTree_p->SetBranchAddress("TTheta", &TTheta);
-  if(varIsGood[14]) inTree_p->SetBranchAddress("TPhi", &TPhi);
-  if(varIsGood[15]) inTree_p->SetBranchAddress("Thrust_charged", &Thrust_charged);
-  if(varIsGood[16]) inTree_p->SetBranchAddress("TTheta_charged", &TTheta_charged);
-  if(varIsGood[17]) inTree_p->SetBranchAddress("TPhi_charged", &TPhi_charged);
-  if(varIsGood[18]) inTree_p->SetBranchAddress("Sphericity", &Sphericity);
-  if(varIsGood[19]) inTree_p->SetBranchAddress("STheta", &STheta);
-  if(varIsGood[20]) inTree_p->SetBranchAddress("SPhi", &SPhi);
-  if(varIsGood[21]) inTree_p->SetBranchAddress("Aplanarity", &Aplanarity);
-  if(varIsGood[22]) inTree_p->SetBranchAddress("Sphericity_linearized", &Sphericity_linearized);
-  if(varIsGood[23]) inTree_p->SetBranchAddress("STheta_linearized", &STheta_linearized);
-  if(varIsGood[24]) inTree_p->SetBranchAddress("SPhi_linearized", &SPhi_linearized);
-  if(varIsGood[25]) inTree_p->SetBranchAddress("Aplanarity_linearized", &Aplanarity_linearized);
-  if(varIsGood[26]) inTree_p->SetBranchAddress("C_linearized", &C_linearized);
-  if(varIsGood[27]) inTree_p->SetBranchAddress("D_linearized", &D_linearized);
+  if(varIsGood[0]) inTree_p->SetBranchAddress("passesNTupleAfterCut", &passesNTupleAfterCut);
+  if(varIsGood[1]) inTree_p->SetBranchAddress("passesTotalChgEnergyMin", &passesTotalChgEnergyMin);
+  if(varIsGood[2]) inTree_p->SetBranchAddress("passesNTrkMin", &passesNTrkMin);
+  if(varIsGood[3]) inTree_p->SetBranchAddress("passesSTheta", &passesSTheta);
+  if(varIsGood[4]) inTree_p->SetBranchAddress("passesMissP", &passesMissP);
+  if(varIsGood[5]) inTree_p->SetBranchAddress("passesISR", &passesISR);
+  if(varIsGood[6]) inTree_p->SetBranchAddress("passesWW", &passesWW);
+  if(varIsGood[7]) inTree_p->SetBranchAddress("passesAll", &passesAll);
+  if(varIsGood[8]) inTree_p->SetBranchAddress("missP", &missP);
+  if(varIsGood[9]) inTree_p->SetBranchAddress("missPt", &missPt);
+  if(varIsGood[10]) inTree_p->SetBranchAddress("missTheta", &missTheta);
+  if(varIsGood[11]) inTree_p->SetBranchAddress("missPhi", &missPhi);
+  if(varIsGood[12]) inTree_p->SetBranchAddress("missChargedP", &missChargedP);
+  if(varIsGood[13]) inTree_p->SetBranchAddress("missChargedPt", &missChargedPt);
+  if(varIsGood[14]) inTree_p->SetBranchAddress("missChargedTheta", &missChargedTheta);
+  if(varIsGood[15]) inTree_p->SetBranchAddress("missChargedPhi", &missChargedPhi);
+  if(varIsGood[16]) inTree_p->SetBranchAddress("nChargedHadrons", &nChargedHadrons);
+  if(varIsGood[17]) inTree_p->SetBranchAddress("nChargedHadronsHP", &nChargedHadronsHP);
+  if(varIsGood[18]) inTree_p->SetBranchAddress("nChargedHadrons_GT0p4", &nChargedHadrons_GT0p4);
+  if(varIsGood[19]) inTree_p->SetBranchAddress("nChargedHadrons_GT0p4Thrust", &nChargedHadrons_GT0p4Thrust);
+  if(varIsGood[20]) inTree_p->SetBranchAddress("Thrust", &Thrust);
+  if(varIsGood[21]) inTree_p->SetBranchAddress("TTheta", &TTheta);
+  if(varIsGood[22]) inTree_p->SetBranchAddress("TPhi", &TPhi);
+  if(varIsGood[23]) inTree_p->SetBranchAddress("Thrust_charged", &Thrust_charged);
+  if(varIsGood[24]) inTree_p->SetBranchAddress("TTheta_charged", &TTheta_charged);
+  if(varIsGood[25]) inTree_p->SetBranchAddress("TPhi_charged", &TPhi_charged);
+  if(varIsGood[26]) inTree_p->SetBranchAddress("Sphericity", &Sphericity);
+  if(varIsGood[27]) inTree_p->SetBranchAddress("STheta", &STheta);
+  if(varIsGood[28]) inTree_p->SetBranchAddress("SPhi", &SPhi);
+  if(varIsGood[29]) inTree_p->SetBranchAddress("Aplanarity", &Aplanarity);
+  if(varIsGood[30]) inTree_p->SetBranchAddress("Sphericity_linearized", &Sphericity_linearized);
+  if(varIsGood[31]) inTree_p->SetBranchAddress("STheta_linearized", &STheta_linearized);
+  if(varIsGood[32]) inTree_p->SetBranchAddress("SPhi_linearized", &SPhi_linearized);
+  if(varIsGood[33]) inTree_p->SetBranchAddress("Aplanarity_linearized", &Aplanarity_linearized);
+  if(varIsGood[34]) inTree_p->SetBranchAddress("C_linearized", &C_linearized);
+  if(varIsGood[35]) inTree_p->SetBranchAddress("D_linearized", &D_linearized);
 
   return;
 }
 
 void eventData::SetBranchWrite(TTree* inTree_p)
 {
+  inTree_p->Branch("passesNTupleAfterCut", &passesNTupleAfterCut, "passesNTupleAfterCut/O");
+  inTree_p->Branch("passesTotalChgEnergyMin", &passesTotalChgEnergyMin, "passesTotalChgEnergyMin/O");
+  inTree_p->Branch("passesNTrkMin", &passesNTrkMin, "passesNTrkMin/O");
+  inTree_p->Branch("passesSTheta", &passesSTheta, "passesSTheta/O");
+  inTree_p->Branch("passesMissP", &passesMissP, "passesMissP/O");
+  inTree_p->Branch("passesISR", &passesISR, "passesISR/O");
   inTree_p->Branch("passesWW", &passesWW, "passesWW/O");
+  inTree_p->Branch("passesAll", &passesAll, "passesAll/O");
   inTree_p->Branch("missP", &missP, "missP/F");
   inTree_p->Branch("missPt", &missPt, "missPt/F");
   inTree_p->Branch("missTheta", &missTheta, "missTheta/F");
@@ -175,6 +217,7 @@ void eventData::SetBranchWrite(TTree* inTree_p)
   inTree_p->Branch("missChargedTheta", &missChargedTheta, "missChargedTheta/F");
   inTree_p->Branch("missChargedPhi", &missChargedPhi, "missChargedPhi/F");
   inTree_p->Branch("nChargedHadrons", &nChargedHadrons, "nChargedHadrons/I");
+  inTree_p->Branch("nChargedHadronsHP", &nChargedHadronsHP, "nChargedHadronsHP/I");
   inTree_p->Branch("nChargedHadrons_GT0p4", &nChargedHadrons_GT0p4, "nChargedHadrons_GT0p4/I");
   inTree_p->Branch("nChargedHadrons_GT0p4Thrust", &nChargedHadrons_GT0p4Thrust, "nChargedHadrons_GT0p4Thrust/I");
   inTree_p->Branch("Thrust", &Thrust, "Thrust/F");

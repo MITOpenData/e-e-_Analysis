@@ -1,0 +1,438 @@
+ --------------------------------------------------
+                  A L P H A   126.08   11.02.56 30/05/01
+ 
+                            running on LINUX   
+ 
+                          ALEPHLIB Version  316.10
+ --------------------------------------------------
+0_QUIBOS_ Init BOS with  2500000 words working space
+  *** ALFMT*** BANKAL.FMT on unit  77 contains  1331 bank names
+0BREADC-----  NAME........NR  +----------------------------------------------------------------------+
+                            * *                                                                       
+                            * **** the filicards                                                      
+ -----------  READ         0  READ 'mc94_qqbar_mini.filicards'                                        
+                            * *** ***                                                                 
+                            * *                                                                       
+                            * *** stop job if time left =                                             
+ -----------  TIME         0  TIME 10                                                                 
+                            * *                                                                       
+                            * *** event class preselection                                            
+                            * ****                                                                    
+                            * *                                                                       
+                            * *** number of events to analyse                                         
+ -----------  NEVT         0  NEVT 10000                                                              
+                            * *                                                                       
+                            * *** fill energy flow section                                            
+ -----------  EFLW         0  EFLW                                                                    
+                            * *                                                                       
+                            * *** minimal debugging output                                            
+ -----------  DEBU         0  DEBU  0                                                                 
+                            * *                                                                       
+                            * *** to not print histos in ascii output                                 
+ -----------  NOPH         0  NOPH                                                                    
+                            * *                                                                       
+                            * *** histogram file for output                                           
+ -----------  HIST         0  HIST 'qcdana_MC_94_1.hbook'                                             
+                            * *                                                                       
+                            * *                                                                       
+                            * ***** these are additional cards (not default in ALPHA)                 
+                            * ***** which are used for track and event selection                      
+                            * ***** the second number shows the default                               
+                            * *                                                                       
+ -----------  SCUT         0  SCUT 'CECH'  15.   15.     ! min charged energy                         
+ -----------  SCUT         1  SCUT 'CNCH'  5.    5.      ! min number of good charged tracks          
+ -----------  SCUT         2  SCUT 'CCTS'  0.82  0.82    ! max cos(theta(sphericity axis))            
+ -----------  SCUT         3  SCUT 'CNTR'  0.   15.      ! min number of good ch+neu tracks           
+ -----------  SCUT         4  SCUT 'CTD0'  2.    2.      ! max D0                                     
+ -----------  SCUT         5  SCUT 'CTZ0'  10.   5.      ! max Z0                                     
+ -----------  SCUT         6  SCUT 'CTNT'  4.    4.      ! min number of TPC-hits/track               
+ -----------  SCUT         7  SCUT 'CTCT'  0.94  0.94    ! max cos(theta(ch. track))                  
+ -----------  SCUT         8  SCUT 'CTPT'  0.20  0.20    ! min pt of a track                          
+ -----------  SCUT         9  SCUT 'CCCT'  0.98  0.98    ! max cos(theta(cal-object))                 
+ -----------  SCUT        10  SCUT 'CCEB'  0.80   0.80   ! min energy of cal-object                   
+                            * *                                                                       
+                            * ********************************************************                
+                            + ENDQ                                                                    
+ _QMCARD_ Card file : alpha.cards                                                                     
+0_QMCARD_ Warning: unknown file type; expected : CARDS     
+ _QMCARD_ next card file : mc94_qqbar_mini.filicards                                                       
+0BREADC-----  NAME........NR  +----------------------------------------------------------------------+
+                            * *                                                                       
+                            * * CARDS generated on Monday 28-MAY-2001 at 18:17                        
+                            * *                                                                       
+                            * * typedat=>MC DATA                                                      
+                            * * institute=>CERN                                                       
+                            * * wantwhat=>List of Real Data cartridges and creation of FILI cards     
+                            * * data_type=>MINI                                                       
+                            * * DataYear=>2000                                                        
+                            * * runorfill=>                                                           
+                            * * selby=>YEAR                                                           
+                            * * RunOrCart=>                                                           
+                            * * Kinlist=> 5300            HVFL5N        1954            462           
+                            * * Kingal_conds=> 400    40  : q qbar at Z peak                          
+                            * * McYear=>1994                                                          
+                            * * kinMass=>Unknown                                                      
+                            * * PhysGroups=>F_%                                                       
+                            * * energy_Lep=> 91250                                                    
+                            * * filisorted=>No                                                        
+                            * * specpar=>ANY                                                          
+                            * * Runquality=>                                                          
+                            * * OutputType=>Normal output                                             
+                            * * mcDatasets=>   309    313   205          40                           
+                            * * EdirYesno=>Yes                                                        
+ -----------  FILI         0  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_43.edir  | EDIR'  ! MINI
+ -----------  FILI         1  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_44.edir  | EDIR'  ! MINI
+ -----------  FILI         2  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_45.edir  | EDIR'  ! MINI
+ -----------  FILI         3  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_46.edir  | EDIR'  ! MINI
+ -----------  FILI         4  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_47.edir  | EDIR'  ! MINI
+ -----------  FILI         5  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_48.edir  | EDIR'  ! MINI
+ -----------  FILI         6  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_49.edir  | EDIR'  ! MINI
+ -----------  FILI         7  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_50.edir  | EDIR'  ! MINI
+ -----------  FILI         8  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_51.edir  | EDIR'  ! MINI
+ -----------  FILI         9  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_52.edir  | EDIR'  ! MINI
+ -----------  FILI        10  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_53.edir  | EDIR'  ! MINI
+ -----------  FILI        11  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_54.edir  | EDIR'  ! MINI
+ -----------  FILI        12  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_55.edir  | EDIR'  ! MINI
+ -----------  FILI        13  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_56.edir  | EDIR'  ! MINI
+ -----------  FILI        14  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_57.edir  | EDIR'  ! MINI
+ -----------  FILI        15  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_58.edir  | EDIR'  ! MINI
+ -----------  FILI        16  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_59.edir  | EDIR'  ! MINI
+ -----------  FILI        17  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_60.edir  | EDIR'  ! MINI
+ -----------  FILI        18  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_61.edir  | EDIR'  ! MINI
+ -----------  FILI        19  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_62.edir  | EDIR'  ! MINI
+ -----------  FILI        20  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_63.edir  | EDIR'  ! MINI
+ -----------  FILI        21  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_64.edir  | EDIR'  ! MINI
+ -----------  FILI        22  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_65.edir  | EDIR'  ! MINI
+ -----------  FILI        23  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_66.edir  | EDIR'  ! MINI
+ -----------  FILI        24  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_67.edir  | EDIR'  ! MINI
+ -----------  FILI        25  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_68.edir  | EDIR'  ! MINI
+ -----------  FILI        26  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_69.edir  | EDIR'  ! MINI
+ -----------  FILI        27  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_70.edir  | EDIR'  ! MINI
+ -----------  FILI        28  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_71.edir  | EDIR'  ! MINI
+ -----------  FILI        29  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_72.edir  | EDIR'  ! MINI
+ -----------  FILI        30  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_73.edir  | EDIR'  ! MINI
+ -----------  FILI        31  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_74.edir  | EDIR'  ! MINI
+ -----------  FILI        32  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_75.edir  | EDIR'  ! MINI
+ -----------  FILI        33  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_76.edir  | EDIR'  ! MINI
+ -----------  FILI        34  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_77.edir  | EDIR'  ! MINI
+ -----------  FILI        35  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_78.edir  | EDIR'  ! MINI
+ -----------  FILI        36  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_79.edir  | EDIR'  ! MINI
+ -----------  FILI        37  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_80.edir  | EDIR'  ! MINI
+ -----------  FILI        38  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_81.edir  | EDIR'  ! MINI
+ -----------  FILI        39  FILI '/afs/cern.ch/aleph/shared/edirlink/zm4000_82.edir  | EDIR'  ! MINI
+                            * ****==> Explanation of keyword HqqZ94 in the above comment : q qbar at Z
+                              (EOF)
+ _QMDBAS_ Read temporary database: DBASBANK                                                                        
+0-----------  OPENDA  LUN= 4      IRECL=1024     DSN=          PASSWD=....
+              ONLY READ POSSIBLE
+ _QMINIT_ Data base version ADBS    311  20010425, ADBL    124 900405
+ _QMIHIS_ Histogram file : qcdana_mc_94_1.hbook                                                            
+0_QMIHIS_ Warning: unknown file type; expected : EXCH      
+ _QMIHIS_ Open successful: RECL=  1024  NREC= 16000
+ YTIJOB (initialization YTOPOL) : YTGP  bank not found :use default values for YTOP parameters
+ YTIJOB (initialization YTOPOL) : YTPP  bank not found :use default values for YTOP parameters
+ YTIJOB (initialization YTOPOL) : YTCP  bank not found :use default values for YTOP parameters
+ YTIJOB (initialization YTOPOL) : YTVP  bank not found :use default values for YTOP parameters
+ General parameters for YTOPOL
+ DHXLIM =   2.000 max.dist. betw trks for start vtx.
+ PMINSE =   0.500 min.charged trk. mom. for YTOP
+ PIDACP =   0.010 min.prob. for setting part.id. flag
+ Parameters for primary vertex reconstruction
+ MNTHPV =        4 min. TPC hits on track
+ MXTSPV =       15 max. # of tracks in first step
+ PMINRQ =    0.500 min. momentum in first step
+ PMINRA =    0.000 min. mom. in second step
+ _QCD_INIT_ ---------------------------------------------------------------------
+
+ Selection cuts to be used
+ =========================
+ criteria for event selection... 
+ Minimum #charged tracks     :    5.0000
+ Minimum charged energy/GeV  :   15.0000
+ Maximum abs(cos(th_spher.)) :    0.8200
+ Minimum #ch+neu  tracks     :    0.0000
+ criteria for charged tracks... 
+ Maximum d0                  :    2.0000
+ Maximum z0                  :   10.0000
+ Minimum #tpc hits           :    4.0000
+ Maximum abs(cos(th))        :    0.9400
+ Minimum pt                  :    0.2000
+ Maxmium Chi2/Ndf            : 1000.0000
+ criteria for calorimeter objects... 
+ Maximum abs(cos(th))        :    0.9800
+ Minimum energy in ECAL/HCAL :    0.8000
+
+ Identifiers 1 to 55  reserved for standard track+event selection histograms
+
+ _QCD_INIT_ ---------------------------------------------------------------------
+ _QMINIT_------- Initialization done --------
+ 
+
+ TRDDAF - pre-1997-style calibration banks read
+          Ecal Geometry package version    211 running
+
+ _XFMCBP_ Using luminous region parameters for run period   1994
+ _XFMCBP_ Average sigma_x,y,z =  0.0125  0.0005  0.7000
+ Vrddaf>  VDET Geometry Package initialized for setup   6
+ _QMREAD_ First selected event on input file 
+ KNEVT :      1, KRUN :     10, KEVT :      1
+
+
+                                        **** Reading Mini-DST version  205 ****
+
+   +++ YV1INI +++ CUTS FOR V0 RECONSTRUCTION:  NR =  3
+      IV      O1      O2      CT      PS      RV      ZV      DI      C2      CS      C0      MA
+       1    0.00    0.00    2.00    0.00  180.00  180.00   0.060    13.0   0.920    0.009999.000
+      PM      NT      CB      NC      MD      DZ      ZZ      KW      LW      GW
+   0.000       5       0      33    0.00  999.00  999.00   0.500   0.500   0.500
+ _QFGET_BP: Use fixed XY beam position uncertainties
+ _QFECAL_ ECAL energy weight factors and errors
+ CEEW    1.000       1.000       1.000      0.1700    
+ _QFHCAL_ HCAL energy weight factor and error
+ CHEW    1.000      0.8000    
+
+
+
+ Event dump: run, event:         10         2
+
+ MC truth information
+
+ track,mother:    207     0  Z0            px,py,pz,e,klund:     0.0010    0.0000    0.0000   91.2000      11
+ track,mother:    208   207  squark#       px,py,pz,e,klund:    29.7640    6.7770  -33.8750   45.6002      14
+ track,mother:    209   207  squark        px,py,pz,e,klund:   -29.7640   -6.7770   33.8750   45.6002      14
+ track,mother:    210   208  CMshower      px,py,pz,e,klund:     0.0010    0.0000    0.0000   91.2000      11
+ track,mother:    211   209  squark        px,py,pz,e,klund:   -29.6730   -6.7560   33.7700   45.7403      14
+ track,mother:    212   208  squark#       px,py,pz,e,klund:    29.6730    6.7560  -33.7700   45.4597      13
+ track,mother:    213   211  squark        px,py,pz,e,klund:    -3.4350   -0.5170    2.2260    4.1305      13
+ track,mother:    214   211  gluon         px,py,pz,e,klund:   -26.2380   -6.2390   31.5440   41.6098      14
+ track,mother:    215   214  gluon         px,py,pz,e,klund:   -25.5230   -6.3880   30.6460   40.4523      14
+ track,mother:    216   214  gluon         px,py,pz,e,klund:    -0.7140    0.1490    0.8980    1.1569      13
+ track,mother:    217   215  dquark        px,py,pz,e,klund:   -10.6820   -1.7110   11.6910   15.9283      13
+ track,mother:    218   215  dquark#       px,py,pz,e,klund:   -14.8410   -4.6770   18.9550   24.5239      13
+ track,mother:    219   212  squark#       px,py,pz,e,klund:    29.6730    6.7560  -33.7700   45.4597      12
+ track,mother:    220   217  dquark        px,py,pz,e,klund:   -10.6820   -1.7110   11.6910   15.9283      11
+ track,mother:    221   213  squark        px,py,pz,e,klund:    -3.4350   -0.5170    2.2260    4.1305      12
+ track,mother:    222   216  gluon         px,py,pz,e,klund:    -0.7140    0.1490    0.8980    1.1569      12
+ track,mother:    223   218  dquark#       px,py,pz,e,klund:   -14.8410   -4.6770   18.9550   24.5239      11
+ track,mother:    224   219  string        px,py,pz,e,klund:    18.9900    5.0450  -22.0790   61.3884      11
+ track,mother:    225   219  K+            px,py,pz,e,klund:    10.7510    2.8080  -12.3670   16.6330       1
+ track,mother:    226   219  etapr         px,py,pz,e,klund:     8.3310    1.1620   -9.4890   12.7166      11
+ track,mother:    227   219  K-            px,py,pz,e,klund:     4.9510    1.7110   -5.7040    7.7601       1
+ track,mother:    228   219  K_10          px,py,pz,e,klund:     3.2200    0.2830   -3.9820    5.2886      11
+ track,mother:    229   219  a_2+          px,py,pz,e,klund:     1.4040    0.7070   -1.2340    2.3901      11
+ track,mother:    230   219  K-            px,py,pz,e,klund:    -0.1650    0.1630   -0.2390    0.5958       1
+ track,mother:    231   220  K*+           px,py,pz,e,klund:     0.1140   -0.5450    0.5910    1.2003      11
+ track,mother:    232   220  etapr         px,py,pz,e,klund:    -3.3340   -0.1790    3.0040    4.5923      11
+ track,mother:    233   220  K*-           px,py,pz,e,klund:    -1.5740    0.0380    0.8850    2.0157      11
+ track,mother:    234   220  K*_20         px,py,pz,e,klund:    -4.7070   -1.1040    6.4560    8.1955      11
+ track,mother:    235   221  string        px,py,pz,e,klund:   -18.9900   -5.0450   22.0790   29.8114      11
+ track,mother:    236   221  K0#           px,py,pz,e,klund:    -3.4160   -0.2980    2.4430    4.2396      11
+ track,mother:    237   223  rho-          px,py,pz,e,klund:    -3.7070   -1.0800    4.9940    6.3568      11
+ track,mother:    238   223  rho+          px,py,pz,e,klund:   -11.8670   -3.6660   14.6420   19.2149      11
+ track,mother:    239   226  pi0           px,py,pz,e,klund:     1.3260    0.1470   -1.3070    1.8725      11
+ track,mother:    240   226  pi0           px,py,pz,e,klund:     0.7590    0.1400   -0.9930    1.2649      11
+ track,mother:    241   226  eta           px,py,pz,e,klund:     6.2450    0.8750   -7.1890    9.5786      11
+ track,mother:    242   228  K*+           px,py,pz,e,klund:     2.3900    0.3980   -3.3050    4.2026      11
+ track,mother:    243   228  pi-           px,py,pz,e,klund:     0.8300   -0.1140   -0.6770    1.0862       1
+ track,mother:    244   229  rho+          px,py,pz,e,klund:     1.3940    0.5420   -0.7030    1.8178      11
+ track,mother:    245   229  pi0           px,py,pz,e,klund:     0.0100    0.1650   -0.5310    0.5723      11
+ track,mother:    246   231  K0            px,py,pz,e,klund:    -0.0090   -0.5480    0.1990    0.7668      11
+ track,mother:    247   231  pi+           px,py,pz,e,klund:     0.1230    0.0030    0.3920    0.4341       1
+ track,mother:    248   232  gamma         px,py,pz,e,klund:    -0.3990    0.0720    0.4520    0.6072       1
+ track,mother:    249   232  rho0          px,py,pz,e,klund:    -2.9350   -0.2510    2.5520    3.9850      11
+ track,mother:    250   233  K0#           px,py,pz,e,klund:    -1.1790   -0.1500    0.8730    1.5565      11
+ track,mother:    251   233  pi-           px,py,pz,e,klund:    -0.3950    0.1880    0.0120    0.4595       1
+ track,mother:    252   234  K*+           px,py,pz,e,klund:    -3.9390   -1.2920    5.5280    6.9683      11
+ track,mother:    253   234  pi-           px,py,pz,e,klund:    -0.7680    0.1880    0.9280    1.2272       1
+ track,mother:    254   236  K0l           px,py,pz,e,klund:    -3.4160   -0.2980    2.4430    4.2396       1
+ track,mother:    255   237  pi-           px,py,pz,e,klund:    -1.1810   -0.0310    1.6610    2.0431       1
+ track,mother:    256   237  pi0           px,py,pz,e,klund:    -2.5260   -1.0490    3.3330    4.3137      11
+ track,mother:    257   238  pi+           px,py,pz,e,klund:    -5.8170   -1.6460    6.6380    8.9794       1
+ track,mother:    258   238  pi0           px,py,pz,e,klund:    -6.0500   -2.0200    8.0040   10.2355      11
+ track,mother:    259   239  gamma         px,py,pz,e,klund:     1.2100    0.1420   -1.2400    1.7384       1
+ track,mother:    260   239  gamma         px,py,pz,e,klund:     0.1160    0.0050   -0.0670    0.1341       1
+ track,mother:    261   240  gamma         px,py,pz,e,klund:     0.5830    0.1130   -0.6640    0.8908       1
+ track,mother:    262   240  gamma         px,py,pz,e,klund:     0.1760    0.0280   -0.3290    0.3742       1
+ track,mother:    263   241  pi+           px,py,pz,e,klund:     3.8270    0.4950   -4.2420    5.7363       1
+ track,mother:    264   241  pi-           px,py,pz,e,klund:     1.5430    0.2790   -1.8690    2.4437       1
+ track,mother:    265   241  pi0           px,py,pz,e,klund:     0.8750    0.1010   -1.0780    1.3986      11
+ track,mother:    266   242  K0            px,py,pz,e,klund:     1.2980    0.5060   -1.7030    2.2559      11
+ track,mother:    267   242  pi+           px,py,pz,e,klund:     1.0930   -0.1080   -1.6020    1.9474       1
+ track,mother:    268   244  pi+           px,py,pz,e,klund:     1.0470    0.0490   -0.4130    1.1352       1
+ track,mother:    269   244  pi0           px,py,pz,e,klund:     0.3470    0.4930   -0.2900    0.6825      11
+ track,mother:    270   245  gamma         px,py,pz,e,klund:    -0.0340    0.1240   -0.2160    0.2514       1
+ track,mother:    271   245  gamma         px,py,pz,e,klund:     0.0440    0.0410   -0.3160    0.3217       1
+ track,mother:    272   246  K0l           px,py,pz,e,klund:    -0.0090   -0.5480    0.1990    0.7668       1
+ track,mother:    273   249  pi+           px,py,pz,e,klund:    -0.4880   -0.1820    0.8270    0.9873       1
+ track,mother:    274   249  pi-           px,py,pz,e,klund:    -2.4460   -0.0690    1.7250    2.9971       1
+ track,mother:    275   250  K0s           px,py,pz,e,klund:    -1.1790   -0.1500    0.8730    1.5565       1
+ track,mother:    276   252  K+            px,py,pz,e,klund:    -1.4890   -0.5610    2.4820    2.9893       1
+ track,mother:    277   252  pi0           px,py,pz,e,klund:    -2.4500   -0.7310    3.0460    3.9791      11
+ track,mother:    278   256  gamma         px,py,pz,e,klund:    -1.8700   -0.8310    2.5390    3.2610       1
+ track,mother:    279   256  gamma         px,py,pz,e,klund:    -0.6560   -0.2180    0.7940    1.0528       1
+ track,mother:    280   258  gamma         px,py,pz,e,klund:    -2.1030   -0.7700    2.7980    3.5839       1
+ track,mother:    281   258  gamma         px,py,pz,e,klund:    -3.9460   -1.2500    5.2060    6.6510       1
+ track,mother:    282   265  gamma         px,py,pz,e,klund:     0.7020    0.0860   -0.9430    1.1787       1
+ track,mother:    283   265  gamma         px,py,pz,e,klund:     0.1720    0.0140   -0.1350    0.2191       1
+ track,mother:    284   266  K0l           px,py,pz,e,klund:     1.2980    0.5060   -1.7030    2.2559       1
+ track,mother:    285   269  gamma         px,py,pz,e,klund:     0.2480    0.4360   -0.2160    0.5461       1
+ track,mother:    286   269  gamma         px,py,pz,e,klund:     0.0990    0.0560   -0.0740    0.1357       1
+ track,mother:    287   277  gamma         px,py,pz,e,klund:    -0.0250    0.0020    0.0160    0.0297       1
+ track,mother:    288   277  gamma         px,py,pz,e,klund:    -2.4250   -0.7330    3.0300    3.9495       1
+ track,mother:    289   282  e+            px,py,pz,e,klund:     0.3090    0.0390   -0.4130    0.5173       0
+ track,mother:    290   282  e-            px,py,pz,e,klund:     0.3940    0.0470   -0.5310    0.6629       0
+ track,mother:    291   290  gamma         px,py,pz,e,klund:     0.0270    0.0050   -0.0370    0.0461       0
+ track,mother:    292   275  pi0           px,py,pz,e,klund:    -0.6710    0.0160    0.6980    0.9777       0
+ track,mother:    293   275  pi0           px,py,pz,e,klund:    -0.5080   -0.1660    0.1740    0.5780       0
+ track,mother:    294   293  gamma         px,py,pz,e,klund:    -0.2820   -0.1570    0.1270    0.3468       0
+ track,mother:    295   293  gamma         px,py,pz,e,klund:    -0.2260   -0.0090    0.0470    0.2310       0
+ track,mother:    296   292  gamma         px,py,pz,e,klund:    -0.3490    0.0070    0.4590    0.5767       0
+ track,mother:    297   292  gamma         px,py,pz,e,klund:    -0.3210    0.0090    0.2390    0.4003       0
+ track,mother:    298   272  mu-           px,py,pz,e,klund:    -0.0030   -0.2620    0.1440    0.3172       0
+ track,mother:    299   247  mu+           px,py,pz,e,klund:    -0.0190   -0.0210   -0.0100    0.1102       0
+ track,mother:    300   243  Deuteron      px,py,pz,e,klund:     0.2580    0.2610   -0.1170    1.9161       0
+ track,mother:    301   243  pi0           px,py,pz,e,klund:     0.6770    0.0150    0.1140    0.6998       0
+ track,mother:    302   243  n             px,py,pz,e,klund:     0.0380   -0.0250   -0.6840    1.1634       0
+ track,mother:    303   243  p             px,py,pz,e,klund:    -0.0360    0.1920    0.0200    0.9583       0
+ track,mother:    304   243  n             px,py,pz,e,klund:     0.0580   -0.0490    0.0340    0.9437       0
+ track,mother:    305   243  p             px,py,pz,e,klund:     0.0050   -0.2480    0.0060    0.9703       0
+ track,mother:    306   243  p             px,py,pz,e,klund:     0.0340   -0.0830    0.1250    0.9505       0
+ track,mother:    307   243  p             px,py,pz,e,klund:    -0.1960   -0.1250   -0.0720    0.9691       0
+ track,mother:    308   301  gamma         px,py,pz,e,klund:     0.0550   -0.0200    0.0440    0.0732       0
+ track,mother:    309   301  gamma         px,py,pz,e,klund:     0.6220    0.0340    0.0700    0.6268       0
+ track,mother:    310   230  mu-           px,py,pz,e,klund:    -0.2660   -0.1570   -0.1510    0.3598       0
+ track,mother:    311   230  nu            px,py,pz,e,klund:     0.2060   -0.0520   -0.0720    0.2243       0
+
+
+ Reconstructed charged tracks
+
+ track:     51  d0,z0:    -0.0046    1.0063  px,py,pz,e,q:    -2.4431   -0.0684    1.7206    2.9922    -1
+ track:     52  d0,z0:     0.0064    1.0037  px,py,pz,e,q:     4.9224    1.7026   -5.6724    7.7022    -1
+ track:     53  d0,z0:    -0.0114    1.0051  px,py,pz,e,q:    -5.8466   -1.6490    6.6730    9.0250     1
+ track:     54  d0,z0:     0.0102    0.9964  px,py,pz,e,q:    10.8779    2.8449  -12.5188   16.8274     1
+ track:     55  d0,z0:     0.0006    1.0541  px,py,pz,e,q:     3.8431    0.4970   -4.2534    5.7556     1
+ track:     56  d0,z0:    -0.0040    0.9875  px,py,pz,e,q:     1.0510    0.0476   -0.4123    1.1386     1
+ track:     57  d0,z0:    -0.0156    0.9792  px,py,pz,e,q:    -0.3920    0.1882    0.0131    0.4568    -1
+ track:     58  d0,z0:    -0.0154    0.9727  px,py,pz,e,q:    -1.1740   -0.0282    1.6583    2.0368    -1
+ track:     59  d0,z0:     0.0344    0.6910  px,py,pz,e,q:    -0.4959   -0.1858    0.8341    0.9978     1
+ track:     60  d0,z0:    -0.1325    0.9444  px,py,pz,e,q:    -0.1562    0.1618   -0.2305    0.3509    -1
+ track:     61  d0,z0:    -0.0022    1.0086  px,py,pz,e,q:    -0.7683    0.1886    0.9274    1.2270    -1
+ track:     62  d0,z0:    -0.0409    1.1323  px,py,pz,e,q:     1.5453    0.2759   -1.8732    2.4480    -1
+ track:     63  d0,z0:    -0.0225    0.9895  px,py,pz,e,q:     1.0971   -0.1126   -1.6045    1.9520     1
+ track:     64  d0,z0:     0.0131    0.5749  px,py,pz,e,q:    -1.4849   -0.5605    2.4937    2.9593     1
+ track:     65  d0,z0:    -0.2333    2.0341  px,py,pz,e,q:     0.3402    0.0145   -0.4757    0.6014    -1
+ track:     66  d0,z0:     0.4912    2.2541  px,py,pz,e,q:     0.2979    0.0708   -0.4166    0.5355     1
+ track:     67  d0,z0:    32.0769 -273.9081  px,py,pz,e,q:     0.2466   -0.1340    0.1363    0.3418     1
+ track:     68  d0,z0:    -0.1164  -22.4249  px,py,pz,e,q:     0.7396   -0.1115    0.2175    0.7914    -1
+ track:     69  d0,z0:     0.6384  -10.3306  px,py,pz,e,q:     0.1137    0.0105    0.4301    0.4664     1
+ track:     70  d0,z0:    -6.5506   -2.3183  px,py,pz,e,q:    -0.1273   -0.0189   -0.1833    0.2639     1
+ track:     71  d0,z0:     8.7814   -5.9124  px,py,pz,e,q:     0.1875   -0.0272   -0.1175    0.2631    -1
+
+
+ Reconstructed energy flow objects
+
+ track:    163  d0,z0:    -0.0046    1.0063  px,py,pz,e,type,lock:    -2.4430   -0.0680    1.7210    2.9924     0   F
+ track:    164  d0,z0:     0.0064    1.0037  px,py,pz,e,type,lock:     4.9220    1.7020   -5.6720    7.7016     0   F
+ track:    165  d0,z0:    -0.0114    1.0051  px,py,pz,e,type,lock:    -5.8470   -1.6490    6.6720    9.0245     0   F
+ track:    166  d0,z0:     0.0102    0.9964  px,py,pz,e,type,lock:    10.8780    2.8450  -12.5190   16.8276     0   F
+ track:    167  d0,z0:     0.0006    1.0541  px,py,pz,e,type,lock:     3.8430    0.4970   -4.2540    5.7560     0   F
+ track:    168  d0,z0:    -0.0040    0.9875  px,py,pz,e,type,lock:     1.0510    0.0480   -0.4120    1.1385     0   F
+ track:    169  d0,z0:    -0.0156    0.9792  px,py,pz,e,type,lock:    -0.3920    0.1880    0.0130    0.4569     0   F
+ track:    170  d0,z0:    -0.0154    0.9727  px,py,pz,e,type,lock:    -1.1740   -0.0280    1.6580    2.0366     0   F
+ track:    171  d0,z0:     0.0344    0.6910  px,py,pz,e,type,lock:    -0.4960   -0.1860    0.8340    0.9979     0   F
+ track:    172  d0,z0:    -0.1325    0.9444  px,py,pz,e,type,lock:    -0.1560    0.1620   -0.2300    0.3508     0   F
+ track:    173  d0,z0:    -0.0022    1.0086  px,py,pz,e,type,lock:    -0.7680    0.1890    0.9270    1.2266     0   F
+ track:    174  d0,z0:    -0.0409    1.1323  px,py,pz,e,type,lock:     1.5450    0.2760   -1.8730    2.4476     0   F
+ track:    175  d0,z0:    -0.0225    0.9895  px,py,pz,e,type,lock:     1.0970   -0.1130   -1.6040    1.9516     0   F
+ track:    176  d0,z0:     0.0131    0.5749  px,py,pz,e,type,lock:    -1.4850   -0.5610    2.4940    2.9597     0   F
+ track:    177  d0,z0:    -0.2333    2.0341  px,py,pz,e,type,lock:     0.3400    0.0140   -0.4760    0.6016     0   F
+ track:    178  d0,z0:     0.4912    2.2541  px,py,pz,e,type,lock:     0.2980    0.0710   -0.4170    0.5360     0   F
+ track:    179  d0,z0:     0.0000    0.0000  px,py,pz,e,type,lock:    -1.1840   -0.1110    0.8450    1.4588     4   F
+ track:    180  d0,z0:     0.0000    0.0000  px,py,pz,e,type,lock:    -3.7990   -1.2050    5.0280    6.4161     4   F
+ track:    181  d0,z0:     0.0000    0.0000  px,py,pz,e,type,lock:    -1.7880   -0.5290    2.2410    2.9153     4   F
+ track:    182  d0,z0:     0.0000    0.0000  px,py,pz,e,type,lock:    -0.4710   -0.1470    0.5810    0.7622     4   T
+ track:    183  d0,z0:     0.0000    0.0000  px,py,pz,e,type,lock:    -1.8530   -0.6850    2.4700    3.1629     4   F
+ track:    184  d0,z0:     0.0000    0.0000  px,py,pz,e,type,lock:    -0.3970    0.0040    0.5130    0.6487     4   T
+ track:    185  d0,z0:     0.0000    0.0000  px,py,pz,e,type,lock:    -0.3880    0.0690    0.4370    0.5885     4   T
+ track:    186  d0,z0:     0.0000    0.0000  px,py,pz,e,type,lock:    -0.4120   -0.0170    0.0940    0.4229     4   T
+ track:    187  d0,z0:     0.0000    0.0000  px,py,pz,e,type,lock:     0.2600    0.4550   -0.2270    0.5712     4   T
+ track:    188  d0,z0:     0.0000    0.0000  px,py,pz,e,type,lock:     1.1360    0.1330   -1.1650    1.6326     4   F
+ track:    189  d0,z0:     0.0000    0.0000  px,py,pz,e,type,lock:     0.4660    0.0890   -0.5300    0.7113     4   T
+ track:    190  d0,z0:     0.0000    0.0000  px,py,pz,e,type,lock:    -1.8650   -0.8320    2.5300    3.2515     5   F
+ track:    191  d0,z0:     0.0000    0.0000  px,py,pz,e,type,lock:    -0.7590    0.0150    0.5600    0.9433     5   F
+ track:    192  d0,z0:     0.0000    0.0000  px,py,pz,e,type,lock:    -0.5090   -0.2770    0.2380    0.6265     5   T
+ track:    193  d0,z0:     0.0000    0.0000  px,py,pz,e,type,lock:    -0.0040   -0.5220    0.1550    0.5445     5   T
+ track:    194  d0,z0:     0.0000    0.0000  px,py,pz,e,type,lock:     0.8000    0.0350   -0.0140    0.8009     5   F
+ track:    195  d0,z0:     0.0000    0.0000  px,py,pz,e,type,lock:     0.2410    0.0370   -0.4500    0.5118     5   T
+ -------------------------------------------------------------------------------
+
+
+
+ +---------------------------------------------+
+ |     Welcome to the Energy Flow Package      |
+ |                                             |
+ |                   ENFLW                     |
+ |                                             |
+ |                Version 2.09                 |
+ |                                             |
+ |  Last date of change : 27 October 1999      |
+ |  P. Janot      CERN                         |
+ +---------------------------------------------+
+
+
+ No thrust 10 7621
+0_QMREAD_ NEVT card : all events processed                  
+ KNEVT :  10000, KRUN :     10, KEVT :  10000
+ _QMREAD_ End-of-job 
+ _QMTERM_ --- program termination ----------
+ _QMTERM_ Last event :
+ KNEVT :  10000, KRUN :     10, KEVT :  10000
+ _QMTERM_ Call QUTERM
+
+ *****************************************************
+  ====================> final calculations ....
+
+
+ Nhad used in normalization =     7624
+
+  Out of     10000. events      7624. passed the cuts.
+
+  Out of      7624. events      7624. had good event shape calculations.
+
+  Out of      7624. events       413. had good 4-jet calculations.
+
+  Out of      7624. events      7624. had good event shape + jet calculations.
+
+  Out of      7624. events      7624. had good inclusive chg tracks calculations.
+
+   3-jet rate for ycut  0.100 = 0.05233 +- 0.00255
+   3-jet rate for ycut  0.050 = 0.11870 +- 0.00370
+   3-jet rate for ycut  0.025 = 0.20003 +- 0.00458
+
+   4-jet rate for ycut  0.008 = 0.05417 +- 0.00259
+
+   < 1 - Thrust > = 0.06313 +- 0.00071
+
+  ====================> end of final calculations ....
+ *****************************************************
+
+ _QUTHIS_ Write histograms/ntuples on histogram file
+0_QWFILE_ Input / output files
+ Selected events :      10000
+ Current input file :   10000 events 
+                     =  10001 run/event/other records
+ No FILO card : No event output written
+ Histogram file : qcdana_mc_94_1.hbook                                                            
+_QWSUMM_ WARNING: Some run information was missing in database;
+  SICAL LUMI  total may be unreliable.
+
+0_QWTIME_ : total     init    10000        1     term     TIME     time
+             time     time   events    event     time     card     left
+           245.82     0.74   245.04    0.025     0.04    10.00   171.18
+
+ == QTKIREV : Summary of KINGAL events generated -
+               Total number of FILI cards read =     1
+
+     ** Tape read:  ZM4000_43    Run:   10  Number of Kingal triggers =   10000
+0BOS--BEPRW-  REWIND UNIT 20
+ _QMTERM_ Stop.
