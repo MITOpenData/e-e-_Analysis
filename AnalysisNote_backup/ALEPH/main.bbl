@@ -1,0 +1,147 @@
+\providecommand{\href}[2]{#2}\begingroup\raggedright\begin{thebibliography}{10}%
+\makeatletter
+\providecommand{\hrefCMSnoop }[0]{\@secondoftwo}%
+\makeatother
+\providecommand{\doi}{\texttt{doi:}\begingroup \urlstyle{tt}\Url}
+
+\bibitem{Khachatryan:2010gv}
+\hrefCMSnoop {}{{CMS} Collaboration, ``{Observation of Long-Range Near-Side
+  Angular Correlations in Proton-Proton Collisions at the LHC}'',} \textit{
+  JHEP} \textbf{ 09} (2010) 091,
+  \href{http://dx.doi.org/10.1007/JHEP09(2010)091}{\doi{10.1007/JHEP09(2010)091}},
+\href{http://www.arXiv.org/abs/1009.4122}{\texttt{arXiv:1009.4122}}.
+%%CITATION = ARXIV:1009.4122;%%.
+
+\bibitem{CMS:2012qk}
+\hrefCMSnoop {}{{CMS} Collaboration, ``{Observation of long-range near-side
+  angular correlations in proton-lead collisions at the LHC}'',} \textit{ Phys.
+  Lett.} \textbf{ B718} (2013) 795--814,
+  \href{http://dx.doi.org/10.1016/j.physletb.2012.11.025}{\doi{10.1016/j.physletb.2012.11.025}},
+\href{http://www.arXiv.org/abs/1210.5482}{\texttt{arXiv:1210.5482}}.
+%%CITATION = ARXIV:1210.5482;%%.
+
+\bibitem{Abelev:2012ola}
+\hrefCMSnoop {}{{ALICE} Collaboration, ``{Long-range angular correlations on
+  the near and away side in $p$-Pb collisions at $\sqrt{s_{NN}}=5.02$ TeV}'',}
+  \textit{ Phys. Lett.} \textbf{ B719} (2013) 29--41,
+  \href{http://dx.doi.org/10.1016/j.physletb.2013.01.012}{\doi{10.1016/j.physletb.2013.01.012}},
+\href{http://www.arXiv.org/abs/1212.2001}{\texttt{arXiv:1212.2001}}.
+%%CITATION = ARXIV:1212.2001;%%.
+
+\bibitem{Aad:2012gla}
+\hrefCMSnoop {}{{ATLAS} Collaboration, ``{Observation of Associated Near-Side
+  and Away-Side Long-Range Correlations in $\sqrt{s_{NN}}$=5.02??TeV
+  Proton-Lead Collisions with the ATLAS Detector}'',} \textit{ Phys. Rev.
+  Lett.} \textbf{ 110} (2013), no.~18, 182302,
+  \href{http://dx.doi.org/10.1103/PhysRevLett.110.182302}{\doi{10.1103/PhysRevLett.110.182302}},
+\href{http://www.arXiv.org/abs/1212.5198}{\texttt{arXiv:1212.5198}}.
+%%CITATION = ARXIV:1212.5198;%%.
+
+\bibitem{Aamodt:2010pa}
+\hrefCMSnoop {}{{ALICE} Collaboration, ``{Elliptic flow of charged particles in
+  Pb-Pb collisions at 2.76 TeV}'',} \textit{ Phys. Rev. Lett.} \textbf{ 105}
+  (2010) 252302,
+  \href{http://dx.doi.org/10.1103/PhysRevLett.105.252302}{\doi{10.1103/PhysRevLett.105.252302}},
+\href{http://www.arXiv.org/abs/1011.3914}{\texttt{arXiv:1011.3914}}.
+%%CITATION = ARXIV:1011.3914;%%.
+
+\bibitem{Chatrchyan:2012wg}
+\hrefCMSnoop {}{{CMS} Collaboration, ``{Centrality dependence of dihadron
+  correlations and azimuthal anisotropy harmonics in PbPb collisions at
+  $\sqrt{s_{NN}}=2.76$ TeV}'',} \textit{ Eur. Phys. J.} \textbf{ C72} (2012)
+  2012,
+  \href{http://dx.doi.org/10.1140/epjc/s10052-012-2012-3}{\doi{10.1140/epjc/s10052-012-2012-3}},
+\href{http://www.arXiv.org/abs/1201.3158}{\texttt{arXiv:1201.3158}}.
+%%CITATION = ARXIV:1201.3158;%%.
+
+\bibitem{Back:2004je}
+\hrefCMSnoop {}{B.~B. Back {et~al.}, ``{The PHOBOS perspective on discoveries
+  at RHIC}'',} \textit{ Nucl. Phys.} \textbf{ A757} (2005) 28--101,
+  \href{http://dx.doi.org/10.1016/j.nuclphysa.2005.03.084}{\doi{10.1016/j.nuclphysa.2005.03.084}},
+\href{http://www.arXiv.org/abs/nucl-ex/0410022}{\texttt{arXiv:nucl-ex/0410022}}.
+%%CITATION = NUCL-EX/0410022;%%.
+
+\bibitem{Arsene:2004fa}
+\hrefCMSnoop {}{{BRAHMS} Collaboration, ``{Quark gluon plasma and color glass
+  condensate at RHIC? The Perspective from the BRAHMS experiment}'',} \textit{
+  Nucl. Phys.} \textbf{ A757} (2005) 1--27,
+  \href{http://dx.doi.org/10.1016/j.nuclphysa.2005.02.130}{\doi{10.1016/j.nuclphysa.2005.02.130}},
+\href{http://www.arXiv.org/abs/nucl-ex/0410020}{\texttt{arXiv:nucl-ex/0410020}}.
+%%CITATION = NUCL-EX/0410020;%%.
+
+\bibitem{Adcox:2004mh}
+\hrefCMSnoop {}{{PHENIX} Collaboration, ``{Formation of dense partonic matter
+  in relativistic nucleus-nucleus collisions at RHIC: Experimental evaluation
+  by the PHENIX collaboration}'',} \textit{ Nucl. Phys.} \textbf{ A757} (2005)
+  184--283,
+  \href{http://dx.doi.org/10.1016/j.nuclphysa.2005.03.086}{\doi{10.1016/j.nuclphysa.2005.03.086}},
+\href{http://www.arXiv.org/abs/nucl-ex/0410003}{\texttt{arXiv:nucl-ex/0410003}}.
+%%CITATION = NUCL-EX/0410003;%%.
+
+\bibitem{Adams:2005dq}
+\hrefCMSnoop {}{{STAR} Collaboration, ``{Experimental and theoretical
+  challenges in the search for the quark gluon plasma: The STAR Collaboration's
+  critical assessment of the evidence from RHIC collisions}'',} \textit{ Nucl.
+  Phys.} \textbf{ A757} (2005) 102--183,
+  \href{http://dx.doi.org/10.1016/j.nuclphysa.2005.03.085}{\doi{10.1016/j.nuclphysa.2005.03.085}},
+\href{http://www.arXiv.org/abs/nucl-ex/0501009}{\texttt{arXiv:nucl-ex/0501009}}.
+%%CITATION = NUCL-EX/0501009;%%.
+
+\bibitem{Ollitrault:1992bk}
+\hrefCMSnoop {}{J.-Y. Ollitrault, ``{Anisotropy as a signature of transverse
+  collective flow}'',} \textit{ Phys. Rev.} \textbf{ D46} (1992) 229--245,
+\href{http://dx.doi.org/10.1103/PhysRevD.46.229}{\doi{10.1103/PhysRevD.46.229}}.
+%%CITATION = PHRVA,D46,229;%%.
+
+\bibitem{Alver:2010gr}
+\hrefCMSnoop {}{B.~Alver and G.~Roland, ``{Collision geometry fluctuations and
+  triangular flow in heavy-ion collisions}'',} \textit{ Phys. Rev.} \textbf{
+  C81} (2010) 054905, \href{http://dx.doi.org/10.1103/PhysRevC.82.039903,
+  10.1103/PhysRevC.81.054905}{\doi{10.1103/PhysRevC.82.039903,
+  10.1103/PhysRevC.81.054905}},
+  \href{http://www.arXiv.org/abs/1003.0194}{\texttt{arXiv:1003.0194}}.
+[Erratum: Phys. Rev.C82,039903(2010)].
+%%CITATION = ARXIV:1003.0194;%%.
+
+\bibitem{Bzdak:2013zma}
+\hrefCMSnoop {}{A.~Bzdak, B.~Schenke, P.~Tribedy, and R.~Venugopalan,
+  ``{Initial state geometry and the role of hydrodynamics in proton-proton,
+  proton-nucleus and deuteron-nucleus collisions}'',} \textit{ Phys. Rev.}
+  \textbf{ C87} (2013), no.~6, 064906,
+  \href{http://dx.doi.org/10.1103/PhysRevC.87.064906}{\doi{10.1103/PhysRevC.87.064906}},
+\href{http://www.arXiv.org/abs/1304.3403}{\texttt{arXiv:1304.3403}}.
+%%CITATION = ARXIV:1304.3403;%%.
+
+\bibitem{Dusling:2015gta}
+\hrefCMSnoop {}{K.~Dusling, W.~Li, and B.~Schenke, ``{Novel collective
+  phenomena in high-energy proton?proton and proton?nucleus collisions}'',}
+  \textit{ Int. J. Mod. Phys.} \textbf{ E25} (2016), no.~01, 1630002,
+  \href{http://dx.doi.org/10.1142/S0218301316300022}{\doi{10.1142/S0218301316300022}},
+\href{http://www.arXiv.org/abs/1509.07939}{\texttt{arXiv:1509.07939}}.
+%%CITATION = ARXIV:1509.07939;%%.
+
+\bibitem{Adamczyk:2012ku}
+\hrefCMSnoop {}{{STAR} Collaboration, ``{Inclusive charged hadron elliptic flow
+  in Au + Au collisions at $\sqrt{s_{NN}}$ = 7.7 - 39 GeV}'',} \textit{ Phys.
+  Rev.} \textbf{ C86} (2012) 054908,
+  \href{http://dx.doi.org/10.1103/PhysRevC.86.054908}{\doi{10.1103/PhysRevC.86.054908}},
+\href{http://www.arXiv.org/abs/1206.5528}{\texttt{arXiv:1206.5528}}.
+%%CITATION = ARXIV:1206.5528;%%.
+
+\bibitem{Gelis:2010nm}
+\hrefCMSnoop {}{F.~Gelis, E.~Iancu, J.~Jalilian-Marian, and R.~Venugopalan,
+  ``{The Color Glass Condensate}'',} \textit{ Ann. Rev. Nucl. Part. Sci.}
+  \textbf{ 60} (2010) 463--489,
+  \href{http://dx.doi.org/10.1146/annurev.nucl.010909.083629}{\doi{10.1146/annurev.nucl.010909.083629}},
+\href{http://www.arXiv.org/abs/1002.0333}{\texttt{arXiv:1002.0333}}.
+%%CITATION = ARXIV:1002.0333;%%.
+
+\bibitem{Dusling:2013qoz}
+\hrefCMSnoop {}{K.~Dusling and R.~Venugopalan, ``{Comparison of the color glass
+  condensate to dihadron correlations in proton-proton and proton-nucleus
+  collisions}'',} \textit{ Phys. Rev.} \textbf{ D87} (2013), no.~9, 094034,
+  \href{http://dx.doi.org/10.1103/PhysRevD.87.094034}{\doi{10.1103/PhysRevD.87.094034}},
+\href{http://www.arXiv.org/abs/1302.7018}{\texttt{arXiv:1302.7018}}.
+%%CITATION = ARXIV:1302.7018;%%.
+
+\end{thebibliography}\endgroup

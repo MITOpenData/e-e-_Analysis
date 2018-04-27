@@ -19,11 +19,16 @@ void resetMixEvtBoosted(boostedEvtData *out){
 }
 
 //adds the particles from 'in' to tree 'out'
-void appendMixEvt(particleData *out, particleData *in, TVector3 thrustAxis, TVector3 thrustAxis_ch, float nEventsFound){
+void appendMixEvt(eventData *evtOut, particleData *out, particleData *in, TVector3 thrustAxis, TVector3 thrustAxis_ch, float nEventsFound){
+  //set signal thrust theta and phi (does this multiple times, but should be OK because it's from signal event)
+  evtOut->TTheta = thrustAxis.Theta();
+  evtOut->TPhi = thrustAxis.Phi();
+  evtOut->Thrust = thrustAxis.Mag();
+    
   //setting nParticle correctly
   int oldnParticle = out->nParticle;
   out->nParticle += in->nParticle;
-    
+  
   //append extra particles to arrays
   for(int i = 0; i<in->nParticle; i++){
     out->px[oldnParticle+i] = in->px[i];

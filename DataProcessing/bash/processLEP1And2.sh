@@ -1,7 +1,7 @@
 #!/bin/bash
 
 topDir=/data/cmcginn/StudyMultSamples/ALEPH/
-dirDate=20180329
+dirDate=20180423
 
 mkdir -p logs
 mkdir -p $topDir/LEP1/$dirDate
@@ -10,7 +10,7 @@ mkdir -p $topDir/LEP2/$dirDate
 inputPath=$PWD/inputs
 exePath=$PWD/bin
 
-$exePath/scan.exe $inputPath/in1992.txt 1 1 $topDir/LEP1/$dirDate/LEP1Data1992_recons_aftercut-MERGED.root >& logs/proc1992.log &
+$exePath/scan.exe $inputPath/in1992_Single.txt 1 1 $topDir/LEP1/$dirDate/LEP1Data1992_recons_aftercut-MERGED.root >& logs/proc1992.log &
 $exePath/scan.exe $inputPath/in1993.txt 1 1 $topDir/LEP1/$dirDate/LEP1Data1993_recons_aftercut-MERGED.root >& logs/proc1993.log &
 $exePath/scan.exe $inputPath/in1994.txt 1 1 $topDir/LEP1/$dirDate/LEP1Data1994_recons_aftercut-MERGED.root >& logs/proc1994.log &
 $exePath/scan.exe $inputPath/in1995_LEP1.txt 1 1 $topDir/LEP1/$dirDate/LEP1Data1995_recons_aftercut-MERGED.root >& logs/proc1995.log &

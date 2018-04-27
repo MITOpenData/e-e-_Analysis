@@ -259,25 +259,32 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
           l->Draw("same");
             
           TCanvas * c2 = new TCanvas("c2","dphi",600,600);
-          c2->Divide(2,2);
+          //c2->Divide(2,2);
           
           // Fourier decomposition
           TF1 *f1 = new TF1("f1","[0]*(1+2*([1]*cos(1*x)+[2]*cos(2*x)+[3]*cos(3*x)+[4]*cos(4*x)+[5]*cos(5*x)+[6]*cos(6*x)))");
           for (Int_t j=0;j<4;j++) {
-            c2->cd(j+1);
+            //c2->cd(j+1);
             //if (i ==2) for(Int_t k = 0; k<h_deltaphi[j*2]->GetNbinsX();k++)std::cout<<h_deltaphi[j*2]->GetBinContent(k)<<std::endl;
             for(Int_t k = 0; k<h_deltaphi[j*2]->GetNbinsX();k++)if(std::isnan(h_deltaphi[j*2]->GetBinError(k+1))) {h_deltaphi[j*2]->SetBinError(k+1,0);}
             formatTH1F(h_deltaphi[j*2],.8,1.5);
             h_deltaphi[j*2]->Draw();
             xjjroot::drawtex(0.15,0.876,Form("%s",plotsname.c_str()));
+            h_deltaphi[j*2]->Fit("f1");
+            h_deltaphi[j*2]->Fit("f1");
+            h_deltaphi[j*2]->SetStats(0);
+            /*
             if (j==0){
                h_deltaphi[0]->Fit("f1");
                h_deltaphi[0]->Fit("f1");
                h_deltaphi[0]->SetStats(0);
               }
+              */
+            c2->SaveAs(Form("%s_deltaphi_%d_%d_%d_%d_%d_%d.png",plotsname.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et,j));
+            c2->SaveAs(Form("%s_deltaphi_%d_%d_%d_%d_%d_%d.pdf",plotsname.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et,j));
             }
-            c2->SaveAs(Form("%s_deltaphi_%d_%d_%d_%d_%d.png",plotsname.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
-            c2->SaveAs(Form("%s_deltaphi_%d_%d_%d_%d_%d.pdf",plotsname.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
+            //c2->SaveAs(Form("%s_deltaphi_%d_%d_%d_%d_%d.png",plotsname.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
+            //c2->SaveAs(Form("%s_deltaphi_%d_%d_%d_%d_%d.pdf",plotsname.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
             //c2->SaveAs(Form("%s_longRangeYield1_%d_%d.C",plotsname.c_str(),s.multBinsLow[m],s.multBinsHigh[m]));
 
           cAll->cd(4);

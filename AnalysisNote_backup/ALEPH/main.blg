@@ -1,0 +1,52 @@
+This is BibTeX, Version 0.99d (TeX Live 2015/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: main.aux
+The style file: lucas_unsrt.bst
+Database file #1: mainNotes.bib
+Database file #2: main.bib
+Repeated entry---line 225 of file main.bib
+ : @article{Aamodt:2010pa
+ :                       ,
+I'm skipping whatever remains of this entry
+You've used 17 entries,
+            2537 wiz_defined-function locations,
+            782 strings with 9029 characters,
+and the built_in function-call counts, 6329 in all, are:
+= -- 741
+> -- 89
+< -- 0
++ -- 35
+- -- 18
+* -- 606
+:= -- 736
+add.period$ -- 35
+call.type$ -- 17
+change.case$ -- 0
+chr.to.int$ -- 0
+cite$ -- 17
+duplicate$ -- 401
+empty$ -- 626
+format.name$ -- 18
+if$ -- 1697
+int.to.chr$ -- 0
+int.to.str$ -- 17
+missing$ -- 51
+newline$ -- 92
+num.names$ -- 7
+pop$ -- 80
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 258
+stack$ -- 0
+substring$ -- 298
+swap$ -- 190
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 32
+width$ -- 19
+write$ -- 248
+(There was 1 error message)
