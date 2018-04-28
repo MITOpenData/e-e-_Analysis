@@ -144,4 +144,18 @@
 \href{http://www.arXiv.org/abs/1302.7018}{\texttt{arXiv:1302.7018}}.
 %%CITATION = ARXIV:1302.7018;%%.
 
+\bibitem{Barate:1996fi}
+\hrefCMSnoop {}{{ALEPH} Collaboration, ``{Studies of quantum chromodynamics
+  with the ALEPH detector}'',} \textit{ Phys. Rept.} \textbf{ 294} (1998)
+  1--165,
+\href{http://dx.doi.org/10.1016/S0370-1573(97)00045-8}{\doi{10.1016/S0370-1573(97)00045-8}}.
+%%CITATION = PRPLC,294,1;%%.
+
+\bibitem{heister:2003aj}
+\hrefCMSnoop {}{{ALEPH} Collaboration, ``{Studies of QCD at e+ e-
+  centre-of-mass energies between 91-GeV and 209-GeV}'',} \textit{ Eur. Phys.
+  J.} \textbf{ C35} (2004) 457--486,
+\href{http://dx.doi.org/10.1140/epjc/s2004-01891-4}{\doi{10.1140/epjc/s2004-01891-4}}.
+%%CITATION = EPHJA,C35,457;%%.
+
 \end{thebibliography}\endgroup
