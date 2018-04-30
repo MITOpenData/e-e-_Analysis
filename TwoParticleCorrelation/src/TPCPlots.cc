@@ -17,6 +17,7 @@
 #include "include/Selection.h"
 #include "include/utilities.h"
 #include "../include/xjjrootuti.h"
+#include "../../Utilities/include/plotLogo.h"
 
 void formatTPCAxes(TH2F * h, float offsetx, float offsety, float offsetz){
    h->SetTitleOffset(offsetx,"X");
@@ -213,13 +214,14 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
 	  cAll->Divide(3,2);
 	  for (Int_t iCanvas = 1; iCanvas<4; iCanvas++) setupCanvas(cAll->GetPad(iCanvas));
           
-	  TCanvas * c1 = new TCanvas("c1","c1",800,800);
+	  TCanvas * c1 = new TCanvas("c1","c1",1000,1000);
           setupCanvas(c1);
           formatTPCAxes(signal2PC[e][m][p][et],1.5,1.5,2);
           formatZaxis(signal2PC[e][m][p][et],1);
           c1->cd();
 	  signal2PC[e][m][p][et]->Draw("surf1 fb");
           l->Draw("same");
+	  plotLogo(1,1.6,1);
           //sig[m]->GetZaxis()->SetRangeUser(0.9*sig[m]->GetMinimum(),0.4*sig[m]->GetMaximum());
           c1->SaveAs(Form("%s_signal_%d_%d_%d_%d_%d.png",plotsname.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
           c1->SaveAs(Form("%s_signal_%d_%d_%d_%d_%d.pdf",plotsname.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
@@ -234,6 +236,7 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
           formatZaxis(bkgrnd2PC[e][m][p][et],1);
           c1->cd();
           bkgrnd2PC[e][m][p][et]->Draw("surf1 fb");
+	  plotLogo(1,1.6,1);
           l->Draw("same");
           c1->SaveAs(Form("%s_background_%d_%d_%d_%d_%d.png",plotsname.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
           c1->SaveAs(Form("%s_background_%d_%d_%d_%d_%d.pdf",plotsname.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
@@ -249,6 +252,7 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
           c1->cd();
           ratio2PC[e][m][p][et]->Draw("surf1 fb");
           l->Draw("same");
+ 	  plotLogo(1,1.6,1);
           c1->SaveAs(Form("%s_ratio2PC_%d_%d_%d_%d_%d.png",plotsname.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
           c1->SaveAs(Form("%s_ratio2PC_%d_%d_%d_%d_%d.pdf",plotsname.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
           //c1->SaveAs(Form("%s_ratio2PC_%d_%d_%d_%d_%d.C",plotsname.c_str(),s.multBinsLow[m],s.multBinsHigh[m]));
@@ -289,11 +293,14 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
 
           cAll->cd(4);
           h_deltaphi[0]->Fit("f1");
+          h_deltaphi[0]->Fit("f1","LL");
+          h_deltaphi[0]->Fit("f1");
+          h_deltaphi[0]->Fit("f1","LL");
           h_deltaphi[0]->Fit("f1");
           h_deltaphi[0]->Draw();
-          TLatex*texv1_0 = new TLatex(1, (h_deltaphi[0]->GetMaximum()), Form("v_{1}=%.3f #pm %.3f",f1->GetParameter(1),f1->GetParError(1)));
-          TLatex*texv2_0 = new TLatex(1, 0.97*(h_deltaphi[0]->GetMaximum()), Form("v_{2}=%.3f #pm %.3f",f1->GetParameter(2),f1->GetParError(2)));
-          TLatex*texv3_0 = new TLatex(1, 0.94*(h_deltaphi[0]->GetMaximum()), Form("v_{3}=%.3f #pm %.3f",f1->GetParameter(3),f1->GetParError(3)));
+          TLatex*texv1_0 = new TLatex(0.2, 0.95*(h_deltaphi[0]->GetMaximum()), Form("v_{1}=%.3f #pm %.3f",f1->GetParameter(1),f1->GetParError(1)));
+          TLatex*texv2_0 = new TLatex(0.2, 0.85*(h_deltaphi[0]->GetMaximum()), Form("v_{2}=%.3f #pm %.3f",f1->GetParameter(2),f1->GetParError(2)));
+          TLatex*texv3_0 = new TLatex(0.2, 0.75*(h_deltaphi[0]->GetMaximum()), Form("v_{3}=%.3f #pm %.3f",f1->GetParameter(3),f1->GetParError(3)));
           texv1_0->Draw();
           texv2_0->Draw();
           texv3_0->Draw();
@@ -301,10 +308,14 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
           cAll->cd(5);
           h_deltaphi[2]->Fit("f1");
           h_deltaphi[2]->Fit("f1");
+          h_deltaphi[2]->Fit("f1","LL");
+          h_deltaphi[2]->Fit("f1");
+          h_deltaphi[2]->Fit("f1","LL");
+          h_deltaphi[2]->Fit("f1");
           h_deltaphi[2]->Draw();
-          TLatex*texv1_1 = new TLatex(1, (h_deltaphi[2]->GetMaximum()), Form("v_{1}=%.3f #pm %.3f",f1->GetParameter(1),f1->GetParError(1)));
-          TLatex*texv2_1 = new TLatex(1, 0.97*(h_deltaphi[2]->GetMaximum()), Form("v_{2}=%.3f #pm %.3f",f1->GetParameter(2),f1->GetParError(2)));
-          TLatex*texv3_1 = new TLatex(1, 0.94*(h_deltaphi[2]->GetMaximum()), Form("v_{3}=%.3f #pm %.3f",f1->GetParameter(3),f1->GetParError(3)));
+          TLatex*texv1_1 = new TLatex(0.2, 0.95*(h_deltaphi[2]->GetMaximum()), Form("v_{1}=%.3f #pm %.3f",f1->GetParameter(1),f1->GetParError(1)));
+          TLatex*texv2_1 = new TLatex(0.2, 0.85*(h_deltaphi[2]->GetMaximum()), Form("v_{2}=%.3f #pm %.3f",f1->GetParameter(2),f1->GetParError(2)));
+          TLatex*texv3_1 = new TLatex(0.2, 0.75*(h_deltaphi[2]->GetMaximum()), Form("v_{3}=%.3f #pm %.3f",f1->GetParameter(3),f1->GetParError(3)));
           texv1_1->Draw();
           texv2_1->Draw();
           texv3_1->Draw();
@@ -312,10 +323,14 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
           cAll->cd(6);
           h_deltaphi[4]->Fit("f1");
           h_deltaphi[4]->Fit("f1");
+          h_deltaphi[4]->Fit("f1","LL");
+          h_deltaphi[4]->Fit("f1");
+          h_deltaphi[4]->Fit("f1","LL");
+          h_deltaphi[4]->Fit("f1");
           h_deltaphi[4]->Draw();
-          TLatex*texv1_2 = new TLatex(1, (h_deltaphi[4]->GetMaximum()), Form("v_{1}=%.3f #pm %.3f",f1->GetParameter(1),f1->GetParError(1)));
-          TLatex*texv2_2 = new TLatex(1, 0.97*(h_deltaphi[4]->GetMaximum()), Form("v_{2}=%.3f #pm %.3f",f1->GetParameter(2),f1->GetParError(2)));
-          TLatex*texv3_2 = new TLatex(1, 0.94*(h_deltaphi[4]->GetMaximum()), Form("v_{3}=%.3f #pm %.3f",f1->GetParameter(3),f1->GetParError(3)));
+          TLatex*texv1_2 = new TLatex(0.2, 0.95*(h_deltaphi[4]->GetMaximum()), Form("v_{1}=%.3f #pm %.3f",f1->GetParameter(1),f1->GetParError(1)));
+          TLatex*texv2_2 = new TLatex(0.2, 0.85*(h_deltaphi[4]->GetMaximum()), Form("v_{2}=%.3f #pm %.3f",f1->GetParameter(2),f1->GetParError(2)));
+          TLatex*texv3_2 = new TLatex(0.2, 0.75*(h_deltaphi[4]->GetMaximum()), Form("v_{3}=%.3f #pm %.3f",f1->GetParameter(3),f1->GetParError(3)));
           texv1_2->Draw();
           texv2_2->Draw();
           texv3_2->Draw();
