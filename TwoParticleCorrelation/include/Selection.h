@@ -81,7 +81,7 @@ class Selection
         static const Int_t netaBins_wrtBeam = 2;
         Float_t etaBinsLow_wrtBeam[netaBins_wrtBeam]  = {1.6, 1.8};
         Float_t missPCut_wrtBeam = 20;
-        Float_t etaPlotRange_wrtBeam = 6.0;
+        Float_t etaPlotRange_wrtBeam = 3.2;
 
         // Thrust Axis
         bool doThrust = true;  bool donTrkThrust = false; // false = use beam axis for nTrk calculation
