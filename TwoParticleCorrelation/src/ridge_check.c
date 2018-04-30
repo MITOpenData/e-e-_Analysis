@@ -33,6 +33,7 @@
 #include "DataProcessing/include/trackSelection.h"
 #include "include/smartJetName.h"
 #include "include/ProgressBar.h"
+#include "include/efficiency.h"
 
 /********************************************************************************************************************/
 // Two particle correlation analysis
@@ -51,47 +52,48 @@ using namespace std;
 // Main Analysis Routine
 /********************************************************************************************************************/
 
-int ridge_check( const std::string inFileName, 		// Input file
-                       std::string outFileName,    	// Output file
-      		       std::string inMixFileName="", 	// Input mix file
-		       bool overwrite = false,		// if we overwrite the doWTA, doThrust and doPerp from selection.h
-		       bool owThrust = false,		// overwrite the value of doThrust from selection.h
-		       bool owWTA = false,		// overwrite the value of doWTA from selection.h
-		       bool owPerp = false,		// overwrite the value of doPerp from selection.h
-		       bool owDoGen = false,            // overwrite the value of doGen from selection.h 
-		       int verbose = 1,                 // Verbose level
-		       bool owAjCut=false,      // dijet selection flag
-		       double _AjCut=-999,     // dijet  cut selection
-		       bool ow3jetEvtCut=false,      // three jet selection flag
-		       double _thirdJetCut=-999,     // three jet cut selection
-		       bool owBarrel = false,            // overwrite the values related to barrel selection and barrel multiplicity 
-		       int _anatyperegion=0,  // option==0 -> no eta selection on tracks, option==1 -> reject the tracks at small eta, option==2 -> reject the tracks at large rapidity
-		       double _etabarrelcut=-1,  // eta cut values that defines the three regions defined above
-		       int _typeEnergyBarrelSel=0,      // type of selection on the total energy inside the barrel vs total. 0=no selection, 1=rejecting events with large energy in barrel, 2= rejecting events with small energy in barrel 
-		       double _etabarrelcutforEselection=2.0, //define the eta region for the Ebarrel selection
-		       double _maxrelenergyinsidebarrel=0., // define the cut on the Ebarrel, _maxrelenergyinsidebarrel=Ebarrel/Etotal 
-		       int _typemultiplicity=0 // 0=total charged track multiplicity, 1=charged track multiplicity in barrel
+int ridge_check( const std::string inFileName, 			// Input file
+                       std::string outFileName,    		// Output file
+      		       std::string inMixFileName="", 		// Input mix file
+		       bool overwrite = false,			// if we overwrite the doWTA, doThrust and doPerp from selection.h
+		       bool owThrust = false,			// overwrite the value of doThrust from selection.h
+		       bool owWTA = false,			// overwrite the value of doWTA from selection.h
+		       bool owPerp = false,			// overwrite the value of doPerp from selection.h
+		       bool owDoGen = false,            	// overwrite the value of doGen from selection.h 
+		       int verbose = 1,                 	// Verbose level
+		       bool owAjCut=false,      		// dijet selection flag
+		       double _AjCut=-999,     			// dijet  cut selection
+		       bool ow3jetEvtCut=false,      		// three jet selection flag
+		       double _thirdJetCut=-999,     		// three jet cut selection
+		       bool owBarrel = false,           	// overwrite the values related to barrel selection and barrel multiplicity 
+		       int _anatyperegion=0,  			// option==0 -> no eta selection on tracks, option==1 -> reject the tracks at small eta, option==2 -> reject the tracks at large rapidity
+		       double _etabarrelcut=-1,  		// eta cut values that defines the three regions defined above
+		       int _typeEnergyBarrelSel=0,      	// type of selection on the total energy inside the barrel vs total. 0=no selection, 1=rejecting events with large energy in barrel, 2= rejecting events with small energy in barrel 
+		       double _etabarrelcutforEselection=2.0, 	//define the eta region for the Ebarrel selection
+		       double _maxrelenergyinsidebarrel=0., 	// define the cut on the Ebarrel, _maxrelenergyinsidebarrel=Ebarrel/Etotal 
+		       int _typemultiplicity=0, 		// 0=total charged track multiplicity, 1=charged track multiplicity in barrel
+		       bool owEffCorr = true			// overwrite the value of efficiency correction from selection.h
                ) 
 {
-
-   cout<<"overwrite="<<overwrite<<endl;
-   cout<<"owThrust="<<owThrust<<endl;
-   cout<<"owWTA="<<owWTA<<endl;
-   cout<<"owPerp="<<owPerp<<endl;
-   cout<<"owDoGen="<<owDoGen<<endl;
-   cout<<"owAjCut="<<owAjCut<<endl;
-   cout<<"AjCut="<<_AjCut<<endl;
-   cout<<"ow3jetEvtCut="<<ow3jetEvtCut<<endl;
-   cout<<"thirdJetCut="<<_thirdJetCut<<endl;
-   cout<<"owBarrel="<<owBarrel<<endl;
-   cout<<"anatyperegion="<<_anatyperegion<<endl;
-   cout<<"etabarrelcut="<<_etabarrelcut<<endl;
-   cout<<"typeEnergyBarrelSel="<<_typeEnergyBarrelSel<<endl;
-   cout<<"etabarrelcutforEselection="<<_etabarrelcutforEselection<<endl;
-   cout<<"maxrelenergyinsidebarrel="<<_maxrelenergyinsidebarrel<<endl;
-   cout<<"typemultiplicity="<<_typemultiplicity<<endl;
+    // Print settings
+    cout<<"overwrite="<<overwrite<<endl;
+    cout<<"owThrust="<<owThrust<<endl;
+    cout<<"owWTA="<<owWTA<<endl;
+    cout<<"owPerp="<<owPerp<<endl;
+    cout<<"owDoGen="<<owDoGen<<endl;
+    cout<<"owAjCut="<<owAjCut<<endl;
+    cout<<"AjCut="<<_AjCut<<endl;
+    cout<<"ow3jetEvtCut="<<ow3jetEvtCut<<endl;
+    cout<<"thirdJetCut="<<_thirdJetCut<<endl;
+    cout<<"owBarrel="<<owBarrel<<endl;
+    cout<<"anatyperegion="<<_anatyperegion<<endl;
+    cout<<"etabarrelcut="<<_etabarrelcut<<endl;
+    cout<<"typeEnergyBarrelSel="<<_typeEnergyBarrelSel<<endl;
+    cout<<"etabarrelcutforEselection="<<_etabarrelcutforEselection<<endl;
+    cout<<"maxrelenergyinsidebarrel="<<_maxrelenergyinsidebarrel<<endl;
+    cout<<"typemultiplicity="<<_typemultiplicity<<endl;
+    cout<<"owEffCorr="<<owEffCorr<<endl;
    
-
     // ROOT Global setting
     TH1::SetDefaultSumw2();    TH2::SetDefaultSumw2();
 
@@ -181,6 +183,7 @@ int ridge_check( const std::string inFileName, 		// Input file
     TH1D * nEvtBkgHist = new TH1D("nEvtBkgHisto","nEvtBkgHisto",10,0,10);
     
     Float_t etaPlotRange = s.getEtaPlotRange();
+    
     for(int e = 0; e<nEnergyBins; e++)
     {
         for(int i = 0; i<nMultBins; i++)
@@ -268,7 +271,6 @@ int ridge_check( const std::string inFileName, 		// Input file
 
     TChain * t_mix = new TChain("t"); 
           
-
     if (inMixFileName=="0"||inMixFileName=="") {   // no mix file specified
        cout <<"Perform analysis without mix file"<<endl;
        t_mix->Add(inFileName.c_str());
@@ -289,6 +291,7 @@ int ridge_check( const std::string inFileName, 		// Input file
     // analysis
     Int_t nevent = (Int_t)t->GetEntries();
     if(s.doOneEvent) nevent = s.numEvents;
+    Float_t trackWeight = 1; // efficiency correction factor
 
     // Setup Progress bar
     ProgressBar Bar(cout, nevent);
@@ -334,7 +337,6 @@ int ridge_check( const std::string inFileName, 		// Input file
         h_Tphi->Fill(data.getTPhi());
 
         Float_t fillNumerator = 1.0;
-        //if (s.doPP) fillNumerator = data.pthatWeight;
         /****************************************/
         // S calculation using multiplicity cut //
         /****************************************/
@@ -361,12 +363,12 @@ int ridge_check( const std::string inFileName, 		// Input file
             Float_t phi1 = data.getPhi(j);
             //std::cout<<"eta for first particle "<<angle1<<std::endl;
             // Signal loop, calculate S correlation function
+	    
             for ( Int_t k=j+1;k<data.particle.nParticle;k++ )
             {
 		if (!trackSelector.highPurityBit(&data.particle,k)&&s.doGen==0) continue;
-        if (s.anatyperegion==1 && fabs(data.getEta(k))<s.etabarrelcut) continue;
-        if (s.anatyperegion==2 && fabs(data.getEta(k))>s.etabarrelcut) continue;
-
+                if (s.anatyperegion==1 && fabs(data.getEta(k))<s.etabarrelcut) continue;
+                if (s.anatyperegion==2 && fabs(data.getEta(k))>s.etabarrelcut) continue;
 	    
                 // Check if the second particle is in the same range of pt and eta 
 
@@ -387,6 +389,9 @@ int ridge_check( const std::string inFileName, 		// Input file
                 Float_t angle2;
                 if (s.getThetaAngle) angle2 = data.getTheta(k); else angle2 = data.getEta(k);
                 Float_t phi2 = data.getPhi(k);
+		if (s.doGen) trackWeight=1;
+		else trackWeight=1./efficiency(data.getTheta(j),data.getPhi(j),data.getPt(j))/efficiency(data.getTheta(k),data.getPhi(k),data.getPt(k));
+		//fillNumerator=trackWeight;
                 for(unsigned int eI = 0; eI< histE.size(); eI++)
                 {
                     for(unsigned int nI = 0; nI< histNtrk.size(); nI++)
@@ -407,7 +412,7 @@ int ridge_check( const std::string inFileName, 		// Input file
             }
         }
 
-	        /********************************************************************************************************************/
+	/********************************************************************************************************************/
         // B calculation using multiplicity cut //
         /********************************************************************************************************************/
         for (Int_t nMix = 0; nMix<s.bkgrd_runs; nMix++)
@@ -508,6 +513,9 @@ int ridge_check( const std::string inFileName, 		// Input file
                     Float_t angle_mix;
                     if (s.getThetaAngle) angle_mix = mix.getTheta(k); else angle_mix = mix.getEta(k);
                     Float_t phi_mix = mix.getPhi(k);
+  	  	    if (s.doGen) trackWeight=1;
+		    else trackWeight=1./efficiency(data.getTheta(j),data.getPhi(j),data.getPt(j))/efficiency(mix.getTheta(k),mix.getPhi(k),mix.getPt(k));
+		    //fillNumerator=trackWeight;
 		    for(unsigned int eI = 0; eI< histE.size(); eI++)
                     {
                         for(unsigned int nI = 0; nI< histNtrk_mix.size(); nI++) // histNtrk_mix contains the intersection of histNtrk_mix and histNtrk
