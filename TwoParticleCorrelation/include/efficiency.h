@@ -11,6 +11,7 @@ Float_t efficiency(Float_t theta, Float_t phi, Float_t pt)
 	   _effInf = new TFile("../include/efficiency_hist.root","read");
    	   _heff = (TH3F*)_effInf->Get("eff");
 	}
+	i=1;
 	Float_t e = _heff->GetBinContent(_heff->FindBin(pt,theta,phi));
         if (e==0) cout <<"!!!Error on efficiency correction! Zero efficiency!!!"<<endl<<endl;
 	  
