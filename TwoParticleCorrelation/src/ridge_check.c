@@ -59,7 +59,8 @@ int ridge_check( const std::string inFileName, 			// Input file
 		       bool owThrust = false,			// overwrite the value of doThrust from selection.h
 		       bool owWTA = false,			// overwrite the value of doWTA from selection.h
 		       bool owPerp = false,			// overwrite the value of doPerp from selection.h
-		       bool owDoGen = false,            	// overwrite the value of doGen from selection.h 
+		       bool owDoGen = false,            	// overwrite the value of doGen from selection.h: use TTree t and assume those are gen level info (such as isoMC and PYTHIA8 gen level event)
+		       bool owDoTGen = false,			// overwrite the value of doTGen from selection.h: used for closure test. use TTree tgen
 		       int verbose = 1,                 	// Verbose level
 		       bool owAjCut=false,      		// dijet selection flag
 		       double _AjCut=-999,     			// dijet  cut selection
@@ -113,6 +114,7 @@ int ridge_check( const std::string inFileName, 			// Input file
        if (owWTA)    s.doWTA = true; else s.doWTA = false;
        if (owPerp)   s.doPerp = true; else s.doPerp = false;
        if (owDoGen)  s.doGen = true; else s.doGen = false;
+       if (owDoTGen)  {s.doGen = true; s.doTGen=true;} else {s.doTGen = false;}
        if (owAjCut) {s.doAjCut = true; s.AjCut=_AjCut;}
        else s.doAjCut = false;
        if (ow3jetEvtCut) {s.do3jetEvtCut = true; s.thirdJetCut=_thirdJetCut;}
@@ -137,6 +139,7 @@ int ridge_check( const std::string inFileName, 			// Input file
       if ((s.doThrust||s.doWTA) && s.doPerp) cout <<"Reference axis rotated by 90 degree"<<endl;
       if (s.do3jetEvtCut) 	cout <<"Applying three jet rejection with value="<<s.thirdJetCut<<endl;
       if (s.doGen) cout <<"This is a generator level analysis, i.e., no track or event selection applied!"<<endl;    
+      if (s.doTGen) cout <<"Use tgen for analysis: This is a generator level analysis, i.e., no track or event selection applied!"<<endl;    
       if (owBarrel){
         cout <<"you are modifying the parameters of the barrel selection"<<endl;    
         cout<<"_anatyperegion="<<s.anatyperegion<<endl;
@@ -261,7 +264,9 @@ int ridge_check( const std::string inFileName, 			// Input file
     // get the correct tree for the analysis
     std::string boostTree = "BoostedWTAR8Evt";
     
-    TChain * t = new TChain("t");       			t->Add(inFileName.c_str());
+    TChain * t;
+    if (s.doTGen) t = new TChain("tgen"); else t = new TChain("t");       			
+    t->Add(inFileName.c_str());
     TChain * boost_t = new TChain(boostTree.c_str());       	boost_t->Add(inFileName.c_str());
     TChain * jt = new TChain(jtTreeName.c_str());       	jt->Add(inFileName.c_str());
 
@@ -269,7 +274,9 @@ int ridge_check( const std::string inFileName, 			// Input file
     
     bool doMixFile=0;
 
-    TChain * t_mix = new TChain("t"); 
+    TChain * t_mix; 
+    if (s.doTGen) t_mix = new TChain("tgen"); else t_mix = new TChain("t");       			
+
           
     if (inMixFileName=="0"||inMixFileName=="") {   // no mix file specified
        cout <<"Perform analysis without mix file"<<endl;
