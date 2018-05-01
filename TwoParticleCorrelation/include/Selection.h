@@ -41,6 +41,7 @@ class Selection
         bool doParallel = true;
         bool doOneEvent = false;     int numEvents = 50000;
         bool doBelle = false;
+	bool doEffcorr = true;
         Int_t experiment = 0; // 0 ALEPH , 1 DELPHI, 2 BELLE, 3 CMS pp
         Int_t jttree = 0; // 0 ak4ESchemeJetTree, 1 ak4WTAmodpSchemeJetTree, 2 ak8ESchemeJetTree, 3 ak8WTAmodpSchemeJetTree, 4 ktN2WTAmodpSchemeJetTree
         Int_t nbin = 20;
@@ -48,6 +49,7 @@ class Selection
         enum SIMPLEPID {BELLE_PHOTON, BELLE_ELECTRON, BELLE_PION, BELLE_MUON, BELLE_KAON, BELLE_PROTON};    // BELLE Particle Definition
         enum SIMPLEPWFLAG {ALEPH_CHARGED_TRACK, ALEPH_CHARGED_LEPTONS1, ALEPH_CHARGED_LEPTONS2, ALEPH_V0, ALEPH_PHOTON, ALEPH_NEUTRAL_HADRON};  // ALEPH Particle Flow Classification
         bool doGen = false; // turn of event and track selections
+	bool doTGen = false; // used for closure test. use TTree tgen
         bool getThetaAngle = false;
         
         /* Detector Specific Cuts */
@@ -111,9 +113,9 @@ class Selection
         Float_t energyBinsLow[nEnergyBins] = {0}; // {0,100}
         Float_t energyBinsHigh[nEnergyBins] = {100}; // {100,999}
 
-        static const Int_t nMultBins = 10;
-        Int_t multBinsLow[nMultBins]  = {0 , 20, 30, 35, 0, 5, 10, 15, 20, 25};
-        Int_t multBinsHigh[nMultBins] = {20, 30, 999, 999, 5, 10, 15, 20, 25, 30};
+        static const Int_t nMultBins = 11;
+        Int_t multBinsLow[nMultBins]  = {4 , 10, 20, 30, 35, 0, 5, 10, 15, 20, 25};
+        Int_t multBinsHigh[nMultBins] = {10, 30, 999, 999, 5, 10, 15, 20, 25, 30};
 
         /* Plotting */
         Float_t dEtaBins = 20; //keep even
