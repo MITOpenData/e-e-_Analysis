@@ -211,6 +211,7 @@ void eventData::SetBranchWrite(TTree* inTree_p)
   inTree_p->Branch("passesMissP", &passesMissP, "passesMissP/O");
   inTree_p->Branch("passesISR", &passesISR, "passesISR/O");
   inTree_p->Branch("passesWW", &passesWW, "passesWW/O");
+  inTree_p->Branch("passesNeuNch", &passesNeuNch, "passesNeuNch/O");
   inTree_p->Branch("passesAll", &passesAll, "passesAll/O");
   inTree_p->Branch("missP", &missP, "missP/F");
   inTree_p->Branch("missPt", &missPt, "missPt/F");
