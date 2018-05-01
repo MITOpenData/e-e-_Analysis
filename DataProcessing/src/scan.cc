@@ -985,7 +985,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 
         //missing momentum calculation and multiplicity calculation
         netP -= TVector3(_px,_py,_pz);
-        if(_pwflag==0){
+        if(_pwflag==0||_pwflag==1||_pwflag==2){
           netP_charged -= TVector3(_px,_py,_pz);
           nTrk++;
           if(v.Pt()>0.4) nTrk_GT0p4++; 
