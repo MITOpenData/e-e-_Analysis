@@ -245,7 +245,7 @@ void eventData::SetBranchWrite(TTree* inTree_p)
   inTree_p->Branch("Aplanarity_linearized", &Aplanarity_linearized,"Aplanarity_linearized/F");
   inTree_p->Branch("C_linearized", &C_linearized,"C_linearized/F");
   inTree_p->Branch("D_linearized", &D_linearized,"D_linearized/F");
-  inTree_p->Branch("passesLEP1TwoPC", &passesPassesLEP1TwoPC, "passesLEP1TwoPC/O");
+  inTree_p->Branch("passesLEP1TwoPC", &passesLEP1TwoPC, "passesLEP1TwoPC/O");
   
   return;
 }
