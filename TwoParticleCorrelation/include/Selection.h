@@ -36,7 +36,6 @@ class Selection
     public:
     
         // Initial Setup
-	TrackSelection trackSelector;
 	NeutralHadronSelection neutralHadronSelector;
         bool doParallel = true;
         bool doOneEvent = false;     int numEvents = 50000;
@@ -268,7 +267,7 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
     Float_t E = 0;
 
     for (Int_t j=0;j<particle->nParticle;j++) {
-        if (trackSelector.highPurity(particle,j)){
+        if (particle->highPurity[j]&&particle->pwflag[j]<=2){
             Nch++;
             E += sqrt(particle->pmag[j]*particle->pmag[j] + particle->mass[j]*particle->mass[j]);
         }
@@ -309,7 +308,7 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
       double totalenergyinbarrel=0.;
     
       for (Int_t j=0;j<particle->nParticle;j++) {
-        if (trackSelector.highPurity(particle,j) || neutralHadronSelector.highPurity(particle,j)){
+        if (particle->highPurity[j] || neutralHadronSelector.highPurity(particle,j)){
           totalenergy += sqrt(particle->pmag[j]*particle->pmag[j] + particle->mass[j]*particle->mass[j]);
           //std::cout<<"eta"<<particle->eta_wrtThr[j]<<std::endl;
           if(fabs(particle->eta_wrtThr[j])<etabarrelcutforEselection){
@@ -327,7 +326,7 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
     /* here we define a new version of the multiplicity that considers only tracks inside the barrel region defined by etabarrelcutforEselection*/
     Int_t NchBarrel = 0;
       for (Int_t j=0;j<particle->nParticle;j++) {
-        if (trackSelector.highPurity(particle,j)){
+        if (particle->highPurity[j]){
           if(fabs(particle->eta_wrtThr[j])<etabarrelcutforEselection){
             NchBarrel++;
           }
