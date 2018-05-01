@@ -6,7 +6,7 @@
 
 int GetNaiveEff()
 {
-	int ptbins = 10;
+	int ptbins = 50;
 	int thetabins = 10;
 	int phibins = 10;
 	Float_t maxpt = 30;
@@ -29,6 +29,8 @@ int GetNaiveEff()
 	Int_t multgen = 0;
 	Bool_t highPurity[maxmult];
 	Bool_t highPuritygen[maxmult];
+	Int_t pwflag[maxmult];
+	Int_t pwflaggen[maxmult];
 	t->SetBranchAddress("pt",pt);
 	tgen->SetBranchAddress("pt",ptgen);
 	t->SetBranchAddress("theta",theta);
@@ -39,13 +41,15 @@ int GetNaiveEff()
 	tgen->SetBranchAddress("nParticle",&multgen);
 	t->SetBranchAddress("highPurity",highPurity);
 	tgen->SetBranchAddress("highPurity",highPuritygen);
+	t->SetBranchAddress("pwflag",pwflag);
+	tgen->SetBranchAddress("pwflag",pwflaggen);
 	for(ULong64_t i=0;i<nevt;i++)
 	{
 		if(i % 1000 == 0) std::cout << i << "/" << nevt << std::endl;
 		t->GetEntry(i);
 		tgen->GetEntry(i);
-		for(int j=0;j<mult;j++) {if(!highPurity[j]) continue; eff->Fill(pt[j],theta[j],phi[j]);}
-		for(int j=0;j<multgen;j++) {effgen->Fill(ptgen[j],thetagen[j],phigen[j]);}
+		for(int j=0;j<mult;j++) {if(!highPurity[j] || pwflag[j]>2) continue; eff->Fill(pt[j],theta[j],phi[j]);}
+		for(int j=0;j<multgen;j++) {if(pwflaggen[j]>2) continue; effgen->Fill(ptgen[j],thetagen[j],phigen[j]);}
 	}
 	eff->Sumw2();
 	effgen->Sumw2();
