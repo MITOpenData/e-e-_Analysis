@@ -18,6 +18,9 @@ int ProcessEffHist()
 	TH2F* ptphieff = (TH2F*)eff->Project3D("xze");
 	TH2F* thetaphieff = (TH2F*)eff->Project3D("yze");
 
+	TH1F* thetaclean = (TH1F*)f->Get("efftheta_clean");
+	TH1F* ptclean = (TH1F*)f->Get("effpt_clean");
+
 	int nptbins = pteff->GetNbinsX();
 	int nthetabins = thetaeff->GetNbinsX();
 	int nphibins = phieff->GetNbinsX();
@@ -56,5 +59,12 @@ int ProcessEffHist()
 	thetaphieff->SetTitle("(#phi, #theta) efficiency");
 	thetaphieff->Draw("COLZ");
 	c->SaveAs("thetaphieff.png");
+	thetaclean->SetTitle("#theta efficiency, highPurity, pwflag<2, pt>1");
+	thetaclean->Draw("pe");
+	c->SaveAs("thetaclean.png");
+	ptclean->SetTitle("pt efficiency, highPurity, pwflag<2, 0.35<theta<2.8");
+	ptclean->Draw("pe");
+	c->SaveAs("ptclean.png");
+	f->Close();
 	return 0;
 }
