@@ -11,7 +11,7 @@
 #include "fastjet/ClusterSequence.hh"
 
 #include "include/trackSelection.h"
-#include "/include/neutralHadronSelection.h"
+#include "include/neutralHadronSelection.h"
 
 #include "include/particleData.h"
 #include "include/eventData.h"
@@ -196,7 +196,7 @@ void eventSelection::setEventSelection(particleData* inPart, eventData* inData)
     Double_t e = TMath::Sqrt(inPart->pmag[pI]*inPart->pmag[pI] + inPart->mass[pI]*inPart->mass[pI]);
     particles.push_back(fastjet::PseudoJet(inPart->px[pI], inPart->py[pI], inPart->pz[pI], e));
 
-    if (neutralHadronSelector.highPurity(particle,j)) {
+    if (neutralHadronSel.highPurity(inPart,pI)) {
        Neu++;
     }
 
@@ -209,7 +209,7 @@ void eventSelection::setEventSelection(particleData* inPart, eventData* inData)
   passesNTrkMin = NTrk >= 5;
   passesSTheta = TMath::Abs(TMath::Cos(STheta)) <= .82;
   passesMissP = MissP < 20;
-  passesNeuNch = (Neu+Ntrk)>=13;
+  passesNeuNch = (Neu+NTrk)>=13;
 
   fastjet::ClusterSequence csISR(particles, jDefISR);
   std::vector<fastjet::PseudoJet> twoJetsFJ = csISR.exclusive_jets(nJISR);

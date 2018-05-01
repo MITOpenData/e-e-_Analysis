@@ -8,6 +8,7 @@ class eventData{
   Bool_t passesNTupleAfterCut;
   Bool_t passesTotalChgEnergyMin;
   Bool_t passesNTrkMin;
+  Bool_t passesNeuNch;
   Bool_t passesSTheta;
   Bool_t passesMissP;
 
