@@ -40,7 +40,7 @@ class particleData{
   int pid[nMaxPart];
   float d0[nMaxPart];
   float z0[nMaxPart];
-  bool highPurity[nMaxPart];
+  Bool_t highPurity[nMaxPart];
   Short_t ntpc[nMaxPart];
   Short_t nitc[nMaxPart];
   Short_t nvdet[nMaxPart];
