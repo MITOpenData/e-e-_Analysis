@@ -112,9 +112,9 @@ class Selection
         Float_t energyBinsLow[nEnergyBins] = {0}; // {0,100}
         Float_t energyBinsHigh[nEnergyBins] = {100}; // {100,999}
 
-        static const Int_t nMultBins = 11;
-        Int_t multBinsLow[nMultBins]  = {4 , 10, 20, 30, 35, 0, 5, 10, 15, 20, 25};
-        Int_t multBinsHigh[nMultBins] = {10, 30, 999, 999, 5, 10, 15, 20, 25, 30};
+        static const Int_t nMultBins = 5;
+        Int_t multBinsLow[nMultBins]  = {4 , 10, 20, 30, 35 };
+        Int_t multBinsHigh[nMultBins] = {10, 20, 30, 999, 999};
 
         /* Plotting */
         Float_t dEtaBins = 20; //keep even
@@ -252,7 +252,9 @@ int Selection::ridge_trackSelection(Int_t j)
 int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData *particle)
 {
     if (doGen) return particle->nParticle;
+
     ///////// QCD Paper Selection /////////
+    /*
     if (particle->nParticle<nTrkMin || particle->nParticle<13) return -1;
 
     // Yen-Jie: probably need to update and apply neutral particle selection
@@ -280,9 +282,11 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
     // this is to ensure that we are able to find a mixed event
     if( Nch >= 1000) return -1;
     if ((Neu+Nch)<13) return -1;
-
     if (doE && E < TotalChrgEnergyMin) return -1;
-
+    */
+    Int_t Nch = event->nChargedHadronsHP;
+    if (event->passesLEP1TwoPC==0) return -1;
+    
 
     //// End of 1990 cuts ////
 
@@ -308,7 +312,7 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
       double totalenergyinbarrel=0.;
     
       for (Int_t j=0;j<particle->nParticle;j++) {
-        if (particle->highPurity[j] || neutralHadronSelector.highPurity(particle,j)){
+        if ((particle->highPurity[j]&&particle->pwflag[j]<=2) || neutralHadronSelector.highPurity(particle,j)){
           totalenergy += sqrt(particle->pmag[j]*particle->pmag[j] + particle->mass[j]*particle->mass[j]);
           //std::cout<<"eta"<<particle->eta_wrtThr[j]<<std::endl;
           if(fabs(particle->eta_wrtThr[j])<etabarrelcutforEselection){
@@ -320,13 +324,13 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
       if (typeEnergyBarrelSel==2 && totalenergyinbarrel/totalenergy<maxrelenergyinsidebarrel) return -1;
     }
     
-    returnNch=Nch;
+    Int_t returnNch=Nch;
     
     if (typemultiplicity==kMultInBarrelThrust) { 
     /* here we define a new version of the multiplicity that considers only tracks inside the barrel region defined by etabarrelcutforEselection*/
     Int_t NchBarrel = 0;
       for (Int_t j=0;j<particle->nParticle;j++) {
-        if (particle->highPurity[j]){
+        if (particle->highPurity[j]&&particle->pwflag[j]<=2){
           if(fabs(particle->eta_wrtThr[j])<etabarrelcutforEselection){
             NchBarrel++;
           }
