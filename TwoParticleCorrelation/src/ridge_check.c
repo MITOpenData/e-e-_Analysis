@@ -115,6 +115,7 @@ int ridge_check( const std::string inFileName, 			// Input file
        if (owDoGen)  s.doGen = true; else s.doGen = false;
        if (owDoTGen)  {s.doGen = true; s.doTGen=true;} else {s.doTGen = false;}
        if (owAjCut) {s.doAjCut = true; s.AjCut=_AjCut;}
+       if (owEffCorr) {s.doEffCorr;}
        else s.doAjCut = false;
        if (ow3jetEvtCut) {s.do3jetEvtCut = true; s.thirdJetCut=_thirdJetCut;}
        else s.do3jetEvtCut = false;
@@ -395,7 +396,7 @@ int ridge_check( const std::string inFileName, 			// Input file
                 Float_t angle2;
                 if (s.getThetaAngle) angle2 = data.getTheta(k); else angle2 = data.getEta(k);
                 Float_t phi2 = data.getPhi(k);
-		if (s.doGen) trackWeight=1;
+		if (s.doGen||s.doEffCorr==0) trackWeight=1;
 		else trackWeight=1./efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j])/efficiency(data.particle.theta[k],data.particle.theta[k],data.particle.pt[k]);
 		//fillNumerator=trackWeight;
                 for(unsigned int eI = 0; eI< histE.size(); eI++)
@@ -519,7 +520,7 @@ int ridge_check( const std::string inFileName, 			// Input file
                     Float_t angle_mix;
                     if (s.getThetaAngle) angle_mix = mix.getTheta(k); else angle_mix = mix.getEta(k);
                     Float_t phi_mix = mix.getPhi(k);
-  	  	    if (s.doGen) trackWeight=1;
+  	  	    if (s.doGen||s.doEffCorr==0) trackWeight=1;
 		    else trackWeight=1./efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j])/efficiency(mix.particle.theta[k],mix.particle.phi[k],mix.particle.pt[k]);
 		    //fillNumerator=trackWeight;
 		    for(unsigned int eI = 0; eI< histE.size(); eI++)
