@@ -11,6 +11,8 @@
 #include "fastjet/ClusterSequence.hh"
 
 #include "include/trackSelection.h"
+#include "/include/neutralHadronSelection.h"
+
 #include "include/particleData.h"
 #include "include/eventData.h"
 
@@ -49,6 +51,7 @@ class eventSelection{
   Bool_t passesNTrkMin = false;
   Bool_t passesSTheta = false;
   Bool_t passesMissP = false;
+  Bool_t passesNeuNch = false;
 
   Bool_t passesISR = false;
   Bool_t passesWW = false;
@@ -71,6 +74,7 @@ class eventSelection{
   void setEventSelection(particleData* inPart, eventData* inData);
   Bool_t getPassesTotalChgEnergyMin(){return passesTotalChgEnergyMin;}
   Bool_t getPassesNTrkMin(){return passesNTrkMin;}
+  Bool_t getPassesNeuNch(){return passesNeuNch;}
   Bool_t getPassesSTheta(){return passesSTheta;}
   Bool_t getPassesMissP(){return passesMissP;}
 
@@ -79,6 +83,7 @@ class eventSelection{
 
   private:
     TrackSelection trkSel = TrackSelection();
+    NeutralHadronSelection neutralHadronSel;
 
 };
 
@@ -183,12 +188,17 @@ void eventSelection::setEventSelection(particleData* inPart, eventData* inData)
 
   Float_t TotalChgEnergy = 0;
   Int_t NTrk = 0;
+  Int_t Neu = 0;
   Float_t STheta = inData->STheta;
   Float_t MissP = inData->missP;
 
   for(Int_t pI = 0; pI < inPart->nParticle; ++pI){
     Double_t e = TMath::Sqrt(inPart->pmag[pI]*inPart->pmag[pI] + inPart->mass[pI]*inPart->mass[pI]);
     particles.push_back(fastjet::PseudoJet(inPart->px[pI], inPart->py[pI], inPart->pz[pI], e));
+
+    if (neutralHadronSelector.highPurity(particle,j)) {
+       Neu++;
+    }
 
     if(!trkSel.highPurity(inPart, pI)) continue;
     TotalChgEnergy += TMath::Sqrt(inPart->pmag[pI]*inPart->pmag[pI] + inPart->mass[pI]*inPart->mass[pI]);
@@ -199,6 +209,7 @@ void eventSelection::setEventSelection(particleData* inPart, eventData* inData)
   passesNTrkMin = NTrk >= 5;
   passesSTheta = TMath::Abs(TMath::Cos(STheta)) <= .82;
   passesMissP = MissP < 20;
+  passesNeuNch = (Neu+Ntrk)>=13;
 
   fastjet::ClusterSequence csISR(particles, jDefISR);
   std::vector<fastjet::PseudoJet> twoJetsFJ = csISR.exclusive_jets(nJISR);

@@ -49,7 +49,7 @@ class eventData{
   Float_t C_linearized;
   Float_t D_linearized;
 
-  static const int nVar = 36;
+  static const int nVar = 37;
   std::string varStr[nVar] = {"passesNTupleAfterCut",
 			      "passesTotalChgEnergyMin",
 			      "passesNTrkMin",
@@ -57,6 +57,7 @@ class eventData{
 			      "passesMissP",
 			      "passesISR",
 			      "passesWW",
+			      "passesNeuNch",
 			      "passesAll",
 			      "missP",
 			      "missPt",
@@ -104,6 +105,7 @@ eventData::eventData()
   passesMissP = false;
   passesISR = false;
   passesWW = false;
+  passesNeuNch = false;
   passesAll = false;
   missP = -999;
   missPt = -999;
@@ -165,35 +167,36 @@ void eventData::SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::string
   if(varIsGood[4]) inTree_p->SetBranchAddress("passesMissP", &passesMissP);
   if(varIsGood[5]) inTree_p->SetBranchAddress("passesISR", &passesISR);
   if(varIsGood[6]) inTree_p->SetBranchAddress("passesWW", &passesWW);
-  if(varIsGood[7]) inTree_p->SetBranchAddress("passesAll", &passesAll);
-  if(varIsGood[8]) inTree_p->SetBranchAddress("missP", &missP);
-  if(varIsGood[9]) inTree_p->SetBranchAddress("missPt", &missPt);
-  if(varIsGood[10]) inTree_p->SetBranchAddress("missTheta", &missTheta);
-  if(varIsGood[11]) inTree_p->SetBranchAddress("missPhi", &missPhi);
-  if(varIsGood[12]) inTree_p->SetBranchAddress("missChargedP", &missChargedP);
-  if(varIsGood[13]) inTree_p->SetBranchAddress("missChargedPt", &missChargedPt);
-  if(varIsGood[14]) inTree_p->SetBranchAddress("missChargedTheta", &missChargedTheta);
-  if(varIsGood[15]) inTree_p->SetBranchAddress("missChargedPhi", &missChargedPhi);
-  if(varIsGood[16]) inTree_p->SetBranchAddress("nChargedHadrons", &nChargedHadrons);
-  if(varIsGood[17]) inTree_p->SetBranchAddress("nChargedHadronsHP", &nChargedHadronsHP);
-  if(varIsGood[18]) inTree_p->SetBranchAddress("nChargedHadrons_GT0p4", &nChargedHadrons_GT0p4);
-  if(varIsGood[19]) inTree_p->SetBranchAddress("nChargedHadrons_GT0p4Thrust", &nChargedHadrons_GT0p4Thrust);
-  if(varIsGood[20]) inTree_p->SetBranchAddress("Thrust", &Thrust);
-  if(varIsGood[21]) inTree_p->SetBranchAddress("TTheta", &TTheta);
-  if(varIsGood[22]) inTree_p->SetBranchAddress("TPhi", &TPhi);
-  if(varIsGood[23]) inTree_p->SetBranchAddress("Thrust_charged", &Thrust_charged);
-  if(varIsGood[24]) inTree_p->SetBranchAddress("TTheta_charged", &TTheta_charged);
-  if(varIsGood[25]) inTree_p->SetBranchAddress("TPhi_charged", &TPhi_charged);
-  if(varIsGood[26]) inTree_p->SetBranchAddress("Sphericity", &Sphericity);
-  if(varIsGood[27]) inTree_p->SetBranchAddress("STheta", &STheta);
-  if(varIsGood[28]) inTree_p->SetBranchAddress("SPhi", &SPhi);
-  if(varIsGood[29]) inTree_p->SetBranchAddress("Aplanarity", &Aplanarity);
-  if(varIsGood[30]) inTree_p->SetBranchAddress("Sphericity_linearized", &Sphericity_linearized);
-  if(varIsGood[31]) inTree_p->SetBranchAddress("STheta_linearized", &STheta_linearized);
-  if(varIsGood[32]) inTree_p->SetBranchAddress("SPhi_linearized", &SPhi_linearized);
-  if(varIsGood[33]) inTree_p->SetBranchAddress("Aplanarity_linearized", &Aplanarity_linearized);
-  if(varIsGood[34]) inTree_p->SetBranchAddress("C_linearized", &C_linearized);
-  if(varIsGood[35]) inTree_p->SetBranchAddress("D_linearized", &D_linearized);
+  if(varIsGood[7]) inTree_p->SetBranchAddress("passesNeuNch", &passesNeuNch);
+  if(varIsGood[8]) inTree_p->SetBranchAddress("passesAll", &passesAll);
+  if(varIsGood[9]) inTree_p->SetBranchAddress("missP", &missP);
+  if(varIsGood[10]) inTree_p->SetBranchAddress("missPt", &missPt);
+  if(varIsGood[11]) inTree_p->SetBranchAddress("missTheta", &missTheta);
+  if(varIsGood[12]) inTree_p->SetBranchAddress("missPhi", &missPhi);
+  if(varIsGood[13]) inTree_p->SetBranchAddress("missChargedP", &missChargedP);
+  if(varIsGood[14]) inTree_p->SetBranchAddress("missChargedPt", &missChargedPt);
+  if(varIsGood[15]) inTree_p->SetBranchAddress("missChargedTheta", &missChargedTheta);
+  if(varIsGood[16]) inTree_p->SetBranchAddress("missChargedPhi", &missChargedPhi);
+  if(varIsGood[17]) inTree_p->SetBranchAddress("nChargedHadrons", &nChargedHadrons);
+  if(varIsGood[18]) inTree_p->SetBranchAddress("nChargedHadronsHP", &nChargedHadronsHP);
+  if(varIsGood[19]) inTree_p->SetBranchAddress("nChargedHadrons_GT0p4", &nChargedHadrons_GT0p4);
+  if(varIsGood[20]) inTree_p->SetBranchAddress("nChargedHadrons_GT0p4Thrust", &nChargedHadrons_GT0p4Thrust);
+  if(varIsGood[21]) inTree_p->SetBranchAddress("Thrust", &Thrust);
+  if(varIsGood[22]) inTree_p->SetBranchAddress("TTheta", &TTheta);
+  if(varIsGood[23]) inTree_p->SetBranchAddress("TPhi", &TPhi);
+  if(varIsGood[24]) inTree_p->SetBranchAddress("Thrust_charged", &Thrust_charged);
+  if(varIsGood[25]) inTree_p->SetBranchAddress("TTheta_charged", &TTheta_charged);
+  if(varIsGood[26]) inTree_p->SetBranchAddress("TPhi_charged", &TPhi_charged);
+  if(varIsGood[27]) inTree_p->SetBranchAddress("Sphericity", &Sphericity);
+  if(varIsGood[28]) inTree_p->SetBranchAddress("STheta", &STheta);
+  if(varIsGood[29]) inTree_p->SetBranchAddress("SPhi", &SPhi);
+  if(varIsGood[30]) inTree_p->SetBranchAddress("Aplanarity", &Aplanarity);
+  if(varIsGood[31]) inTree_p->SetBranchAddress("Sphericity_linearized", &Sphericity_linearized);
+  if(varIsGood[32]) inTree_p->SetBranchAddress("STheta_linearized", &STheta_linearized);
+  if(varIsGood[33]) inTree_p->SetBranchAddress("SPhi_linearized", &SPhi_linearized);
+  if(varIsGood[34]) inTree_p->SetBranchAddress("Aplanarity_linearized", &Aplanarity_linearized);
+  if(varIsGood[35]) inTree_p->SetBranchAddress("C_linearized", &C_linearized);
+  if(varIsGood[36]) inTree_p->SetBranchAddress("D_linearized", &D_linearized);
 
   return;
 }
