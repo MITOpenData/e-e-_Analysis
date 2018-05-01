@@ -13,7 +13,7 @@ Float_t efficiency(Float_t theta, Float_t phi, Float_t pt)
 	}
 	i=1;
 	Float_t e = _heff->GetBinContent(_heff->FindBin(pt,theta,phi));
-        if (e==0) cout <<"!!!Error on efficiency correction! Zero efficiency!!!"<<endl<<endl;
+        if (e==0) cout <<"!!!Error on efficiency correction! Zero efficiency!!! theta="<<theta<<" phi="<<phi<<" pt="<<pt<<endl<<endl;
 	  
 	return e;
 }
