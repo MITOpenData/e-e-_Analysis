@@ -58,7 +58,7 @@ class Selection
         // Event Cuts
         bool doE = true; Float_t TotalChrgEnergyMin = 15; // measured in GeV
         Float_t nTrkMin = 5;
-        bool doSTheta = false; Float_t SThetaMax = 0.4;  
+        bool doSTheta = false; Float_t SThetaMax = 0.82;  
         // end of 1990 cuts
         bool domissPCut = false;  Float_t missPCut = 20;  // measured in GeV
         
