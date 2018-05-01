@@ -197,7 +197,7 @@ void eventSelection::setEventSelection(particleData* inPart, eventData* inData)
 
   passesTotalChgEnergyMin = TotalChgEnergy >= 15;
   passesNTrkMin = NTrk >= 5;
-  passesSTheta = TMath::Abs(TMath::Cos(STheta)) <= .8;
+  passesSTheta = TMath::Abs(TMath::Cos(STheta)) <= .82;
   passesMissP = MissP < 20;
 
   fastjet::ClusterSequence csISR(particles, jDefISR);
