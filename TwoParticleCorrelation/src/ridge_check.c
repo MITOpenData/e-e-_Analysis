@@ -115,7 +115,7 @@ int ridge_check( const std::string inFileName, 			// Input file
        if (owDoGen)  s.doGen = true; else s.doGen = false;
        if (owDoTGen)  {s.doGen = true; s.doTGen=true;} else {s.doTGen = false;}
        if (owAjCut) {s.doAjCut = true; s.AjCut=_AjCut;}
-       if (owEffCorr) {s.doEffCorr;}
+       if (owEffCorr) {s.doEffCorr= true;} else {s.doEffCorr = false;}
        else s.doAjCut = false;
        if (ow3jetEvtCut) {s.do3jetEvtCut = true; s.thirdJetCut=_thirdJetCut;}
        else s.do3jetEvtCut = false;

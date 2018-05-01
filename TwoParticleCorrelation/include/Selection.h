@@ -40,7 +40,7 @@ class Selection
         bool doParallel = true;
         bool doOneEvent = false;     int numEvents = 50000;
         bool doBelle = false;
-	bool doEffcorr = true;
+	bool doEffCorr = true;
         Int_t experiment = 0; // 0 ALEPH , 1 DELPHI, 2 BELLE, 3 CMS pp
         Int_t jttree = 0; // 0 ak4ESchemeJetTree, 1 ak4WTAmodpSchemeJetTree, 2 ak8ESchemeJetTree, 3 ak8WTAmodpSchemeJetTree, 4 ktN2WTAmodpSchemeJetTree
         Int_t nbin = 20;
