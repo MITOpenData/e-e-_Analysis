@@ -11,6 +11,7 @@ class eventData{
   Bool_t passesNeuNch;
   Bool_t passesSTheta;
   Bool_t passesMissP;
+  Bool_t passesLEP1TwoPC;
 
   Bool_t passesISR;
   Bool_t passesWW;
@@ -50,7 +51,7 @@ class eventData{
   Float_t C_linearized;
   Float_t D_linearized;
 
-  static const int nVar = 37;
+  static const int nVar = 38;
   std::string varStr[nVar] = {"passesNTupleAfterCut",
 			      "passesTotalChgEnergyMin",
 			      "passesNTrkMin",
@@ -87,7 +88,8 @@ class eventData{
                               "SPhi_linearized",
                               "Aplanarity_linearized",
                               "C_linearized",
-                              "D_linearized"
+                              "D_linearized",
+			      "passesLEP1TwoPC"
                              };
 
   bool varIsGood[nVar];
@@ -136,6 +138,7 @@ eventData::eventData()
   Aplanarity_linearized = -999;
   C_linearized = -999;
   D_linearized = -999;
+  passesLEP1TwoPC = false;
 
   for(int i = 0; i < nVar; ++i){varIsGood[i] = true;}
   return;
@@ -198,6 +201,7 @@ void eventData::SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::string
   if(varIsGood[34]) inTree_p->SetBranchAddress("Aplanarity_linearized", &Aplanarity_linearized);
   if(varIsGood[35]) inTree_p->SetBranchAddress("C_linearized", &C_linearized);
   if(varIsGood[36]) inTree_p->SetBranchAddress("D_linearized", &D_linearized);
+  if(varIsGood[37]) inTree_p->SetBranchAddress("passesLEP1TwoPC", &passesLEP1TwoPC);
 
   return;
 }
@@ -241,6 +245,7 @@ void eventData::SetBranchWrite(TTree* inTree_p)
   inTree_p->Branch("Aplanarity_linearized", &Aplanarity_linearized,"Aplanarity_linearized/F");
   inTree_p->Branch("C_linearized", &C_linearized,"C_linearized/F");
   inTree_p->Branch("D_linearized", &D_linearized,"D_linearized/F");
+  inTree_p->Branch("passesLEP1TwoPC", &passesPassesLEP1TwoPC, "passesLEP1TwoPC/O");
   
   return;
 }

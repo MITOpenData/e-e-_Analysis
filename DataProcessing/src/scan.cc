@@ -227,7 +227,7 @@ void doEndEvent(particleData* pData_p, eventData* eData_p, std::vector<boostedEv
   eData_p->passesNeuNch = eSelection.getPassesNeuNch();
 
   eData_p->passesAll = (eData_p->passesNTupleAfterCut && eData_p->passesTotalChgEnergyMin && eData_p->passesNTrkMin && eData_p->passesSTheta && eData_p->passesMissP && eData_p->passesISR && eData_p->passesWW);
-
+  eData_p->passesLEP1TwoPC = eData_p->passesNeuNch && eData_p->passesSTheta && eData_p->passesTotalChgEnergyMin && (eData_p->nChargedHadronsHP>=5);  // selection used in 2PC analysis with LEP1 data
   return;
 }
 
