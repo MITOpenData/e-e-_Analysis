@@ -224,6 +224,7 @@ void doEndEvent(particleData* pData_p, eventData* eData_p, std::vector<boostedEv
 
   eData_p->passesISR = eSelection.getPassesISR();
   eData_p->passesWW = eSelection.getPassesWW();
+  eData_p->passesNeuNch = eSelection.getPassesNeuNch();
 
   eData_p->passesAll = (eData_p->passesNTupleAfterCut && eData_p->passesTotalChgEnergyMin && eData_p->passesNTrkMin && eData_p->passesSTheta && eData_p->passesMissP && eData_p->passesISR && eData_p->passesWW);
 
