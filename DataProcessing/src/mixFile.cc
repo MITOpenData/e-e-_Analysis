@@ -16,19 +16,19 @@
 #include <sys/time.h>
 
 //local dependencies
-#include "include/doLocalDebug.h"
-#include "include/checkMakeDir.h"
-#include "include/particleData.h"
-#include "include/eventData.h"
-#include "include/jetData.h"
-#include "include/boostedEvtData.h"
-#include "include/thrustTools.h"
-#include "include/mixTools.h"
-#include "include/mixMap.h"
-#include "include/boostTools.h"
-#include "include/sphericityTools.h"
-#include "include/returnRootFileContentsList.h"
-#include "include/removeVectorDuplicates.h"
+#include "DataProcessing/include/doLocalDebug.h"
+#include "DataProcessing/include/checkMakeDir.h"
+#include "DataProcessing/include/particleData.h"
+#include "DataProcessing/include/eventData.h"
+#include "DataProcessing/include/jetData.h"
+#include "DataProcessing/include/boostedEvtData.h"
+#include "DataProcessing/include/thrustTools.h"
+#include "DataProcessing/include/mixTools.h"
+#include "DataProcessing/include/mixMap.h"
+#include "DataProcessing/include/boostTools.h"
+#include "DataProcessing/include/sphericityTools.h"
+#include "DataProcessing/include/returnRootFileContentsList.h"
+#include "DataProcessing/include/removeVectorDuplicates.h"
 
 double get_wall_time(){
   struct timeval time;

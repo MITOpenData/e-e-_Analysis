@@ -18,21 +18,22 @@
 #include "fastjet/PseudoJet.hh"
 
 //local dependencies
-#include "include/doLocalDebug.h"
-#include "include/checkMakeDir.h"
-#include "include/particleData.h"
-#include "include/trackSelection.h"
-#include "include/eventSelection.h"
-#include "include/eventData.h"
-#include "include/jetData.h"
-#include "include/boostedEvtData.h"
-#include "include/thrustTools.h"
-#include "include/boostTools.h"
-#include "include/sphericityTools.h"
-#include "include/processJets.h"
-#include "include/uniqueIDTools.h"
-#include "include/alephTrkEfficiency.h"
-#include "src/mixFile.cc"
+#include "DataProcessing/include/doLocalDebug.h"
+#include "DataProcessing/include/checkMakeDir.h"
+#include "DataProcessing/include/particleData.h"
+#include "DataProcessing/include/trackSelection.h"
+#include "DataProcessing/include/eventSelection.h"
+#include "DataProcessing/include/eventData.h"
+#include "DataProcessing/include/jetData.h"
+#include "DataProcessing/include/boostedEvtData.h"
+#include "DataProcessing/include/thrustTools.h"
+#include "DataProcessing/include/boostTools.h"
+#include "DataProcessing/include/sphericityTools.h"
+#include "DataProcessing/include/processJets.h"
+#include "DataProcessing/include/uniqueIDTools.h"
+#include "DataProcessing/include/alephTrkEfficiency.h"
+
+#include "DataProcessing/src/mixFile.cc"
 
 bool getIsMC(std::string inStr)
 {

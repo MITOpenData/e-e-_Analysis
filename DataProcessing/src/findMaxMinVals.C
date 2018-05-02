@@ -6,7 +6,7 @@
 #include "TFile.h"
 #include "TTree.h"
 
-#include "include/particleData.h"
+#include "DataProcessing/include/particleData.h"
 
 int findMaxMinVals(const std::string inFileName)
 {
