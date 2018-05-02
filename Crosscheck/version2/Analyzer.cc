@@ -12,6 +12,7 @@
 #include <string>
 #include "../../DataProcessing/include/eventData.h"
 #include "../../DataProcessing/include/particleData.h"
+#include "../../DataProcessing/include/alephTrkEfficiency.h"
 
 //#include "include/smartJetName.h"
 
@@ -19,6 +20,8 @@
 
 void Analyzer(){
   TH1::SetDefaultSumw2();
+
+  alephTrkEfficiency a;
 
   //set up plots
   Settings s = Settings();
@@ -64,18 +67,22 @@ void Analyzer(){
     if(i%1000==0) std::cout << i << "/" << (s.doAllData?t->GetEntries():s.nEvts)<< std::endl;  
     t->GetEntry(i);
 
-    if(!ed.passesAll) continue;
+    //if(!ed.passesAll) continue;
+    if(!ed.passesLEP1TwoPC) continue;
     tMix->GetEntry(i);
  
     int nTrk = ed.nChargedHadronsHP;
     float nTrig = 0;
     for(int t = 0; t<pd.nParticle; t++){
       if(!pd.highPurity[t]) continue;
+      if(pd.pwflag[t]>2) continue;
+      if(TMath::Abs(pd.eta[t])>s.etaCut) continue;
       if(!s.doThrust && (pd.pt[t]<=s.trigPt[0] || pd.pt[t]>=s.trigPt[1])) continue;//nTrig calculation
       if(s.doThrust && (pd.pt_wrtThr[t]<=s.trigPt[0] || pd.pt_wrtThr[t]>=s.trigPt[1])) continue;//nTrig calculation
-      float corr = 1.0/getEff(s,pd.pt[t],pd.eta[t]);
+      float corr = 1.0/a.efficiency(pd.theta[t],pd.phi[t],pd.pt[t]);
       nTrig += corr;
     }
+    std::cout << i << " " << nTrk << " " << nTrig << std::endl;
     multiplicity->Fill(nTrk);
  
     for(int k = 0; k<s.nMultBins; k++){
@@ -86,16 +93,20 @@ void Analyzer(){
       //fill signal histogram
     for(int j1 = 0; j1<pd.nParticle; j1++){
       if(!pd.highPurity[j1]) continue;
+      if(pd.pwflag[j1]>2) continue;
+      if(TMath::Abs(pd.eta[j1])>s.etaCut) continue;
       if(!s.doThrust && (pd.pt[j1]<s.trigPt[0] || pd.pt[j1]>s.trigPt[1])) continue;
       if(s.doThrust && (pd.pt_wrtThr[j1]<s.trigPt[0] || pd.pt_wrtThr[j1]>s.trigPt[1])) continue;
-      float corr1 = 1.0/getEff(s,pd.pt[j1],pd.eta[j1]);
+      float corr1 = 1.0/a.efficiency(pd.theta[j1],pd.phi[j1],pd.pt[j1]);
 
       //signal histogram
       for(int j2 = 0; j2<j1; j2++){
         if(!pd.highPurity[j2]) continue;
+        if(pd.pwflag[j2]>2) continue;
+        if(TMath::Abs(pd.eta[j2])>s.etaCut) continue;
         if(!s.doThrust && (pd.pt[j2]<s.assocPt[0] || pd.pt[j2]>s.assocPt[1])) continue;
         if(s.doThrust && (pd.pt_wrtThr[j2]<s.assocPt[0] || pd.pt_wrtThr[j2]>s.assocPt[1])) continue;
-        float corr2 = 1.0/getEff(s,pd.pt[j2],pd.eta[j2]);
+        float corr2 = 1.0/a.efficiency(pd.theta[j2],pd.phi[j2],pd.pt[j2]);
        
         //correct for both particles and also divide by hte bin widths
         for(int k = 0; k<s.nMultBins; k++){
@@ -109,9 +120,11 @@ void Analyzer(){
       //background mixed event histogram 
       for(int j2 = 0; j2<pdm.nParticle; j2++){
         if(!pdm.highPurity[j2]) continue;
+        if(pdm.pwflag[j2]>2) continue;
+        if(TMath::Abs(pdm.eta[j2])>s.etaCut) continue;
         if(!s.doThrust && (pdm.pt[j2]<s.assocPt[0] || pdm.pt[j2]>s.assocPt[1])) continue;
         if(s.doThrust && (pdm.pt_wrtThr[j2]<s.assocPt[0] || pdm.pt_wrtThr[j2]>s.assocPt[1])) continue;
-        float corr2 = pdm.particleWeight/getEff(s,pdm.pt[j2],pdm.eta[j2]);
+        float corr2 = pdm.particleWeight/a.efficiency(pdm.theta[j2],pdm.phi[j2],pdm.pt[j2]);
         //correct for both particles and also divide by hte bin widths
         for(int k = 0; k<s.nMultBins; k++){
           if(s.isInMultBin(nTrk,k)){
