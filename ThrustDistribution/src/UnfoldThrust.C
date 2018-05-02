@@ -79,9 +79,9 @@ void UnfoldThrust()
 
   TH2D *hR = new TH2D("hR","",42,0.58,1,168*4,0.58,1);
   
-  tMC->Draw("T:GenThrust>>hR");
-  tMC->Draw("T>>hMMC");
-  tData->Draw("T>>hM");
+  tMC->Draw("Thrust:GenThrust>>hR");
+  tMC->Draw("Thrust>>hMMC");
+  tData->Draw("Thrust>>hM");
   //hM = (TH1D*)infData->Get("h_thrust");
   tMC->Draw("GenThrust>>hT");
   tMC->Draw("GenThrust>>hTAll");
@@ -98,7 +98,7 @@ void UnfoldThrust()
   hEff->Draw();
   
   
-    // rescale response function
+  // rescale response function
   for (Int_t m= 1; m<=hR->GetNbinsY(); m++)
   {
      double Measured = hM->GetBinContent(m);
@@ -118,7 +118,7 @@ void UnfoldThrust()
      }  
   }
   
-  /*
+  
   
   for (int i=0;i<100;i++) {
      bayesianUnfold myUnfolding0(hR,hT,0);
@@ -146,7 +146,7 @@ void UnfoldThrust()
         }  
      }
   }
-  */
+  
   
   
 
@@ -292,7 +292,7 @@ void UnfoldThrust()
   Double_t scale = 1.0/( hFinalResult->GetXaxis()->GetBinWidth(1)*hFinalResult->Integral());
   hFinalResult->Sumw2();
   hFinalResult->Scale(scale);
-  hFinalResult->SetMarkerSize(1);    
+  hFinalResult->SetMarkerSize(1.2);    
   hFinalResult->GetXaxis()->CenterTitle();
   hFinalResult->GetYaxis()->CenterTitle();
 

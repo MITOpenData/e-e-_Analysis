@@ -76,11 +76,11 @@ class Selection
         Float_t etaPlotRange;
 
         // Beam Axis
-        static const Int_t nptBins_wrtBeam = 3;
-        Float_t ptBinsLow_wrtBeam[nptBins_wrtBeam]  = {0.4,0.4,1.0};  // measured in GeV
-        Float_t ptBinsHigh_wrtBeam[nptBins_wrtBeam] = {100.0,4.0,3.0};
-        static const Int_t netaBins_wrtBeam = 2;
-        Float_t etaBinsLow_wrtBeam[netaBins_wrtBeam]  = {1.6, 1.8};
+        static const Int_t nptBins_wrtBeam = 1;
+        Float_t ptBinsLow_wrtBeam[nptBins_wrtBeam]  = {0.4,};  // measured in GeV
+        Float_t ptBinsHigh_wrtBeam[nptBins_wrtBeam] = {100.0};
+        static const Int_t netaBins_wrtBeam = 1;
+        Float_t etaBinsLow_wrtBeam[netaBins_wrtBeam]  = {1.6};
         Float_t missPCut_wrtBeam = 20;
         Float_t etaPlotRange_wrtBeam = 3.2;
 
