@@ -21,7 +21,7 @@ class alephTrkEfficiency{
 
 alephTrkEfficiency::alephTrkEfficiency()
 {
-  _effInf = new TFile("tables/efficiency_hist.root","READ");
+  _effInf = new TFile("DataProcessing/tables/efficiency_hist.root","READ");
   _heff = (TH3F*)_effInf->Get("eff");
   counter = 0;
   return;

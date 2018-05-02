@@ -20,7 +20,7 @@ int EfficiencyClosureTest()
 	TTree* t = (TTree*)f->Get("t");
 	TTree* tgen = (TTree*)f->Get("tgen");
 
-	TFile* e = new TFile("tables/efficiency_hist.root","read");
+	TFile* e = new TFile("DataProcessing/tables/efficiency_hist.root","read");
 	TH3F* eff = (TH3F*)e->Get("eff");
 
 	Float_t pt[maxmult];

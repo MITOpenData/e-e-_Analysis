@@ -10,7 +10,7 @@ int ProcessEffHist()
 {
 	gStyle->SetOptStat(0);
 
-	TFile* f = TFile::Open("tables/efficiency_hist.root","update");
+	TFile* f = TFile::Open("DataProcessing/tables/efficiency_hist.root","update");
 	TH3F* eff = (TH3F*)f->Get("eff");
 
 	TH1F* pteff = (TH1F*)eff->Project3D("xe");
