@@ -3,6 +3,7 @@
 #define ALEPHTRKEFFICIENCY_H
 
 #include <iostream>
+#include <cstdlib>
 
 #include <TFile.h>
 #include <TH3F.h>
@@ -21,7 +22,14 @@ class alephTrkEfficiency{
 
 alephTrkEfficiency::alephTrkEfficiency()
 {
-  _effInf = new TFile("DataProcessing/tables/efficiency_hist.root","READ");
+  std::string fullPath = std::getenv("STUDYMULTDIR");
+  if(fullPath.size() == 0){
+    std::cout << "WARNING from " << __FILE__ << ", ENVIRONMENT Variable STUDYMULTDIR NOT SET" << std::endl;
+    std::cout << "Please \'source setStudyMultEnv.sh\' from top directory to fix" << std::endl;
+    return;
+  }
+
+  _effInf = new TFile((fullPath + "/DataProcessing/tables/efficiency_hist.root").c_str(),"READ");
   _heff = (TH3F*)_effInf->Get("eff");
   counter = 0;
   return;
