@@ -54,14 +54,14 @@ int GetNaiveEff()
 		tgen->GetEntry(i);
 		for(int j=0;j<mult;j++) 
 		{
-			if(!highPurity[j] || pwflag[j]>2) continue; 
+			if(!highPurity[j] || pwflag[j]>2) continue;
 			eff->Fill(pt[j],theta[j],phi[j]);
 			if(pt[j]>1) efftheta_clean->Fill(theta[j]);
 			if(theta[j]>0.35 && theta[j]<2.8) effpt_clean->Fill(pt[j]);
 		}
 		for(int j=0;j<multgen;j++) 
 		{
-			if(!highPuritygen[j] || pwflaggen[j]>2) continue; 
+			if(pwflaggen[j]>2) continue;
 			effgen->Fill(ptgen[j],thetagen[j],phigen[j]);
 			if(ptgen[j]>1) effthetagen_clean->Fill(thetagen[j]);
 			if(thetagen[j]>0.35 && thetagen[j]<2.8) effptgen_clean->Fill(ptgen[j]);
