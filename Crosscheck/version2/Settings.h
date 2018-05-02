@@ -37,7 +37,7 @@ class Settings{
 
     //other
     bool doThrust = false;
-    bool doAllData = false;
+    bool doAllData = true;
     int nEvts = 10;
 
     Settings();
