@@ -16,7 +16,7 @@
 
 //#include "include/smartJetName.h"
 
-//inline float jtp(float pt, float eta){ return pt*TMath::CosH(eta); }
+//inline Float_t jtp(Float_t pt, Float_t eta){ return pt*TMath::CosH(eta); }
 
 void Analyzer(){
   TH1::SetDefaultSumw2();
@@ -31,8 +31,8 @@ void Analyzer(){
   TH2F * bkgrnd2PC[s.nMultBins];
   TH2F * ratio2PC[s.nMultBins]; 
   TH1F * longRangeYield[s.nMultBins]; 
-  float nSignalEvts[s.nMultBins] = {0};
-  float nBkgrndEvts[s.nMultBins] = {0};
+  Float_t nSignalEvts[s.nMultBins] = {0};
+  Float_t nBkgrndEvts[s.nMultBins] = {0};
 
   TH1D * nEvtSigHist = new TH1D("nEvtSigHisto","nEvtSigHisto",10,0,10);
   TH1D * nEvtBkgHist = new TH1D("nEvtBkgHisto","nEvtBkgHisto",10,0,10);
@@ -72,17 +72,16 @@ void Analyzer(){
     tMix->GetEntry(i);
  
     int nTrk = ed.nChargedHadronsHP;
-    float nTrig = 0;
+    Float_t nTrig = 0;
     for(int t = 0; t<pd.nParticle; t++){
       if(!pd.highPurity[t]) continue;
       if(pd.pwflag[t]>2) continue;
       if(TMath::Abs(pd.eta[t])>s.etaCut) continue;
-      if(!s.doThrust && (pd.pt[t]<=s.trigPt[0] || pd.pt[t]>=s.trigPt[1])) continue;//nTrig calculation
-      if(s.doThrust && (pd.pt_wrtThr[t]<=s.trigPt[0] || pd.pt_wrtThr[t]>=s.trigPt[1])) continue;//nTrig calculation
-      float corr = 1.0/a.efficiency(pd.theta[t],pd.phi[t],pd.pt[t]);
+      if(!s.doThrust && (pd.pt[t]<s.trigPt[0] || pd.pt[t]>=s.trigPt[1])) continue;//nTrig calculation
+      if(s.doThrust && (pd.pt_wrtThr[t]<s.trigPt[0] || pd.pt_wrtThr[t]>=s.trigPt[1])) continue;//nTrig calculation
+      Float_t corr = 1.0/a.efficiency(pd.theta[t],pd.phi[t],pd.pt[t]);
       nTrig += corr;
     }
-    std::cout << i << " " << nTrk << " " << nTrig << std::endl;
     multiplicity->Fill(nTrk);
  
     for(int k = 0; k<s.nMultBins; k++){
@@ -97,7 +96,7 @@ void Analyzer(){
       if(TMath::Abs(pd.eta[j1])>s.etaCut) continue;
       if(!s.doThrust && (pd.pt[j1]<s.trigPt[0] || pd.pt[j1]>s.trigPt[1])) continue;
       if(s.doThrust && (pd.pt_wrtThr[j1]<s.trigPt[0] || pd.pt_wrtThr[j1]>s.trigPt[1])) continue;
-      float corr1 = 1.0/a.efficiency(pd.theta[j1],pd.phi[j1],pd.pt[j1]);
+      Float_t corr1 = 1.0/a.efficiency(pd.theta[j1],pd.phi[j1],pd.pt[j1]);
 
       //signal histogram
       for(int j2 = 0; j2<j1; j2++){
@@ -106,13 +105,13 @@ void Analyzer(){
         if(TMath::Abs(pd.eta[j2])>s.etaCut) continue;
         if(!s.doThrust && (pd.pt[j2]<s.assocPt[0] || pd.pt[j2]>s.assocPt[1])) continue;
         if(s.doThrust && (pd.pt_wrtThr[j2]<s.assocPt[0] || pd.pt_wrtThr[j2]>s.assocPt[1])) continue;
-        float corr2 = 1.0/a.efficiency(pd.theta[j2],pd.phi[j2],pd.pt[j2]);
+        Float_t corr2 = 1.0/a.efficiency(pd.theta[j2],pd.phi[j2],pd.pt[j2]);
        
         //correct for both particles and also divide by hte bin widths
         for(int k = 0; k<s.nMultBins; k++){
           if(s.isInMultBin(nTrk,k)){
-            if(!s.doThrust) fillAllQuadrants( signal2PC[k], dEta(pd.eta[j1],pd.eta[j2]), dPhi(pd.phi[j1],pd.phi[j2]), corr1*corr2/(2*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
-            if(s.doThrust) fillAllQuadrants( signal2PC[k], dEta(pd.eta_wrtThr[j1],pd.eta_wrtThr[j2]), dPhi(pd.phi_wrtThr[j1],pd.phi_wrtThr[j2]), corr1*corr2/(2*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+            if(!s.doThrust) fillAllQuadrants( signal2PC[k], dEta(pd.eta[j1],pd.eta[j2]), dPhi(pd.phi[j1],pd.phi[j2]), corr1*corr2/(2*s.etaPlotRange/(Float_t)s.dEtaBins)/(2*TMath::Pi()/(Float_t)s.dPhiBins)/nTrig);
+            if(s.doThrust) fillAllQuadrants( signal2PC[k], dEta(pd.eta_wrtThr[j1],pd.eta_wrtThr[j2]), dPhi(pd.phi_wrtThr[j1],pd.phi_wrtThr[j2]), corr1*corr2/(2*s.etaPlotRange/(Float_t)s.dEtaBins)/(2*TMath::Pi()/(Float_t)s.dPhiBins)/nTrig);
           }
         }//end mult bin loop
       }//end 2nd particle loop
@@ -124,12 +123,12 @@ void Analyzer(){
         if(TMath::Abs(pdm.eta[j2])>s.etaCut) continue;
         if(!s.doThrust && (pdm.pt[j2]<s.assocPt[0] || pdm.pt[j2]>s.assocPt[1])) continue;
         if(s.doThrust && (pdm.pt_wrtThr[j2]<s.assocPt[0] || pdm.pt_wrtThr[j2]>s.assocPt[1])) continue;
-        float corr2 = pdm.particleWeight/a.efficiency(pdm.theta[j2],pdm.phi[j2],pdm.pt[j2]);
+        Float_t corr2 = pdm.particleWeight/a.efficiency(pdm.theta[j2],pdm.phi[j2],pdm.pt[j2]);
         //correct for both particles and also divide by hte bin widths
         for(int k = 0; k<s.nMultBins; k++){
           if(s.isInMultBin(nTrk,k)){
-            if(!s.doThrust) fillAllQuadrants( bkgrnd2PC[k], dEta(pd.eta[j1],pdm.eta[j2]), dPhi(pd.phi[j1],pdm.phi[j2]), corr1*corr2/(2*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
-            if(s.doThrust) fillAllQuadrants( bkgrnd2PC[k], dEta(pd.eta_wrtThr[j1],pdm.eta_wrtThr[j2]), dPhi(pd.phi_wrtThr[j1],pdm.phi_wrtThr[j2]), corr1*corr2/(2*s.etaPlotRange/(float)s.dEtaBins)/(2*TMath::Pi()/(float)s.dPhiBins)/nTrig);
+            if(!s.doThrust) fillAllQuadrants( bkgrnd2PC[k], dEta(pd.eta[j1],pdm.eta[j2]), dPhi(pd.phi[j1],pdm.phi[j2]), corr1*corr2/(2*s.etaPlotRange/(Float_t)s.dEtaBins)/(2*TMath::Pi()/(Float_t)s.dPhiBins)/nTrig);
+            if(s.doThrust) fillAllQuadrants( bkgrnd2PC[k], dEta(pd.eta_wrtThr[j1],pdm.eta_wrtThr[j2]), dPhi(pd.phi_wrtThr[j1],pdm.phi_wrtThr[j2]), corr1*corr2/(2*s.etaPlotRange/(Float_t)s.dEtaBins)/(2*TMath::Pi()/(Float_t)s.dPhiBins)/nTrig);
           }
         }//end mult bin loop
       }//end mixed particle loop
@@ -139,8 +138,8 @@ void Analyzer(){
   output->cd();
   for(int k = 0; k<s.nMultBins; k++){
     std::cout << nSignalEvts[k] <<" " << std::endl;
-    if(!s.doParallel) signal2PC[k]->Scale(1.0/(float)nSignalEvts[k]);
-    if(!s.doParallel) bkgrnd2PC[k]->Scale(1.0/(float)nBkgrndEvts[k]);
+    if(!s.doParallel) signal2PC[k]->Scale(1.0/(Float_t)nSignalEvts[k]);
+    if(!s.doParallel) bkgrnd2PC[k]->Scale(1.0/(Float_t)nBkgrndEvts[k]);
 
     nEvtSigHist->Fill(k,nSignalEvts[k]);
     nEvtBkgHist->Fill(k,nBkgrndEvts[k]);
