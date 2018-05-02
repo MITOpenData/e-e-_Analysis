@@ -1,6 +1,12 @@
+#include <iostream>
+
 #include "TH3.h"
 #include "TH1.h"
 #include "TFile.h"
+#include "TTree.h"
+#include "TMath.h"
+#include "TCanvas.h"
+#include "TStyle.h"
 
 int EfficiencyClosureTest()
 {
@@ -14,7 +20,7 @@ int EfficiencyClosureTest()
 	TTree* t = (TTree*)f->Get("t");
 	TTree* tgen = (TTree*)f->Get("tgen");
 
-	TFile* e = new TFile("./efficiency_hist.root","read");
+	TFile* e = new TFile("tables/efficiency_hist.root","read");
 	TH3F* eff = (TH3F*)e->Get("eff");
 
 	Float_t pt[maxmult];
