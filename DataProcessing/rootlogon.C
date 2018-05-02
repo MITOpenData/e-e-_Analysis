@@ -1,0 +1,9 @@
+{
+  gInterpreter->AddIncludePath("$STUDYMULTDIR");
+  gInterpreter->AddIncludePath("/afs/cern.ch/work/c/cmcginn/public/Fastjet/fastjet-install/include");
+  gSystem->Load("/afs/cern.ch/work/c/cmcginn/public/Fastjet/fastjet-install/lib/libfastjettools");
+  gSystem->Load("/afs/cern.ch/work/c/cmcginn/public/Fastjet/fastjet-install/lib/libfastjet");
+  gSystem->Load("/afs/cern.ch/work/c/cmcginn/public/Fastjet/fastjet-install/lib/libfastjetplugins");
+  gSystem->Load("/afs/cern.ch/work/c/cmcginn/public/Fastjet/fastjet-install/lib/libsiscone_spherical");
+  gSystem->Load("/afs/cern.ch/work/c/cmcginn/public/Fastjet/fastjet-install/lib/libsiscone");
+}
