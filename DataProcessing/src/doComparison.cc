@@ -13,7 +13,6 @@
 #include "TPad.h"
 
 #include "DataProcessing/include/particleData.h"
-#include "DataProcessing/include/particleData.h"
 #include "DataProcessing/include/eventData.h"
 #include "DataProcessing/include/jetData.h"
 #include "DataProcessing/include/boostedEvtData.h"
