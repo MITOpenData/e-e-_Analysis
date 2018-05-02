@@ -11,14 +11,16 @@ class Settings{
     bool doParallel = false;
 
     //ALEPH data
-    std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180426/LEP1Data1992_recons_aftercut-MERGED.root";
-    std::string inputFileMix = "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180426/LEP1Data1992_recons_aftercut-MERGED_Mix.root";
+    std::string inputFile = "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180501/LEP1Data1992_recons_aftercut-MERGED.root";
+    std::string inputFileMix = "/data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180501/LEP1Data1992_recons_aftercut-MERGED_Mix.root";
 
     //kinematics (if trig != assoc cuts, make sure doExcludeNTrigLT2 is set to false)
-    float trigPt[2] = {0.0,100};
-    float assocPt[2] = {0.0,100};
+    float trigPt[2] = {0.4,100};
+    float assocPt[2] = {0.4,100};
     float nTrkPt[2] = {0.0,100};
     
+    float etaCut = 1.6;
+
     //beam  axis stuff
     float etaPlotRange = 3.2;//THRUST AXIS this gets multiplied by 2
     float dEtaBins = 20;//keep even
@@ -28,15 +30,15 @@ class Settings{
 
 
     //plots
-    static const int nMultBins = 3;
-    int multBinsLow[nMultBins]  = {0 , 20, 30};
-    int multBinsHigh[nMultBins] = {20, 30, 999};
+    static const int nMultBins = 4;
+    int multBinsLow[nMultBins]  = {4 , 10, 20, 30};
+    int multBinsHigh[nMultBins] = {10, 20, 30, 999};
 
 
     //other
     bool doThrust = false;
-    bool doAllData = true;
-    int nEvts = 50000;
+    bool doAllData = false;
+    int nEvts = 10;
 
     Settings();
     bool isInMultBin(int n, int bin);
