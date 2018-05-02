@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "TFile.h"
 #include "TMath.h"
 #include "TTree.h"
@@ -97,7 +99,7 @@ int GetNaiveEff()
 		if(i!=ptbins-1) std::cout << "," << std::endl;
 	}
 	std::cout << "};";
-	TFile* out = new TFile("efficiency_hist.root","recreate");
+	TFile* out = new TFile("tables/efficiency_hist.root","recreate");
 	eff->Write("eff");
 	efftheta_clean->Write("efftheta_clean");
 	effpt_clean->Write("effpt_clean");
