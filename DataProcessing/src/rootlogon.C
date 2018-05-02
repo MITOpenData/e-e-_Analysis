@@ -1,0 +1,9 @@
+{
+  gInterpreter->AddIncludePath("$STUDYMULTDIR");
+  gInterpreter->AddIncludePath("$FASTJETDIR/include");
+  gSystem->Load("$FASTJETDIR/lib/libfastjettools");
+  gSystem->Load("$FASTJETDIR/lib/libfastjet");
+  gSystem->Load("$FASTJETDIR/lib/libfastjetplugins");
+  gSystem->Load("$FASTJETDIR/lib/libsiscone_spherical");
+  gSystem->Load("$FASTJETDIR/lib/libsiscone");
+}
