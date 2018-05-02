@@ -65,14 +65,14 @@ void setBoostedVariables(bool doBoost, particleData *p, boostedEvtData *b, TLore
     b->boostz = boost.Z(); 
     b->boost = boost.Mag(); 
 
-    std::cout << "SETTING BOOST, " << p->nParticle << std::endl;
+    //    std::cout << "SETTING BOOST, " << p->nParticle << std::endl;
 
     for(int i = 0; i< p->nParticle; i++){
       TLorentzVector part;
       part.SetXYZM(p->px[i], p->py[i], p->pz[i], p->mass[i]);
       part.Boost(boost);
       
-      std::cout << " " << p->pt[i] << ", " << p->phi[i] << ", " << p->eta[i] << std::endl;
+      //      std::cout << " " << p->pt[i] << ", " << p->phi[i] << ", " << p->eta[i] << std::endl;
 
       b->pt[i] = ptFromThrust(mainAxis.Vect().Unit(), part.Vect());
       b->pmag[i] = part.Vect().Mag();
@@ -80,7 +80,7 @@ void setBoostedVariables(bool doBoost, particleData *p, boostedEvtData *b, TLore
       b->theta[i] = thetaFromThrust(mainAxis.Vect().Unit(), part.Vect());
       b->phi[i] = phiFromThrust(mainAxis.Vect().Unit(), part.Vect());
 
-      std::cout << "  " << b->pt[i] << ", " << b->phi[i] << ", " << b->eta[i] << ", " << b->theta[i] << std::endl;
+      //      std::cout << "  " << b->pt[i] << ", " << b->phi[i] << ", " << b->eta[i] << ", " << b->theta[i] << std::endl;
 
       b->pt_Perp[i] = ptFromThrust(mainAxis.Vect(), part.Vect(), true);
       b->pmag_Perp[i] = part.Vect().Mag();
@@ -97,12 +97,12 @@ void boostTools(){
   TLorentzVector a = TLorentzVector(4,0,-1,7);
   TLorentzVector b = TLorentzVector(-1,0.2,1,3);
   TVector3 boost = findBack2BackBoost(a,b);
-  std::cout << "boost magnitude: " << boost.Mag() << std::endl;
-  std::cout << "boost phi: " << boost.Phi()*360.0/2.0/TMath::Pi() << std::endl;
+  //  std::cout << "boost magnitude: " << boost.Mag() << std::endl;
+  //  std::cout << "boost phi: " << boost.Phi()*360.0/2.0/TMath::Pi() << std::endl;
   a.Boost(boost);
   b.Boost(boost);
-  std::cout << "post-boost dPhi: " << a.Vect().Angle(b.Vect()) << std::endl;
-  std::cout << "post-boost difference in momentum (want 0): " << a.Vect().Mag() - b.Vect().Mag() << std::endl;
+  //  std::cout << "post-boost dPhi: " << a.Vect().Angle(b.Vect()) << std::endl;
+  //  std::cout << "post-boost difference in momentum (want 0): " << a.Vect().Mag() - b.Vect().Mag() << std::endl;
 }
 
 #endif
