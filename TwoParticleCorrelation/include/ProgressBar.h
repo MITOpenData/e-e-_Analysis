@@ -143,7 +143,7 @@ void ProgressBar::Print(double progress)
       int AvailableColumn = Column - 2 - 5;
       int FilledColumn = (int)(AvailableColumn * (progress - Min) / (Max - Min));
       *Out << "\033[1G[";
-      for(int i = 0; i < FilledColumn - 3; i++)
+      for(int i = 0; i < FilledColumn - 6; i++)
          *Out << " ";
       if(FilledColumn >= 6)
          *Out << ">";

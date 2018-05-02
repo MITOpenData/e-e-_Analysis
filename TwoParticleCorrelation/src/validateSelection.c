@@ -33,7 +33,6 @@
 #include "DataProcessing/include/trackSelection.h"
 #include "include/smartJetName.h"
 #include "include/ProgressBar.h"
-#include "include/efficiency.h"
 
 /********************************************************************************************************************/
 // Two particle correlation analysis

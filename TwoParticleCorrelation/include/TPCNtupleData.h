@@ -46,9 +46,12 @@ class TPCNtupleData{
        listData.push_back("eta");
        listData.push_back("theta");
        listData.push_back("phi");
-       listData.push_back("d0");
-       listData.push_back("z0");
-       listData.push_back("ntpc");
+       //listData.push_back("passesLEP1TwoPC");
+       //listData.push_back("nChargedHadronsHP");
+       //listData.push_back("d0");
+       //listData.push_back("z0");
+       //listData.push_back("ntpc");
+       listData.push_back("highPurity");
        
        if (doThrust) {
           if (doPerp) {

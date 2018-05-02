@@ -2,9 +2,9 @@
 
 mkdir -p logs
 
-for i in `seq 0 9`
+for i in `seq 40 49`
 do
-    ./mainCustomZee /data/cmcginn/GeneratorsHEPMC/PYTHIA8/0p0912/pthat1_Zee_RopeWalk/20171208/outFile_$i.root 2000000 0 1 >& logs/log_$i.log &
+    ./bin/mainCustomZpole_ppAndee.exe PYTHIA8 0 $i 100000 0 0 0 >& logs/log_$i.log &
 
     sleep 2
 done

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 topDir=/data/cmcginn/StudyMultSamples/ALEPH/
-dirDate=20180430
+dirDate=20180501
 
 mkdir -p logs
 mkdir -p $topDir/LEP1/$dirDate
