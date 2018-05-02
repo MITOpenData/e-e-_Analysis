@@ -8,7 +8,7 @@ ifeq "$(GCCVERSION)" "1"
 endif
 
 #Public install of latest fastjet code (3.3.0) on lxplus; if not on lxplus or using different version, change this path as appropriate
-FASTJET=`/afs/cern.ch/work/c/cmcginn/public/Fastjet/fastjet-install/bin/fastjet-config --cxxflags --libs --plugins`
+FASTJET=`$(FASTJETDIR)/bin/fastjet-config --cxxflags --libs --plugins`
 MKDIR_BIN=mkdir -p $(PWD)/bin
 MKDIR_PDF=mkdir -p $(PWD)/pdfDir
 CHECK_STUDYMULTDIR=printf "\nSTUDYMULTDIR is set to: \'$(STUDYMULTDIR)\'\n   !!!IF STUDYMULTDIR IS EMPTY THE BUILD WILL FAIL!!!\n   Run 'source setStudyMultEnv.sh' in top level StudyMult directory to fix.\n\n"
@@ -38,6 +38,9 @@ clean:
 	rm -f $(PWD)/include/*~
 	rm -f $(PWD)/src/#*.*#
 	rm -f $(PWD)/src/*~
+	rm -f $(PWD)/src/*.so
+	rm -f $(PWD)/src/*.d
+	rm -f $(PWD)/src/*.pcm
 	rm -f $(PWD)/bash/#*.*#
 	rm -f $(PWD)/bash/*~
 	rm -f $(PWD)/paths/#*.*#
