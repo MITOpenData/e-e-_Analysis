@@ -254,7 +254,6 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
     if (doGen) return particle->nParticle;
 
     ///////// QCD Paper Selection /////////
-    /*
     if (particle->nParticle<nTrkMin || particle->nParticle<13) return -1;
 
     // Yen-Jie: probably need to update and apply neutral particle selection
@@ -263,14 +262,16 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
     if (doSTheta && TMath::Abs(cos(event->STheta))>=SThetaMax) return -1;
 
     // From 1990 "Properties of Hadronic Events in e+e- Annihilation at sqrt(s) = 91 GeV" ALEPH Collaboration paper
-    Int_t returnNch=-1;
+    //Int_t returnNch=-1;
     Int_t Nch = 0;
     Int_t Neu = 0;
+    Int_t NtrkOffline = 0;
     Float_t E = 0;
 
     for (Int_t j=0;j<particle->nParticle;j++) {
         if (particle->highPurity[j]&&particle->pwflag[j]<=2){
             Nch++;
+	    if (particle->pt[j]>0.4) NtrkOffline++;
             E += sqrt(particle->pmag[j]*particle->pmag[j] + particle->mass[j]*particle->mass[j]);
         }
 	if (neutralHadronSelector.highPurity(particle,j)) {
@@ -283,8 +284,8 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
     if( Nch >= 1000) return -1;
     if ((Neu+Nch)<13) return -1;
     if (doE && E < TotalChrgEnergyMin) return -1;
-    */
-    Int_t Nch = event->nChargedHadronsHP;
+
+    //Int_t Nch = event->nChargedHadronsHP;
     if (event->passesLEP1TwoPC==0) return -1;
     
 
@@ -324,7 +325,7 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
       if (typeEnergyBarrelSel==2 && totalenergyinbarrel/totalenergy<maxrelenergyinsidebarrel) return -1;
     }
     
-    Int_t returnNch=Nch;
+    Int_t returnNch=NtrkOffline;
     
     if (typemultiplicity==kMultInBarrelThrust) { 
     /* here we define a new version of the multiplicity that considers only tracks inside the barrel region defined by etabarrelcutforEselection*/
