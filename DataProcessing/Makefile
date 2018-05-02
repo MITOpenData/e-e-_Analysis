@@ -1,4 +1,5 @@
 #path var + dir commands
+
 LOCAL=$(PWD)
 ROOT=`root-config --cflags --glibs`
 CXX=g++
@@ -11,23 +12,26 @@ endif
 FASTJET=`/afs/cern.ch/work/c/cmcginn/public/Fastjet/fastjet-install/bin/fastjet-config --cxxflags --libs --plugins`
 MKDIR_BIN=mkdir -p $(LOCAL)/bin
 MKDIR_PDF=mkdir -p $(LOCAL)/pdfDir
+CHECK_STUDYMULTDIR=printf "\nSTUDYMULTDIR is set to: \'$(STUDYMULTDIR)\'\n   !!!IF STUDYMULTDIR IS EMPTY THE BUILD WILL FAIL!!!\n   Run 'source setStudyMultEnv.sh' in top level StudyMult directory to fix.\n\n"
 
 #programs to make
 
-all: mkdirBin mkdirPdf bin/scan.exe bin/mixMain.exe bin/countNEvt.exe bin/doComparison.exe
+all: mkdirBin mkdirPdf checkGlobal bin/scan.exe bin/mixMain.exe bin/countNEvt.exe bin/doComparison.exe
 mkdirBin:
 	$(MKDIR_BIN)
 mkdirPdf:
 	$(MKDIR_PDF)
+checkGlobal:
+	@$(CHECK_STUDYMULTDIR)
 
 bin/scan.exe: src/scan.cc
-	$(CXX) $(CXXFLAGS) $(ROOT) $(FASTJET) -I $(LOCAL) -o bin/scan.exe src/scan.cc
+	$(CXX) $(CXXFLAGS) $(ROOT) $(FASTJET) -I $(LOCAL) -I $(STUDYMULTDIR) -o bin/scan.exe src/scan.cc
 bin/mixMain.exe: src/mixMain.cc
-	$(CXX) $(CXXFLAGS) $(ROOT) $(FASTJET) -I $(LOCAL) -o bin/mixMain.exe src/mixMain.cc
+	$(CXX) $(CXXFLAGS) $(ROOT) $(FASTJET) -I $(LOCAL) -I $(STUDYMULTDIR) -o bin/mixMain.exe src/mixMain.cc
 bin/doComparison.exe: src/doComparison.cc
-	$(CXX) $(CXXFLAGS) $(ROOT) -I $(LOCAL) -o bin/doComparison.exe src/doComparison.cc
+	$(CXX) $(CXXFLAGS) $(ROOT) -I $(LOCAL) -I $(STUDYMULTDIR) -o bin/doComparison.exe src/doComparison.cc
 bin/countNEvt.exe: src/countNEvt.C
-	$(CXX) $(CXXFLAGS) $(ROOT) $(FASTJET) -I $(LOCAL) -o bin/countNEvt.exe src/countNEvt.C
+	$(CXX) $(CXXFLAGS) $(ROOT) $(FASTJET) -I $(LOCAL) -I $(STUDYMULTDIR) -o bin/countNEvt.exe src/countNEvt.C
 clean:
 	rm -f *~
 	rm -f \#*.*#
