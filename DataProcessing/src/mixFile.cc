@@ -63,18 +63,18 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
   inTree1_p->SetBranchStatus("*",0);
   particleData pdataSig;
   eventData edataSig;  
-  std::vector<std::string> listOfBranches2 = {"passesAll", "nChargedHadronsHP"};
+  std::vector<std::string> listOfBranches2 = {"passesAll", "nChargedHadronsHP","passesLEP1TwoPC"};
   edataSig.SetStatusAndAddressRead(inTree1_p, listOfBranches2); 
 
   //set up mixing multiplicity map
   MixMap m = MixMap(maxMult);
   for(int i = 0; i<inTree1_p->GetEntries(); i++){
     inTree1_p->GetEntry(i);
-    if(!(edataSig.passesAll)) continue;
+    if(!(edataSig.passesLEP1TwoPC)) continue;
     m.addElement(edataSig.nChargedHadronsHP,i);
   }
   
-  std::vector<std::string> listOfBranches = {"nParticle", "process", "Energy", "px", "py", "pz", "pt", "pmag", "rap", "eta", "theta", "phi", "highPurity", "pwflag", "passesAll", "nChargedHadronsHP", "Thrust", "TTheta", "TPhi", "Thrust_charged", "TTheta_charged", "TPhi_charged"};
+  std::vector<std::string> listOfBranches = {"nParticle", "process", "Energy", "px", "py", "pz", "pt", "pmag", "rap", "eta", "theta", "phi", "highPurity", "pwflag", "passesAll","passesLEP1TwoPC", "nChargedHadronsHP", "Thrust", "TTheta", "TPhi", "Thrust_charged", "TTheta_charged", "TPhi_charged"};
   pdataSig.SetStatusAndAddressRead(inTree1_p, listOfBranches);
   edataSig.SetStatusAndAddressRead(inTree1_p, listOfBranches);
 
@@ -181,7 +181,7 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
   
       //if we check the entire file and haven't found enough mixed events, give up and mix it with itself.  Warning if it passes evt sel
       if(i==j){
-        if(edataSig.passesAll) std::cout << "Warning! Only " << mixedEventsFound << "/" << nEvts2Mix << " found in file for event index " <<  i << "!  Giving up with less than the requested number of mixed events..." << std::endl;
+        if(edataSig.passesLEP1TwoPC) std::cout << "Warning! Only " << mixedEventsFound << "/" << nEvts2Mix << " found in file for event index " <<  i << "!  Giving up with less than the requested number of mixed events..." << std::endl;
         appendMixEvt(&edataMix, &pdataMix, &pdataSig, thrustAxis, thrustAxis_ch, (float)mixedEventsFound);
         for(Int_t jI = 0; jI < nBoostedTrees; ++jI) appendMixEvtBoosted(&bDataMix[jI], &pdataSig, WTAAxis[jI], WTABoost[jI], (float)mixedEventsFound);
         break;
