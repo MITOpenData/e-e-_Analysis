@@ -31,6 +31,7 @@
 #include "include/sphericityTools.h"
 #include "include/processJets.h"
 #include "include/uniqueIDTools.h"
+#include "include/alephTrkEfficiency.h"
 #include "src/mixFile.cc"
 
 bool getIsMC(std::string inStr)
@@ -180,7 +181,7 @@ void initTVector3(std::vector<TVector3*> in)
   return;
 }
 
-void doEndEvent(particleData* pData_p, eventData* eData_p, std::vector<boostedEvtData*> bData_p, Int_t counterParticles, Int_t nTrk, Int_t nTrk_HP, Int_t nTrk_GT0p4, Int_t nTrk_GT0p4Thrust, TVector3 netP, TVector3 netP_charged)
+void doEndEvent(particleData* pData_p, eventData* eData_p, std::vector<boostedEvtData*> bData_p, Int_t counterParticles, Int_t nTrk, Int_t nTrk_HP,Float_t nTrk_HP_Corr, Int_t nTrk_GT0p4, Int_t nTrk_GT0p4Thrust, TVector3 netP, TVector3 netP_charged)
 {
   pData_p->nParticle=counterParticles;
   
@@ -193,6 +194,7 @@ void doEndEvent(particleData* pData_p, eventData* eData_p, std::vector<boostedEv
   thrust_charged = getChargedThrust(pData_p->nParticle, pData_p->px, pData_p->py, pData_p->pz, pData_p->pwflag, THRUST::OPTIMAL);
   eData_p->nChargedHadrons = nTrk;
   eData_p->nChargedHadronsHP = nTrk_HP;
+  eData_p->nChargedHadronsHP_Corrected = nTrk_HP_Corr;
   eData_p->nChargedHadrons_GT0p4 = nTrk_GT0p4;
   eData_p->nChargedHadrons_GT0p4Thrust = nTrk_GT0p4Thrust;
   setThrustVariables(pData_p, eData_p, thrust, thrust_charged);
@@ -395,6 +397,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 
   eventSelection eSelection;
   TrackSelection trkSelection = TrackSelection();
+  alephTrkEfficiency trkEff = alephTrkEfficiency();
 
   particleData pData;
   jetData jData[nJtAlgo];
@@ -460,6 +463,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 
     int nTrk=0;
     int nTrk_HP=0;
+    float nTrk_HP_Corr = 0;
     int nTrk_GT0p4=0;
     int nTrk_GT0p4Thrust=0;
 
@@ -502,7 +506,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
       if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2))/* not all files do four 999 && check999(num.at(3)*/){
 	std::vector<boostedEvtData*> bDataTempVect;
 	for(Int_t jI = 0; jI < nJtAlgo; ++jI){bDataTempVect.push_back(&(bData[jI]));}
-	doEndEvent(&pData, &eData, bDataTempVect, counterParticles, nTrk, nTrk_HP, nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
+	doEndEvent(&pData, &eData, bDataTempVect, counterParticles, nTrk, nTrk_HP, nTrk_HP_Corr, nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
 	bDataTempVect.clear();
 
 	if(counterEntries>0){pData.preFillClean(); tout->Fill();}
@@ -565,6 +569,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
       
 	initTVector3({&netP, &netP_charged});
 	initVal({&nTrk, &nTrk_HP ,&nTrk_GT0p4, &nTrk_GT0p4Thrust, &counterParticles}, 0);
+	initVal({&nTrk_HP_Corr}, 0);
 
 	++counterEntries;	
 	
@@ -685,6 +690,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
       } 
       pData.highPurity[counterParticles] = trkSelection.highPurity(&pData, counterParticles);
       if(pData.highPurity[counterParticles]) nTrk_HP++;
+      if(pData.highPurity[counterParticles]) nTrk_HP_Corr += 1.0/trkEff.efficiency(v.Theta(),v.Phi(),v.Pt());
 
       ++counterParticles;	
     }
@@ -694,7 +700,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
     //Have to fill one last time since the condition for fill is dependent on NEXT EVENT existing, else we would lose last event per file
     std::vector<boostedEvtData*> bDataTempVect;
     for(Int_t jI = 0; jI < nJtAlgo; ++jI){bDataTempVect.push_back(&(bData[jI]));}
-    doEndEvent(&pData, &eData, bDataTempVect, counterParticles, nTrk, nTrk_HP, nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
+    doEndEvent(&pData, &eData, bDataTempVect, counterParticles, nTrk, nTrk_HP, nTrk_HP_Corr, nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
     bDataTempVect.clear();
     
     if(counterEntries>0){pData.preFillClean(); tout->Fill();}
@@ -731,6 +737,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
       std::ifstream fileGen(genFileStr.c_str());
       initTVector3({&netP, &netP_charged});
       initVal({&nTrk, &nTrk_HP ,&nTrk_GT0p4, &nTrk_GT0p4Thrust, &counterParticles, &counterEntries}, 0);
+      initVal({&nTrk_HP_Corr}, 0);
 
       while(std::getline(fileGen,getStr)){
 	if(getStr.size() == 0) continue;
@@ -774,7 +781,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2)) /* && check999(num.at(3))*/){ 
 	  std::vector<boostedEvtData*> bgDataTempVect;
 	  for(Int_t jI = 0; jI < nJtAlgo; ++jI){bgDataTempVect.push_back(&(bgData[jI]));}
-	  doEndEvent(&pgData, &egData, bgDataTempVect, counterParticles, nTrk, nTrk_HP, nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
+	  doEndEvent(&pgData, &egData, bgDataTempVect, counterParticles, nTrk, nTrk_HP, nTrk_HP_Corr, nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
 	  bgDataTempVect.clear();
 
 	  if(counterEntries>0){pgData.preFillClean(); tgout->Fill();}
@@ -834,6 +841,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	  initVal({&(pData.bx), &(pData.by), &(pData.ebx), &(pData.eby)}, -999.);	 
 	  initTVector3({&netP, &netP_charged});
 	  initVal({&nTrk, &nTrk_HP, &nTrk_GT0p4, &nTrk_GT0p4Thrust, &counterParticles}, 0);
+	  initVal({&nTrk_HP_Corr}, 0);
 	  
 	  if(pgData.RunNo != runNo.at(counterEntries) || pgData.EventNo != evtNo.at(counterEntries)){
 	    std::cout << "Gen entries dont match reco for file \'" << genFileStr << "\'. return 1" << std::endl;
@@ -991,6 +999,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
           if(v.Pt()>0.4) nTrk_GT0p4++; 
           if(v.Pt()>0.4) nTrk_GT0p4Thrust++; 
           if(pgData.highPurity[counterParticles]) nTrk_HP++;
+          if(pgData.highPurity[counterParticles]) nTrk_HP_Corr += 1.0/trkEff.efficiency(v.Theta(),v.Phi(),v.Pt());
         } 
       
 	++counterParticles;	
@@ -1002,7 +1011,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 
       std::vector<boostedEvtData*> bgDataTempVect;
       for(Int_t jI = 0; jI < nJtAlgo; ++jI){bgDataTempVect.push_back(&(bgData[jI]));}
-      doEndEvent(&pgData, &egData, bgDataTempVect, counterParticles, nTrk, nTrk_HP, nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
+      doEndEvent(&pgData, &egData, bgDataTempVect, counterParticles, nTrk, nTrk_HP, nTrk_HP_Corr, nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
       bgDataTempVect.clear();
       
       if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
@@ -1047,6 +1056,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
       std::ifstream fileGen(genFileStr.c_str());
       initTVector3({&netP, &netP_charged});
       initVal({&nTrk, &nTrk_HP ,&nTrk_GT0p4, &nTrk_GT0p4Thrust, &counterParticles, &counterEntries}, 0);
+      initVal({&nTrk_HP_Corr}, 0);
 
       while(std::getline(fileGen,getStr)){
 	if(getStr.size() == 0) continue;
@@ -1086,7 +1096,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	if(check999(num.at(0)) && check999(num.at(1)) && check999(num.at(2)) /* && check999(num.at(3))*/){ 
 	  std::vector<boostedEvtData*> bgBeforeDataTempVect;
 	  for(Int_t jI = 0; jI < nJtAlgo; ++jI){bgBeforeDataTempVect.push_back(&(bgBeforeData[jI]));}
-	  doEndEvent(&pgBeforeData, &egBeforeData, bgBeforeDataTempVect, counterParticles, nTrk, nTrk_HP , nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
+	  doEndEvent(&pgBeforeData, &egBeforeData, bgBeforeDataTempVect, counterParticles, nTrk, nTrk_HP, nTrk_HP_Corr , nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
 	  bgBeforeDataTempVect.clear();
 
 	  if(counterEntries>0){pgBeforeData.preFillClean(); tgBeforeout->Fill();}
@@ -1154,7 +1164,8 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 	  initVal(&(pData.bFlag), -999.);
 	  initVal({&(pData.bx), &(pData.by), &(pData.ebx), &(pData.eby)}, -999.);	 
 	  initTVector3({&netP, &netP_charged});
-	  initVal({&nTrk, &nTrk_HP ,&nTrk_GT0p4, &nTrk_GT0p4Thrust, &counterParticles}, 0);
+	  initVal({&nTrk, &nTrk_HP,&nTrk_GT0p4, &nTrk_GT0p4Thrust, &counterParticles}, 0);
+	  initVal({&nTrk_HP_Corr}, 0);
 	  
 	  if(doLocalDebug){
 	    std::cout << __FILE__ << ", " << __LINE__ << ", " << num.size() << ", " << counterEntries << std::endl;
@@ -1324,6 +1335,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
           if(v.Pt()>0.4) nTrk_GT0p4++; 
           if(v.Pt()>0.4) nTrk_GT0p4Thrust++; 
           if(pgBeforeData.highPurity[counterParticles]) nTrk_HP++;
+          if(pgBeforeData.highPurity[counterParticles]) nTrk_HP_Corr += 1.0/trkEff.efficiency(v.Theta(),v.Phi(),v.Pt());
         } 
       
 	++counterParticles;	
@@ -1333,7 +1345,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
       //Have to fill one last time since the condition for fill is dependent on NEXT EVENT existing, else we would lose last event per file
       std::vector<boostedEvtData*> bgBeforeDataTempVect;
       for(Int_t jI = 0; jI < nJtAlgo; ++jI){bgBeforeDataTempVect.push_back(&(bgBeforeData[jI]));}
-      doEndEvent(&pgBeforeData, &egBeforeData, bgBeforeDataTempVect, counterParticles, nTrk, nTrk_HP,nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
+      doEndEvent(&pgBeforeData, &egBeforeData, bgBeforeDataTempVect, counterParticles, nTrk, nTrk_HP, nTrk_HP_Corr,nTrk_GT0p4, nTrk_GT0p4Thrust, netP, netP_charged);
       bgBeforeDataTempVect.clear();
       
       if(counterEntries>0){pgBeforeData.preFillClean(); tgBeforeout->Fill();}
