@@ -33,7 +33,9 @@
 #include "DataProcessing/include/trackSelection.h"
 #include "include/smartJetName.h"
 #include "include/ProgressBar.h"
-#include "include/efficiency.h"
+
+//DataProcessingHeaders
+#include "include/alephTrkEfficiency.h"
 
 /********************************************************************************************************************/
 // Two particle correlation analysis
@@ -306,6 +308,10 @@ int ridge_check( const std::string inFileName, 			// Input file
 
     unsigned int entryDiv = (nevent > 200) ? nevent / 200 : 1;
  
+    //declare efficiency object before loop (Defined in DataProcessing/include/alephTrkEfficiency.h"
+    alephTrkEfficiency aEff;
+    
+
     /********************************************************************************************************************/
     // Main Event Loop
     /********************************************************************************************************************/
@@ -355,7 +361,7 @@ int ridge_check( const std::string inFileName, 			// Input file
                if (!(data.particle.highPurity[j]&&data.particle.pwflag[j]<=2)&&s.doGen==0) continue;
                if (s.anatyperegion==1 && fabs(data.getEta(j))<s.etabarrelcut) continue;
                if (s.anatyperegion==2 && fabs(data.getEta(j))>s.etabarrelcut) continue;
-	       nTrkCorr += 1./efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j]);
+	       nTrkCorr += 1./aEff.efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j]);
            } 
         } else {
 	   nTrkCorr = nTrk; // no eff correction
@@ -411,7 +417,7 @@ int ridge_check( const std::string inFileName, 			// Input file
                 if (s.getThetaAngle) angle2 = data.getTheta(k); else angle2 = data.getEta(k);
                 Float_t phi2 = data.getPhi(k);
 		if (s.doGen||s.doEffCorr==0) trackWeight=1;
-		else trackWeight=1./efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j])/efficiency(data.particle.theta[k],data.particle.theta[k],data.particle.pt[k]);
+		else trackWeight=1./aEff.efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j])/aEff.efficiency(data.particle.theta[k],data.particle.theta[k],data.particle.pt[k]);
 		fillNumerator=trackWeight;
                 for(unsigned int eI = 0; eI< histE.size(); eI++)
                 {
@@ -535,7 +541,7 @@ int ridge_check( const std::string inFileName, 			// Input file
                     if (s.getThetaAngle) angle_mix = mix.getTheta(k); else angle_mix = mix.getEta(k);
                     Float_t phi_mix = mix.getPhi(k);
   	  	    if (s.doGen||s.doEffCorr==0) trackWeight=1;
-		    else trackWeight=1./efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j])/efficiency(mix.particle.theta[k],mix.particle.phi[k],mix.particle.pt[k]);
+		    else trackWeight=1./aEff.efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j])/aEff.efficiency(mix.particle.theta[k],mix.particle.phi[k],mix.particle.pt[k]);
 		    fillNumerator=trackWeight;
 		    for(unsigned int eI = 0; eI< histE.size(); eI++)
                     {

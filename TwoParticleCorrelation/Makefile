@@ -18,7 +18,7 @@ MKDIR_PDFDIR=mkdir -p $(PWD)/pdfDir
 
 #all: mkdirBin mkdirPdfdir plotDQC ridge_check histoHadd_TH1F findGlobalMaxMin
 
-all: mkdirBin mkdirPdfdir bin/ridge_check.exe bin/histoHadd_TH1F.exe bin/findGlobalMaxMin.exe bin/plotDQC.exe
+all: mkdirBin mkdirPdfdir bin/ridge_check.exe bin/histoHadd_TH1F.exe bin/findGlobalMaxMin.exe #bin/plotDQC.exe not compiling
 
 mkdirBin:
 	$(MKDIR_BIN)
@@ -29,8 +29,8 @@ mkdirPdfdir:
 bin/plotDQC.exe: src/plotDQC.cc
 	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -I $(DATAPROCESSING) -o bin/plotDQC.exe src/plotDQC.cc
 
-bin/ridge_check.exe: src/ridge_check.c
-	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -I $(DATAPROCESSING) -o bin/ridge_check.exe src/ridge_check.c
+bin/ridge_check.exe: src/ridge_check.C
+	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -I $(DATAPROCESSING) -o bin/ridge_check.exe src/ridge_check.C
 
 bin/histoHadd_TH1F.exe: src/histoHadd_TH1F.C
 	$(CXX) $(CXXFLAGS) $(ROOT)  -I $(PWD) -I $(EVENTPARTICLEDATA) -I $(DATAPROCESSING) -o bin/histoHadd_TH1F.exe src/histoHadd_TH1F.C
