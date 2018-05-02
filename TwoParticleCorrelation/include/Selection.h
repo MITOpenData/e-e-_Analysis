@@ -29,7 +29,7 @@
 
 using namespace std;
 
-inline float jtp(float pt, float eta){ return pt*TMath::CosH(eta);}
+inline Float_t jtp(Float_t pt, Float_t eta){ return pt*TMath::CosH(eta);}
 
 class Selection
 {
@@ -77,7 +77,7 @@ class Selection
 
         // Beam Axis
         static const Int_t nptBins_wrtBeam = 1;
-        Float_t ptBinsLow_wrtBeam[nptBins_wrtBeam]  = {0.4,};  // measured in GeV
+        Float_t ptBinsLow_wrtBeam[nptBins_wrtBeam]  = {0.4};  // measured in GeV
         Float_t ptBinsHigh_wrtBeam[nptBins_wrtBeam] = {100.0};
         static const Int_t netaBins_wrtBeam = 1;
         Float_t etaBinsLow_wrtBeam[netaBins_wrtBeam]  = {1.6};
@@ -122,9 +122,9 @@ class Selection
         Float_t dEtaRangeToIntegrate[2] = {2.0,3.6}; //used for Austin's implementation of getLongRangeYield(.) in utilities.h
     
         //kinematics (if trig != assoc cuts, make sure doExcludeNTrigLT2 is set to false)
-        //float trigPt[2] = {0.4,100};
-        //float assocPt[2] = {0.4,100};
-        //float nTrkPt[2] = {0.4,100};
+        //Float_t trigPt[2] = {0.4,100};
+        //Float_t assocPt[2] = {0.4,100};
+        //Float_t nTrkPt[2] = {0.4,100};
     
         /* pp Cross-Check */
         bool doPP = false;
@@ -170,15 +170,15 @@ class Selection
         void histPt(std::vector<Int_t> &hists, Float_t pt);
         void histEta(std::vector<Int_t> &hists, Float_t eta);
 	void writeMetaData(TH1F *h);
+	void Init();
         
     private:
 };
 
-Selection::Selection()
+void Selection::Init()
 {
-    std::cout << "Getting settings.." << std::endl;
     if (getThetaAngle) std::cout << "THIS IS A THETA ANALYSIS!!!"<<std::endl;
-    if(doPP)
+    if (doPP)
     {
         multBinsLow[2] = 110;
         multBinsHigh[1] = 110;
@@ -204,6 +204,12 @@ Selection::Selection()
         doAjCut = false;
         do3jetEvtCut = false;
     }
+}
+
+Selection::Selection()
+{
+    std::cout << "Getting settings.." << std::endl;
+    Init();
     return;
 }
 
@@ -216,9 +222,9 @@ Float_t Selection::getEtaPlotRange()
 
 Float_t Selection::getDifferential()
 {
-    if(doThrust) return (2*etaPlotRange_wrtThr/(float)dEtaBins)*(2*TMath::Pi()/(float)dPhiBins);
-    if(doWTA) return (2*etaPlotRange_wrtWTA/(float)dEtaBins)*(2*TMath::Pi()/(float)dPhiBins);
-    return (2*etaPlotRange_wrtBeam/(float)dEtaBins)*(2*TMath::Pi()/(float)dPhiBins);
+    if(doThrust) return (2*etaPlotRange_wrtThr/(Float_t)dEtaBins)*(2*TMath::Pi()/(Float_t)dPhiBins);
+    if(doWTA) return (2*etaPlotRange_wrtWTA/(Float_t)dEtaBins)*(2*TMath::Pi()/(Float_t)dPhiBins);
+    return (2*etaPlotRange_wrtBeam/(Float_t)dEtaBins)*(2*TMath::Pi()/(Float_t)dPhiBins);
 }
 // return 1 if the track passes the selection
 // otherwise return 0
@@ -254,6 +260,7 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
     if (doGen) return particle->nParticle;
 
     ///////// QCD Paper Selection /////////
+    /*
     if (particle->nParticle<nTrkMin || particle->nParticle<13) return -1;
 
     // Yen-Jie: probably need to update and apply neutral particle selection
@@ -262,16 +269,14 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
     if (doSTheta && TMath::Abs(cos(event->STheta))>=SThetaMax) return -1;
 
     // From 1990 "Properties of Hadronic Events in e+e- Annihilation at sqrt(s) = 91 GeV" ALEPH Collaboration paper
-    //Int_t returnNch=-1;
+    Int_t returnNch=-1;
     Int_t Nch = 0;
     Int_t Neu = 0;
-    Int_t NtrkOffline = 0;
     Float_t E = 0;
 
     for (Int_t j=0;j<particle->nParticle;j++) {
         if (particle->highPurity[j]&&particle->pwflag[j]<=2){
             Nch++;
-	    if (particle->pt[j]>0.4) NtrkOffline++;
             E += sqrt(particle->pmag[j]*particle->pmag[j] + particle->mass[j]*particle->mass[j]);
         }
 	if (neutralHadronSelector.highPurity(particle,j)) {
@@ -284,8 +289,8 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
     if( Nch >= 1000) return -1;
     if ((Neu+Nch)<13) return -1;
     if (doE && E < TotalChrgEnergyMin) return -1;
-
-    //Int_t Nch = event->nChargedHadronsHP;
+    */
+    Int_t Nch = event->nChargedHadronsHP;
     if (event->passesLEP1TwoPC==0) return -1;
     
 
@@ -325,7 +330,7 @@ int Selection::ridge_eventSelection(eventData *event, jetData *jet, particleData
       if (typeEnergyBarrelSel==2 && totalenergyinbarrel/totalenergy<maxrelenergyinsidebarrel) return -1;
     }
     
-    Int_t returnNch=NtrkOffline;
+    Int_t returnNch=Nch;
     
     if (typemultiplicity==kMultInBarrelThrust) { 
     /* here we define a new version of the multiplicity that considers only tracks inside the barrel region defined by etabarrelcutforEselection*/
@@ -391,9 +396,9 @@ void Selection::histEta(std::vector<Int_t> &hists, Float_t eta)
     // we iterate backwards because we want to fill all of the bins with an eta fill less than or equal to the min 
     for (Int_t i = 0; i < netaBins; ++i)
     {
-        if (doThrust && (TMath::Abs(eta) < etaBinsLow_wrtThr[i])) hists.push_back(i);
-        else if (doWTA && (TMath::Abs(eta) < etaBinsLow_wrtThr[i])) hists.push_back(i);
-        else if (TMath::Abs(eta) < etaBinsLow_wrtBeam[i]) hists.push_back(i);
+        if (doThrust && (TMath::Abs(eta) <= etaBinsLow_wrtThr[i])) hists.push_back(i);
+        else if (doWTA && (TMath::Abs(eta) <= etaBinsLow_wrtThr[i])) hists.push_back(i);
+        else if (TMath::Abs(eta) <= etaBinsLow_wrtBeam[i]) hists.push_back(i);
     }
 }
 

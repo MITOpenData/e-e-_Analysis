@@ -33,7 +33,7 @@
 #include "DataProcessing/include/trackSelection.h"
 #include "include/smartJetName.h"
 #include "include/ProgressBar.h"
-#include "include/efficiency.h"
+#include "../../DataProcessing/include/alephTrkEfficiency.h"
 
 /********************************************************************************************************************/
 // Two particle correlation analysis
@@ -63,15 +63,15 @@ int ridge_check( const std::string inFileName, 			// Input file
 		       bool owDoTGen = false,			// overwrite the value of doTGen from selection.h: used for closure test. use TTree tgen
 		       int verbose = 1,                 	// Verbose level
 		       bool owAjCut=false,      		// dijet selection flag
-		       double _AjCut=-999,     			// dijet  cut selection
+		       Float_t _AjCut=-999,     			// dijet  cut selection
 		       bool ow3jetEvtCut=false,      		// three jet selection flag
-		       double _thirdJetCut=-999,     		// three jet cut selection
+		       Float_t _thirdJetCut=-999,     		// three jet cut selection
 		       bool owBarrel = false,           	// overwrite the values related to barrel selection and barrel multiplicity 
 		       int _anatyperegion=0,  			// option==0 -> no eta selection on tracks, option==1 -> reject the tracks at small eta, option==2 -> reject the tracks at large rapidity
-		       double _etabarrelcut=-1,  		// eta cut values that defines the three regions defined above
+		       Float_t _etabarrelcut=-1,  		// eta cut values that defines the three regions defined above
 		       int _typeEnergyBarrelSel=0,      	// type of selection on the total energy inside the barrel vs total. 0=no selection, 1=rejecting events with large energy in barrel, 2= rejecting events with small energy in barrel 
-		       double _etabarrelcutforEselection=2.0, 	//define the eta region for the Ebarrel selection
-		       double _maxrelenergyinsidebarrel=0., 	// define the cut on the Ebarrel, _maxrelenergyinsidebarrel=Ebarrel/Etotal 
+		       Float_t _etabarrelcutforEselection=2.0, 	//define the eta region for the Ebarrel selection
+		       Float_t _maxrelenergyinsidebarrel=0., 	// define the cut on the Ebarrel, _maxrelenergyinsidebarrel=Ebarrel/Etotal 
 		       int _typemultiplicity=0, 		// 0=total charged track multiplicity, 1=charged track multiplicity in barrel
 		       bool owEffCorr = true			// overwrite the value of efficiency correction from selection.h
                ) 
@@ -99,7 +99,10 @@ int ridge_check( const std::string inFileName, 			// Input file
     TH1::SetDefaultSumw2();    TH2::SetDefaultSumw2();
 
     // Setup event selection (Selection)
-    Selection s = Selection();
+    Selection s;
+    
+    // Setup efficiency corrector
+    alephTrkEfficiency efficiencyCorrector;
         
     // Print general information
     if (verbose) cout <<"Input File : "<<inFileName<<endl;
@@ -129,6 +132,8 @@ int ridge_check( const std::string inFileName, 			// Input file
          if(owThrust==false) {std::cout<<"the barrel selection and multiplicity is defined now in the thrust axis only!!!"<<std::endl; return 0;} 
        }
     }
+    
+    s.Init();
     
     
     if (verbose) {
@@ -163,6 +168,8 @@ int ridge_check( const std::string inFileName, 			// Input file
     static const Int_t nMultBins = s.nMultBins;
     static const Int_t nptBins = s.nptBins;
     static const Int_t netaBins = s.netaBins;
+    
+    cout <<"number of pt bins = "<<s.nptBins<<endl;
 
     TH1F *hMetaData = new TH1F("hMetaData","",100,0,100);
     s.writeMetaData(hMetaData);
@@ -172,8 +179,8 @@ int ridge_check( const std::string inFileName, 			// Input file
     TH2F * bkgrnd2PC[nEnergyBins][nMultBins][nptBins][netaBins];
     TH2F * ratio2PC[nEnergyBins][nMultBins][nptBins][netaBins];
     TH1F * longRangeYield[nEnergyBins][nMultBins][nptBins][netaBins];
-    float nSignalEvts[nMultBins] = {0};
-    float nBkgrndEvts[nMultBins] = {0};
+    Float_t nSignalEvts[nMultBins] = {0};
+    Float_t nBkgrndEvts[nMultBins] = {0};
     
     TH1D * h_eff = new TH1D("h_eff","Selection Efficiency",100,0.0,1.0);;
     TH1D * h_phi = new TH1D("phi","phi",100,-TMath::Pi(),TMath::Pi());
@@ -350,7 +357,16 @@ int ridge_check( const std::string inFileName, 			// Input file
 	/****************************************/
         // S calculation using multiplicity cut //
         /****************************************/
-        
+
+        for(int e = 0; e<nEnergyBins; e++){
+           for(int i = 0; i<nMultBins; i++){
+              for(int j = 0; j<nptBins; j++){
+                 for(int k = 0; k<netaBins; k++){
+         	    nTrkCorr[e][i][j][j]=0;
+                 }
+	      }
+	   }
+	}   
 	for ( Int_t j=0;j<data.particle.nParticle;j++ )
         {
             if (!(data.particle.highPurity[j]&&data.particle.pwflag[j]<=2)&&s.doGen==0) continue;
@@ -360,7 +376,7 @@ int ridge_check( const std::string inFileName, 			// Input file
 	    if (s.doGen || s.doEffCorr==0) {
 	       weight = 1;
 	    } else {
-	       weight = 1./efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j]);
+	       weight = 1./efficiencyCorrector.efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j]);
 	    }
             std::vector<Int_t> histPt1;
 	    s.histPt(histPt1, data.getPt(j));
@@ -435,7 +451,7 @@ int ridge_check( const std::string inFileName, 			// Input file
                 if (s.getThetaAngle) angle2 = data.getTheta(k); else angle2 = data.getEta(k);
                 Float_t phi2 = data.getPhi(k);
 		if (s.doGen||s.doEffCorr==0) trackWeight=1;
-		else trackWeight=1./efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j])/efficiency(data.particle.theta[k],data.particle.theta[k],data.particle.pt[k]);
+		else trackWeight=1./efficiencyCorrector.efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j])/efficiencyCorrector.efficiency(data.particle.theta[k],data.particle.theta[k],data.particle.pt[k]);
 		fillNumerator=trackWeight;
                 for(unsigned int eI = 0; eI< histE.size(); eI++)
                 {
@@ -446,6 +462,7 @@ int ridge_check( const std::string inFileName, 			// Input file
                             for(unsigned int etI = 0; etI< histEta1.size(); etI++)
                             {
                                 Float_t nTrigCorr = nTrkCorr[histE.at(eI)][histNtrk.at(nI)][histPt1.at(pI)][histEta1.at(etI)];
+			        //if (pval==0) cout <<eI<<" "<<nI<<" "<<pI<<" "<<etI<<" "<<nTrigCorr<<endl<<endl;
                                 signal2PC[histE.at(eI)][histNtrk.at(nI)][histPt1.at(pI)][histEta1.at(etI)]->Fill(angle1-angle2,dphi(phi1,phi2),fillNumerator/(s.getDifferential())/nTrigCorr);
                                 signal2PC[histE.at(eI)][histNtrk.at(nI)][histPt1.at(pI)][histEta1.at(etI)]->Fill(angle1-angle2,dphi(phi2,phi1),fillNumerator/(s.getDifferential())/nTrigCorr);
                                 signal2PC[histE.at(eI)][histNtrk.at(nI)][histPt1.at(pI)][histEta1.at(etI)]->Fill(angle2-angle1,dphi(phi1,phi2),fillNumerator/(s.getDifferential())/nTrigCorr);
@@ -505,7 +522,6 @@ int ridge_check( const std::string inFileName, 			// Input file
 		     histNtrk_mix.erase(histNtrk_mix.begin() + nI);
 		     nI--;
 		   }
-
 		}
             }           
             if (doMixFile==1 && selected!=i) cout <<"ERROR MIXING"<<endl;
@@ -559,7 +575,8 @@ int ridge_check( const std::string inFileName, 			// Input file
                     if (s.getThetaAngle) angle_mix = mix.getTheta(k); else angle_mix = mix.getEta(k);
                     Float_t phi_mix = mix.getPhi(k);
   	  	    if (s.doGen||s.doEffCorr==0) trackWeight=1;
-		    else trackWeight=1./efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j])/efficiency(mix.particle.theta[k],mix.particle.phi[k],mix.particle.pt[k]);
+		    else trackWeight=mix.particle.particleWeight/efficiencyCorrector.efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j])/efficiencyCorrector.efficiency(mix.particle.theta[k],mix.particle.phi[k],mix.particle.pt[k]);
+//		    else trackWeight=1./efficiencyCorrector.efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j])/efficiencyCorrector.efficiency(mix.particle.theta[k],mix.particle.phi[k],mix.particle.pt[k]);
 		    fillNumerator=trackWeight;
 		    for(unsigned int eI = 0; eI< histE.size(); eI++)
                     {
@@ -599,8 +616,8 @@ int ridge_check( const std::string inFileName, 			// Input file
                     bkgrnd2PC[e][i][j][k]->Write();
                     if(!s.doParallel)
                     {
-                        signal2PC[e][i][j][k]->Scale(1.0/(float)nSignalEvts[i]);
-                        bkgrnd2PC[e][i][j][k]->Scale(1.0/(float)nBkgrndEvts[i]);
+                        signal2PC[e][i][j][k]->Scale(1.0/(Float_t)nSignalEvts[i]);
+                        bkgrnd2PC[e][i][j][k]->Scale(1.0/(Float_t)nBkgrndEvts[i]);
                         calculateRatio(signal2PC[e][i][j][k],bkgrnd2PC[e][i][j][k],ratio2PC[e][i][j][k]);
                         getLongRangeYield(s,ratio2PC[e][i][j][k],longRangeYield[e][i][j][k]);
                     }
