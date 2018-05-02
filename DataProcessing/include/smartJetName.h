@@ -8,7 +8,7 @@
 
 #include "TFile.h"
 
-#include "include/returnRootFileContentsList.h"
+#include "DataProcessing/include/returnRootFileContentsList.h"
 
 bool sameString(const std::string inStr1, const std::string inStr2){return (inStr1.size() == inStr2.size() && inStr1.find(inStr2) != std::string::npos);}
 

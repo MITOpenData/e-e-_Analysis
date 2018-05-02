@@ -10,7 +10,7 @@
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
 
-#include "include/jetData.h"
+#include "DataProcessing/include/jetData.h"
 
 void processJets(std::vector<fastjet::PseudoJet> p, fastjet::JetDefinition jDef, fastjet::JetDefinition jDefReclust, jetData *d, const double ptCut, const double rParam, const int nExclJet)
 {

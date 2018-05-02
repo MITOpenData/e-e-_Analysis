@@ -10,11 +10,11 @@
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
 
-#include "include/trackSelection.h"
-#include "include/neutralHadronSelection.h"
+#include "DataProcessing/include/trackSelection.h"
+#include "DataProcessing/include/neutralHadronSelection.h"
 
-#include "include/particleData.h"
-#include "include/eventData.h"
+#include "DataProcessing/include/particleData.h"
+#include "DataProcessing/include/eventData.h"
 
 class eventSelection{
  public:

@@ -5,7 +5,7 @@
 
 #include "TMath.h"
 #include "TLorentzVector.h"
-#include "include/particleData.h"
+#include "DataProcessing/include/particleData.h"
 
 /*example do getting highPurity requirement for ith particle from pData:
 TrackSelection trkSel = TrackSelection();

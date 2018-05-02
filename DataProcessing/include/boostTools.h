@@ -65,16 +65,22 @@ void setBoostedVariables(bool doBoost, particleData *p, boostedEvtData *b, TLore
     b->boostz = boost.Z(); 
     b->boost = boost.Mag(); 
 
+    std::cout << "SETTING BOOST, " << p->nParticle << std::endl;
+
     for(int i = 0; i< p->nParticle; i++){
       TLorentzVector part;
       part.SetXYZM(p->px[i], p->py[i], p->pz[i], p->mass[i]);
       part.Boost(boost);
+      
+      std::cout << " " << p->pt[i] << ", " << p->phi[i] << ", " << p->eta[i] << std::endl;
 
       b->pt[i] = ptFromThrust(mainAxis.Vect().Unit(), part.Vect());
       b->pmag[i] = part.Vect().Mag();
       b->eta[i] = etaFromThrust(mainAxis.Vect().Unit(),part.Vect());
       b->theta[i] = thetaFromThrust(mainAxis.Vect().Unit(), part.Vect());
       b->phi[i] = phiFromThrust(mainAxis.Vect().Unit(), part.Vect());
+
+      std::cout << "  " << b->pt[i] << ", " << b->phi[i] << ", " << b->eta[i] << ", " << b->theta[i] << std::endl;
 
       b->pt_Perp[i] = ptFromThrust(mainAxis.Vect(), part.Vect(), true);
       b->pmag_Perp[i] = part.Vect().Mag();
