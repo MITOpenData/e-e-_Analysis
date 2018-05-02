@@ -318,7 +318,7 @@ int ridge_check( const std::string inFileName, 			// Input file
         Bar.PrintWithMod(entryDiv);
         
         // nTrk calculation
-        Int_t nTrk = s.ridge_eventSelection(&data.event, &data.jet, &data.particle);
+        Float_t nTrk = s.ridge_eventSelection(&data.event, &data.jet, &data.particle);
 	
         if( nTrk < 0) continue;
         //std::cout<<data.RunNo<<","<<data.EventNo<<std::endl;
@@ -344,9 +344,23 @@ int ridge_check( const std::string inFileName, 			// Input file
         h_Tphi->Fill(data.getTPhi());
 
         Float_t fillNumerator = 1.0;
-        /****************************************/
+        
+	/****************************************/
         // S calculation using multiplicity cut //
         /****************************************/
+        Float_t nTrkCorr=0;
+	if (s.doEffCorr && s.doGen==0) {
+           for ( Int_t j=0;j<data.particle.nParticle;j++ )
+           {
+               if (!(data.particle.highPurity[j]&&data.particle.pwflag[j]<=2)&&s.doGen==0) continue;
+               if (s.anatyperegion==1 && fabs(data.getEta(j))<s.etabarrelcut) continue;
+               if (s.anatyperegion==2 && fabs(data.getEta(j))>s.etabarrelcut) continue;
+	       nTrkCorr += 1./efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j]);
+           } 
+        } else {
+	   nTrkCorr = nTrk; // no eff correction
+	}
+	
         for ( Int_t j=0;j<data.particle.nParticle;j++ )
         {
             if (!(data.particle.highPurity[j]&&data.particle.pwflag[j]<=2)&&s.doGen==0) continue;
@@ -398,7 +412,7 @@ int ridge_check( const std::string inFileName, 			// Input file
                 Float_t phi2 = data.getPhi(k);
 		if (s.doGen||s.doEffCorr==0) trackWeight=1;
 		else trackWeight=1./efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j])/efficiency(data.particle.theta[k],data.particle.theta[k],data.particle.pt[k]);
-		//fillNumerator=trackWeight;
+		fillNumerator=trackWeight;
                 for(unsigned int eI = 0; eI< histE.size(); eI++)
                 {
                     for(unsigned int nI = 0; nI< histNtrk.size(); nI++)
@@ -408,10 +422,10 @@ int ridge_check( const std::string inFileName, 			// Input file
                             for(unsigned int etI = 0; etI< histEta1.size(); etI++)
                             {
                                 //std::cout<<"histEta "<<histEta1.at(etI)<<" eta1 = "<<angle1<<" eta2 = "<<angle2<<std::endl;
-                                signal2PC[histE.at(eI)][histNtrk.at(nI)][histPt1.at(pI)][histEta1.at(etI)]->Fill(angle1-angle2,dphi(phi1,phi2),fillNumerator/(s.getDifferential())/nTrk);
-                                signal2PC[histE.at(eI)][histNtrk.at(nI)][histPt1.at(pI)][histEta1.at(etI)]->Fill(angle1-angle2,dphi(phi2,phi1),fillNumerator/(s.getDifferential())/nTrk);
-                                signal2PC[histE.at(eI)][histNtrk.at(nI)][histPt1.at(pI)][histEta1.at(etI)]->Fill(angle2-angle1,dphi(phi1,phi2),fillNumerator/(s.getDifferential())/nTrk);
-                                signal2PC[histE.at(eI)][histNtrk.at(nI)][histPt1.at(pI)][histEta1.at(etI)]->Fill(angle2-angle1,dphi(phi2,phi1),fillNumerator/(s.getDifferential())/nTrk);
+                                signal2PC[histE.at(eI)][histNtrk.at(nI)][histPt1.at(pI)][histEta1.at(etI)]->Fill(angle1-angle2,dphi(phi1,phi2),fillNumerator/(s.getDifferential())/nTrkCorr);
+                                signal2PC[histE.at(eI)][histNtrk.at(nI)][histPt1.at(pI)][histEta1.at(etI)]->Fill(angle1-angle2,dphi(phi2,phi1),fillNumerator/(s.getDifferential())/nTrkCorr);
+                                signal2PC[histE.at(eI)][histNtrk.at(nI)][histPt1.at(pI)][histEta1.at(etI)]->Fill(angle2-angle1,dphi(phi1,phi2),fillNumerator/(s.getDifferential())/nTrkCorr);
+                                signal2PC[histE.at(eI)][histNtrk.at(nI)][histPt1.at(pI)][histEta1.at(etI)]->Fill(angle2-angle1,dphi(phi2,phi1),fillNumerator/(s.getDifferential())/nTrkCorr);
                             }
                         }
                     }
@@ -522,7 +536,7 @@ int ridge_check( const std::string inFileName, 			// Input file
                     Float_t phi_mix = mix.getPhi(k);
   	  	    if (s.doGen||s.doEffCorr==0) trackWeight=1;
 		    else trackWeight=1./efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j])/efficiency(mix.particle.theta[k],mix.particle.phi[k],mix.particle.pt[k]);
-		    //fillNumerator=trackWeight;
+		    fillNumerator=trackWeight;
 		    for(unsigned int eI = 0; eI< histE.size(); eI++)
                     {
                         for(unsigned int nI = 0; nI< histNtrk_mix.size(); nI++) // histNtrk_mix contains the intersection of histNtrk_mix and histNtrk
@@ -531,10 +545,10 @@ int ridge_check( const std::string inFileName, 			// Input file
                             {
                                 for(unsigned int etI = 0; etI< histEta_bkg1.size(); etI++)
                                 {
-                                    bkgrnd2PC[histE.at(eI)][histNtrk.at(nI)][histPt_bkg1.at(pI)][histEta_bkg1.at(etI)]->Fill(angle-angle_mix,dphi(phi,phi_mix),fillNumerator/(s.getDifferential())/nTrk);
-                                    bkgrnd2PC[histE.at(eI)][histNtrk.at(nI)][histPt_bkg1.at(pI)][histEta_bkg1.at(etI)]->Fill(angle-angle_mix,dphi(phi_mix,phi),fillNumerator/(s.getDifferential())/nTrk);
-                                    bkgrnd2PC[histE.at(eI)][histNtrk.at(nI)][histPt_bkg1.at(pI)][histEta_bkg1.at(etI)]->Fill(angle_mix-angle,dphi(phi,phi_mix),fillNumerator/(s.getDifferential())/nTrk);
-                                    bkgrnd2PC[histE.at(eI)][histNtrk.at(nI)][histPt_bkg1.at(pI)][histEta_bkg1.at(etI)]->Fill(angle_mix-angle,dphi(phi_mix,phi),fillNumerator/(s.getDifferential())/nTrk);
+                                    bkgrnd2PC[histE.at(eI)][histNtrk.at(nI)][histPt_bkg1.at(pI)][histEta_bkg1.at(etI)]->Fill(angle-angle_mix,dphi(phi,phi_mix),fillNumerator/(s.getDifferential())/nTrkCorr);
+                                    bkgrnd2PC[histE.at(eI)][histNtrk.at(nI)][histPt_bkg1.at(pI)][histEta_bkg1.at(etI)]->Fill(angle-angle_mix,dphi(phi_mix,phi),fillNumerator/(s.getDifferential())/nTrkCorr);
+                                    bkgrnd2PC[histE.at(eI)][histNtrk.at(nI)][histPt_bkg1.at(pI)][histEta_bkg1.at(etI)]->Fill(angle_mix-angle,dphi(phi,phi_mix),fillNumerator/(s.getDifferential())/nTrkCorr);
+                                    bkgrnd2PC[histE.at(eI)][histNtrk.at(nI)][histPt_bkg1.at(pI)][histEta_bkg1.at(etI)]->Fill(angle_mix-angle,dphi(phi_mix,phi),fillNumerator/(s.getDifferential())/nTrkCorr);
                                 }
                             }
                         }
