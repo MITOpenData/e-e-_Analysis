@@ -203,7 +203,7 @@ int ridge_check( const std::string inFileName, 			// Input file
             {
                 for(int k = 0; k<netaBins; k++)
                 {
-		    nTrkCorr[e][i][j][j]=0;
+		    nTrkCorr[e][i][j][k]=0;
                     if(s.doThrust) // Thrust Axis Analysis
                     {
                         signal2PC[e][i][j][k] = new TH2F(Form("signal2PC_%d_%d_%d_%d_%d",e,s.multBinsLow[i],s.multBinsHigh[i], j,k),";#Delta#eta;#Delta#Phi",s.dEtaBins,-etaPlotRange,etaPlotRange,s.dPhiBins,-TMath::Pi()/2.0,3*TMath::Pi()/2.0);
@@ -358,11 +358,11 @@ int ridge_check( const std::string inFileName, 			// Input file
         // S calculation using multiplicity cut //
         /****************************************/
 
-        for(int e = 0; e<nEnergyBins; e++){
-           for(int i = 0; i<nMultBins; i++){
-              for(int j = 0; j<nptBins; j++){
-                 for(int k = 0; k<netaBins; k++){
-         	    nTrkCorr[e][i][j][j]=0;
+        for(int ie = 0; ie<nEnergyBins; ie++){
+           for(int ii = 0; ii<nMultBins; ii++){
+              for(int ij = 0; ij<nptBins; ij++){
+                 for(int ik = 0; ik<netaBins; ik++){
+         	    nTrkCorr[ie][ii][ij][ik]=0;
                  }
 	      }
 	   }

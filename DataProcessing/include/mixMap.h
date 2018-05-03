@@ -85,7 +85,9 @@ int MixMap::getNextElement(unsigned char mult, int indx){
     isSorted = true;
   }
   if(nEvtsPerMult.at(mult)<2){
-    //std::cout << "Warning: less than 2 events in sample passing matching criterion.  Cannot mix!  Returning the events own index: " << indx << std::endl;
+    std::cout << "Warning: less than 2 events in sample passing matching criterion.  Cannot mix!  Returning the events own index: " << indx << std::endl;
+    std::cout << " " << (int)mult << ", " << nEvtsPerMult.at(mult) << std::endl;
+
     return indx;
   }
 
