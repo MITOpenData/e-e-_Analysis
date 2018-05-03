@@ -39,7 +39,7 @@ alephTrkEfficiency::~alephTrkEfficiency(){if(_effInf != NULL) delete _effInf;}
 
 Float_t alephTrkEfficiency::efficiency(Float_t theta, Float_t phi, Float_t pt)
 {
-  Float_t e = _heff->GetBinContent(_heff->FindBin(pt,theta,phi));
+  Float_t e = _heff->GetBinContent(_heff->FindBin(pt,theta));
   if(e < 0.00000000001){
     if(counter < 10){
       std::cout << "!!!Error on efficiency correction! Zero efficiency!!! theta=" << theta << " phi=" << phi << " pt=" << pt << std::endl << std::endl;

@@ -7,12 +7,16 @@
 #include "TMath.h"
 #include "TCanvas.h"
 #include "TStyle.h"
+#include "getLogBins.h"
+#include "getLinBins.h"
+#include "../../DataProcessing/include/alephTrkEfficiency.h"
 
 int EfficiencyClosureTest()
 {
 	int ptbins = 50;
 	int thetabins = 20;
 	int phibins = 20;
+	Float_t minpt = 0.2;
 	Float_t maxpt = 30;
 	Int_t maxmult = 999;
 
@@ -20,8 +24,7 @@ int EfficiencyClosureTest()
 	TTree* t = (TTree*)f->Get("t");
 	TTree* tgen = (TTree*)f->Get("tgen");
 
-	TFile* e = new TFile("DataProcessing/tables/efficiency_hist.root","read");
-	TH3F* eff = (TH3F*)e->Get("eff");
+	alephTrkEfficiency* eff = new alephTrkEfficiency();
 
 	Float_t pt[maxmult];
 	Float_t ptgen[maxmult];
@@ -49,8 +52,11 @@ int EfficiencyClosureTest()
 	t->SetBranchAddress("pwflag",pwflag);
 	tgen->SetBranchAddress("pwflag",pwflaggen);
 
-	TH1F* ptratio = new TH1F("ptratio","pt reco/gen efficiency-corrected",ptbins,0,maxpt);
-	TH1F* ptgenfactor = new TH1F("ptgenfactor","ptgenfactor",ptbins,0,maxpt);
+	Double_t ptlogbins[ptbins+1];
+	getLogBins(minpt,maxpt,ptbins,ptlogbins);
+
+	TH1F* ptratio = new TH1F("ptratio","pt reco/gen efficiency-corrected",ptbins,ptlogbins);
+	TH1F* ptgenfactor = new TH1F("ptgenfactor","ptgenfactor",ptbins,ptlogbins);
 	TH1F* thetaratio = new TH1F("thetaratio","#theta reco/gen efficiency-corrected",thetabins,0,TMath::Pi());
 	TH1F* thetagenfactor = new TH1F("thetagenfactor","thetagenfactor",thetabins,0,TMath::Pi());
 	TH1F* phiratio = new TH1F("phiratio","#phi reco/gen efficiency-corrected",phibins,-TMath::Pi(),TMath::Pi());
@@ -68,11 +74,11 @@ int EfficiencyClosureTest()
 		for(int j=0;j<mult;j++)
 		{
 			if(!highPurity[j] || theta[j]<0.35 || theta[j]>2.8 || pt[j]<1 || pwflag[j]>2) continue;
-			if(eff->GetBinContent(eff->FindBin(pt[j],theta[j],phi[j]))!=0)
+			if(eff->efficiency(theta[j],phi[j],pt[j])!=0)
 			{
-				ptratio->Fill(pt[j],1./(eff->GetBinContent(eff->FindBin(pt[j],theta[j],phi[j]))));
-				thetaratio->Fill(theta[j],1./(eff->GetBinContent(eff->FindBin(pt[j],theta[j],phi[j]))));
-				phiratio->Fill(phi[j],1./(eff->GetBinContent(eff->FindBin(pt[j],theta[j],phi[j]))));
+				ptratio->Fill(pt[j],1./eff->efficiency(theta[j],phi[j],pt[j]));
+				thetaratio->Fill(theta[j],1./eff->efficiency(theta[j],phi[j],pt[j]));
+				phiratio->Fill(phi[j],1./eff->efficiency(theta[j],phi[j],pt[j]));
 			}
 		}
 		for(int j=0;j<multgen;j++)
@@ -94,7 +100,7 @@ int EfficiencyClosureTest()
 	phiratio->Divide(phigenfactor);
 
 	gStyle->SetOptStat(0);
-
+/*
 	TCanvas* c = new TCanvas("c","c",800,800);
 	ptratio->Draw("pe");
 	c->SaveAs("ptratio.png");
@@ -102,7 +108,8 @@ int EfficiencyClosureTest()
 	c->SaveAs("thetaratio.png");
 	phiratio->Draw("pe");
 	c->SaveAs("phiratio.png");
-	
+*/	
 	f->Close();
+	delete eff;
 	return 0;
 }

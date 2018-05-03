@@ -10,8 +10,10 @@ int ProcessEffHist()
 {
 	gStyle->SetOptStat(0);
 
-	TFile* f = TFile::Open("DataProcessing/tables/efficiency_hist.root","update");
-	TH3F* eff = (TH3F*)f->Get("eff");
+	std::string fullPath = std::getenv("STUDYMULTDIR");
+	fullPath.append("/DataProcessing/tables/efficiency_hist.root");
+	TFile* f = TFile::Open(fullPath.c_str(),"update");
+	TH3F* eff = (TH3F*)f->Get("eff3D");
 
 	TH1F* pteff = (TH1F*)eff->Project3D("xe");
 	TH1F* thetaeff = (TH1F*)eff->Project3D("ye");
