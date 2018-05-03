@@ -170,14 +170,13 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
     for(Int_t jI = 0; jI < nBoostedTrees; ++jI) resetMixEvtBoosted(&bDataMix[jI]);
    
     m.setCurrentElement(signalMultiplicity,i);//makes sure you find 'close' events in the file to speed things up
-
+  
     int mixedEventsFound = 0;
     while(mixedEventsFound < nEvts2Mix){
-      int j = m.getNextElement(signalMultiplicity ,i);
+      int j = m.getNextElement((unsigned char)signalMultiplicity, i);
       tempTime = get_wall_time();
       inTree1_p->GetEntry(j);
-      getTime += get_wall_time()-tempTime;
-     
+      getTime += get_wall_time()-tempTime;     
   
       //if we check the entire file and haven't found enough mixed events, give up and mix it with itself.  Warning if it passes evt sel
       if(i==j){
@@ -191,6 +190,7 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
       //make sure mixed event is a good one (using Sig tree here because it is the input tree)
       bool processesMatch = (signalProcess == pdataSig.process);
       bool energiesMatch = (signalEnergy == (int)(pdataSig.Energy < 100));
+
       if(processesMatch && energiesMatch) mixedEventsFound++;
       else continue;
 

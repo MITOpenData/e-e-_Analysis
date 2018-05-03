@@ -21,18 +21,21 @@
 #include "fastjet/PseudoJet.hh"
 
 //mixing
-#include "src/mixFile.cc"
+#include "DataProcessing/src/mixFile.cc"
+
+//DataProcessing dependencies
+#include "DataProcessing/include/uniqueIDTools.h"
+#include "DataProcessing/include/jetData.h"
+#include "DataProcessing/include/particleData.h"
+#include "DataProcessing/include/eventSelection.h"
+#include "DataProcessing/include/eventData.h"
+#include "DataProcessing/include/boostedEvtData.h"
+#include "DataProcessing/include/thrustTools.h"
+#include "DataProcessing/include/boostTools.h"
+#include "DataProcessing/include/processJets.h"
 
 //local dependencies
-#include "include/jetData.h"
-#include "include/particleData.h"
-#include "include/eventData.h"
-#include "include/boostedEvtData.h"
-#include "include/thrustTools.h"
-#include "include/boostTools.h"
 #include "include/doGlobalDebug.h"
-#include "include/processJets.h"
-
 
 int main(int argc, char* argv[])
 {
@@ -63,6 +66,8 @@ int main(int argc, char* argv[])
   if(argc >= 8) tempDoBiasPthat = std::stoi(argv[7]);
   const bool doBiasPthat = tempDoBiasPthat;
 
+
+  uniqueIDTools idMaker;
 
   const double jtPtCut = .01;
   const int nJtAlgo = 8;
@@ -230,7 +235,7 @@ int main(int argc, char* argv[])
       std::cout << "GenTree fills: " << genTree_p->GetEntries() << std::endl;
       currTreeFills = genTree_p->GetEntries();
     }
-
+  
     seed_ = totalSeed;
     pthat_ = pythia.info.pTHat();
     pthatWeight_ = pythia.info.weight();
@@ -238,6 +243,7 @@ int main(int argc, char* argv[])
     bData.nParticle = 0;
     pData.Energy = Energy;
     eData.nChargedHadrons = 0;
+    eData.nChargedHadronsHP = 0;
     eData.nChargedHadrons_GT0p4 = 0;
     eData.nChargedHadrons_GT0p4Thrust = 0;
   
@@ -307,6 +313,7 @@ int main(int argc, char* argv[])
 
 	++(pDataCh.nParticle);
 	++(eData.nChargedHadrons);
+	++(eData.nChargedHadronsHP);
 	if(temp.Pt() > 0.40 && TMath::Abs(temp.Eta()) < 2.4) ++eData.nChargedHadrons_GT0p4;
 	if(temp.Pt() > 0.40 && TMath::Abs(temp.Eta()) < 2.4) ++eData.nChargedHadrons_GT0p4Thrust;
       }
@@ -315,9 +322,11 @@ int main(int argc, char* argv[])
       ++(bData.nParticle);
     }
   
-    if(eData.nChargedHadrons_GT0p4 < nMinPartChgCut_) continue;
+    if(eData.nChargedHadronsHP < nMinPartChgCut_) continue;
 
     if(pData.nParticle > 0){
+      pData.uniqueID = idMaker.getID(true, 15, 0, 1994, std::stoi(argv[3]), genTree_p->GetEntries());
+
       if(doGlobalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
 
       TVector3 thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz, THRUST::OPTIMAL);
@@ -338,6 +347,21 @@ int main(int argc, char* argv[])
       eData.missChargedTheta = netP_charged.Theta();
       eData.missChargedPhi = netP_charged.Phi();
 
+
+      eventSelection eSelection;
+      eSelection.setEventSelection(&pData, &eData);
+      
+      eData.passesTotalChgEnergyMin = eSelection.getPassesTotalChgEnergyMin();
+      eData.passesNTrkMin = eSelection.getPassesNTrkMin();
+      eData.passesSTheta = eSelection.getPassesSTheta();
+      eData.passesMissP = eSelection.getPassesMissP();
+      eData.passesISR = eSelection.getPassesISR();
+      eData.passesWW = eSelection.getPassesWW();
+      eData.passesNeuNch = eSelection.getPassesNeuNch();
+      eData.passesAll = (eData.passesNTupleAfterCut && eData.passesTotalChgEnergyMin && eData.passesNTrkMin && eData.passesSTheta && eData.passesMissP && eData.passesISR && eData.passesWW);
+      eData.passesNTupleAfterCut = true;     
+      //      eData.passesLEP1TwoPC = eData.passesNeuNch && eData.passesSTheta && eData.passesTotalChgEnergyMin && (eData.nChargedHadronsHP>=5);
+      eData.passesLEP1TwoPC = eData.nChargedHadronsHP>=5;
 
       for(int pI = 0; pI < pData.nParticle; ++pI){
 	pData.pt_wrtThr[pI] = ptFromThrust(thrust, TVector3(pData.px[pI], pData.py[pI], pData.pz[pI]));
@@ -403,7 +427,7 @@ int main(int argc, char* argv[])
   std::cout << "Start to end: " << startTime << ", " << endTime << std::endl;
 
   std::cout << "Mixing File..." << std::endl;
-  makeMixFile(outFileName, "", 1);
+  makeMixFile(outFileName, outFileName, 1);
   std::cout << "Job done" << std::endl;
 
   return 0;
