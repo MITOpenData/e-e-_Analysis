@@ -116,7 +116,7 @@ int ridge_check( const std::string inFileName, 			// Input file
        if (owWTA)    s.doWTA = true; else s.doWTA = false;
        if (owPerp)   s.doPerp = true; else s.doPerp = false;
        if (owDoGen)  s.doGen = true; else s.doGen = false;
-       if (owDoTGen)  {s.doGen = true; s.doTGen=true;} else {s.doTGen = false;}
+       if (owDoTGen)  {s.doGen = true; s.doTGen=true; s.doEffCorr = false; owEffCorr = false;} else {s.doTGen = false;}
        if (owAjCut) {s.doAjCut = true; s.AjCut=_AjCut;}
        else s.doAjCut = false;
        if (owEffCorr) {s.doEffCorr= true;} else {s.doEffCorr = false;}
@@ -134,6 +134,7 @@ int ridge_check( const std::string inFileName, 			// Input file
     }
     
     s.Init();
+    
     
     
     if (verbose) {
@@ -273,19 +274,20 @@ int ridge_check( const std::string inFileName, 			// Input file
     // get the correct tree for the analysis
     std::string boostTree = "BoostedWTAR8Evt";
     
-    TChain * t;
-    if (s.doTGen) t = new TChain("tgen"); else t = new TChain("t");       			
+    TChain * t = new TChain("t");       			
+    TChain * tgen = new TChain("tgen");       			
     t->Add(inFileName.c_str());
+    if (s.doTGen) tgen->Add(inFileName.c_str());
+
     TChain * boost_t = new TChain(boostTree.c_str());       	boost_t->Add(inFileName.c_str());
     TChain * jt = new TChain(jtTreeName.c_str());       	jt->Add(inFileName.c_str());
 
-    TPCNtupleData data(s.doBelle, s.doThrust, s.doWTA);      	data.setupTPCTree(t,boost_t,jt);   
+    TPCNtupleData data(s.doBelle, s.doThrust, s.doWTA, s.doPerp, 0, s.doTGen);      	data.setupTPCTree(t,boost_t,jt,tgen);   
     
     bool doMixFile=0;
 
-    TChain * t_mix; 
-    if (s.doTGen) t_mix = new TChain("tgen"); else t_mix = new TChain("t");       			
-
+    TChain * t_mix = new TChain("t");       			
+    TChain * tgen_mix = new TChain("tgen");       			
           
     if (inMixFileName=="0"||inMixFileName=="") {   // no mix file specified
        cout <<"Perform analysis without mix file"<<endl;
@@ -295,14 +297,18 @@ int ridge_check( const std::string inFileName, 			// Input file
        cout <<"Perform analysis with mix file = "<<inMixFileName<<endl;
        t_mix->Add(inMixFileName.c_str());
     }
+
+    if (s.doTGen&&(doMixFile==1||s.doWTA==1||s.doPerp)) cout <<"tGen analysis in this mode is not supported! Terminate..."<<endl;
+
     
     TChain * boost_t_mix = new TChain(boostTree.c_str());      	boost_t_mix->Add(inFileName.c_str());
     TChain * jt_mix = new TChain(jtTreeName.c_str());       	jt_mix->Add(inFileName.c_str());
     
     t_mix->LoadBaskets(4000000000);
+    tgen_mix->LoadBaskets(4000000000);
     jt_mix->LoadBaskets(4000000000);
     boost_t_mix->LoadBaskets(4000000000);
-    TPCNtupleData mix(s.doBelle, s.doThrust, s.doWTA, s.doPerp);       mix.setupTPCTree(t_mix,boost_t_mix,jt_mix);        
+    TPCNtupleData mix(s.doBelle, s.doThrust, s.doWTA, s.doPerp, 1, s.doTGen);       mix.setupTPCTree(t_mix,boost_t_mix,jt_mix,tgen_mix);        
     
     // analysis
     Int_t nevent = (Int_t)t->GetEntries();
@@ -321,6 +327,7 @@ int ridge_check( const std::string inFileName, 			// Input file
     //nevent=1000;
     for (Int_t i=0;i<nevent;i++) {
         t->GetEntry(i); 
+	if (s.doTGen) tgen->GetEntry(i);
         boost_t->GetEntry(i);
         jt->GetEntry(i);
 	Bar.Update(i);
@@ -357,7 +364,8 @@ int ridge_check( const std::string inFileName, 			// Input file
 	/****************************************/
         // S calculation using multiplicity cut //
         /****************************************/
-
+        
+	// reset the number of events
         for(int ie = 0; ie<nEnergyBins; ie++){
            for(int ii = 0; ii<nMultBins; ii++){
               for(int ij = 0; ij<nptBins; ij++){
@@ -366,14 +374,22 @@ int ridge_check( const std::string inFileName, 			// Input file
                  }
 	      }
 	   }
-	}   
-	for ( Int_t j=0;j<data.particle.nParticle;j++ )
+	}
+	
+	Int_t nParticles = data.particle.nParticle;
+	if (s.doTGen) nParticles = data.genParticle.nParticle;   
+	
+	for ( Int_t j=0;j<nParticles;j++ )
         {
-            if (!(data.particle.highPurity[j]&&data.particle.pwflag[j]<=2)&&s.doGen==0) continue;
-            if (s.anatyperegion==1 && fabs(data.getEta(j))<s.etabarrelcut) continue;
+            if (s.doTGen) {
+   	       if (!(fabs(data.genParticle.eta[j])<=1.6&&data.genParticle.pwflag[j]<=2)) continue;
+	    } else {
+	       if (!(data.particle.highPurity[j]&&fabs(data.particle.eta[j])<=1.6&&data.particle.pwflag[j]<=2)&&s.doGen==0) continue;
+            }
+	    if (s.anatyperegion==1 && fabs(data.getEta(j))<s.etabarrelcut) continue;
             if (s.anatyperegion==2 && fabs(data.getEta(j))>s.etabarrelcut) continue;
 	    Float_t weight=1;
-	    if (s.doGen || s.doEffCorr==0) {
+	    if (s.doGen || s.doEffCorr==0 || s.doTGen) {
 	       weight = 1;
 	    } else {
 	       weight = 1./efficiencyCorrector.efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j]);
@@ -401,9 +417,13 @@ int ridge_check( const std::string inFileName, 			// Input file
 	    }	           
         } 
         
-        for ( Int_t j=0;j<data.particle.nParticle;j++ )
+        for ( Int_t j=0;j<nParticles;j++ )
         {
-            if (!(data.particle.highPurity[j]&&data.particle.pwflag[j]<=2)&&s.doGen==0) continue;
+            if (s.doTGen) {
+   	       if (!(fabs(data.genParticle.eta[j])<=1.6&&data.genParticle.pwflag[j]<=2)) continue;
+	    } else {
+	       if (!(data.particle.highPurity[j]&&fabs(data.particle.eta[j])<=1.6&&data.particle.pwflag[j]<=2)&&s.doGen==0) continue;
+            }
 	    h_phi->Fill(data.getPhi(j));
             h_eta->Fill(data.getEta(j));
             h_theta->Fill(data.getTheta(j));
@@ -425,9 +445,13 @@ int ridge_check( const std::string inFileName, 			// Input file
             //std::cout<<"eta for first particle "<<angle1<<std::endl;
             // Signal loop, calculate S correlation function
 	    
-            for ( Int_t k=j+1;k<data.particle.nParticle;k++ )
+            for ( Int_t k=j+1;k<nParticles;k++ )
             {
-		if (!(data.particle.highPurity[k]&&data.particle.pwflag[k]<=2)&&s.doGen==0) continue;
+                if (s.doTGen) {
+      	           if (!(fabs(data.genParticle.eta[k])<=1.6&&data.genParticle.pwflag[k]<=2)) continue;
+	        } else {
+		   if (!(data.particle.highPurity[k]&&fabs(data.particle.eta[k])<=1.6&&data.particle.pwflag[k]<=2)&&s.doGen==0) continue;
+                }
                 if (s.anatyperegion==1 && fabs(data.getEta(k))<s.etabarrelcut) continue;
                 if (s.anatyperegion==2 && fabs(data.getEta(k))>s.etabarrelcut) continue;
 	    
@@ -450,7 +474,7 @@ int ridge_check( const std::string inFileName, 			// Input file
                 Float_t angle2;
                 if (s.getThetaAngle) angle2 = data.getTheta(k); else angle2 = data.getEta(k);
                 Float_t phi2 = data.getPhi(k);
-		if (s.doGen||s.doEffCorr==0) trackWeight=1;
+		if (s.doGen||s.doEffCorr==0||s.doTGen) trackWeight=1;
 		else trackWeight=1./efficiencyCorrector.efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j])/efficiencyCorrector.efficiency(data.particle.theta[k],data.particle.theta[k],data.particle.pt[k]);
 		fillNumerator=trackWeight;
                 for(unsigned int eI = 0; eI< histE.size(); eI++)
@@ -485,6 +509,7 @@ int ridge_check( const std::string inFileName, 			// Input file
             t_mix->GetEntry(selected);
             boost_t_mix->GetEntry(selected);
             jt_mix->GetEntry(selected);
+	    if (s.doTGen)tgen_mix->GetEntry(selected);
         
             Int_t nTrk_mix=nTrk;
 	    
@@ -512,6 +537,7 @@ int ridge_check( const std::string inFileName, 			// Input file
                 t_mix->GetEntry(selected);
                 boost_t_mix->GetEntry(selected);
                 jt_mix->GetEntry(selected);
+  	        if (s.doTGen)tgen_mix->GetEntry(selected);
                 
                 if(!s.donTrkThrust) nTrk_mix = s.ridge_eventSelection(&mix.event, &mix.jet, &mix.particle);
                 // find the event nTrk histogram(s)
@@ -529,12 +555,18 @@ int ridge_check( const std::string inFileName, 			// Input file
 	               
             // increment the number of background events bin for each nTrk histogram going to be filled (note that this should give the same result as the signal events increment)
             for(unsigned int nI = 0; nI < histNtrk.size(); ++nI) nBkgrndEvts[histNtrk.at(nI)] += 1;
+            Int_t nParticles = data.particle.nParticle;
+	    if (s.doTGen) nParticles = data.genParticle.nParticle;
 
-            for ( Int_t j=0;j<data.particle.nParticle;j++ )
+            for ( Int_t j=0;j<nParticles;j++ )
             {
-                // decide if valid track
-                if (!(data.particle.highPurity[j]&&data.particle.pwflag[j]<=2)&&s.doGen==0) continue;
-                if (s.anatyperegion==1 && fabs(data.getEta(j))<s.etabarrelcut) continue;
+                // decide if valid track                
+                if (s.doTGen) {
+   	           if (!(fabs(data.genParticle.eta[j])<=1.6&&data.genParticle.pwflag[j]<=2)) continue;
+	        } else {
+	           if (!(data.particle.highPurity[j]&&fabs(data.particle.eta[j])<=1.6&&data.particle.pwflag[j]<=2)&&s.doGen==0) continue;
+                }
+		if (s.anatyperegion==1 && fabs(data.getEta(j))<s.etabarrelcut) continue;
                 if (s.anatyperegion==2 && fabs(data.getEta(j))>s.etabarrelcut) continue;
                 
                 // Decide which pt and eta range to fill
@@ -548,13 +580,18 @@ int ridge_check( const std::string inFileName, 			// Input file
                 Float_t angle;
                 if (s.getThetaAngle) angle = data.getTheta(j); else angle = data.getEta(j);
                 Float_t phi = data.getPhi(j);
-
+                Int_t nMixedParticles = mix.particle.nParticle;
+		if (s.doTGen) nMixedParticles = mix.genParticle.nParticle;
                 // Background loop, calculate B correlation function from mixed event
-                for ( Int_t k=0;k<mix.particle.nParticle;k++ )
+                for ( Int_t k=0;k<nMixedParticles;k++ )
                 {
                     // decide if valid track
-                    if (!(mix.particle.highPurity[k]&&mix.particle.pwflag[k]<=2)&&s.doGen==0) continue;
-                    if (s.anatyperegion==1 && fabs(mix.getEta(k))<s.etabarrelcut) continue;
+		    if (s.doTGen) {
+                       if (!(fabs(mix.genParticle.eta[k])<=1.6&&mix.genParticle.pwflag[k]<=2)) continue;
+                    } else {
+		       if (!(mix.particle.highPurity[k]&&fabs(mix.particle.eta[k])<=1.6&&mix.particle.pwflag[k]<=2)&&s.doGen==0) continue;
+                    }
+		    if (s.anatyperegion==1 && fabs(mix.getEta(k))<s.etabarrelcut) continue;
                     if (s.anatyperegion==2 && fabs(mix.getEta(k))>s.etabarrelcut) continue;
                     // Check if the second particle is in the same range of pt and eta    
                     std::vector<Int_t> histPt_bkg2;
@@ -574,7 +611,7 @@ int ridge_check( const std::string inFileName, 			// Input file
                     Float_t angle_mix;
                     if (s.getThetaAngle) angle_mix = mix.getTheta(k); else angle_mix = mix.getEta(k);
                     Float_t phi_mix = mix.getPhi(k);
-  	  	    if (s.doGen||s.doEffCorr==0) trackWeight=1;
+  	  	    if (s.doGen||s.doEffCorr==0||s.doTGen) trackWeight=1;
 		    else trackWeight=mix.particle.particleWeight/efficiencyCorrector.efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j])/efficiencyCorrector.efficiency(mix.particle.theta[k],mix.particle.phi[k],mix.particle.pt[k]);
 //		    else trackWeight=1./efficiencyCorrector.efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j])/efficiencyCorrector.efficiency(mix.particle.theta[k],mix.particle.phi[k],mix.particle.pt[k]);
 		    fillNumerator=trackWeight;
