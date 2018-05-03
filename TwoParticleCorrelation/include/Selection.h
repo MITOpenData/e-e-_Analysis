@@ -86,13 +86,13 @@ class Selection
 
         // Thrust Axis
         bool doThrust = true;  bool donTrkThrust = false; // false = use beam axis for nTrk calculation
-        static const Int_t nptBins_wrtThr = 3;
-        Float_t ptBinsLow_wrtThr[nptBins_wrtThr]  = {0.4,0.4,1.0};  // measured in GeV {1.0,0.4}
-        Float_t ptBinsHigh_wrtThr[nptBins_wrtThr] = {100.0,4.0,3.0}; // {3.0,100.0}
+        static const Int_t nptBins_wrtThr = 1;
+        Float_t ptBinsLow_wrtThr[nptBins_wrtThr]  = {0.4,};  // measured in GeV {1.0,0.4}
+        Float_t ptBinsHigh_wrtThr[nptBins_wrtThr] = {100.}; // {3.0,100.0}
         static const Int_t netaBins_wrtThr = 1;
         Float_t etaBinsLow_wrtThr[netaBins_wrtThr]  = {4.5}; //{4.5,5.0}
         Float_t missPCut_wrtThr = 20;
-        Float_t etaPlotRange_wrtThr = 6.0;
+        Float_t etaPlotRange_wrtThr = 3.2;
 
         // WTA Axis
         bool doWTA = false;
@@ -102,10 +102,10 @@ class Selection
         static const Int_t netaBins_wrtWTA = 1;
         Float_t etaBinsLow_wrtWTA[netaBins_wrtWTA]  = {5.0};
         Float_t missPCut_wrtWTA = 20;
-        Float_t etaPlotRange_wrtWTA = 6.0;
+        Float_t etaPlotRange_wrtWTA = 3.2;
 
         // Use the perpendicular direction of WTA or Thrust axis?
-	bool doPerp = true;
+	bool doPerp = false;
 
         /* Independent Cuts */
         static const Int_t nEnergyBins = 1;
@@ -134,7 +134,7 @@ class Selection
         static const Int_t netaBins_pp = 2;
         Float_t etaBinsLow_pp[netaBins_pp]  = {4.5,5.0};
         Float_t missPCut_pp = 20;
-        Float_t etaPlotRange_pp = 6.0;
+        Float_t etaPlotRange_pp = 10.0;
         
 
         /*In this section we define the variables used to perform an analysis inside and outside what we call "barrel" that is a cilindrical region around the thrust axis.
@@ -210,7 +210,6 @@ Selection::Selection()
 {
     std::cout << "Getting settings.." << std::endl;
     Init();
-    return;
 }
 
 Float_t Selection::getEtaPlotRange()
