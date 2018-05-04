@@ -14,6 +14,7 @@ class TPCNtupleData{
     
     Selection s;
     particleData particle;
+    particleData genParticle;
     jetData jet;
     boostedEvtData boosted;
     eventData event;
@@ -22,18 +23,20 @@ class TPCNtupleData{
     bool doThrust;
     bool doWTA;
     bool doPerp;
+    bool doTGen;
     bool isMix;
      
        
-    TPCNtupleData(bool ana=0, bool thrust=0, bool wta=0, bool perp=0, bool mix=0) {
+    TPCNtupleData(bool ana=0, bool thrust=0, bool wta=0, bool perp=0, bool mix=0, bool tgen=0) {
        isBelle = ana;
        doWTA=wta;
        doThrust=thrust;
        doPerp=perp;
+       doTGen=tgen;
        isMix=0;
     }
     
-    void setupTPCTree(TTree *tData, TTree *tBoost, TTree *tJet) {
+    void setupTPCTree(TTree *tData, TTree *tBoost, TTree *tJet, TTree *tGen) {
        std::vector<std::string> listData;
        std::vector<std::string> list;
        
@@ -52,6 +55,7 @@ class TPCNtupleData{
        //listData.push_back("z0");
        //listData.push_back("ntpc");
        listData.push_back("highPurity");
+       listData.push_back("particleWeight");
        
        if (doThrust) {
           if (doPerp) {
@@ -74,9 +78,10 @@ class TPCNtupleData{
        listJet.push_back("jtphi");
        
        particle.SetStatusAndAddressRead(tData,listData);
-       if (!isMix) event.SetStatusAndAddressRead(tData,list);
+       event.SetStatusAndAddressRead(tData,list);
        boosted.SetStatusAndAddressRead(tBoost,list);
        jet.SetStatusAndAddressRead(tJet,listJet);
+       if (doTGen) genParticle.SetStatusAndAddressRead(tGen,listData);
     }	
     
     // Decide if paricle j is a charged hadron    
@@ -103,9 +108,11 @@ class TPCNtupleData{
      if (doThrust)
      {
          if (doPerp) {
-	    return particle.pt_wrtThrPerp[j];
+	    if (doTGen) return genParticle.pt_wrtThrPerp[j];
+	    else return particle.pt_wrtThrPerp[j];
 	 } else {
-	    return particle.pt_wrtThr[j];
+	    if (doTGen) return genParticle.pt_wrtThr[j];
+	    else return particle.pt_wrtThr[j];
 	 }
      } else if (doWTA){
          if (doPerp) {
@@ -114,7 +121,8 @@ class TPCNtupleData{
             return boosted.pt[j];
 	 }
      }
-     return particle.pt[j];
+     if (doTGen) return genParticle.pt[j];
+     else return particle.pt[j];
     }
         
     // Return Pseudorapidity
@@ -123,9 +131,11 @@ class TPCNtupleData{
      if (doThrust)
      {
          if (doPerp) {
-            return particle.eta_wrtThrPerp[j];
+            if (doTGen) return genParticle.eta_wrtThrPerp[j];
+            else return particle.eta_wrtThrPerp[j];
          } else {
-            return particle.eta_wrtThr[j];
+            if (doTGen) return genParticle.eta_wrtThr[j];
+            else return particle.eta_wrtThr[j];
          }
      } else if (doWTA)
      {
@@ -135,7 +145,8 @@ class TPCNtupleData{
             return boosted.eta[j];
 	 }   
      }
-     return particle.eta[j];
+     if (doTGen) return genParticle.eta[j];
+     else return particle.eta[j];
     }
     
     // Return phi angle
@@ -144,9 +155,11 @@ class TPCNtupleData{
      if (doThrust)
      {
          if (doPerp) {
-            return particle.phi_wrtThrPerp[j];
+            if (doTGen) return genParticle.phi_wrtThrPerp[j];
+            else return particle.phi_wrtThrPerp[j];
          } else {
-            return particle.phi_wrtThr[j];
+            if (doTGen) return genParticle.phi_wrtThr[j];
+            else return particle.phi_wrtThr[j];
          }
      } else if (doWTA)
      {
@@ -156,7 +169,8 @@ class TPCNtupleData{
 	    return boosted.phi[j];
 	 }     
      }
-     return particle.phi[j];
+     if (doTGen) return genParticle.phi[j];
+     else return particle.phi[j];
     }
 
     // Return theta angle
@@ -165,9 +179,11 @@ class TPCNtupleData{
      if (doThrust)
      {
          if (doPerp) {
-            return particle.theta_wrtThrPerp[j];
+            if (doTGen) return genParticle.theta_wrtThrPerp[j];
+            else return particle.theta_wrtThrPerp[j];
 	 } else {
-	    return particle.theta_wrtThr[j];
+	    if (doTGen) return genParticle.theta_wrtThr[j];
+            else return particle.theta_wrtThr[j];
 	 }    
      } else if (doWTA) 
      {
@@ -177,7 +193,8 @@ class TPCNtupleData{
             return boosted.theta[j];
          }
      }
-     return particle.theta[j];
+     if (doTGen) return genParticle.theta[j];
+     else return particle.theta[j];
     }
 
     // return pmag
@@ -190,7 +207,8 @@ class TPCNtupleData{
 	   return boosted.pmag[j];
 	}
      }	 
-     return particle.pmag[j];
+     if (doTGen) return genParticle.pmag[j];
+     else return particle.pmag[j];
     }
     
     // return TTheta
