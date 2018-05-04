@@ -90,9 +90,9 @@ class Selection
         Float_t ptBinsLow_wrtThr[nptBins_wrtThr]  = {0.4,};  // measured in GeV {1.0,0.4}
         Float_t ptBinsHigh_wrtThr[nptBins_wrtThr] = {100.}; // {3.0,100.0}
         static const Int_t netaBins_wrtThr = 1;
-        Float_t etaBinsLow_wrtThr[netaBins_wrtThr]  = {4.5}; //{4.5,5.0}
+        Float_t etaBinsLow_wrtThr[netaBins_wrtThr]  = {10000}; //{4.5,5.0}
         Float_t missPCut_wrtThr = 20;
-        Float_t etaPlotRange_wrtThr = 3.2;
+        Float_t etaPlotRange_wrtThr = 6.0;
 
         // WTA Axis
         bool doWTA = false;
@@ -102,7 +102,7 @@ class Selection
         static const Int_t netaBins_wrtWTA = 1;
         Float_t etaBinsLow_wrtWTA[netaBins_wrtWTA]  = {5.0};
         Float_t missPCut_wrtWTA = 20;
-        Float_t etaPlotRange_wrtWTA = 3.2;
+        Float_t etaPlotRange_wrtWTA = 6.0;
 
         // Use the perpendicular direction of WTA or Thrust axis?
 	bool doPerp = false;
