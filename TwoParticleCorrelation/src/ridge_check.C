@@ -297,7 +297,7 @@ int ridge_check( const std::string inFileName, 			// Input file
        doMixFile=1;
        cout <<"Perform analysis with mix file = "<<inMixFileName<<endl;
        t_mix->Add(inMixFileName.c_str());
-       tgen_mix->Add(inFileName.c_str());
+       tgen_mix->Add(inMixFileName.c_str());
     }
 
     if (s.doTGen&&(s.doWTA==1)) cout <<"tGen analysis in this mode is not supported! Terminate..."<<endl;
