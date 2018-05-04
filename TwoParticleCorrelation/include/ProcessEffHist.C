@@ -24,6 +24,7 @@ int ProcessEffHist()
 
 	TH1F* thetaclean = (TH1F*)f->Get("efftheta_clean");
 	TH1F* ptclean = (TH1F*)f->Get("effpt_clean");
+	TH1F* phiclean = (TH1F*)f->Get("effphi_clean");
 
 	int nptbins = pteff->GetNbinsX();
 	int nthetabins = thetaeff->GetNbinsX();
@@ -45,30 +46,42 @@ int ProcessEffHist()
 	thetaphieff->Write("thetaphieff",TObject::kOverwrite);
 
 	TCanvas* c = new TCanvas("c","c",800,800);
-	pteff->SetTitle("pt efficiency");
+	pteff->GetXaxis()->SetTitle("p_{t}");
+	pteff->GetYaxis()->SetTitle("efficiency");
 	pteff->Draw("pe");
-	c->SaveAs("pteff.png");
-	thetaeff->SetTitle("#theta efficiency");
+	c->SaveAs("pteff.pdf");
+	thetaeff->GetXaxis()->SetTitle("#theta");
+	thetaeff->GetYaxis()->SetTitle("efficiency");
 	thetaeff->Draw("pe");
-	c->SaveAs("thetaeff.png");
-	phieff->SetTitle("#phi efficiency");
+	c->SaveAs("thetaeff.pdf");
+	phieff->GetXaxis()->SetTitle("#phi");
+	phieff->GetYaxis()->SetTitle("efficiency");
 	phieff->Draw("pe");
-	c->SaveAs("phieff.png");
+	c->SaveAs("phieff.pdf");
 	ptthetaeff->SetTitle("(#theta, pt) efficiency");
 	ptthetaeff->Draw("COLZ");
-	c->SaveAs("ptthetaeff.png");
+	c->SaveAs("ptthetaeff.pdf");
 	ptphieff->SetTitle("(#phi, pt) efficiency");
 	ptphieff->Draw("COLZ");
-	c->SaveAs("ptphieff.png");
+	c->SaveAs("ptphieff.pdf");
 	thetaphieff->SetTitle("(#phi, #theta) efficiency");
 	thetaphieff->Draw("COLZ");
-	c->SaveAs("thetaphieff.png");
-	thetaclean->SetTitle("#theta efficiency, highPurity, pwflag<2, pt>1");
+	c->SaveAs("thetaphieff.pdf");
+	thetaclean->SetTitle("highPurity, pwflag<=2, pt>1");
+	thetaclean->GetXaxis()->SetTitle("#theta");
+	thetaclean->GetYaxis()->SetTitle("efficiency");
 	thetaclean->Draw("pe");
-	c->SaveAs("thetaclean.png");
-	ptclean->SetTitle("pt efficiency, highPurity, pwflag<2, 0.35<theta<2.8");
+	c->SaveAs("thetaclean.pdf");
+	ptclean->SetTitle("highPurity, pwflag<=2, 0.35<#theta<2.8");
+	ptclean->GetXaxis()->SetTitle("p_{t}");
+	ptclean->GetYaxis()->SetTitle("efficiency");
 	ptclean->Draw("pe");
-	c->SaveAs("ptclean.png");
+	c->SaveAs("ptclean.pdf");
+	phiclean->SetTitle("highPurity, pwflag<=2, pt>1, 0.35<#theta<2.8");
+	phiclean->GetXaxis()->SetTitle("#phi");
+	phiclean->GetYaxis()->SetTitle("efficiency");
+	phiclean->Draw("pe");
+	c->SaveAs("phiclean.pdf");
 	f->Close();
 	return 0;
 }

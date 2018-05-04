@@ -45,6 +45,8 @@ int GetNaiveEff()
 	TH1F* effthetagen_clean = new TH1F("effthetagen_clean","effthetagen_clean",thetabins,thetalinbins);
 	TH1F* effpt_clean = new TH1F("effpt_clean","effpt_clean",ptbins,ptlogbins);
 	TH1F* effptgen_clean = new TH1F("effptgen_clean","effptgen_clean",ptbins,ptlogbins);
+	TH1F* effphi_clean = new TH1F("effphi_clean","effphi_clean",phibins,philinbins);
+	TH1F* effphigen_clean = new TH1F("effphigen_clean","effphigen_clean",phibins,philinbins);
 
 	Float_t pt[maxmult];
 	Float_t ptgen[maxmult];
@@ -82,6 +84,7 @@ int GetNaiveEff()
 			eff->Fill(pt[j],theta[j]);
 			if(pt[j]>1) efftheta_clean->Fill(theta[j]);
 			if(theta[j]>0.35 && theta[j]<2.8) effpt_clean->Fill(pt[j]);
+			if(pt[j]>1 && theta[j]>0.35 && theta[j]<2.8) effphi_clean->Fill(phi[j]);
 		}
 		for(int j=0;j<multgen;j++) 
 		{
@@ -90,6 +93,7 @@ int GetNaiveEff()
 			effgen->Fill(ptgen[j],thetagen[j]);
 			if(ptgen[j]>1) effthetagen_clean->Fill(thetagen[j]);
 			if(thetagen[j]>0.35 && thetagen[j]<2.8) effptgen_clean->Fill(ptgen[j]);
+			if(ptgen[j]>1 && thetagen[j]>0.35 && thetagen[j]<2.8) effphigen_clean->Fill(phigen[j]);
 		}
 	}
 	eff->Sumw2();
@@ -100,9 +104,12 @@ int GetNaiveEff()
 	effthetagen_clean->Sumw2();
 	effpt_clean->Sumw2();
 	effptgen_clean->Sumw2();
+	effphi_clean->Sumw2();
+	effphigen_clean->Sumw2();
 
 	efftheta_clean->Divide(effthetagen_clean);
 	effpt_clean->Divide(effptgen_clean);
+	effphi_clean->Divide(effphigen_clean);
 	eff3D->Divide(effgen3D);
 	eff->Divide(effgen);
 	//print out code for efficiency table
@@ -135,6 +142,7 @@ int GetNaiveEff()
 	eff3D->Write("eff3D");
 	efftheta_clean->Write("efftheta_clean");
 	effpt_clean->Write("effpt_clean");
+	effphi_clean->Write("effphi_clean");
 	out->Close();
 	f->Close();
 	return 0;
