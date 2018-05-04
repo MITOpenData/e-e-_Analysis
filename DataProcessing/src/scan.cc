@@ -1459,8 +1459,10 @@ int main(int argc, char *argv[])
     nMix = 1;
   }
 
+  const bool isMC = getIsMC(fileListTemp.at(0));
+  
   if(nMix < 0){
-    if(getIsMC(fileListTemp.at(0))) nMix = 1;
+    if(isMC) nMix = 1;
     else nMix = 3;
   }
 
@@ -1470,8 +1472,8 @@ int main(int argc, char *argv[])
   else if(argc == 5) retVal += scan(argv[1], argv[2], argv[3], argv[4]);
   
   std::cout << "Making mixing file..." << std::endl;
-  if(argc == 5) retVal += makeMixFile(argv[4], argv[4], nMix);
-  else          retVal += makeMixFile(argv[1], "", nMix);
+  if(argc == 5) retVal += makeMixFile(argv[4], isMC, argv[4], nMix);
+  else          retVal += makeMixFile(argv[1], isMC, "", nMix);
 
   std::cout << "END DATE, TIME: " << date->GetDate() << ", " << date->GetTime() << std::endl;
   delete date;

@@ -427,7 +427,7 @@ int main(int argc, char* argv[])
   std::cout << "Start to end: " << startTime << ", " << endTime << std::endl;
 
   std::cout << "Mixing File..." << std::endl;
-  makeMixFile(outFileName, outFileName, 1);
+  makeMixFile(outFileName, false, outFileName, 1);
   std::cout << "Job done" << std::endl;
 
   return 0;

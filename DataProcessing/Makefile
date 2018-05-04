@@ -12,16 +12,19 @@ FASTJET=`$(FASTJETDIR)/bin/fastjet-config --cxxflags --libs --plugins`
 MKDIR_BIN=mkdir -p $(PWD)/bin
 MKDIR_PDF=mkdir -p $(PWD)/pdfDir
 CHECK_STUDYMULTDIR=printf "\nSTUDYMULTDIR is set to: \'$(STUDYMULTDIR)\'\n   !!!IF STUDYMULTDIR IS EMPTY THE BUILD WILL FAIL!!!\n   Run 'source setStudyMultEnv.sh' in top level StudyMult directory to fix.\n\n"
+CHECK_FASTJETDIR=printf "\nFASTJETDIR is set to: \'$(FASTJETDIR)\'\n   !!!IF FASTJETDIR IS EMPTY THE BUILD WILL FAIL!!!\n   Run 'source setStudyMultEnv.sh' in top level StudyMult directory to fix.\n\n"
 
 #programs to make
 
-all: mkdirBin mkdirPdf checkGlobal bin/scan.exe bin/mixMain.exe bin/countNEvt.exe bin/doComparison.exe
+all: mkdirBin mkdirPdf checkStudyMultDir checkFastJetDir bin/scan.exe bin/mixMain.exe bin/countNEvt.exe bin/doComparison.exe
 mkdirBin:
 	$(MKDIR_BIN)
 mkdirPdf:
 	$(MKDIR_PDF)
-checkGlobal:
+checkStudyMultDir:
 	@$(CHECK_STUDYMULTDIR)
+checkFastJetDir:
+	@$(CHECK_FASTJETDIR)
 
 bin/scan.exe: src/scan.cc
 	$(CXX) $(CXXFLAGS) $(ROOT) $(FASTJET) -I $(STUDYMULTDIR) -o bin/scan.exe src/scan.cc

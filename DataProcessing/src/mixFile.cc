@@ -39,7 +39,7 @@ double get_wall_time(){
   return (double)time.tv_sec + (double)time.tv_usec * .000001;
 }
 
-int makeMixFile(std::string inputFile, std::string outputFile = "", const int nEvts2Mix = 3, const int maxMult = 35){
+int makeMixFile(std::string inputFile, const bool isMC, std::string outputFile = "", const int nEvts2Mix = 3, const int maxMult = 35){
   double startTime = get_wall_time();
   double getTime = 0;
 
@@ -52,6 +52,8 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
   }
   TFile * input = TFile::Open(inputFile.c_str(),"read");
   TTree * inTree1_p = (TTree*)input->Get("t");
+  TTree* inMCTree1_p = NULL;
+  if(isMC) inMCTree1_p = (TTree*)input->Get("tgen");
   
   //compile list of branches and set them
   //std::vector<std::string> listOfBranches;
@@ -61,8 +63,13 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
   
   //particle and event info
   inTree1_p->SetBranchStatus("*",0);
+  if(isMC) inMCTree1_p->SetBranchStatus("*",0);
+
   particleData pdataSig;
   eventData edataSig;  
+  particleData pdataMCSig;
+  eventData edataMCSig;  
+
   std::vector<std::string> listOfBranches2 = {"passesAll", "nChargedHadronsHP","passesLEP1TwoPC"};
   edataSig.SetStatusAndAddressRead(inTree1_p, listOfBranches2); 
 
@@ -77,6 +84,11 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
   std::vector<std::string> listOfBranches = {"nParticle", "process", "Energy", "px", "py", "pz", "pt", "pmag", "rap", "eta", "theta", "phi", "highPurity", "pwflag", "passesAll","passesLEP1TwoPC", "nChargedHadronsHP", "Thrust", "TTheta", "TPhi", "Thrust_charged", "TTheta_charged", "TPhi_charged"};
   pdataSig.SetStatusAndAddressRead(inTree1_p, listOfBranches);
   edataSig.SetStatusAndAddressRead(inTree1_p, listOfBranches);
+
+  if(isMC){
+    pdataMCSig.SetStatusAndAddressRead(inMCTree1_p, listOfBranches);
+    edataMCSig.SetStatusAndAddressRead(inMCTree1_p, listOfBranches);
+  }
 
   //wta branches
   std::vector<std::string> listOfBoostedTrees1 = returnRootFileContentsList(input, "TTree", "Boosted");
@@ -119,9 +131,19 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
   outTree1_p->SetDirectory(output);
   pdataMix.SetBranchWrite(outTree1_p);
 
+  particleData pdataMCMix;
+  TTree * outMCTree1_p = NULL;
+  if(isMC){
+    outMCTree1_p = new TTree("tgen","tgen");
+    outMCTree1_p->SetDirectory(output);
+    pdataMCMix.SetBranchWrite(outMCTree1_p);
+  }
+
   //evt info
   eventData edataMix;
+  eventData edataMCMix;
   edataMix.SetBranchWrite(outTree1_p);
+  if(isMC) edataMCMix.SetBranchWrite(outMCTree1_p);
 
   //wta trees
   boostedEvtData bDataMix[nBoostedTrees];
@@ -131,7 +153,6 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
     outTree1_b[jI]->SetDirectory(output);
     bDataMix[jI].SetBranchWrite(outTree1_b[jI]);
   }
-
 
   const Int_t printInterval = 20;
   const Int_t printNEntries = TMath::Max(1,(int)(inTree1_p->GetEntries()/printInterval));
@@ -145,6 +166,7 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
     //if(i>1000) break;
     double tempTime = get_wall_time(); 
     inTree1_p->GetEntry(i);
+    if(isMC) inMCTree1_p->GetEntry(i);
     for(Int_t jI = 0; jI < nBoostedTrees; ++jI) bTree1_p[jI]->GetEntry(i);
     getTime += get_wall_time()-tempTime; 
 
@@ -167,6 +189,7 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
 
     //setup loop over other events in file to get mixed events
     resetMixEvt(&pdataMix);
+    if(isMC) resetMixEvt(&pdataMCMix);
     for(Int_t jI = 0; jI < nBoostedTrees; ++jI) resetMixEvtBoosted(&bDataMix[jI]);
    
     m.setCurrentElement(signalMultiplicity,i);//makes sure you find 'close' events in the file to speed things up
@@ -176,12 +199,15 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
       int j = m.getNextElement((unsigned char)signalMultiplicity, i);
       tempTime = get_wall_time();
       inTree1_p->GetEntry(j);
+      if(isMC) inMCTree1_p->GetEntry(j);
+
       getTime += get_wall_time()-tempTime;     
   
       //if we check the entire file and haven't found enough mixed events, give up and mix it with itself.  Warning if it passes evt sel
       if(i==j){
         if(edataSig.passesLEP1TwoPC) std::cout << "Warning! Only " << mixedEventsFound << "/" << nEvts2Mix << " found in file for event index " <<  i << "!  Giving up with less than the requested number of mixed events..." << std::endl;
         appendMixEvt(&edataMix, &pdataMix, &pdataSig, thrustAxis, thrustAxis_ch, (float)mixedEventsFound);
+        if(isMC) appendMixEvt(&edataMCMix, &pdataMCMix, &pdataMCSig, thrustAxis, thrustAxis_ch, (float)mixedEventsFound);
         for(Int_t jI = 0; jI < nBoostedTrees; ++jI) appendMixEvtBoosted(&bDataMix[jI], &pdataSig, WTAAxis[jI], WTABoost[jI], (float)mixedEventsFound);
         break;
       }
@@ -196,16 +222,20 @@ int makeMixFile(std::string inputFile, std::string outputFile = "", const int nE
 
       //particle loop is in here
       appendMixEvt(&edataMix, &pdataMix, &pdataSig, thrustAxis, thrustAxis_ch, (float)mixedEventsFound);
+      if(isMC) appendMixEvt(&edataMCMix, &pdataMCMix, &pdataMCSig, thrustAxis, thrustAxis_ch, (float)mixedEventsFound);
       for(Int_t jI = 0; jI < nBoostedTrees; ++jI) appendMixEvtBoosted(&bDataMix[jI], &pdataSig, WTAAxis[jI], WTABoost[jI], (float)mixedEventsFound);
     }
     pdataMix.preFillClean();
+    if(isMC) pdataMCMix.preFillClean();
     outTree1_p->Fill();
+    if(isMC) outMCTree1_p->Fill();
     for(Int_t jI = 0; jI < nBoostedTrees; ++jI){bDataMix[jI].preFillClean(); outTree1_b[jI]->Fill();}
   }
   output->Write("", TObject::kOverwrite);
   
   for(Int_t jI = 0; jI < nBoostedTrees; ++jI) delete outTree1_b[jI];
   delete outTree1_p;
+  if(isMC) delete outMCTree1_p;
   output->Close();
 
 
