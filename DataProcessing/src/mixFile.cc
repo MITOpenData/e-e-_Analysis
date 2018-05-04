@@ -189,7 +189,11 @@ int makeMixFile(std::string inputFile, const bool isMC, std::string outputFile =
 
     //setup loop over other events in file to get mixed events
     resetMixEvt(&pdataMix);
-    if(isMC) resetMixEvt(&pdataMCMix);
+    resetMixEvt(&edataMix);
+    if(isMC){
+      resetMixEvt(&pdataMCMix);
+      resetMixEvt(&edataMCMix);
+    }
     for(Int_t jI = 0; jI < nBoostedTrees; ++jI) resetMixEvtBoosted(&bDataMix[jI]);
    
     m.setCurrentElement(signalMultiplicity,i);//makes sure you find 'close' events in the file to speed things up
