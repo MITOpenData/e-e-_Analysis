@@ -695,7 +695,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 
       ++counterParticles;	
     }
-
+  
     if(doLocalDebug) std::cout << __FILE__ << ", " << __LINE__ << std::endl;
   
     //Have to fill one last time since the condition for fill is dependent on NEXT EVENT existing, else we would lose last event per file
