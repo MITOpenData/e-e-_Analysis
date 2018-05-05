@@ -82,8 +82,10 @@ inline double phiFromThrust(TVector3 thrust, TVector3 p, bool doPerpThrust = fal
 
 void setThrustVariables(particleData *p, eventData *e, TVector3 thrust, TVector3 chThrust){
   int nTrk = 0;
+
   for(int i = 0; i< p->nParticle; i++){
     TVector3 part = TVector3(p->px[i], p->py[i], p->pz[i]);
+
     p->pt_wrtThr[i] = ptFromThrust(thrust, part);
     p->eta_wrtThr[i] = etaFromThrust(thrust, part);
     p->rap_wrtThr[i] = rapFromThrust(thrust, part, p->mass[i]);
@@ -105,9 +107,10 @@ void setThrustVariables(particleData *p, eventData *e, TVector3 thrust, TVector3
     p->theta_wrtChThrPerp[i] = thetaFromThrust(chThrust, part, true);
     p->phi_wrtChThrPerp[i] = phiFromThrust(chThrust, part, true);
     p->rap_wrtChThrPerp[i] = rapFromThrust(chThrust, part,p->mass[i],true);
-    
+      
     if(p->pwflag[i]==0 && p->pt_wrtThr[i]>0.4) nTrk++;
   }
+  
   e->nChargedHadrons_GT0p4Thrust = nTrk;
 }
 

@@ -11,16 +11,19 @@ endif
 FASTJET=`$(FASTJETDIR)/bin/fastjet-config --cxxflags --libs --plugins`
 MKDIR_BIN=mkdir -p $(PWD)/bin
 MKDIR_PDF=mkdir -p $(PWD)/pdfDir
+MKDIR_OUTPUT=mkdir -p $(PWD)/output
 CHECK_STUDYMULTDIR=printf "\nSTUDYMULTDIR is set to: \'$(STUDYMULTDIR)\'\n   !!!IF STUDYMULTDIR IS EMPTY THE BUILD WILL FAIL!!!\n   Run 'source setStudyMultEnv.sh' in top level StudyMult directory to fix.\n\n"
 CHECK_FASTJETDIR=printf "\nFASTJETDIR is set to: \'$(FASTJETDIR)\'\n   !!!IF FASTJETDIR IS EMPTY THE BUILD WILL FAIL!!!\n   Run 'source setStudyMultEnv.sh' in top level StudyMult directory to fix.\n\n"
 
 #programs to make
 
-all: mkdirBin mkdirPdf checkStudyMultDir checkFastJetDir bin/scan.exe bin/mixMain.exe bin/countNEvt.exe bin/doComparison.exe
+all: mkdirBin mkdirPdf mkdirOutput checkStudyMultDir checkFastJetDir bin/scan.exe bin/mixMain.exe bin/countNEvt.exe bin/doComparison.exe bin/recoGenThrustComp.exe bin/plotRecoGenThrustComp.exe
 mkdirBin:
 	$(MKDIR_BIN)
 mkdirPdf:
 	$(MKDIR_PDF)
+mkdirOutput:
+	$(MKDIR_OUTPUT)
 checkStudyMultDir:
 	@$(CHECK_STUDYMULTDIR)
 checkFastJetDir:
@@ -32,6 +35,10 @@ bin/mixMain.exe: src/mixMain.cc
 	$(CXX) $(CXXFLAGS) $(ROOT) $(FASTJET) -I $(STUDYMULTDIR) -o bin/mixMain.exe src/mixMain.cc
 bin/doComparison.exe: src/doComparison.cc
 	$(CXX) $(CXXFLAGS) $(ROOT) -I $(STUDYMULTDIR) -o bin/doComparison.exe src/doComparison.cc
+bin/recoGenThrustComp.exe: src/recoGenThrustComp.C
+	$(CXX) $(CXXFLAGS) $(ROOT) -I $(STUDYMULTDIR) -o bin/recoGenThrustComp.exe src/recoGenThrustComp.C
+bin/plotRecoGenThrustComp.exe: src/plotRecoGenThrustComp.C
+	$(CXX) $(CXXFLAGS) $(ROOT) -I $(STUDYMULTDIR) -o bin/plotRecoGenThrustComp.exe src/plotRecoGenThrustComp.C
 bin/countNEvt.exe: src/countNEvt.C
 	$(CXX) $(CXXFLAGS) $(ROOT) $(FASTJET) -I $(STUDYMULTDIR) -o bin/countNEvt.exe src/countNEvt.C
 clean:
