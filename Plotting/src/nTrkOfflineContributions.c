@@ -36,14 +36,14 @@
 #include <TLegend.h>
 
 //local headers
-#include "include/fourier.h"
-#include "include/Selection.h"
+#include "DataProcessing/include/smartJetName.h"
 #include "DataProcessing/include/trackSelection.h"
-#include "include/smartJetName.h"
-#include "include/ProgressBar.h"
-#include "DataQuality.h"
-#include "include/formatHists.h"
-#include "../../ThrustDistribution/include/getLogBins.h"
+#include "TwoParticleCorrelation/include/fourier.h"
+#include "TwoParticleCorrelation/include/Selection.h"
+#include "TwoParticleCorrelation/include/ProgressBar.h"
+#include "TwoParticleCorrelation/include/formatHists.h"
+#include "TwoParticleCorrelation/include/TPCNtupleData.h"
+#include "ThrustDistribution/include/getLogBins.h"
 
 int nTrkOfflineContributions(const std::string inFileName, 		// Input file
                              std::string outFileName    	// Output file
@@ -88,9 +88,6 @@ int nTrkOfflineContributions(const std::string inFileName, 		// Input file
     /********************************************************************************************************************/
     // Define the output file
     /********************************************************************************************************************/
-    if(createhists("savehist")) return -1;
-    
-    //TFile * output = TFile::Open(outFileName.c_str(),"recreate");
     
     /// Initialize the trees for use
     std::cout<<"Initializing trees for use..."<<std::endl;
