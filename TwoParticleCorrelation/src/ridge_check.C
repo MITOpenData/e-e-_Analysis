@@ -75,26 +75,7 @@ int ridge_check( const std::string inFileName, 			// Input file
 		       int _typemultiplicity=0, 		// 0=total charged track multiplicity, 1=charged track multiplicity in barrel
 		       bool owEffCorr = true			// overwrite the value of efficiency correction from selection.h
                ) 
-{
-    // Print settings
-    cout<<"overwrite="<<overwrite<<endl;
-    cout<<"owThrust="<<owThrust<<endl;
-    cout<<"owWTA="<<owWTA<<endl;
-    cout<<"owPerp="<<owPerp<<endl;
-    cout<<"owDoGen="<<owDoGen<<endl;
-    cout<<"owAjCut="<<owAjCut<<endl;
-    cout<<"AjCut="<<_AjCut<<endl;
-    cout<<"ow3jetEvtCut="<<ow3jetEvtCut<<endl;
-    cout<<"thirdJetCut="<<_thirdJetCut<<endl;
-    cout<<"owBarrel="<<owBarrel<<endl;
-    cout<<"anatyperegion="<<_anatyperegion<<endl;
-    cout<<"etabarrelcut="<<_etabarrelcut<<endl;
-    cout<<"typeEnergyBarrelSel="<<_typeEnergyBarrelSel<<endl;
-    cout<<"etabarrelcutforEselection="<<_etabarrelcutforEselection<<endl;
-    cout<<"maxrelenergyinsidebarrel="<<_maxrelenergyinsidebarrel<<endl;
-    cout<<"typemultiplicity="<<_typemultiplicity<<endl;
-    cout<<"owEffCorr="<<owEffCorr<<endl;
-   
+{  
     // ROOT Global setting
     TH1::SetDefaultSumw2();    TH2::SetDefaultSumw2();
 
@@ -116,7 +97,7 @@ int ridge_check( const std::string inFileName, 			// Input file
        if (owWTA)    s.doWTA = true; else s.doWTA = false;
        if (owPerp)   s.doPerp = true; else s.doPerp = false;
        if (owDoGen)  s.doGen = true; else s.doGen = false;
-       if (owDoTGen)  {s.doGen = true; s.doTGen=true; s.doEffCorr = false; owEffCorr = false;} else {s.doTGen = false;}
+       if (owDoTGen)  {s.doGen = 0; s.doTGen=true; s.doEffCorr = false; owEffCorr = false; owDoGen=0;} else {s.doTGen = false;}
        if (owAjCut) {s.doAjCut = true; s.AjCut=_AjCut;}
        else s.doAjCut = false;
        if (owEffCorr) {s.doEffCorr= true;} else {s.doEffCorr = false;}
@@ -132,7 +113,26 @@ int ridge_check( const std::string inFileName, 			// Input file
          if(owThrust==false) {std::cout<<"the barrel selection and multiplicity is defined now in the thrust axis only!!!"<<std::endl; return 0;} 
        }
     }
-    
+
+    // Print settings
+    cout<<"overwrite="<<overwrite<<endl;
+    cout<<"owThrust="<<owThrust<<endl;
+    cout<<"owWTA="<<owWTA<<endl;
+    cout<<"owPerp="<<owPerp<<endl;
+    cout<<"owDoGen="<<owDoGen<<endl;
+    cout<<"owAjCut="<<owAjCut<<endl;
+    cout<<"AjCut="<<_AjCut<<endl;
+    cout<<"ow3jetEvtCut="<<ow3jetEvtCut<<endl;
+    cout<<"thirdJetCut="<<_thirdJetCut<<endl;
+    cout<<"owBarrel="<<owBarrel<<endl;
+    cout<<"anatyperegion="<<_anatyperegion<<endl;
+    cout<<"etabarrelcut="<<_etabarrelcut<<endl;
+    cout<<"typeEnergyBarrelSel="<<_typeEnergyBarrelSel<<endl;
+    cout<<"etabarrelcutforEselection="<<_etabarrelcutforEselection<<endl;
+    cout<<"maxrelenergyinsidebarrel="<<_maxrelenergyinsidebarrel<<endl;
+    cout<<"typemultiplicity="<<_typemultiplicity<<endl;
+    cout<<"owEffCorr="<<owEffCorr<<endl;
+     
     s.Init();
     
     
@@ -292,13 +292,15 @@ int ridge_check( const std::string inFileName, 			// Input file
     if (inMixFileName=="0"||inMixFileName=="") {   // no mix file specified
        cout <<"Perform analysis without mix file"<<endl;
        t_mix->Add(inFileName.c_str());
+       tgen_mix->Add(inFileName.c_str());
     } else {
        doMixFile=1;
        cout <<"Perform analysis with mix file = "<<inMixFileName<<endl;
        t_mix->Add(inMixFileName.c_str());
+       tgen_mix->Add(inMixFileName.c_str());
     }
 
-    if (s.doTGen&&(doMixFile==1||s.doWTA==1||s.doPerp)) cout <<"tGen analysis in this mode is not supported! Terminate..."<<endl;
+    if (s.doTGen&&(s.doWTA==1)) cout <<"tGen analysis in this mode is not supported! Terminate..."<<endl;
 
     
     TChain * boost_t_mix = new TChain(boostTree.c_str());      	boost_t_mix->Add(inFileName.c_str());
