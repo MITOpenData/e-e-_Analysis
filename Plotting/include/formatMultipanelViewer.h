@@ -28,7 +28,7 @@ void formatMultipanelViewer(TCanvas *multiPanel, TPad *pads[], int rows, int col
     static const float rightMargin = 0.18;
     static const float bottomMargin = 0.15;
     static const float topMargin = 0.22;
-    static const float xMargin = 0.0;
+    static const float xMargin = 0.0; // for multipanel put xMargin/yMargin = 0.0
     static const float yMargin = 0.0;
     static const float frameWidth = 0.8;
     static const float frameHeight = 0.8;

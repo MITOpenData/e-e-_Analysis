@@ -49,7 +49,7 @@
 #include "include/vanGoghPalette.h"
 #include "include/formatMultipanelViewer.h"
 
-int nTrkOfflineContributions(const std::string inFileName)
+int nTrkOfflineContributions(const std::string inFileName, int data) // 0 full directory, 1 monte carlo, 2 local run on single file
 {
     Selection s = Selection();
     vanGoghPalette vGP = vanGoghPalette();
@@ -106,21 +106,77 @@ int nTrkOfflineContributions(const std::string inFileName)
     }
     
     /// Initialize the tree and variables for use
-    TFile * f = TFile::Open(inFileName.c_str(),"read");
-    TTree * t = (TTree*)f->Get("t");
-    TTree * jt = (TTree*)f->Get(smartJetName("ak4ESchemeJetTree", f).c_str());
+    TChain chain_t("t");
+    TChain chain_jt("akR4ESchemeJetTree"); // should use the smartJetName method but not sure how to implement it here so hardcoded name for now
     
-    Int_t nevent = (Int_t)t->GetEntries();
-    int nChargedHadronsHP;      t->SetBranchAddress("nChargedHadronsHP",&nChargedHadronsHP);
+    // Data
+    std::string LEP1Data1992_recons_aftercut = "LEP1Data1992_recons_aftercut-MERGED.root";
+    std::string LEP1Data1993_recons_aftercut = "LEP1Data1993_recons_aftercut-MERGED.root";
+    std::string LEP1Data1994_recons_aftercut = "LEP1Data1994_recons_aftercut-MERGED.root";
+    std::string LEP1Data1995_recons_aftercut = "LEP1Data1995_recons_aftercut-MERGED.root";
+    
+    std::string LEP1Data1992_recons_aftercut_Mix = "LEP1Data1992_recons_aftercut-MERGED_Mix.root";
+    std::string LEP1Data1993_recons_aftercut_Mix = "LEP1Data1993_recons_aftercut-MERGED_Mix.root";
+    std::string LEP1Data1994_recons_aftercut_Mix = "LEP1Data1994_recons_aftercut-MERGED_Mix.root";
+    std::string LEP1Data1995_recons_aftercut_Mix = "LEP1Data1995_recons_aftercut-MERGED_Mix.root";
+    
+    // Monte Carlo
+    std::string alephMCRecoAfterCutPaths_1994 = "alephMCRecoAfterCutPaths_1994.root";
+    
+    std::string alephMCRecoAfterCutPaths_1994_Mix = "alephMCRecoAfterCutPaths_1994_Mix.root";
+
+    if (data == 0) // full data set
+    {
+        chain_t.Add( (inFileName+LEP1Data1992_recons_aftercut).c_str() );
+        chain_t.Add( (inFileName+LEP1Data1993_recons_aftercut).c_str() );
+        chain_t.Add( (inFileName+LEP1Data1994_recons_aftercut).c_str() );
+        chain_t.Add( (inFileName+LEP1Data1995_recons_aftercut).c_str() );
+        
+        chain_jt.Add( (inFileName+LEP1Data1992_recons_aftercut).c_str() );
+        chain_jt.Add( (inFileName+LEP1Data1993_recons_aftercut).c_str() );
+        chain_jt.Add( (inFileName+LEP1Data1994_recons_aftercut).c_str() );
+        chain_jt.Add( (inFileName+LEP1Data1995_recons_aftercut).c_str() );
+    }
+    if (data == 1) // monte-carlo
+    {
+        chain_t.Add( (inFileName+alephMCRecoAfterCutPaths_1994).c_str() );
+        
+        chain_jt.Add( (inFileName+alephMCRecoAfterCutPaths_1994).c_str() );
+    }
+    if (data == 2) // single file run
+    {
+        chain_t.Add(inFileName.c_str());
+        
+        chain_jt.Add(inFileName.c_str());
+    }
+    
+    //TFile * f = TFile::Open(inFileName.c_str(),"read");
+    //TTree * t = (TTree*)f->Get("t");
+    //TTree * jt = (TTree*)f->Get(smartJetName("ak4ESchemeJetTree", f).c_str());
+    
+    //Int_t nevent = (Int_t)chain_t->GetEntries();
+    Int_t nevent = (Int_t)chain_t.GetEntries();
+    
+    int nChargedHadronsHP;      chain_t.SetBranchAddress("nChargedHadronsHP",&nChargedHadronsHP); //t->SetBranchAddress("nChargedHadronsHP",&nChargedHadronsHP);
     //float nChargedHadronsHP_Corrected;      t->SetBranchAddress("nChargedHadronsHP_Corrected",&nChargedHadronsHP_Corrected);
-    float Thrust;       t->SetBranchAddress("Thrust",&Thrust);
-    int nref;       jt->SetBranchAddress("nref",&nref);
+    float Thrust;       chain_t.SetBranchAddress("Thrust",&Thrust); //t->SetBranchAddress("Thrust",&Thrust);
+    int nref;       chain_jt.SetBranchAddress("nref",&nref); //jt->SetBranchAddress("nref",&nref);
     
+    // Setup Progress bar
+    ProgressBar Bar(cout, nevent);
+    Bar.SetStyle(1);
+    unsigned int entryDiv = (nevent > 200) ? nevent / 200 : 1;
     
     for (Int_t i=0;i<nevent;i++)
     {
-        t->GetEntry(i);
-        jt->GetEntry(i);
+        //t->GetEntry(i);
+        //jt->GetEntry(i);
+        
+        chain_t.GetEntry(i);
+        chain_jt.GetEntry(i);
+        
+        Bar.Update(i);
+        Bar.PrintWithMod(entryDiv);
         
         // no cut
         nTrkOffline->Fill(nChargedHadronsHP);
