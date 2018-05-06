@@ -33,7 +33,9 @@
 #include "DataProcessing/include/trackSelection.h"
 #include "include/smartJetName.h"
 #include "include/ProgressBar.h"
-#include "../../DataProcessing/include/alephTrkEfficiency.h"
+#include "DataProcessing/include/alephTrkEfficiency.h"
+#include "DataProcessing/include/signalMixTableReader.h"
+
 
 /********************************************************************************************************************/
 // Two particle correlation analysis
@@ -73,8 +75,9 @@ int ridge_check( const std::string inFileName, 			// Input file
 		       Float_t _etabarrelcutforEselection=2.0, 	//define the eta region for the Ebarrel selection
 		       Float_t _maxrelenergyinsidebarrel=0., 	// define the cut on the Ebarrel, _maxrelenergyinsidebarrel=Ebarrel/Etotal 
 		       int _typemultiplicity=0, 		// 0=total charged track multiplicity, 1=charged track multiplicity in barrel
-		       bool owEffCorr = true			// overwrite the value of efficiency correction from selection.h
-               ) 
+		       bool owEffCorr = true,			// overwrite the value of efficiency correction from selection.h
+		       bool doReweightMix = 1			// reweight eta distribution
+		                      ) 
 {  
     // ROOT Global setting
     TH1::SetDefaultSumw2();    TH2::SetDefaultSumw2();
@@ -84,6 +87,18 @@ int ridge_check( const std::string inFileName, 			// Input file
     
     // Setup efficiency corrector
     alephTrkEfficiency efficiencyCorrector;
+    
+    // Setup Mix Event Scaling factor corrector:
+    signalMixTableReader mixCorrector;
+    
+    // Setup simple reweighing for Thrust analysis
+    TF1 *f  =new TF1("f","[0]*exp([1]+[2]*x+[3]*x*x+[4]*x*x*x)+[5]");
+    f->SetParameter(0,1.34148);
+    f->SetParameter(1,-5.13101);
+    f->SetParameter(2,4.2532);
+    f->SetParameter(3,-6.06677e-1);
+    f->SetParameter(4,2.38007e-2);
+    f->SetParameter(5,1.83583e-1);
         
     // Print general information
     if (verbose) cout <<"Input File : "<<inFileName<<endl;
@@ -134,9 +149,7 @@ int ridge_check( const std::string inFileName, 			// Input file
     cout<<"owEffCorr="<<owEffCorr<<endl;
      
     s.Init();
-    
-    
-    
+       
     if (verbose) {
       if (s.doThrust && s.doWTA) { cout <<"Can't have both doWTA and doThrust on in Selection.h!"<<endl; return 0; }
       if (s.doThrust) 	cout <<"Thrust axis analysis"<<endl;
@@ -277,7 +290,7 @@ int ridge_check( const std::string inFileName, 			// Input file
     TChain * t = new TChain("t");       			
     TChain * tgen = new TChain("tgen");       			
     t->Add(inFileName.c_str());
-    if (s.doTGen) tgen->Add(inFileName.c_str());
+    tgen->Add(inFileName.c_str());
 
     TChain * boost_t = new TChain(boostTree.c_str());       	boost_t->Add(inFileName.c_str());
     TChain * jt = new TChain(jtTreeName.c_str());       	jt->Add(inFileName.c_str());
@@ -300,16 +313,19 @@ int ridge_check( const std::string inFileName, 			// Input file
        tgen_mix->Add(inMixFileName.c_str());
     }
 
+    if (tgen->GetEntries()==0) {
+        cout <<"I think this is a data analysis, therefore, use data mix event correction table"<<endl;
+	mixCorrector.Init("../../DataProcessing/tables/signalOverMixAbsEtaTable_Data_20180506.txt");
+    } else {	
+        cout <<"I think this is a MC analysis, therefore, use MC mix event correction table"<<endl;
+	mixCorrector.Init("../../DataProcessing/tables/signalOverMixAbsEtaTable_MC_20180506.txt");
+    }
+
     if (s.doTGen&&(s.doWTA==1)) cout <<"tGen analysis in this mode is not supported! Terminate..."<<endl;
 
-    
     TChain * boost_t_mix = new TChain(boostTree.c_str());      	boost_t_mix->Add(inFileName.c_str());
     TChain * jt_mix = new TChain(jtTreeName.c_str());       	jt_mix->Add(inFileName.c_str());
     
-    t_mix->LoadBaskets(4000000000);
-    tgen_mix->LoadBaskets(4000000000);
-    jt_mix->LoadBaskets(4000000000);
-    boost_t_mix->LoadBaskets(4000000000);
     TPCNtupleData mix(s.doBelle, s.doThrust, s.doWTA, s.doPerp, 1, s.doTGen);       mix.setupTPCTree(t_mix,boost_t_mix,jt_mix,tgen_mix);        
     
     // analysis
@@ -617,6 +633,7 @@ int ridge_check( const std::string inFileName, 			// Input file
 		    else trackWeight=mix.particle.particleWeight/efficiencyCorrector.efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j])/efficiencyCorrector.efficiency(mix.particle.theta[k],mix.particle.phi[k],mix.particle.pt[k]);
 //		    else trackWeight=1./efficiencyCorrector.efficiency(data.particle.theta[j],data.particle.phi[j],data.particle.pt[j])/efficiencyCorrector.efficiency(mix.particle.theta[k],mix.particle.phi[k],mix.particle.pt[k]);
 		    fillNumerator=trackWeight;
+		    if (doReweightMix&&doMixFile&&s.doThrust&&s.doPerp==0) fillNumerator *= mixCorrector.getSigOverMixFactor(nTrk,fabs(mix.getEta(k)));
 		    for(unsigned int eI = 0; eI< histE.size(); eI++)
                     {
                         for(unsigned int nI = 0; nI< histNtrk_mix.size(); nI++) // histNtrk_mix contains the intersection of histNtrk_mix and histNtrk
