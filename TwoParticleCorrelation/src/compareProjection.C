@@ -12,12 +12,20 @@
 #include "TAttAxis.h"
 #include "TColor.h"
 #include "TF1.h"
+#include "TBox.h"
 
 //local headers
 #include "include/Selection.h"
 #include "include/utilities.h"
 #include "../include/xjjrootuti.h"
 #include "../../Utilities/include/plotLogo.h"
+
+void setSys(TH1F *h, float sys=0.03)
+{
+   for (int i=1;i<=h->GetNbinsX();i++){
+      h->SetBinError(i,h->GetBinContent(i)*0.03);
+   }
+}
 
 void formatTPCAxes(TH2F * h, float offsetx, float offsety, float offsetz){
    h->SetTitleOffset(offsetx,"X");
@@ -97,6 +105,8 @@ int compareProjection(const std::string inFileName1, const std::string mcFileNam
 
   bool getThetaAngle = s.getThetaAngle;
   
+  double sys = 0.03;
+  
 
 
   TFile * f1 = TFile::Open(inFileName1.c_str(),"read");
@@ -137,7 +147,7 @@ int compareProjection(const std::string inFileName1, const std::string mcFileNam
   TH2F * dphiMC[nEnergyBins][nMultBins][nptBins][netaBins];
 
   Float_t etaPlotRange = s.getEtaPlotRange();
-  double etaranges[8]={1.5,2.5,2.5,5,1.5,5,2.6,10};
+  double etaranges[8]={0,1.6,1.6,3.0,2,3.0};
   Int_t minbin,maxbin;
   Int_t nCanvas=0;
   for(int e = 0; e<nEnergyBins; e++)
@@ -152,28 +162,29 @@ int compareProjection(const std::string inFileName1, const std::string mcFileNam
         for(int et = 0; et<netaBins; et++)
         {
 	  if (doOneBin&&et!=0) continue;
-          // preparing variables for the legend and checking if valid axis
-          std::string sqrts = "#sqrt{s}";
-          if(s.energyBinsHigh[e] <= 100) sqrts = sqrts + "=91GeV";
-          else sqrts = sqrts + ">100GeV";
-          Float_t etaCut = 0;
-          Float_t ptLow = 0;
-          Float_t ptHigh = 0;
-	  Int_t ana=0;
-          if (hMetaData==0&&inFileName1.find("perp1") != std::string::npos ) doPerp=1;
-	      if ((hMetaData==0&&inFileName1.find("thrust1") != std::string::npos) || doThrust) {ana=1; etaCut = s.etaBinsLow_wrtThr[et]; ptLow = s.ptBinsLow_wrtThr[p]; ptHigh = s.ptBinsHigh_wrtThr[p];}
-          else if((hMetaData==0&&inFileName1.find("wta1") != std::string::npos) || doWTA) {ana=2;etaCut = s.etaBinsLow_wrtWTA[et]; ptLow = s.ptBinsLow_wrtWTA[p]; ptHigh = s.ptBinsHigh_wrtWTA[p];}
-          else if((hMetaData==0&&inFileName1.find("wta1") != std::string::npos&&inFileName1.find("perp1") != std::string::npos&&inFileName1.find("thrust1") != std::string::npos) || (doThrust==0&&doWTA==0)) {ana=3;etaCut = s.etaBinsLow_wrtBeam[et]; ptLow = s.ptBinsLow_wrtBeam[p]; ptHigh = s.ptBinsHigh_wrtBeam[p];}
-          else {std::cout<<"Unknown axis type...breaking"<<std::endl; break;}
-          TLegend * l = new TLegend(0.18,0.59,0.62,0.91);
-          l->SetFillStyle(0);
-          if(experiment==0)  l->AddEntry((TObject*)0,Form("ALEPH e^{+}e^{-}, %s",sqrts.c_str()),"");
-          if(experiment==1)  l->AddEntry((TObject*)0,"DELPHI e^{+}e^{-}","");
-          if(experiment==2)  l->AddEntry((TObject*)0,"Belle e^{+}e^{-}","");
-          if(experiment==3)  l->AddEntry((TObject*)0,"CMS pp","");
-          l->AddEntry((TObject*)0,Form("%d#leqN_{Trk}^{Offline}<%d",s.multBinsLow[m],s.multBinsHigh[m]),"");
-          l->AddEntry((TObject*)0,Form("|#eta|<%1.1f",etaCut),"");
-          l->AddEntry((TObject*)0,Form("%1.1f<p_{T}<%1.1f GeV",ptLow,ptHigh),"");
+          for (int np = 0; np<3; np++) {
+	     // preparing variables for the legend and checking if valid axis
+             std::string sqrts = "#sqrt{s}";
+             if(s.energyBinsHigh[e] <= 100) sqrts = sqrts + "=91GeV";
+             else sqrts = sqrts + ">100GeV";
+             Float_t etaCut = 0;
+             Float_t ptLow = 0;
+             Float_t ptHigh = 0;
+	     Int_t ana=0;
+             if (hMetaData==0&&inFileName1.find("perp1") != std::string::npos ) doPerp=1;
+   	     if ((hMetaData==0&&inFileName1.find("thrust1") != std::string::npos) || doThrust) {ana=1; etaCut = s.etaBinsLow_wrtThr[et]; ptLow = s.ptBinsLow_wrtThr[p]; ptHigh = s.ptBinsHigh_wrtThr[p];}
+             else if((hMetaData==0&&inFileName1.find("wta1") != std::string::npos) || doWTA) {ana=2;etaCut = s.etaBinsLow_wrtWTA[et]; ptLow = s.ptBinsLow_wrtWTA[p]; ptHigh = s.ptBinsHigh_wrtWTA[p];}
+             else if((hMetaData==0&&inFileName1.find("wta1") != std::string::npos&&inFileName1.find("perp1") != std::string::npos&&inFileName1.find("thrust1") != std::string::npos) || (doThrust==0&&doWTA==0)) {ana=3;etaCut = s.etaBinsLow_wrtBeam[et]; ptLow = s.ptBinsLow_wrtBeam[p]; ptHigh = s.ptBinsHigh_wrtBeam[p];}
+             else {std::cout<<"Unknown axis type...breaking"<<std::endl; break;}
+             TLegend * l = new TLegend(0.29,0.59,0.73,0.91);
+             l->SetFillStyle(0);
+             if(experiment==0)  l->AddEntry((TObject*)0,Form("ALEPH e^{+}e^{-}, %s",sqrts.c_str()),"");
+             if(experiment==1)  l->AddEntry((TObject*)0,"DELPHI e^{+}e^{-}","");
+             if(experiment==2)  l->AddEntry((TObject*)0,"Belle e^{+}e^{-}","");
+             if(experiment==3)  l->AddEntry((TObject*)0,"CMS pp","");
+             l->AddEntry((TObject*)0,Form("%d#leqN_{Trk}^{Offline}<%d",s.multBinsLow[m],s.multBinsHigh[m]),"");
+             l->AddEntry((TObject*)0,Form("|#eta|<%1.1f, %1.1f<p_{T}<%1.1f GeV",etaCut,ptLow,ptHigh),"");
+             l->AddEntry((TObject*)0,Form("%1.1f<|#Delta#eta|<%1.1f",etaranges[np*2],etaranges[np*2+1]),"");
 	  /*
 	  if (ana==1) {
 	     if (doPerp) { 
@@ -192,12 +203,19 @@ int compareProjection(const std::string inFileName1, const std::string mcFileNam
           }
 	  */
           // loading histograms
-          dphi[e][m][p][et] = (TH2F*)f1->Get(Form("h_deltaphi0_%d_%d_%d_%d_%d",e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
-          dphi[e][m][p][et]->SetName(Form("hData_deltaphi0_%d_%d_%d_%d_%d",e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
-	  dphiMC[e][m][p][et] = (TH2F*)fMC->Get(Form("h_deltaphi0_%d_%d_%d_%d_%d",e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
-          dphiMC[e][m][p][et]->SetName(Form("hMC_deltaphi0_%d_%d_%d_%d_%d",e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
-          dphi[e][m][p][et]->GetFunction("f1")->Delete();
+          dphi[e][m][p][et] = (TH2F*)f1->Get(Form("h_deltaphi%d_%d_%d_%d_%d_%d",np*2,e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
+          dphi[e][m][p][et]->SetName(Form("hData_deltaphi%d_%d_%d_%d_%d_%d",np*2,e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
+	  dphiMC[e][m][p][et] = (TH2F*)fMC->Get(Form("h_deltaphi%d_%d_%d_%d_%d_%d",np*2,e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
+          dphiMC[e][m][p][et]->SetName(Form("hMC_deltaphi%d_%d_%d_%d_%d_%d",np*2,e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
+          if (dphi[e][m][p][et]->GetFunction("f1")!=0) {
+	     dphi[e][m][p][et]->GetFunction("f1")->Delete();
+	  }
 	  dphi[e][m][p][et]->SetAxisRange(0,3.14,"x");
+	  double minY=dphi[e][m][p][et]->GetMinimum();
+	  double maxY=dphi[e][m][p][et]->GetMaximum();
+	  if (dphiMC[e][m][p][et]->GetMaximum()>maxY) maxY=dphiMC[e][m][p][et]->GetMaximum();
+	  if (dphiMC[e][m][p][et]->GetMinimum()<minY) minY=dphiMC[e][m][p][et]->GetMinimum();
+	  dphi[e][m][p][et]->SetAxisRange(minY-0.1*(maxY-minY),maxY+0.1*(maxY-minY),"Y");
 	  TCanvas *c = new TCanvas(Form("c%d",cCount),"",1000,1000);
 	  gPad->SetTopMargin(0.08);
 	  cCount++;
@@ -205,10 +223,16 @@ int compareProjection(const std::string inFileName1, const std::string mcFileNam
 	  dphi[e][m][p][et]->SetLineWidth(3);
 	  dphiMC[e][m][p][et]->SetLineWidth(2);
 	  dphi[e][m][p][et]->SetTitle("");
-	  dphi[e][m][p][et]->SetTitleOffset(1.2,"Y");
-	  dphi[e][m][p][et]->SetTitleOffset(1.2,"X");
+	  dphi[e][m][p][et]->SetTitleOffset(1.3,"Y");
+	  dphi[e][m][p][et]->SetTitleOffset(1.3,"X");
 	  
 	  dphi[e][m][p][et]->Draw();
+	  TH1F *hSys = (TH1F*)dphi[e][m][p][et]->Clone(Form("hSys_deltaphi%d_%d_%d_%d_%d_%d",np*2,e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
+	  setSys(hSys,sys);
+	  hSys->SetLineWidth(15);
+	  hSys->SetLineColor(kGray+1);
+	  hSys->SetMarkerStyle(0);
+	  hSys->Draw("same");
 
 	  dphiMC[e][m][p][et]->SetLineColor(4);
 	  dphiMC[e][m][p][et]->SetMarkerStyle(0);
@@ -217,13 +241,15 @@ int compareProjection(const std::string inFileName1, const std::string mcFileNam
   	  dphi[e][m][p][et]->Draw("same");
 	  
 	  l->AddEntry(dphi[e][m][p][et],"Archived Data","pl");
+	  l->AddEntry(hSys,"Systematical Uncertainty","l");
 	  l->AddEntry(dphiMC[e][m][p][et],"Archived PYTHIA 6.1 MC","pl");
 	  
 	  l->Draw();
  	  plotLogo(1,1,1);
-          c->SaveAs(Form("%s_dphiComparison_%d_%d_%d_%d_%d.eps",plotsname.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
-          c->SaveAs(Form("%s_dphiComparison_%d_%d_%d_%d_%d.png",plotsname.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
+          c->SaveAs(Form("%s_dphiComparison_%d_%d_%d_%d_%d_%d.eps",plotsname.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et,np));
+          c->SaveAs(Form("%s_dphiComparison_%d_%d_%d_%d_%d_%d.png",plotsname.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et,np));
 	  
+	  }
         }
       }
     }
