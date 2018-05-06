@@ -75,19 +75,25 @@ int sigMixThrustComp(const std::string inFileName1, const std::string inFileName
   TFile* outFile_p = new TFile(("output/sigMixThrustComp_" + std::to_string(date->GetDate()) + ".root").c_str(), "RECREATE");
   delete date;
 
+  const Int_t nMultBins = 3;
+  const Int_t multBinsLow[nMultBins] = {0, 15, 30};
+  const Int_t multBinsHi[nMultBins] = {15, 30, 200};
+
+  
+
   const Int_t nPtBins = 20;
   Float_t ptLow = 0.2;
   Float_t ptHi = 30.;
   Double_t ptBins[nPtBins+1];
   getLogBins(ptLow, ptHi, nPtBins, ptBins);
 
-  const Int_t nEtaBins = 20;
-  Float_t etaLow = -2.;
-  Float_t etaHi = 2.;
+  const Int_t nEtaBins = 100;
+  Float_t etaLow = -10.;
+  Float_t etaHi = 10.;
 
-  const Int_t nRapBins = 20;
-  Float_t rapLow = -2.;
-  Float_t rapHi = 2.;
+  const Int_t nRapBins = 100;
+  Float_t rapLow = -10.;
+  Float_t rapHi = 10.;
 
   const Int_t nThetaBins = 20;
   Float_t thetaLow = 0;
@@ -97,30 +103,63 @@ int sigMixThrustComp(const std::string inFileName1, const std::string inFileName
   Float_t phiLow = -TMath::Pi();
   Float_t phiHi = TMath::Pi();
 
-  TH1F* sigRecoPtWrtRecoThr_h = new TH1F("sigRecoPtWrtRecoThr_h", ";Sig. reco. p_{T} w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{dp_{T}}", nPtBins, ptBins);
-  TH1F* sigGenPtWrtGenThr_h = new TH1F("sigRecoPtWrtGenThr_h", ";Sig. gen. p_{T} w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{dp_{T}}", nPtBins, ptBins);
-  TH1F* mixRecoPtWrtRecoThr_h = new TH1F("mixRecoPtWrtRecoThr_h", ";Mix. reco. p_{T} w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{dp_{T}}", nPtBins, ptBins);
-  TH1F* mixGenPtWrtGenThr_h = new TH1F("mixRecoPtWrtGenThr_h", ";Mix. gen. p_{T} w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{dp_{T}}", nPtBins, ptBins);
+  TH1F* sigRecoPtWrtRecoThr_h[nMultBins+1];
+  TH1F* sigGenPtWrtGenThr_h[nMultBins+1];
+  TH1F* mixRecoPtWrtRecoThr_h[nMultBins+1];
+  TH1F* mixGenPtWrtGenThr_h[nMultBins+1];
 
-  TH1F* sigRecoEtaWrtRecoThr_h = new TH1F("sigRecoEtaWrtRecoThr_h", ";Sig. reco. #eta w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#eta}", nEtaBins, etaLow, etaHi);
-  TH1F* sigGenEtaWrtGenThr_h = new TH1F("sigRecoEtaWrtGenThr_h", ";Sig. gen. #eta w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#eta}", nEtaBins, etaLow, etaHi);
-  TH1F* mixRecoEtaWrtRecoThr_h = new TH1F("mixRecoEtaWrtRecoThr_h", ";Mix. reco. #eta w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#eta}", nEtaBins, etaLow, etaHi);
-  TH1F* mixGenEtaWrtGenThr_h = new TH1F("mixRecoEtaWrtGenThr_h", ";Mix. gen. #eta w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#eta}", nEtaBins, etaLow, etaHi);
+  TH1F* sigRecoEtaWrtRecoThr_h[nMultBins+1];
+  TH1F* sigGenEtaWrtGenThr_h[nMultBins+1];
+  TH1F* mixRecoEtaWrtRecoThr_h[nMultBins+1];
+  TH1F* mixGenEtaWrtGenThr_h[nMultBins+1];
 
-  TH1F* sigRecoRapWrtRecoThr_h = new TH1F("sigRecoRapWrtRecoThr_h", ";Sig. reco. y w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{dy}", nRapBins, rapLow, rapHi);
-  TH1F* sigGenRapWrtGenThr_h = new TH1F("sigRecoRapWrtGenThr_h", ";Sig. gen. y w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{dy}", nRapBins, rapLow, rapHi);
-  TH1F* mixRecoRapWrtRecoThr_h = new TH1F("mixRecoRapWrtRecoThr_h", ";Mix. reco. y w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{dy}", nRapBins, rapLow, rapHi);
-  TH1F* mixGenRapWrtGenThr_h = new TH1F("mixRecoRapWrtGenThr_h", ";Mix. gen. y w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{dy}", nRapBins, rapLow, rapHi);
+  TH1F* sigRecoRapWrtRecoThr_h[nMultBins+1];
+  TH1F* sigGenRapWrtGenThr_h[nMultBins+1];
+  TH1F* mixRecoRapWrtRecoThr_h[nMultBins+1];
+  TH1F* mixGenRapWrtGenThr_h[nMultBins+1];
 
-  TH1F* sigRecoThetaWrtRecoThr_h = new TH1F("sigRecoThetaWrtRecoThr_h", ";Sig. reco. #theta w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#theta}", nThetaBins, thetaLow, thetaHi);
-  TH1F* sigGenThetaWrtGenThr_h = new TH1F("sigRecoThetaWrtGenThr_h", ";Sig. gen. #theta w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#theta}", nThetaBins, thetaLow, thetaHi);
-  TH1F* mixRecoThetaWrtRecoThr_h = new TH1F("mixRecoThetaWrtRecoThr_h", ";Mix. reco. #theta w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#theta}", nThetaBins, thetaLow, thetaHi);
-  TH1F* mixGenThetaWrtGenThr_h = new TH1F("mixRecoThetaWrtGenThr_h", ";Mix. gen. #theta w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#theta}", nThetaBins, thetaLow, thetaHi);
+  TH1F* sigRecoThetaWrtRecoThr_h[nMultBins+1];
+  TH1F* sigGenThetaWrtGenThr_h[nMultBins+1];
+  TH1F* mixRecoThetaWrtRecoThr_h[nMultBins+1];
+  TH1F* mixGenThetaWrtGenThr_h[nMultBins+1];
 
-  TH1F* sigRecoPhiWrtRecoThr_h = new TH1F("sigRecoPhiWrtRecoThr_h", ";Sig. reco. #phi w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#phi}", nPhiBins, phiLow, phiHi);
-  TH1F* sigGenPhiWrtGenThr_h = new TH1F("sigRecoPhiWrtGenThr_h", ";Sig. gen. #phi w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#phi}", nPhiBins, phiLow, phiHi);
-  TH1F* mixRecoPhiWrtRecoThr_h = new TH1F("mixRecoPhiWrtRecoThr_h", ";Mix. reco. #phi w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#phi}", nPhiBins, phiLow, phiHi);
-  TH1F* mixGenPhiWrtGenThr_h = new TH1F("mixRecoPhiWrtGenThr_h", ";Mix. gen. #phi w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#phi}", nPhiBins, phiLow, phiHi);
+  TH1F* sigRecoPhiWrtRecoThr_h[nMultBins+1];
+  TH1F* sigGenPhiWrtGenThr_h[nMultBins+1];
+  TH1F* mixRecoPhiWrtRecoThr_h[nMultBins+1];
+  TH1F* mixGenPhiWrtGenThr_h[nMultBins+1];   
+    
+
+  for(Int_t mI = 0; mI < nMultBins+1; ++mI){
+    std::string multStr = "Mult" + std::to_string(multBinsLow[0]) + "to" + std::to_string(multBinsHi[nMultBins-1]);
+    if(mI < nMultBins) multStr = "Mult" + std::to_string(multBinsLow[mI]) + "to" + std::to_string(multBinsHi[mI]);
+
+    std::cout << multStr << ", " << mI << "/" << nMultBins << std::endl;
+
+    sigRecoPtWrtRecoThr_h[mI] = new TH1F(("sigRecoPtWrtRecoThr_" + multStr + "_h").c_str(), ";Sig. reco. p_{T} w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{dp_{T}}", nPtBins, ptBins);
+    sigGenPtWrtGenThr_h[mI] = new TH1F(("sigRecoPtWrtGenThr_" + multStr + "_h").c_str(), ";Sig. gen. p_{T} w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{dp_{T}}", nPtBins, ptBins);
+    mixRecoPtWrtRecoThr_h[mI] = new TH1F(("mixRecoPtWrtRecoThr_" + multStr + "_h").c_str(), ";Mix. reco. p_{T} w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{dp_{T}}", nPtBins, ptBins);
+    mixGenPtWrtGenThr_h[mI] = new TH1F(("mixRecoPtWrtGenThr_" + multStr + "_h").c_str(), ";Mix. gen. p_{T} w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{dp_{T}}", nPtBins, ptBins);
+    
+    sigRecoEtaWrtRecoThr_h[mI] = new TH1F(("sigRecoEtaWrtRecoThr_" + multStr + "_h").c_str(), ";Sig. reco. #eta w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#eta}", nEtaBins, etaLow, etaHi);
+    sigGenEtaWrtGenThr_h[mI] = new TH1F(("sigRecoEtaWrtGenThr_" + multStr + "_h").c_str(), ";Sig. gen. #eta w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#eta}", nEtaBins, etaLow, etaHi);
+    mixRecoEtaWrtRecoThr_h[mI] = new TH1F(("mixRecoEtaWrtRecoThr_" + multStr + "_h").c_str(), ";Mix. reco. #eta w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#eta}", nEtaBins, etaLow, etaHi);
+    mixGenEtaWrtGenThr_h[mI] = new TH1F(("mixRecoEtaWrtGenThr_" + multStr + "_h").c_str(), ";Mix. gen. #eta w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#eta}", nEtaBins, etaLow, etaHi);
+    
+    sigRecoRapWrtRecoThr_h[mI] = new TH1F(("sigRecoRapWrtRecoThr_" + multStr + "_h").c_str(), ";Sig. reco. y w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{dy}", nRapBins, rapLow, rapHi);
+    sigGenRapWrtGenThr_h[mI] = new TH1F(("sigRecoRapWrtGenThr_" + multStr + "_h").c_str(), ";Sig. gen. y w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{dy}", nRapBins, rapLow, rapHi);
+    mixRecoRapWrtRecoThr_h[mI] = new TH1F(("mixRecoRapWrtRecoThr_" + multStr + "_h").c_str(), ";Mix. reco. y w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{dy}", nRapBins, rapLow, rapHi);
+    mixGenRapWrtGenThr_h[mI] = new TH1F(("mixRecoRapWrtGenThr_" + multStr + "_h").c_str(), ";Mix. gen. y w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{dy}", nRapBins, rapLow, rapHi);
+    
+    sigRecoThetaWrtRecoThr_h[mI] = new TH1F(("sigRecoThetaWrtRecoThr_" + multStr + "_h").c_str(), ";Sig. reco. #theta w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#theta}", nThetaBins, thetaLow, thetaHi);
+    sigGenThetaWrtGenThr_h[mI] = new TH1F(("sigRecoThetaWrtGenThr_" + multStr + "_h").c_str(), ";Sig. gen. #theta w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#theta}", nThetaBins, thetaLow, thetaHi);
+    mixRecoThetaWrtRecoThr_h[mI] = new TH1F(("mixRecoThetaWrtRecoThr_" + multStr + "_h").c_str(), ";Mix. reco. #theta w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#theta}", nThetaBins, thetaLow, thetaHi);
+    mixGenThetaWrtGenThr_h[mI] = new TH1F(("mixRecoThetaWrtGenThr_" + multStr + "_h").c_str(), ";Mix. gen. #theta w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#theta}", nThetaBins, thetaLow, thetaHi);
+    
+    sigRecoPhiWrtRecoThr_h[mI] = new TH1F(("sigRecoPhiWrtRecoThr_" + multStr + "_h").c_str(), ";Sig. reco. #phi w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#phi}", nPhiBins, phiLow, phiHi);
+    sigGenPhiWrtGenThr_h[mI] = new TH1F(("sigRecoPhiWrtGenThr_" + multStr + "_h").c_str(), ";Sig. gen. #phi w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#phi}", nPhiBins, phiLow, phiHi);
+    mixRecoPhiWrtRecoThr_h[mI] = new TH1F(("mixRecoPhiWrtRecoThr_" + multStr + "_h").c_str(), ";Mix. reco. #phi w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#phi}", nPhiBins, phiLow, phiHi);
+    mixGenPhiWrtGenThr_h[mI] = new TH1F(("mixRecoPhiWrtGenThr_" + multStr + "_h").c_str(), ";Mix. gen. #phi w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#phi}", nPhiBins, phiLow, phiHi);
+  }
 
   particleData pSigData;
   particleData pSigDataGen;
@@ -152,65 +191,85 @@ int sigMixThrustComp(const std::string inFileName1, const std::string inFileName
     tmix->GetEntry(entry);
     tmixgen->GetEntry(entry);
 
+    std::vector<int> pos;
+    pos.push_back(nMultBins);
+    for(Int_t mI = 0; mI < nMultBins; ++mI){
+      if(pSigData.nParticle >= multBinsLow[mI] && pSigData.nParticle < multBinsHi[mI]){
+	pos.push_back(mI);
+	break;
+      }
+    }
+    
     for(Int_t pI = 0; pI < pSigData.nParticle; ++pI){
-      sigRecoPtWrtRecoThr_h->Fill(pSigData.pt_wrtThr[pI], weight);
-      sigRecoEtaWrtRecoThr_h->Fill(pSigData.eta_wrtThr[pI], weight);
-      sigRecoRapWrtRecoThr_h->Fill(pSigData.rap_wrtThr[pI], weight);
-      sigRecoThetaWrtRecoThr_h->Fill(pSigData.theta_wrtThr[pI], weight);
-      sigRecoPhiWrtRecoThr_h->Fill(pSigData.phi_wrtThr[pI], weight);
+      for(unsigned int mI = 0; mI < pos.size(); ++mI){
+	sigRecoPtWrtRecoThr_h[pos.at(mI)]->Fill(pSigData.pt_wrtThr[pI], weight);
+	sigRecoEtaWrtRecoThr_h[pos.at(mI)]->Fill(pSigData.eta_wrtThr[pI], weight);
+	sigRecoRapWrtRecoThr_h[pos.at(mI)]->Fill(pSigData.rap_wrtThr[pI], weight);
+	sigRecoThetaWrtRecoThr_h[pos.at(mI)]->Fill(pSigData.theta_wrtThr[pI], weight);
+	sigRecoPhiWrtRecoThr_h[pos.at(mI)]->Fill(pSigData.phi_wrtThr[pI], weight);
+      }
     }
 
     for(Int_t pI = 0; pI < pSigDataGen.nParticle; ++pI){
-      sigGenPtWrtGenThr_h->Fill(pSigDataGen.pt_wrtThr[pI], weight);
-      sigGenEtaWrtGenThr_h->Fill(pSigDataGen.eta_wrtThr[pI], weight);
-      sigGenRapWrtGenThr_h->Fill(pSigDataGen.rap_wrtThr[pI], weight);
-      sigGenThetaWrtGenThr_h->Fill(pSigDataGen.theta_wrtThr[pI], weight);
-      sigGenPhiWrtGenThr_h->Fill(pSigDataGen.phi_wrtThr[pI], weight);
+      for(unsigned int mI = 0; mI < pos.size(); ++mI){
+	sigGenPtWrtGenThr_h[pos.at(mI)]->Fill(pSigDataGen.pt_wrtThr[pI], weight);
+	sigGenEtaWrtGenThr_h[pos.at(mI)]->Fill(pSigDataGen.eta_wrtThr[pI], weight);
+	sigGenRapWrtGenThr_h[pos.at(mI)]->Fill(pSigDataGen.rap_wrtThr[pI], weight);
+	sigGenThetaWrtGenThr_h[pos.at(mI)]->Fill(pSigDataGen.theta_wrtThr[pI], weight);
+	sigGenPhiWrtGenThr_h[pos.at(mI)]->Fill(pSigDataGen.phi_wrtThr[pI], weight);
+      }
     }
 
     for(Int_t pI = 0; pI < pMixData.nParticle; ++pI){
-      mixRecoPtWrtRecoThr_h->Fill(pMixData.pt_wrtThr[pI], weight);
-      mixRecoEtaWrtRecoThr_h->Fill(pMixData.eta_wrtThr[pI], weight);
-      mixRecoRapWrtRecoThr_h->Fill(pMixData.rap_wrtThr[pI], weight);
-      mixRecoThetaWrtRecoThr_h->Fill(pMixData.theta_wrtThr[pI], weight);
-      mixRecoPhiWrtRecoThr_h->Fill(pMixData.phi_wrtThr[pI], weight);
+      for(unsigned int mI = 0; mI < pos.size(); ++mI){
+	mixRecoPtWrtRecoThr_h[pos.at(mI)]->Fill(pMixData.pt_wrtThr[pI], weight);
+	mixRecoEtaWrtRecoThr_h[pos.at(mI)]->Fill(pMixData.eta_wrtThr[pI], weight);
+	mixRecoRapWrtRecoThr_h[pos.at(mI)]->Fill(pMixData.rap_wrtThr[pI], weight);
+	mixRecoThetaWrtRecoThr_h[pos.at(mI)]->Fill(pMixData.theta_wrtThr[pI], weight);
+	mixRecoPhiWrtRecoThr_h[pos.at(mI)]->Fill(pMixData.phi_wrtThr[pI], weight);
+      }
     }
 
     for(Int_t pI = 0; pI < pMixDataGen.nParticle; ++pI){
-      mixGenPtWrtGenThr_h->Fill(pMixDataGen.pt_wrtThr[pI], weight);
-      mixGenEtaWrtGenThr_h->Fill(pMixDataGen.eta_wrtThr[pI], weight);
-      mixGenRapWrtGenThr_h->Fill(pMixDataGen.rap_wrtThr[pI], weight);
-      mixGenThetaWrtGenThr_h->Fill(pMixDataGen.theta_wrtThr[pI], weight);
-      mixGenPhiWrtGenThr_h->Fill(pMixDataGen.phi_wrtThr[pI], weight);
+      for(unsigned int mI = 0; mI < pos.size(); ++mI){
+	mixGenPtWrtGenThr_h[pos.at(mI)]->Fill(pMixDataGen.pt_wrtThr[pI], weight);
+	mixGenEtaWrtGenThr_h[pos.at(mI)]->Fill(pMixDataGen.eta_wrtThr[pI], weight);
+	mixGenRapWrtGenThr_h[pos.at(mI)]->Fill(pMixDataGen.rap_wrtThr[pI], weight);
+	mixGenThetaWrtGenThr_h[pos.at(mI)]->Fill(pMixDataGen.theta_wrtThr[pI], weight);
+	mixGenPhiWrtGenThr_h[pos.at(mI)]->Fill(pMixDataGen.phi_wrtThr[pI], weight);
+      }
     }
   }
 
   outFile_p->cd();
 
   std::vector<TH1*> hists_p;
-  hists_p.push_back(sigRecoPtWrtRecoThr_h);
-  hists_p.push_back(sigRecoEtaWrtRecoThr_h);
-  hists_p.push_back(sigRecoRapWrtRecoThr_h);
-  hists_p.push_back(sigRecoThetaWrtRecoThr_h);
-  hists_p.push_back(sigRecoPhiWrtRecoThr_h);
-
-  hists_p.push_back(sigGenPtWrtGenThr_h);
-  hists_p.push_back(sigGenEtaWrtGenThr_h);
-  hists_p.push_back(sigGenRapWrtGenThr_h);
-  hists_p.push_back(sigGenThetaWrtGenThr_h);
-  hists_p.push_back(sigGenPhiWrtGenThr_h);
-
-  hists_p.push_back(mixRecoPtWrtRecoThr_h);
-  hists_p.push_back(mixRecoEtaWrtRecoThr_h);
-  hists_p.push_back(mixRecoRapWrtRecoThr_h);
-  hists_p.push_back(mixRecoThetaWrtRecoThr_h);
-  hists_p.push_back(mixRecoPhiWrtRecoThr_h);
-
-  hists_p.push_back(mixGenPtWrtGenThr_h);
-  hists_p.push_back(mixGenEtaWrtGenThr_h);
-  hists_p.push_back(mixGenRapWrtGenThr_h);
-  hists_p.push_back(mixGenThetaWrtGenThr_h);
-  hists_p.push_back(mixGenPhiWrtGenThr_h);
+  
+  for(Int_t mI = 0; mI < nMultBins+1; ++mI){
+    hists_p.push_back(sigRecoPtWrtRecoThr_h[mI]);
+    hists_p.push_back(sigRecoEtaWrtRecoThr_h[mI]);
+    hists_p.push_back(sigRecoRapWrtRecoThr_h[mI]);
+    hists_p.push_back(sigRecoThetaWrtRecoThr_h[mI]);
+    hists_p.push_back(sigRecoPhiWrtRecoThr_h[mI]);
+    
+    hists_p.push_back(sigGenPtWrtGenThr_h[mI]);
+    hists_p.push_back(sigGenEtaWrtGenThr_h[mI]);
+    hists_p.push_back(sigGenRapWrtGenThr_h[mI]);
+    hists_p.push_back(sigGenThetaWrtGenThr_h[mI]);
+    hists_p.push_back(sigGenPhiWrtGenThr_h[mI]);
+    
+    hists_p.push_back(mixRecoPtWrtRecoThr_h[mI]);
+    hists_p.push_back(mixRecoEtaWrtRecoThr_h[mI]);
+    hists_p.push_back(mixRecoRapWrtRecoThr_h[mI]);
+    hists_p.push_back(mixRecoThetaWrtRecoThr_h[mI]);
+    hists_p.push_back(mixRecoPhiWrtRecoThr_h[mI]);
+    
+    hists_p.push_back(mixGenPtWrtGenThr_h[mI]);
+    hists_p.push_back(mixGenEtaWrtGenThr_h[mI]);
+    hists_p.push_back(mixGenRapWrtGenThr_h[mI]);
+    hists_p.push_back(mixGenThetaWrtGenThr_h[mI]);
+    hists_p.push_back(mixGenPhiWrtGenThr_h[mI]);
+  }
 
   for(unsigned int hI = 0; hI < hists_p.size(); ++hI){
     for(Int_t bI = 0; bI < hists_p.at(hI)->GetNbinsX(); ++bI){

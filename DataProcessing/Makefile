@@ -17,7 +17,8 @@ CHECK_FASTJETDIR=printf "\nFASTJETDIR is set to: \'$(FASTJETDIR)\'\n   !!!IF FAS
 
 #programs to make
 
-all: mkdirBin mkdirPdf mkdirOutput checkStudyMultDir checkFastJetDir bin/scan.exe bin/mixMain.exe bin/countNEvt.exe bin/doComparison.exe bin/recoGenThrustComp.exe bin/plotRecoGenThrustComp.exe
+all: mkdirBin mkdirPdf mkdirOutput checkStudyMultDir checkFastJetDir bin/scan.exe bin/mixMain.exe bin/countNEvt.exe bin/doComparison.exe bin/recoGenThrustComp.exe bin/plotRecoGenThrustComp.exe bin/sigMixThrustComp.exe bin/plotSigMixThrustComp.exe bin/testSignalMixTableReader.exe
+
 mkdirBin:
 	$(MKDIR_BIN)
 mkdirPdf:
@@ -37,8 +38,14 @@ bin/doComparison.exe: src/doComparison.cc
 	$(CXX) $(CXXFLAGS) $(ROOT) -I $(STUDYMULTDIR) -o bin/doComparison.exe src/doComparison.cc
 bin/recoGenThrustComp.exe: src/recoGenThrustComp.C
 	$(CXX) $(CXXFLAGS) $(ROOT) -I $(STUDYMULTDIR) -o bin/recoGenThrustComp.exe src/recoGenThrustComp.C
+bin/sigMixThrustComp.exe: src/sigMixThrustComp.C
+	$(CXX) $(CXXFLAGS) $(ROOT) -I $(STUDYMULTDIR) -o bin/sigMixThrustComp.exe src/sigMixThrustComp.C
 bin/plotRecoGenThrustComp.exe: src/plotRecoGenThrustComp.C
 	$(CXX) $(CXXFLAGS) $(ROOT) -I $(STUDYMULTDIR) -o bin/plotRecoGenThrustComp.exe src/plotRecoGenThrustComp.C
+bin/plotSigMixThrustComp.exe: src/plotSigMixThrustComp.C
+	$(CXX) $(CXXFLAGS) $(ROOT) -I $(STUDYMULTDIR) -o bin/plotSigMixThrustComp.exe src/plotSigMixThrustComp.C
+bin/testSignalMixTableReader.exe: src/testSignalMixTableReader.C
+	$(CXX) $(CXXFLAGS) $(ROOT) -I $(STUDYMULTDIR) -o bin/testSignalMixTableReader.exe src/testSignalMixTableReader.C
 bin/countNEvt.exe: src/countNEvt.C
 	$(CXX) $(CXXFLAGS) $(ROOT) $(FASTJET) -I $(STUDYMULTDIR) -o bin/countNEvt.exe src/countNEvt.C
 clean:

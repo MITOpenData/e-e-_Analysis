@@ -6,6 +6,7 @@
 #include "TH1F.h"
 #include "TDatime.h"
 #include "TVector3.h"
+#include "TMath.h"
 
 #include "DataProcessing/include/checkMakeDir.h"
 #include "DataProcessing/include/returnRootFileContentsList.h"
@@ -52,8 +53,32 @@ int recoGenThrustComp(const std::string inFileName)
   Double_t ptBins[nPtBins+1];
   getLogBins(ptLow, ptHi, nPtBins, ptBins);
 
+  const Int_t nEtaBins = 20;
+  Float_t etaLow = -2.;
+  Float_t etaHi = 2.;
+
+  const Int_t nRapBins = 20;
+  Float_t rapLow = -2.;
+  Float_t rapHi = 2.;
+
+  const Int_t nThetaBins = 20;
+  Float_t thetaLow = 0;
+  Float_t thetaHi = TMath::Pi();
+
+  const Int_t nPhiBins = 20;
+  Float_t phiLow = -TMath::Pi();
+  Float_t phiHi = TMath::Pi();
+
   TH1F* recoPtWrtRecoThr_h = new TH1F("recoPtWrtRecoThr_h", ";p_{T} w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{dp_{T}}", nPtBins, ptBins);
   TH1F* recoPtWrtGenThr_h = new TH1F("recoPtWrtGenThr_h", ";p_{T} w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{dp_{T}}", nPtBins, ptBins);
+  TH1F* recoEtaWrtRecoThr_h = new TH1F("recoEtaWrtRecoThr_h", ";#eta w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#eta}", nEtaBins, etaLow, etaHi);
+  TH1F* recoEtaWrtGenThr_h = new TH1F("recoEtaWrtGenThr_h", ";#eta w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#eta}", nEtaBins, etaLow, etaHi);
+  TH1F* recoRapWrtRecoThr_h = new TH1F("recoRapWrtRecoThr_h", ";y w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{dy}", nRapBins, rapLow, rapHi);
+  TH1F* recoRapWrtGenThr_h = new TH1F("recoRapWrtGenThr_h", ";y w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{dy}", nRapBins, rapLow, rapHi);
+  TH1F* recoThetaWrtRecoThr_h = new TH1F("recoThetaWrtRecoThr_h", ";#theta w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#theta}", nThetaBins, thetaLow, thetaHi);
+  TH1F* recoThetaWrtGenThr_h = new TH1F("recoThetaWrtGenThr_h", ";#theta w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#theta}", nThetaBins, thetaLow, thetaHi);
+  TH1F* recoPhiWrtRecoThr_h = new TH1F("recoPhiWrtRecoThr_h", ";#phi w.r.t Reco. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#phi}", nPhiBins, phiLow, phiHi);
+  TH1F* recoPhiWrtGenThr_h = new TH1F("recoPhiWrtGenThr_h", ";#phi w.r.t Gen. Thrust;#frac{1}{N_{evt}} #frac{dN_{particle}}{d#phi}", nPhiBins, phiLow, phiHi);
 
   inFile_p->cd();
   particleData pData;
@@ -82,6 +107,10 @@ int recoGenThrustComp(const std::string inFileName)
 
     for(Int_t pI = 0; pI < pData.nParticle; ++pI){
       recoPtWrtRecoThr_h->Fill(pData.pt_wrtThr[pI], weight);
+      recoEtaWrtRecoThr_h->Fill(pData.eta_wrtThr[pI], weight);
+      recoRapWrtRecoThr_h->Fill(pData.rap_wrtThr[pI], weight);
+      recoThetaWrtRecoThr_h->Fill(pData.theta_wrtThr[pI], weight);
+      recoPhiWrtRecoThr_h->Fill(pData.phi_wrtThr[pI], weight);
     }
 
     TVector3 thrust = getThrust(pDataGen.nParticle, pDataGen.px, pDataGen.py, pDataGen.pz, THRUST::OPTIMAL);
@@ -90,24 +119,37 @@ int recoGenThrustComp(const std::string inFileName)
 
     for(Int_t pI = 0; pI < pData.nParticle; ++pI){
       recoPtWrtGenThr_h->Fill(pData.pt_wrtThr[pI], weight);
+      recoEtaWrtGenThr_h->Fill(pData.eta_wrtThr[pI], weight);
+      recoRapWrtGenThr_h->Fill(pData.rap_wrtThr[pI], weight);
+      recoThetaWrtGenThr_h->Fill(pData.theta_wrtThr[pI], weight);
+      recoPhiWrtGenThr_h->Fill(pData.phi_wrtThr[pI], weight);
     }    
   }
 
   outFile_p->cd();
 
-  for(Int_t bI = 0; bI < recoPtWrtRecoThr_h->GetNbinsX(); ++bI){
-    recoPtWrtRecoThr_h->SetBinContent(bI+1, recoPtWrtRecoThr_h->GetBinContent(bI+1)/recoPtWrtRecoThr_h->GetBinWidth(bI+1));
-    recoPtWrtRecoThr_h->SetBinError(bI+1, recoPtWrtRecoThr_h->GetBinError(bI+1)/recoPtWrtRecoThr_h->GetBinWidth(bI+1));
+  std::vector<TH1*> hists_p;
+  hists_p.push_back(recoPtWrtRecoThr_h);
+  hists_p.push_back(recoEtaWrtRecoThr_h);
+  hists_p.push_back(recoRapWrtRecoThr_h);
+  hists_p.push_back(recoThetaWrtRecoThr_h);
+  hists_p.push_back(recoPhiWrtRecoThr_h);
 
-    recoPtWrtGenThr_h->SetBinContent(bI+1, recoPtWrtGenThr_h->GetBinContent(bI+1)/recoPtWrtGenThr_h->GetBinWidth(bI+1));
-    recoPtWrtGenThr_h->SetBinError(bI+1, recoPtWrtGenThr_h->GetBinError(bI+1)/recoPtWrtGenThr_h->GetBinWidth(bI+1));
+  hists_p.push_back(recoPtWrtGenThr_h);
+  hists_p.push_back(recoEtaWrtGenThr_h);
+  hists_p.push_back(recoRapWrtGenThr_h);
+  hists_p.push_back(recoThetaWrtGenThr_h);
+  hists_p.push_back(recoPhiWrtGenThr_h);
+
+  for(unsigned int hI = 0; hI < hists_p.size(); ++hI){
+    for(Int_t bI = 0; bI < hists_p.at(hI)->GetNbinsX(); ++bI){
+      hists_p.at(hI)->SetBinContent(bI+1, hists_p.at(hI)->GetBinContent(bI+1)/hists_p.at(hI)->GetBinWidth(bI+1));
+      hists_p.at(hI)->SetBinError(bI+1, hists_p.at(hI)->GetBinError(bI+1)/hists_p.at(hI)->GetBinWidth(bI+1));
+    }
+
+    hists_p.at(hI)->Write("", TObject::kOverwrite);
+    delete hists_p.at(hI);
   }
-
-  recoPtWrtRecoThr_h->Write("", TObject::kOverwrite);
-  recoPtWrtGenThr_h->Write("", TObject::kOverwrite);
-
-  delete recoPtWrtRecoThr_h;
-  delete recoPtWrtGenThr_h;
 
   outFile_p->Close();
   delete outFile_p;
