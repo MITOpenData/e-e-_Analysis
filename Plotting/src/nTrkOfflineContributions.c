@@ -51,17 +51,17 @@
 
 void formatMultiPanelHist(TH1F *hist)
 {
-    hist->GetXaxis()->SetTitleSize(24);
+    hist->GetXaxis()->SetTitleSize(30);
     hist->GetXaxis()->SetTitleFont(43);
-    hist->SetTitleOffset(2.000,"X");
+    hist->SetTitleOffset(2.200,"X");
     hist->GetXaxis()->SetLabelSize(20);
     hist->GetXaxis()->SetLabelFont(43);
     hist->GetXaxis()->SetNdivisions(5);
-    hist->GetYaxis()->SetTitleSize(24);
+    hist->GetYaxis()->SetTitleSize(30);
     hist->GetYaxis()->SetTitleFont(43);
     hist->GetYaxis()->SetLabelSize(20);
     hist->GetYaxis()->SetLabelFont(43);
-    hist->SetTitleOffset(3.000,"Y");
+    hist->SetTitleOffset(3.200,"Y");
 }
 
 int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
@@ -405,7 +405,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     formatMultipanelViewer(multiPanel_thrust, pads_thrust, rows, columns);
 
     TLatex latex;
-    latex.SetTextSize(18);
+    latex.SetTextSize(22);
     latex.SetTextAlign(13);
     latex.SetTextFont(43);
     
@@ -429,7 +429,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     TLegend *leg_ThrLabel = new TLegend(0.22,0.62,0.67,0.75); //0.2,0.65,0.5,0.75
     leg_ThrLabel->SetBorderSize(0);
     leg_ThrLabel->SetFillStyle(0);
-    leg_ThrLabel->SetTextSize(0.04);
+    leg_ThrLabel->SetTextSize(0.045);
     //leg_ThrLabel->SetTextSize(42);
     leg_ThrLabel->AddEntry(nTrkOffline,collisionLabel.c_str(),"t");
     leg_ThrLabel->AddEntry(nTrkOffline,ALEPH.c_str(),"t");
@@ -447,7 +447,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     formatMultipanelViewer(multiPanel_nJets, pads_nJets, rows, columns);
     
     TLatex latex_nJet;
-    latex_nJet.SetTextSize(20);
+    latex_nJet.SetTextSize(22);
     latex_nJet.SetTextAlign(13);
     latex_nJet.SetTextFont(43);
     
@@ -545,33 +545,39 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
             nTrkOffline_Clone_Cut[i]->SetMarkerStyle(24); //open circle
             nTrkOffline_Clone_Cut[i]->SetMarkerSize(1.35);
             nTrkOffline_Clone_Cut[i]->SetMarkerColorAlpha(vGP.getColor(colors[i]),0.85);
+            nTrkOffline_Clone_Cut[i]->SetLineColorAlpha(vGP.getColor(colors[i]),0.85);
             
             thrust_Clone_Cut[i] = (TH1F*)thrust_Cut[i]->Clone(Form("thrust_Clone_%d",nTrkMin[i]));
             thrust_Clone_Cut[i]->Scale(1./thrust_Integral);
             thrust_Clone_Cut[i]->SetMarkerStyle(24); //open circle
             thrust_Clone_Cut[i]->SetMarkerSize(1.35);
             thrust_Clone_Cut[i]->SetMarkerColorAlpha(vGP.getColor(colors[i]),0.85);
+            thrust_Clone_Cut[i]->SetLineColorAlpha(vGP.getColor(colors[i]),0.85);
             
             nJets_Clone_Cut[i] = (TH1F*)nJets_Cut[i]->Clone(Form("nJets_Clone_%d",nTrkMin[i]));
             nJets_Clone_Cut[i]->Scale(1./nJets_Integral);
             nJets_Clone_Cut[i]->SetMarkerStyle(24); //open circle
             nJets_Clone_Cut[i]->SetMarkerSize(1.35);
             nJets_Clone_Cut[i]->SetMarkerColorAlpha(vGP.getColor(colors[i]),0.85);
+            nJets_Clone_Cut[i]->SetLineColorAlpha(vGP.getColor(colors[i]),0.85);
         
             nTrkOffline_MC_Cut[i]->Scale(1./nTrkOffline_MC_Integral);
             nTrkOffline_MC_Cut[i]->SetMarkerStyle(33); //filled cross
             nTrkOffline_MC_Cut[i]->SetMarkerSize(1.35);
             nTrkOffline_MC_Cut[i]->SetMarkerColorAlpha(vGP.getColor(colors[i]),0.85);
+            nTrkOffline_MC_Cut[i]->SetLineColorAlpha(vGP.getColor(colors[i]),0.85);
             
             thrust_MC_Cut[i]->Scale(1./thrust_MC_Integral);
             thrust_MC_Cut[i]->SetMarkerStyle(33); //filled cross
             thrust_MC_Cut[i]->SetMarkerSize(1.35);
             thrust_MC_Cut[i]->SetMarkerColorAlpha(vGP.getColor(colors[i]),0.85);
+            thrust_MC_Cut[i]->SetLineColorAlpha(vGP.getColor(colors[i]),0.85);
             
             nJets_MC_Cut[i]->Scale(1./nJets_MC_Integral);
             nJets_MC_Cut[i]->SetMarkerStyle(33); //filled cross
             nJets_MC_Cut[i]->SetMarkerSize(1.35);
             nJets_MC_Cut[i]->SetMarkerColorAlpha(vGP.getColor(colors[i]),0.85);
+            nJets_MC_Cut[i]->SetLineColorAlpha(vGP.getColor(colors[i]),0.85);
         }
         
         /************************************************/
@@ -615,7 +621,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         formatMultipanelViewer(multiPanel_thrust_MC, pads_thrust_MC, rows, columns);
         
         TLatex latex_thrust_MC;
-        latex_thrust_MC.SetTextSize(18);
+        latex_thrust_MC.SetTextSize(22);
         latex_thrust_MC.SetTextAlign(13);
         latex_thrust_MC.SetTextFont(43);
         
@@ -659,12 +665,13 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         formatMultipanelViewer(multiPanel_nJets_MC, pads_nJets_MC, rows, columns);
         
         TLatex latex_nJet_MC;
-        latex_nJet_MC.SetTextSize(18);
+        latex_nJet_MC.SetTextSize(22);
         latex_nJet_MC.SetTextAlign(13);
         latex_nJet_MC.SetTextFont(43);
         
         multiPanel_nJets_MC->cd(1);
         gPad->SetLogy();
+        gStyle->SetErrorX(0);
         nJets_Clone->Draw();
         nJets_MC->Draw("same");
         latex_nJet_MC.DrawLatex(14,0.08,"Inclusive N_{Trk}^{Offline}");
@@ -673,6 +680,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         {
             multiPanel_nJets_MC->cd(i+2);
             gPad->SetLogy();
+            gStyle->SetErrorX(0);
             nJets_Clone->Draw();
             nJets_MC->Draw("same");
             nJets_Clone_Cut[i]->Draw("same");
