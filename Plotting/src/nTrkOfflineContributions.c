@@ -433,10 +433,10 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     }
     
     multiPanel_thrust->cd(1);
-    TLegend *leg_ThrLabel = new TLegend(0.30,0.12,0.75,0.25); //0.22,0.62,0.67,0.75 0.32,0.22,0.77,0.35
+    TLegend *leg_ThrLabel = new TLegend(0.30,0.08,0.75,0.25); //0.22,0.62,0.67,0.75 0.32,0.22,0.77,0.35
     leg_ThrLabel->SetBorderSize(0);
     leg_ThrLabel->SetFillStyle(0);
-    leg_ThrLabel->SetTextSize(0.05);
+    leg_ThrLabel->SetTextSize(0.055);
     //leg_ThrLabel->SetTextSize(42);
     leg_ThrLabel->AddEntry(nTrkOffline,collisionLabel.c_str(),"t");
     leg_ThrLabel->AddEntry(nTrkOffline,ALEPH.c_str(),"t");
@@ -601,10 +601,10 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         nTrkOffline_Clone->Draw();
         nTrkOffline_MC->Draw("same");
         
-        TLegend *leg_nTrk_MC = new TLegend(0.22,0.22,0.63,0.32);
+        TLegend *leg_nTrk_MC = new TLegend(0.24,0.22,0.65,0.42);
         leg_nTrk_MC->SetBorderSize(0);
         leg_nTrk_MC->SetFillStyle(0);
-        leg_nTrk_MC->SetTextSize(0.035);
+        leg_nTrk_MC->SetTextSize(0.045);
         leg_nTrk_MC->AddEntry(nTrkOffline_MC,collisionLabel.c_str(),"t");
         leg_nTrk_MC->AddEntry(nTrkOffline_Clone,ALEPH.c_str(),"p");
         leg_nTrk_MC->AddEntry(nTrkOffline_MC,PYTHIA.c_str(),"p");
@@ -652,10 +652,10 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         }
         
         multiPanel_thrust_MC->cd(1);
-        TLegend *leg_ThrLabel_MC = new TLegend(0.37,0.1,0.90,0.27);
+        TLegend *leg_ThrLabel_MC = new TLegend(0.37,0.08,0.90,0.27);
         leg_ThrLabel_MC->SetBorderSize(0);
         leg_ThrLabel_MC->SetFillStyle(0);
-        leg_ThrLabel_MC->SetTextSize(0.05);
+        leg_ThrLabel_MC->SetTextSize(0.051);
         leg_ThrLabel_MC->AddEntry(thrust_MC,collisionLabel.c_str(),"t");
         leg_ThrLabel_MC->AddEntry(thrust_Clone,ALEPH.c_str(),"p");
         leg_ThrLabel_MC->AddEntry(thrust_MC,PYTHIA.c_str(),"p");
