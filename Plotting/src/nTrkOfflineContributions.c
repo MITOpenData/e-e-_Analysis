@@ -164,7 +164,6 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     std::string LEP1Data1994P1_recons_aftercut = "/LEP1Data1994P1_recons_aftercut-MERGED.root";
     std::string LEP1Data1994P2_recons_aftercut = "/LEP1Data1994P2_recons_aftercut-MERGED.root";
     std::string LEP1Data1994P3_recons_aftercut = "/LEP1Data1994P3_recons_aftercut-MERGED.root";
-    std::string LEP1Data1994P4_recons_aftercut = "/LEP1Data1994P4_recons_aftercut-MERGED.root";
     std::string LEP1Data1995_recons_aftercut = "/LEP1Data1995_recons_aftercut-MERGED.root";
     
     std::string LEP1Data1992_recons_aftercut_Mix = "/LEP1Data1992_recons_aftercut-MERGED_Mix.root";
@@ -172,7 +171,6 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     std::string LEP1Data1994P1_recons_aftercut_Mix = "/LEP1Data1994P1_recons_aftercut-MERGED_Mix.root";
     std::string LEP1Data1994P2_recons_aftercut_Mix = "/LEP1Data1994P2_recons_aftercut-MERGED_Mix.root";
     std::string LEP1Data1994P3_recons_aftercut_Mix = "/LEP1Data1994P3_recons_aftercut-MERGED_Mix.root";
-    std::string LEP1Data1994P4_recons_aftercut_Mix = "/LEP1Data1994P4_recons_aftercut-MERGED_Mix.root";
     std::string LEP1Data1995_recons_aftercut_Mix = "/LEP1Data1995_recons_aftercut-MERGED_Mix.root";
     
     
@@ -188,7 +186,6 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         chain_t.Add( (inFileNameData+LEP1Data1994P1_recons_aftercut).c_str() );
         chain_t.Add( (inFileNameData+LEP1Data1994P2_recons_aftercut).c_str() );
         chain_t.Add( (inFileNameData+LEP1Data1994P3_recons_aftercut).c_str() );
-        chain_t.Add( (inFileNameData+LEP1Data1994P4_recons_aftercut).c_str() );
         chain_t.Add( (inFileNameData+LEP1Data1995_recons_aftercut).c_str() );
         
         chain_jt.Add( (inFileNameData+LEP1Data1992_recons_aftercut).c_str() );
@@ -196,7 +193,6 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         chain_jt.Add( (inFileNameData+LEP1Data1994P1_recons_aftercut).c_str() );
         chain_jt.Add( (inFileNameData+LEP1Data1994P2_recons_aftercut).c_str() );
         chain_jt.Add( (inFileNameData+LEP1Data1994P3_recons_aftercut).c_str() );
-        chain_jt.Add( (inFileNameData+LEP1Data1994P4_recons_aftercut).c_str() );
         chain_jt.Add( (inFileNameData+LEP1Data1995_recons_aftercut).c_str() );
     }
     
