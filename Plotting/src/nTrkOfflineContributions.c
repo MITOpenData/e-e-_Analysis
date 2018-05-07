@@ -407,14 +407,14 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     formatMultipanelViewer(multiPanel_thrust, pads_thrust, rows, columns);
 
     TLatex latex;
-    latex.SetTextSize(28);
+    latex.SetTextSize(33);
     latex.SetTextAlign(13);
     latex.SetTextFont(43);
     
     multiPanel_thrust->cd(1);
     gPad->SetLogy();
     thrust->Draw();
-    latex.DrawLatex(0.624,700000,"Inclusive N_{Trk}^{Offline}"); // 0.585
+    latex.DrawLatex(0.624,600000,"Inclusive N_{Trk}^{Offline}"); // 0.585
     
     for(unsigned int i = 0; i < numRanges; ++i)
     {
@@ -423,8 +423,8 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         thrust->Draw();
         thrust_Cut[i]->SetFillColorAlpha(vGP.getColor(colors[i]),0.85);
         thrust_Cut[i]->Draw("same");
-        if(i<numRanges-2) latex.DrawLatex(0.624,700000,Form("%d #leq N_{Trk}^{Offline} < %d",nTrkMin[i],nTrkMax[i]));
-        else latex.DrawLatex(0.624,700000,Form("N_{Trk}^{Offline} #geq %d",nTrkMin[i]));
+        if(i<numRanges-2) latex.DrawLatex(0.624,600000,Form("%d #leq N_{Trk}^{Offline} < %d",nTrkMin[i],nTrkMax[i]));
+        else latex.DrawLatex(0.624,600000,Form("N_{Trk}^{Offline} #geq %d",nTrkMin[i]));
     }
     
     multiPanel_thrust->cd(1);
@@ -470,10 +470,10 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     }
     
     multiPanel_nJets->cd(1);
-    TLegend *leg_nJetsLabel = new TLegend(0.23,0.12,0.68,0.25); //0.47,0.67,0.94,0.75
+    TLegend *leg_nJetsLabel = new TLegend(0.23,0.12,0.75,0.25); //0.47,0.67,0.94,0.75
     leg_nJetsLabel->SetBorderSize(0);
     leg_nJetsLabel->SetFillStyle(0);
-    leg_nJetsLabel->SetTextSize(0.05);
+    leg_nJetsLabel->SetTextSize(0.06);
     leg_nJetsLabel->AddEntry(nJets,collisionLabel.c_str(),"t");
     leg_nJetsLabel->AddEntry(nJets,ALEPH.c_str(),"t");
     leg_nJetsLabel->Draw();
@@ -623,7 +623,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         formatMultipanelViewer(multiPanel_thrust_MC, pads_thrust_MC, rows, columns);
         
         TLatex latex_thrust_MC;
-        latex_thrust_MC.SetTextSize(24);
+        latex_thrust_MC.SetTextSize(33);
         latex_thrust_MC.SetTextAlign(13);
         latex_thrust_MC.SetTextFont(43);
         
@@ -692,10 +692,10 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         }
         
         multiPanel_nJets_MC->cd(1);
-        TLegend *leg_nJetsLabel_MC = new TLegend(0.23,0.12,0.68,0.25);
+        TLegend *leg_nJetsLabel_MC = new TLegend(0.23,0.12,0.75,0.25);
         leg_nJetsLabel_MC->SetBorderSize(0);
         leg_nJetsLabel_MC->SetFillStyle(0);
-        leg_nJetsLabel_MC->SetTextSize(0.04);
+        leg_nJetsLabel_MC->SetTextSize(0.05);
         leg_nJetsLabel_MC->AddEntry(nJets_MC,collisionLabel.c_str(),"t");
         leg_nJetsLabel_MC->AddEntry(nJets_Clone,ALEPH.c_str(),"p");
         leg_nJetsLabel_MC->AddEntry(nJets_MC,PYTHIA.c_str(),"p");

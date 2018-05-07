@@ -24,9 +24,9 @@
 void formatMultipanelViewer(TCanvas *multiPanel, TPad *pads[], int rows, int columns)
 {
     // Parameters for the canvas division
-    static const float leftMargin = 0.25;
+    static const float leftMargin = 0.35;
     static const float rightMargin = 0.18;
-    static const float bottomMargin = 0.25;
+    static const float bottomMargin = 0.35;
     static const float topMargin = 0.22;
     static const float xMargin = 0.0; // for multipanel put xMargin/yMargin = 0.0
     static const float yMargin = 0.0;
