@@ -54,13 +54,14 @@ void formatMultiPanelHist(TH1F *hist)
     hist->GetXaxis()->SetTitleSize(30);
     hist->GetXaxis()->SetTitleFont(43);
     hist->SetTitleOffset(2.200,"X");
-    hist->GetXaxis()->SetLabelSize(20);
+    hist->GetXaxis()->SetLabelSize(25);
     hist->GetXaxis()->SetLabelFont(43);
     hist->GetXaxis()->SetNdivisions(5);
     hist->GetYaxis()->SetTitleSize(30);
     hist->GetYaxis()->SetTitleFont(43);
-    hist->GetYaxis()->SetLabelSize(20);
+    hist->GetYaxis()->SetLabelSize(25);
     hist->GetYaxis()->SetLabelFont(43);
+    hist->GetYaxis()->SetNdivisions(3);
     hist->SetTitleOffset(3.200,"Y");
 }
 
@@ -405,14 +406,14 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     formatMultipanelViewer(multiPanel_thrust, pads_thrust, rows, columns);
 
     TLatex latex;
-    latex.SetTextSize(22);
+    latex.SetTextSize(24);
     latex.SetTextAlign(13);
     latex.SetTextFont(43);
     
     multiPanel_thrust->cd(1);
     gPad->SetLogy();
     thrust->Draw();
-    latex.DrawLatex(0.624,70000,"Inclusive N_{Trk}^{Offline}"); // 0.585
+    latex.DrawLatex(0.624,800000,"Inclusive N_{Trk}^{Offline}"); // 0.585
     
     for(unsigned int i = 0; i < numRanges; ++i)
     {
@@ -421,12 +422,12 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         thrust->Draw();
         thrust_Cut[i]->SetFillColorAlpha(vGP.getColor(colors[i]),0.85);
         thrust_Cut[i]->Draw("same");
-        if(i<numRanges-2) latex.DrawLatex(0.624,70000,Form("%d #leq N_{Trk}^{Offline} < %d",nTrkMin[i],nTrkMax[i]));
-        else latex.DrawLatex(0.624,70000,Form("N_{Trk}^{Offline} #geq %d",nTrkMin[i]));
+        if(i<numRanges-2) latex.DrawLatex(0.624,800000,Form("%d #leq N_{Trk}^{Offline} < %d",nTrkMin[i],nTrkMax[i]));
+        else latex.DrawLatex(0.624,800000,Form("N_{Trk}^{Offline} #geq %d",nTrkMin[i]));
     }
     
     multiPanel_thrust->cd(1);
-    TLegend *leg_ThrLabel = new TLegend(0.22,0.62,0.67,0.75); //0.2,0.65,0.5,0.75
+    TLegend *leg_ThrLabel = new TLegend(0.32,0.22,0.77,0.35); //0.22,0.62,0.67,0.75 0.32,0.22,0.77,0.35
     leg_ThrLabel->SetBorderSize(0);
     leg_ThrLabel->SetFillStyle(0);
     leg_ThrLabel->SetTextSize(0.045);
@@ -447,14 +448,14 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     formatMultipanelViewer(multiPanel_nJets, pads_nJets, rows, columns);
     
     TLatex latex_nJet;
-    latex_nJet.SetTextSize(22);
+    latex_nJet.SetTextSize(24);
     latex_nJet.SetTextAlign(13);
     latex_nJet.SetTextFont(43);
     
     multiPanel_nJets->cd(1);
     gPad->SetLogy();
     nJets->Draw();
-    latex_nJet.DrawLatex(16.5,130000,"Inclusive N_{Trk}^{Offline}");
+    latex_nJet.DrawLatex(14,150000,"Inclusive N_{Trk}^{Offline}");
     
     for(unsigned int i = 0; i < numRanges; ++i)
     {
@@ -463,8 +464,8 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         nJets->Draw();
         nJets_Cut[i]->SetFillColorAlpha(vGP.getColor(colors[i]),0.85);
         nJets_Cut[i]->Draw("same");
-        if(i<numRanges-2) latex_nJet.DrawLatex(16.3,130000,Form("%d #leq N_{Trk}^{Offline} < %d",nTrkMin[i],nTrkMax[i]));
-        else latex_nJet.DrawLatex(17.0,130000,Form("N_{Trk}^{Offline} #geq %d",nTrkMin[i]));
+        if(i<numRanges-2) latex_nJet.DrawLatex(14,150000,Form("%d #leq N_{Trk}^{Offline} < %d",nTrkMin[i],nTrkMax[i]));
+        else latex_nJet.DrawLatex(17.0,150000,Form("N_{Trk}^{Offline} #geq %d",nTrkMin[i]));
     }
     
     multiPanel_nJets->cd(1);
@@ -621,7 +622,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         formatMultipanelViewer(multiPanel_thrust_MC, pads_thrust_MC, rows, columns);
         
         TLatex latex_thrust_MC;
-        latex_thrust_MC.SetTextSize(22);
+        latex_thrust_MC.SetTextSize(24);
         latex_thrust_MC.SetTextAlign(13);
         latex_thrust_MC.SetTextFont(43);
         
@@ -629,7 +630,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         gPad->SetLogy();
         thrust_Clone->Draw();
         thrust_MC->Draw("same");
-        latex_thrust_MC.DrawLatex(0.624,0.02,"Inclusive N_{Trk}^{Offline}");
+        latex_thrust_MC.DrawLatex(0.624,0.9,"Inclusive N_{Trk}^{Offline}");
         
         for(unsigned int i = 0; i < numRanges; ++i)
         {
@@ -640,12 +641,12 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
             thrust_Clone_Cut[i]->Draw("same");
             thrust_MC_Cut[i]->Draw("same");
             
-            if(i<numRanges-2) latex_thrust_MC.DrawLatex(0.624,0.02,Form("%d #leq N_{Trk}^{Offline} < %d",nTrkMin[i],nTrkMax[i]));
-            else latex_thrust_MC.DrawLatex(0.624,0.02,Form("N_{Trk}^{Offline} #geq %d",nTrkMin[i]));
+            if(i<numRanges-2) latex_thrust_MC.DrawLatex(0.624,0.9,Form("%d #leq N_{Trk}^{Offline} < %d",nTrkMin[i],nTrkMax[i]));
+            else latex_thrust_MC.DrawLatex(0.624,0.9,Form("N_{Trk}^{Offline} #geq %d",nTrkMin[i]));
         }
         
         multiPanel_thrust_MC->cd(1);
-        TLegend *leg_ThrLabel_MC = new TLegend(0.22,0.62,0.67,0.75);
+        TLegend *leg_ThrLabel_MC = new TLegend(0.32,0.22,0.77,0.35);
         leg_ThrLabel_MC->SetBorderSize(0);
         leg_ThrLabel_MC->SetFillStyle(0);
         leg_ThrLabel_MC->SetTextSize(0.04);
@@ -665,7 +666,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         formatMultipanelViewer(multiPanel_nJets_MC, pads_nJets_MC, rows, columns);
         
         TLatex latex_nJet_MC;
-        latex_nJet_MC.SetTextSize(22);
+        latex_nJet_MC.SetTextSize(24);
         latex_nJet_MC.SetTextAlign(13);
         latex_nJet_MC.SetTextFont(43);
         
@@ -674,7 +675,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         gStyle->SetErrorX(0);
         nJets_Clone->Draw();
         nJets_MC->Draw("same");
-        latex_nJet_MC.DrawLatex(14,0.08,"Inclusive N_{Trk}^{Offline}");
+        latex_nJet_MC.DrawLatex(14,0.09,"Inclusive N_{Trk}^{Offline}");
         
         for(unsigned int i = 0; i < numRanges; ++i)
         {
@@ -685,8 +686,8 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
             nJets_MC->Draw("same");
             nJets_Clone_Cut[i]->Draw("same");
             nJets_MC_Cut[i]->Draw("same");
-            if(i<numRanges-2) latex_nJet_MC.DrawLatex(14,0.08,Form("%d #leq N_{Trk}^{Offline} < %d",nTrkMin[i],nTrkMax[i]));
-            else latex_nJet_MC.DrawLatex(16,0.08,Form("N_{Trk}^{Offline} #geq %d",nTrkMin[i]));
+            if(i<numRanges-2) latex_nJet_MC.DrawLatex(14,0.09,Form("%d #leq N_{Trk}^{Offline} < %d",nTrkMin[i],nTrkMax[i]));
+            else latex_nJet_MC.DrawLatex(17,0.09,Form("N_{Trk}^{Offline} #geq %d",nTrkMin[i]));
         }
         
         multiPanel_nJets_MC->cd(1);
