@@ -53,7 +53,7 @@ void formatMultiPanelHist(TH1F *hist)
 {
     hist->GetXaxis()->SetTitleSize(35);
     hist->GetXaxis()->SetTitleFont(43);
-    hist->SetTitleOffset(2.300,"X");
+    hist->SetTitleOffset(3.300,"X");
     hist->GetXaxis()->SetLabelSize(30);
     hist->GetXaxis()->SetLabelFont(43);
     hist->GetXaxis()->SetNdivisions(5);
@@ -407,7 +407,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     formatMultipanelViewer(multiPanel_thrust, pads_thrust, rows, columns);
 
     TLatex latex;
-    latex.SetTextSize(24);
+    latex.SetTextSize(28);
     latex.SetTextAlign(13);
     latex.SetTextFont(43);
     
@@ -473,7 +473,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     TLegend *leg_nJetsLabel = new TLegend(0.23,0.12,0.68,0.25); //0.47,0.67,0.94,0.75
     leg_nJetsLabel->SetBorderSize(0);
     leg_nJetsLabel->SetFillStyle(0);
-    leg_nJetsLabel->SetTextSize(0.04);
+    leg_nJetsLabel->SetTextSize(0.05);
     leg_nJetsLabel->AddEntry(nJets,collisionLabel.c_str(),"t");
     leg_nJetsLabel->AddEntry(nJets,ALEPH.c_str(),"t");
     leg_nJetsLabel->Draw();
@@ -667,7 +667,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         formatMultipanelViewer(multiPanel_nJets_MC, pads_nJets_MC, rows, columns);
         
         TLatex latex_nJet_MC;
-        latex_nJet_MC.SetTextSize(24);
+        latex_nJet_MC.SetTextSize(28);
         latex_nJet_MC.SetTextAlign(13);
         latex_nJet_MC.SetTextFont(43);
         
