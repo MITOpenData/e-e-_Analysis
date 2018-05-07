@@ -399,7 +399,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     static const int columns = 3;
     static const int nPads = rows * columns;
     
-    TCanvas *multiPanel_thrust = new TCanvas("multiPanel_thrust","multiPanel_thrust",1000,1500);
+    TCanvas *multiPanel_thrust = new TCanvas("multiPanel_thrust","multiPanel_thrust",1500,1000);
     TPad* pads_thrust[nPads];
     formatMultipanelViewer(multiPanel_thrust, pads_thrust, rows, columns);
 
@@ -441,7 +441,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     // nJet                                          /
     /************************************************/
     
-    TCanvas *multiPanel_nJets = new TCanvas("multiPanel_nJets","multiPanel_nJets",1000,1500);
+    TCanvas *multiPanel_nJets = new TCanvas("multiPanel_nJets","multiPanel_nJets",1500,1000);
     TPad* pads_nJets[nPads];
     formatMultipanelViewer(multiPanel_nJets, pads_nJets, rows, columns);
     
@@ -609,7 +609,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         // Thrust                                        /
         /************************************************/
         
-        TCanvas *multiPanel_thrust_MC = new TCanvas("multiPanel_thrust_MC","multiPanel_thrust_MC",1000,1000);
+        TCanvas *multiPanel_thrust_MC = new TCanvas("multiPanel_thrust_MC","multiPanel_thrust_MC",1500,1000);
         TPad* pads_thrust_MC[nPads];
         formatMultipanelViewer(multiPanel_thrust_MC, pads_thrust_MC, rows, columns);
         
@@ -653,7 +653,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         // nJet                                          /
         /************************************************/
         
-        TCanvas *multiPanel_nJets_MC = new TCanvas("multiPanel_nJets_MC","multiPanel_nJets_MC",1000,1000);
+        TCanvas *multiPanel_nJets_MC = new TCanvas("multiPanel_nJets_MC","multiPanel_nJets_MC",1500,1000);
         TPad* pads_nJets_MC[nPads];
         formatMultipanelViewer(multiPanel_nJets_MC, pads_nJets_MC, rows, columns);
         
