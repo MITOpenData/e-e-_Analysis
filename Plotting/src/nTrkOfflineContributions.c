@@ -363,6 +363,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     std::string collisionLabel = "e^{+}e^{-} #rightarrow hadrons, #sqrt{s} = 91 GeV";
     std::string ALEPH = "ALEPH Archived Data";
     std::string PYTHIA = "Archived PYTHIA 6.1 MC";
+    std::string jetAlgo = "Jet Algo";
     
     /************************************************/
     // nTrkOffline                                   /
@@ -478,9 +479,10 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     TLegend *leg_nJetsLabel = new TLegend(0.23,0.12,0.75,0.25); //0.47,0.67,0.94,0.75
     leg_nJetsLabel->SetBorderSize(0);
     leg_nJetsLabel->SetFillStyle(0);
-    leg_nJetsLabel->SetTextSize(0.06);
+    leg_nJetsLabel->SetTextSize(0.057);
     leg_nJetsLabel->AddEntry(nJets,collisionLabel.c_str(),"t");
     leg_nJetsLabel->AddEntry(nJets,ALEPH.c_str(),"t");
+    leg_nJetsLabel->AddEntry(nJets,jetAlgo.c_str(),"t");
     leg_nJetsLabel->Draw();
     multiPanel_nJets->cd();
     plotLogo(1,1,1);
@@ -604,7 +606,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         TLegend *leg_nTrk_MC = new TLegend(0.24,0.22,0.65,0.42);
         leg_nTrk_MC->SetBorderSize(0);
         leg_nTrk_MC->SetFillStyle(0);
-        leg_nTrk_MC->SetTextSize(0.045);
+        leg_nTrk_MC->SetTextSize(0.04);
         leg_nTrk_MC->AddEntry(nTrkOffline_MC,collisionLabel.c_str(),"t");
         leg_nTrk_MC->AddEntry(nTrkOffline_Clone,ALEPH.c_str(),"p");
         leg_nTrk_MC->AddEntry(nTrkOffline_MC,PYTHIA.c_str(),"p");
@@ -697,11 +699,12 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         }
         
         multiPanel_nJets_MC->cd(1);
-        TLegend *leg_nJetsLabel_MC = new TLegend(0.30,0.08,0.82,0.27);
+        TLegend *leg_nJetsLabel_MC = new TLegend(0.30,0.08,0.82,0.30);
         leg_nJetsLabel_MC->SetBorderSize(0);
         leg_nJetsLabel_MC->SetFillStyle(0);
         leg_nJetsLabel_MC->SetTextSize(0.05);
         leg_nJetsLabel_MC->AddEntry(nJets_MC,collisionLabel.c_str(),"t");
+        leg_nJetsLabel_MC->AddEntry(nJets_MC,jetAlgo.c_str(),"t");
         leg_nJetsLabel_MC->AddEntry(nJets_Clone,ALEPH.c_str(),"p");
         leg_nJetsLabel_MC->AddEntry(nJets_MC,PYTHIA.c_str(),"p");
         leg_nJetsLabel_MC->Draw();
