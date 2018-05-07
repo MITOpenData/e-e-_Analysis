@@ -375,7 +375,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     c_nTrkOffline_Cut->SetTicky(1);
     nTrkOffline->Draw();
 
-    TLegend *leg_nTrk = new TLegend(0.46,0.85,0.96,0.93);
+    TLegend *leg_nTrk = new TLegend(0.46,0.75,0.96,0.83);
     leg_nTrk->SetBorderSize(0);
     leg_nTrk->SetFillStyle(0);
     leg_nTrk->AddEntry(nTrkOffline,collisionLabel.c_str(),"t");
@@ -411,7 +411,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     multiPanel_thrust->cd(1);
     gPad->SetLogy();
     thrust->Draw();
-    latex.DrawLatex(0.624,7000,"Inclusive N_{Trk}^{Offline}"); // 0.585
+    latex.DrawLatex(0.624,70000,"Inclusive N_{Trk}^{Offline}"); // 0.585
     
     for(unsigned int i = 0; i < numRanges; ++i)
     {
@@ -420,8 +420,8 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         thrust->Draw();
         thrust_Cut[i]->SetFillColorAlpha(vGP.getColor(colors[i]),0.85);
         thrust_Cut[i]->Draw("same");
-        if(i<numRanges-2) latex.DrawLatex(0.624,7000,Form("%d #leq N_{Trk}^{Offline} < %d",nTrkMin[i],nTrkMax[i]));
-        else latex.DrawLatex(0.624,7000,Form("N_{Trk}^{Offline} #geq %d",nTrkMin[i]));
+        if(i<numRanges-2) latex.DrawLatex(0.624,70000,Form("%d #leq N_{Trk}^{Offline} < %d",nTrkMin[i],nTrkMax[i]));
+        else latex.DrawLatex(0.624,70000,Form("N_{Trk}^{Offline} #geq %d",nTrkMin[i]));
     }
     
     multiPanel_thrust->cd(1);
@@ -446,14 +446,14 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     formatMultipanelViewer(multiPanel_nJets, pads_nJets, rows, columns);
     
     TLatex latex_nJet;
-    latex_nJet.SetTextSize(18);
+    latex_nJet.SetTextSize(20);
     latex_nJet.SetTextAlign(13);
     latex_nJet.SetTextFont(43);
     
     multiPanel_nJets->cd(1);
     gPad->SetLogy();
     nJets->Draw();
-    latex_nJet.DrawLatex(14,100000,"Inclusive N_{Trk}^{Offline}");
+    latex_nJet.DrawLatex(18,130000,"Inclusive N_{Trk}^{Offline}");
     
     for(unsigned int i = 0; i < numRanges; ++i)
     {
@@ -462,8 +462,8 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         nJets->Draw();
         nJets_Cut[i]->SetFillColorAlpha(vGP.getColor(colors[i]),0.85);
         nJets_Cut[i]->Draw("same");
-        if(i<numRanges-2) latex_nJet.DrawLatex(14,100000,Form("%d #leq N_{Trk}^{Offline} < %d",nTrkMin[i],nTrkMax[i]));
-        else latex_nJet.DrawLatex(16,100000,Form("N_{Trk}^{Offline} #geq %d",nTrkMin[i]));
+        if(i<numRanges-2) latex_nJet.DrawLatex(18,130000,Form("%d #leq N_{Trk}^{Offline} < %d",nTrkMin[i],nTrkMax[i]));
+        else latex_nJet.DrawLatex(18,130000,Form("N_{Trk}^{Offline} #geq %d",nTrkMin[i]));
     }
     
     multiPanel_nJets->cd(1);
@@ -510,13 +510,13 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         
         TH1D *nTrkOffline_Clone = (TH1D*)nTrkOffline->Clone("nTrkOffline_Clone");
         nTrkOffline_Clone->SetMarkerStyle(24); //open circle
-        nTrkOffline_Clone->SetMarkerSize(1.5);
+        nTrkOffline_Clone->SetMarkerSize(1.35);
         TH1F *thrust_Clone = (TH1F*)thrust->Clone("thrust_Clone");
         thrust_Clone->SetMarkerStyle(24); //open circle
-        thrust_Clone->SetMarkerSize(1.2);
+        thrust_Clone->SetMarkerSize(1.35)
         TH1F *nJets_Clone = (TH1F*)nJets->Clone("nJets_Clone");
         nJets_Clone->SetMarkerStyle(24); //open circle
-        nJets_Clone->SetMarkerSize(1.2);
+        nJets_Clone->SetMarkerSize(1.35)
         
         TH1D * nTrkOffline_Clone_Cut[numRanges];
         TH1F * thrust_Clone_Cut[numRanges];
@@ -528,48 +528,48 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         
         nTrkOffline_MC->Scale(1./nTrkOffline_MC_Integral);
         nTrkOffline_MC->SetMarkerStyle(33); //filled diamond
-        nTrkOffline_MC->SetMarkerSize(1.5);
+        nTrkOffline_MC->SetMarkerSize(1.35);
         thrust_MC->Scale(1./thrust_MC_Integral);
         thrust_MC->SetMarkerStyle(33); //filled diamond
-        thrust_MC->SetMarkerSize(1.2);
+        thrust_MC->SetMarkerSize(1.35)
         nJets_MC->Scale(1./nJets_MC_Integral);
         nJets_MC->SetMarkerStyle(33); //filled diamond
-        nJets_MC->SetMarkerSize(1.2);
+        nJets_MC->SetMarkerSize(1.35)
         
         for(unsigned int i = 0; i < numRanges; ++i)
         {
             // normalize these to the full distributions
             nTrkOffline_Clone_Cut[i] = (TH1D*)nTrkOffline_Cut[i]->Clone(Form("nTrkOffline_Clone_%d",nTrkMin[i]));
             nTrkOffline_Clone_Cut[i]->Scale(1./nTrkOffline_Integral);
-            nTrkOffline_Clone_Cut[i]->SetMarkerStyle(25); //open box
-            nTrkOffline_Clone_Cut[i]->SetMarkerSize(1.2);
+            nTrkOffline_Clone_Cut[i]->SetMarkerStyle(24); //open circle
+            nTrkOffline_Clone_Cut[i]->SetMarkerSize(1.35)
             nTrkOffline_Clone_Cut[i]->SetMarkerColorAlpha(vGP.getColor(colors[i]),0.85);
             
             thrust_Clone_Cut[i] = (TH1F*)thrust_Cut[i]->Clone(Form("thrust_Clone_%d",nTrkMin[i]));
             thrust_Clone_Cut[i]->Scale(1./thrust_Integral);
-            thrust_Clone_Cut[i]->SetMarkerStyle(25); //open box
-            thrust_Clone_Cut[i]->SetMarkerSize(1.2);
+            thrust_Clone_Cut[i]->SetMarkerStyle(24); //open circle
+            thrust_Clone_Cut[i]->SetMarkerSize(1.35)
             thrust_Clone_Cut[i]->SetMarkerColorAlpha(vGP.getColor(colors[i]),0.85);
             
             nJets_Clone_Cut[i] = (TH1F*)nJets_Cut[i]->Clone(Form("nJets_Clone_%d",nTrkMin[i]));
             nJets_Clone_Cut[i]->Scale(1./nJets_Integral);
-            nJets_Clone_Cut[i]->SetMarkerStyle(25); //open box
-            nJets_Clone_Cut[i]->SetMarkerSize(1.2);
+            nJets_Clone_Cut[i]->SetMarkerStyle(24); //open circle
+            nJets_Clone_Cut[i]->SetMarkerSize(1.35)
             nJets_Clone_Cut[i]->SetMarkerColorAlpha(vGP.getColor(colors[i]),0.85);
         
             nTrkOffline_MC_Cut[i]->Scale(1./nTrkOffline_MC_Integral);
             nTrkOffline_MC_Cut[i]->SetMarkerStyle(33); //filled cross
-            nTrkOffline_MC_Cut[i]->SetMarkerSize(1.2);
+            nTrkOffline_MC_Cut[i]->SetMarkerSize(1.35)
             nTrkOffline_MC_Cut[i]->SetMarkerColorAlpha(vGP.getColor(colors[i]),0.85);
             
             thrust_MC_Cut[i]->Scale(1./thrust_MC_Integral);
             thrust_MC_Cut[i]->SetMarkerStyle(33); //filled cross
-            thrust_MC_Cut[i]->SetMarkerSize(1.2);
+            thrust_MC_Cut[i]->SetMarkerSize(1.35)
             thrust_MC_Cut[i]->SetMarkerColorAlpha(vGP.getColor(colors[i]),0.85);
             
             nJets_MC_Cut[i]->Scale(1./nJets_MC_Integral);
             nJets_MC_Cut[i]->SetMarkerStyle(33); //filled cross
-            nJets_MC_Cut[i]->SetMarkerSize(1.2);
+            nJets_MC_Cut[i]->SetMarkerSize(1.35)
             nJets_MC_Cut[i]->SetMarkerColorAlpha(vGP.getColor(colors[i]),0.85);
         }
         
