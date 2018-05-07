@@ -161,13 +161,20 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     // Data
     std::string LEP1Data1992_recons_aftercut = "/LEP1Data1992_recons_aftercut-MERGED.root";
     std::string LEP1Data1993_recons_aftercut = "/LEP1Data1993_recons_aftercut-MERGED.root";
-    std::string LEP1Data1994_recons_aftercut = "/LEP1Data1994_recons_aftercut-MERGED.root";
+    std::string LEP1Data1994P1_recons_aftercut = "/LEP1Data1994P1_recons_aftercut-MERGED.root";
+    std::string LEP1Data1994P2_recons_aftercut = "/LEP1Data1994P2_recons_aftercut-MERGED.root";
+    std::string LEP1Data1994P3_recons_aftercut = "/LEP1Data1994P3_recons_aftercut-MERGED.root";
+    std::string LEP1Data1994P4_recons_aftercut = "/LEP1Data1994P4_recons_aftercut-MERGED.root";
     std::string LEP1Data1995_recons_aftercut = "/LEP1Data1995_recons_aftercut-MERGED.root";
     
     std::string LEP1Data1992_recons_aftercut_Mix = "/LEP1Data1992_recons_aftercut-MERGED_Mix.root";
     std::string LEP1Data1993_recons_aftercut_Mix = "/LEP1Data1993_recons_aftercut-MERGED_Mix.root";
-    std::string LEP1Data1994_recons_aftercut_Mix = "/LEP1Data1994_recons_aftercut-MERGED_Mix.root";
+    std::string LEP1Data1994P1_recons_aftercut_Mix = "/LEP1Data1994P1_recons_aftercut-MERGED_Mix.root";
+    std::string LEP1Data1994P2_recons_aftercut_Mix = "/LEP1Data1994P2_recons_aftercut-MERGED_Mix.root";
+    std::string LEP1Data1994P3_recons_aftercut_Mix = "/LEP1Data1994P3_recons_aftercut-MERGED_Mix.root";
+    std::string LEP1Data1994P4_recons_aftercut_Mix = "/LEP1Data1994P4_recons_aftercut-MERGED_Mix.root";
     std::string LEP1Data1995_recons_aftercut_Mix = "/LEP1Data1995_recons_aftercut-MERGED_Mix.root";
+    
     
     // Monte Carlo
     std::string alephMCRecoAfterCutPaths_1994 = "/alephMCRecoAfterCutPaths_1994.root";
