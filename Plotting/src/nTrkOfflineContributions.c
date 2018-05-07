@@ -463,8 +463,8 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         nJets->Draw();
         nJets_Cut[i]->SetFillColorAlpha(vGP.getColor(colors[i]),0.85);
         nJets_Cut[i]->Draw("same");
-        if(i<numRanges-2) latex_nJet.DrawLatex(16.5,130000,Form("%d #leq N_{Trk}^{Offline} < %d",nTrkMin[i],nTrkMax[i]));
-        else latex_nJet.DrawLatex(16.5,130000,Form("N_{Trk}^{Offline} #geq %d",nTrkMin[i]));
+        if(i<numRanges-2) latex_nJet.DrawLatex(16.3,130000,Form("%d #leq N_{Trk}^{Offline} < %d",nTrkMin[i],nTrkMax[i]));
+        else latex_nJet.DrawLatex(17.0,130000,Form("N_{Trk}^{Offline} #geq %d",nTrkMin[i]));
     }
     
     multiPanel_nJets->cd(1);
