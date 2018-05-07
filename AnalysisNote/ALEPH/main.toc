@@ -4,13 +4,12 @@
 \contentsline {section}{\numberline {}Contents}{2}{}
 \tocdepth@restore 
 \contentsline {section}{\numberline {I}Introduction}{2}{}
-\contentsline {section}{\numberline {II}The ALEPH Detector}{4}{}
+\contentsline {section}{\numberline {II}The ALEPH Detector}{3}{}
 \contentsline {section}{\numberline {III}Data Sample}{4}{}
 \contentsline {section}{\numberline {IV}Data Quality Checks}{4}{}
-\contentsline {subsection}{\numberline {A}LEP1 vs LEP1 Monte-Carlo}{5}{}
-\contentsline {subsection}{\numberline {B}LEP1 Track Efficiency}{5}{}
-\contentsline {section}{\numberline {V}Analysis}{6}{}
-\contentsline {section}{\numberline {VI}Thrust and sphericity axes}{6}{}
-\contentsline {section}{\numberline {VII}Event Selection}{7}{}
-\contentsline {section}{\numberline {VIII}Thrust distribution}{7}{}
-\contentsline {section}{\numberline {}References}{8}{}
+\contentsline {subsection}{\numberline {A}LEP1 vs LEP1 Monte-Carlo}{4}{}
+\contentsline {section}{\numberline {V}Analysis}{4}{}
+\contentsline {section}{\numberline {VI}Thrust and sphericity axes}{4}{}
+\contentsline {section}{\numberline {VII}Event Selection}{6}{}
+\contentsline {section}{\numberline {VIII}Thrust distribution}{6}{}
+\contentsline {section}{\numberline {}References}{7}{}
