@@ -96,6 +96,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     // Full Distributions //
     TH1D * nTrkOffline = new TH1D("nTrkOffline","nTrkOffline;N_{Trk}^{Offline};Entries",54,0,54);
     InitHist(nTrkOffline, "N_{Trk}^{Offline}", "Entries", kBlack, 1001,0);
+    nTrkOffline->SetTitleOffset(3.300,"Y");
     
     TH1F *thrust = new TH1F("Thrust","Thrust;Thrust;Entries",nBins,bins);
     InitHist(thrust, "Thrust", "#frac{1}{#sigma} #frac{d#sigma}{dT}", kBlack, 1001,0);
@@ -388,7 +389,11 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     {
         //nTrkOffline_Cut[i]->SetFillStyle(3000+i);
         nTrkOffline_Cut[i]->SetFillColorAlpha(vGP.getColor(colors[i]),0.85);
-        if(i == numRanges -1) nTrkOffline_Cut[i]->SetFillStyle(3344);
+        if(i == numRanges -1)
+        {
+            gStyle->SetHatchesLineWidth(2);
+            nTrkOffline_Cut[i]->SetFillStyle(3344);
+        }
         nTrkOffline_Cut[i]->Draw("same");
     }
     plotLogo(1,1,1);
@@ -513,7 +518,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         
         TH1D *nTrkOffline_Clone = (TH1D*)nTrkOffline->Clone("nTrkOffline_Clone");
         nTrkOffline_Clone->SetMarkerStyle(24); //open circle
-        nTrkOffline_Clone->SetMarkerSize(1.3);
+        nTrkOffline_Clone->SetMarkerSize(1.25);
         TH1F *thrust_Clone = (TH1F*)thrust->Clone("thrust_Clone");
         thrust_Clone->SetMarkerStyle(24); //open circle
         thrust_Clone->SetMarkerSize(1.35);
