@@ -51,18 +51,18 @@
 
 void formatMultiPanelHist(TH1F *hist)
 {
-    hist->GetXaxis()->SetTitleSize(30);
+    hist->GetXaxis()->SetTitleSize(35);
     hist->GetXaxis()->SetTitleFont(43);
-    hist->SetTitleOffset(2.200,"X");
-    hist->GetXaxis()->SetLabelSize(25);
+    hist->SetTitleOffset(2.300,"X");
+    hist->GetXaxis()->SetLabelSize(30);
     hist->GetXaxis()->SetLabelFont(43);
     hist->GetXaxis()->SetNdivisions(5);
-    hist->GetYaxis()->SetTitleSize(30);
+    hist->GetYaxis()->SetTitleSize(35);
     hist->GetYaxis()->SetTitleFont(43);
-    hist->GetYaxis()->SetLabelSize(25);
+    hist->GetYaxis()->SetLabelSize(30);
     hist->GetYaxis()->SetLabelFont(43);
     hist->GetYaxis()->SetNdivisions(3);
-    hist->SetTitleOffset(3.200,"Y");
+    hist->SetTitleOffset(3.300,"Y");
 }
 
 int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
@@ -388,6 +388,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     {
         //nTrkOffline_Cut[i]->SetFillStyle(3000+i);
         nTrkOffline_Cut[i]->SetFillColorAlpha(vGP.getColor(colors[i]),0.85);
+        if(i == numRanges -1) nTrkOffline_Cut[i]->SetFillStyle(3344);
         nTrkOffline_Cut[i]->Draw("same");
     }
     plotLogo(1,1,1);
@@ -413,7 +414,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     multiPanel_thrust->cd(1);
     gPad->SetLogy();
     thrust->Draw();
-    latex.DrawLatex(0.624,800000,"Inclusive N_{Trk}^{Offline}"); // 0.585
+    latex.DrawLatex(0.624,700000,"Inclusive N_{Trk}^{Offline}"); // 0.585
     
     for(unsigned int i = 0; i < numRanges; ++i)
     {
@@ -422,12 +423,12 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         thrust->Draw();
         thrust_Cut[i]->SetFillColorAlpha(vGP.getColor(colors[i]),0.85);
         thrust_Cut[i]->Draw("same");
-        if(i<numRanges-2) latex.DrawLatex(0.624,800000,Form("%d #leq N_{Trk}^{Offline} < %d",nTrkMin[i],nTrkMax[i]));
-        else latex.DrawLatex(0.624,800000,Form("N_{Trk}^{Offline} #geq %d",nTrkMin[i]));
+        if(i<numRanges-2) latex.DrawLatex(0.624,700000,Form("%d #leq N_{Trk}^{Offline} < %d",nTrkMin[i],nTrkMax[i]));
+        else latex.DrawLatex(0.624,700000,Form("N_{Trk}^{Offline} #geq %d",nTrkMin[i]));
     }
     
     multiPanel_thrust->cd(1);
-    TLegend *leg_ThrLabel = new TLegend(0.32,0.22,0.77,0.35); //0.22,0.62,0.67,0.75 0.32,0.22,0.77,0.35
+    TLegend *leg_ThrLabel = new TLegend(0.25,0.12,0.70,0.25); //0.22,0.62,0.67,0.75 0.32,0.22,0.77,0.35
     leg_ThrLabel->SetBorderSize(0);
     leg_ThrLabel->SetFillStyle(0);
     leg_ThrLabel->SetTextSize(0.045);
@@ -630,7 +631,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         gPad->SetLogy();
         thrust_Clone->Draw();
         thrust_MC->Draw("same");
-        latex_thrust_MC.DrawLatex(0.624,0.9,"Inclusive N_{Trk}^{Offline}");
+        latex_thrust_MC.DrawLatex(0.624,0.2,"Inclusive N_{Trk}^{Offline}");
         
         for(unsigned int i = 0; i < numRanges; ++i)
         {
@@ -641,15 +642,15 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
             thrust_Clone_Cut[i]->Draw("same");
             thrust_MC_Cut[i]->Draw("same");
             
-            if(i<numRanges-2) latex_thrust_MC.DrawLatex(0.624,0.9,Form("%d #leq N_{Trk}^{Offline} < %d",nTrkMin[i],nTrkMax[i]));
-            else latex_thrust_MC.DrawLatex(0.624,0.9,Form("N_{Trk}^{Offline} #geq %d",nTrkMin[i]));
+            if(i<numRanges-2) latex_thrust_MC.DrawLatex(0.624,0.2,Form("%d #leq N_{Trk}^{Offline} < %d",nTrkMin[i],nTrkMax[i]));
+            else latex_thrust_MC.DrawLatex(0.624,0.2,Form("N_{Trk}^{Offline} #geq %d",nTrkMin[i]));
         }
         
         multiPanel_thrust_MC->cd(1);
-        TLegend *leg_ThrLabel_MC = new TLegend(0.32,0.22,0.77,0.35);
+        TLegend *leg_ThrLabel_MC = new TLegend(0.32,0.12,0.85,0.25);
         leg_ThrLabel_MC->SetBorderSize(0);
         leg_ThrLabel_MC->SetFillStyle(0);
-        leg_ThrLabel_MC->SetTextSize(0.04);
+        leg_ThrLabel_MC->SetTextSize(0.045);
         leg_ThrLabel_MC->AddEntry(thrust_MC,collisionLabel.c_str(),"t");
         leg_ThrLabel_MC->AddEntry(thrust_Clone,ALEPH.c_str(),"p");
         leg_ThrLabel_MC->AddEntry(thrust_MC,PYTHIA.c_str(),"p");
