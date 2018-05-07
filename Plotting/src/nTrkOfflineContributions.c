@@ -428,10 +428,10 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     }
     
     multiPanel_thrust->cd(1);
-    TLegend *leg_ThrLabel = new TLegend(0.25,0.12,0.70,0.25); //0.22,0.62,0.67,0.75 0.32,0.22,0.77,0.35
+    TLegend *leg_ThrLabel = new TLegend(0.30,0.12,0.75,0.25); //0.22,0.62,0.67,0.75 0.32,0.22,0.77,0.35
     leg_ThrLabel->SetBorderSize(0);
     leg_ThrLabel->SetFillStyle(0);
-    leg_ThrLabel->SetTextSize(0.045);
+    leg_ThrLabel->SetTextSize(0.05);
     //leg_ThrLabel->SetTextSize(42);
     leg_ThrLabel->AddEntry(nTrkOffline,collisionLabel.c_str(),"t");
     leg_ThrLabel->AddEntry(nTrkOffline,ALEPH.c_str(),"t");
@@ -692,7 +692,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         }
         
         multiPanel_nJets_MC->cd(1);
-        TLegend *leg_nJetsLabel_MC = new TLegend(0.28,0.12,0.80,0.25);
+        TLegend *leg_nJetsLabel_MC = new TLegend(0.30,0.08,0.82,0.27);
         leg_nJetsLabel_MC->SetBorderSize(0);
         leg_nJetsLabel_MC->SetFillStyle(0);
         leg_nJetsLabel_MC->SetTextSize(0.05);
