@@ -476,7 +476,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     }
     
     multiPanel_nJets->cd(1);
-    TLegend *leg_nJetsLabel = new TLegend(0.23,0.12,0.75,0.25); //0.47,0.67,0.94,0.75
+    TLegend *leg_nJetsLabel = new TLegend(0.23,0.04,0.75,0.34); //0.47,0.67,0.94,0.75
     leg_nJetsLabel->SetBorderSize(0);
     leg_nJetsLabel->SetFillStyle(0);
     leg_nJetsLabel->SetTextSize(0.057);
@@ -699,7 +699,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         }
         
         multiPanel_nJets_MC->cd(1);
-        TLegend *leg_nJetsLabel_MC = new TLegend(0.30,0.08,0.82,0.38);
+        TLegend *leg_nJetsLabel_MC = new TLegend(0.30,0.06,0.82,0.36);
         leg_nJetsLabel_MC->SetBorderSize(0);
         leg_nJetsLabel_MC->SetFillStyle(0);
         leg_nJetsLabel_MC->SetTextSize(0.05);
