@@ -399,7 +399,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     static const int columns = 3;
     static const int nPads = rows * columns;
     
-    TCanvas *multiPanel_thrust = new TCanvas("multiPanel_thrust","multiPanel_thrust",1000,1000);
+    TCanvas *multiPanel_thrust = new TCanvas("multiPanel_thrust","multiPanel_thrust",1000,1500);
     TPad* pads_thrust[nPads];
     formatMultipanelViewer(multiPanel_thrust, pads_thrust, rows, columns);
 
@@ -441,7 +441,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     // nJet                                          /
     /************************************************/
     
-    TCanvas *multiPanel_nJets = new TCanvas("multiPanel_nJets","multiPanel_nJets",1000,1000);
+    TCanvas *multiPanel_nJets = new TCanvas("multiPanel_nJets","multiPanel_nJets",1000,1500);
     TPad* pads_nJets[nPads];
     formatMultipanelViewer(multiPanel_nJets, pads_nJets, rows, columns);
     
