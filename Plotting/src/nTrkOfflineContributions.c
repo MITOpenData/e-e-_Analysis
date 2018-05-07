@@ -699,7 +699,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         }
         
         multiPanel_nJets_MC->cd(1);
-        TLegend *leg_nJetsLabel_MC = new TLegend(0.30,0.08,0.82,0.30);
+        TLegend *leg_nJetsLabel_MC = new TLegend(0.30,0.08,0.82,0.38);
         leg_nJetsLabel_MC->SetBorderSize(0);
         leg_nJetsLabel_MC->SetFillStyle(0);
         leg_nJetsLabel_MC->SetTextSize(0.05);
