@@ -146,6 +146,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         thrust_MC_Cut[i] = new TH1F(Form("Thrust_MC_%d",nTrkMin[i]), Form("Thrust_MC_%d;Thrust;Entries",nTrkMin[i]),nBins,bins);
         InitHist(thrust_MC_Cut[i], "", "Entries", kBlack, 1001,0);
         nJets_MC_Cut[i] = new TH1F(Form("nJets_MC_%d",nTrkMin[i]), Form("nJets_MC_%d;N_{Jets}^{Offline};Entries",nTrkMin[i]),24,0.0001,24.9999);
+        InitHist(nJets_MC_Cut[i], "", "Entries", kBlack, 1001,0);
     }
 
     /************************************************/
@@ -375,7 +376,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     c_nTrkOffline_Cut->SetTicky(1);
     nTrkOffline->Draw();
 
-    TLegend *leg_nTrk = new TLegend(0.46,0.75,0.96,0.83);
+    TLegend *leg_nTrk = new TLegend(0.46,0.78,0.96,0.86);
     leg_nTrk->SetBorderSize(0);
     leg_nTrk->SetFillStyle(0);
     leg_nTrk->AddEntry(nTrkOffline,collisionLabel.c_str(),"t");
@@ -453,7 +454,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     multiPanel_nJets->cd(1);
     gPad->SetLogy();
     nJets->Draw();
-    latex_nJet.DrawLatex(18,130000,"Inclusive N_{Trk}^{Offline}");
+    latex_nJet.DrawLatex(16.5,130000,"Inclusive N_{Trk}^{Offline}");
     
     for(unsigned int i = 0; i < numRanges; ++i)
     {
@@ -462,8 +463,8 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         nJets->Draw();
         nJets_Cut[i]->SetFillColorAlpha(vGP.getColor(colors[i]),0.85);
         nJets_Cut[i]->Draw("same");
-        if(i<numRanges-2) latex_nJet.DrawLatex(18,130000,Form("%d #leq N_{Trk}^{Offline} < %d",nTrkMin[i],nTrkMax[i]));
-        else latex_nJet.DrawLatex(18,130000,Form("N_{Trk}^{Offline} #geq %d",nTrkMin[i]));
+        if(i<numRanges-2) latex_nJet.DrawLatex(16.5,130000,Form("%d #leq N_{Trk}^{Offline} < %d",nTrkMin[i],nTrkMax[i]));
+        else latex_nJet.DrawLatex(16.5,130000,Form("N_{Trk}^{Offline} #geq %d",nTrkMin[i]));
     }
     
     multiPanel_nJets->cd(1);
@@ -510,7 +511,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         
         TH1D *nTrkOffline_Clone = (TH1D*)nTrkOffline->Clone("nTrkOffline_Clone");
         nTrkOffline_Clone->SetMarkerStyle(24); //open circle
-        nTrkOffline_Clone->SetMarkerSize(1.35);
+        nTrkOffline_Clone->SetMarkerSize(1.3);
         TH1F *thrust_Clone = (TH1F*)thrust->Clone("thrust_Clone");
         thrust_Clone->SetMarkerStyle(24); //open circle
         thrust_Clone->SetMarkerSize(1.35);
@@ -528,7 +529,7 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
         
         nTrkOffline_MC->Scale(1./nTrkOffline_MC_Integral);
         nTrkOffline_MC->SetMarkerStyle(33); //filled diamond
-        nTrkOffline_MC->SetMarkerSize(1.35);
+        nTrkOffline_MC->SetMarkerSize(1.3);
         thrust_MC->Scale(1./thrust_MC_Integral);
         thrust_MC->SetMarkerStyle(33); //filled diamond
         thrust_MC->SetMarkerSize(1.35);
