@@ -185,12 +185,18 @@ int nTrkOfflineContributions(const std::string inFileNameData,  //  Data
     {
         chain_t.Add( (inFileNameData+LEP1Data1992_recons_aftercut).c_str() );
         chain_t.Add( (inFileNameData+LEP1Data1993_recons_aftercut).c_str() );
-        chain_t.Add( (inFileNameData+LEP1Data1994_recons_aftercut).c_str() );
+        chain_t.Add( (inFileNameData+LEP1Data1994P1_recons_aftercut).c_str() );
+        chain_t.Add( (inFileNameData+LEP1Data1994P2_recons_aftercut).c_str() );
+        chain_t.Add( (inFileNameData+LEP1Data1994P3_recons_aftercut).c_str() );
+        chain_t.Add( (inFileNameData+LEP1Data1994P4_recons_aftercut).c_str() );
         chain_t.Add( (inFileNameData+LEP1Data1995_recons_aftercut).c_str() );
         
         chain_jt.Add( (inFileNameData+LEP1Data1992_recons_aftercut).c_str() );
         chain_jt.Add( (inFileNameData+LEP1Data1993_recons_aftercut).c_str() );
-        chain_jt.Add( (inFileNameData+LEP1Data1994_recons_aftercut).c_str() );
+        chain_jt.Add( (inFileNameData+LEP1Data1994P1_recons_aftercut).c_str() );
+        chain_jt.Add( (inFileNameData+LEP1Data1994P2_recons_aftercut).c_str() );
+        chain_jt.Add( (inFileNameData+LEP1Data1994P3_recons_aftercut).c_str() );
+        chain_jt.Add( (inFileNameData+LEP1Data1994P4_recons_aftercut).c_str() );
         chain_jt.Add( (inFileNameData+LEP1Data1995_recons_aftercut).c_str() );
     }
     
