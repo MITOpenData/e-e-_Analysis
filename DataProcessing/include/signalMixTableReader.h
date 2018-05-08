@@ -6,6 +6,8 @@
 #include <fstream>
 #include <vector>
 
+#include "TMath.h"
+
 #include "DataProcessing/include/checkMakeDir.h"
 
 class signalMixTableReader{
@@ -18,6 +20,8 @@ class signalMixTableReader{
   bool isNum(const std::string inStr);
   bool Init(const std::string inFileName);
   double getSigOverMixFactor(int mult, double inAbsEta);
+
+  void Print();
 
   std::map<unsigned int, double> globalMap;
   std::vector<int> multLowBounds;
@@ -91,6 +95,8 @@ double signalMixTableReader::getSigOverMixFactor(int mult, double absEta)
     return 0;
   }
 
+  absEta = TMath::Abs(absEta);
+
   unsigned int mpos = 0;
   for(unsigned int mI = 0; mI < multHiBounds.size(); ++mI){
     if(mult >= multLowBounds.at(mI) && mult < multHiBounds.at(mI)){
@@ -109,6 +115,17 @@ double signalMixTableReader::getSigOverMixFactor(int mult, double absEta)
 
   unsigned int key = mpos + 10*aepos;
   return globalMap[key];
+}
+
+
+void signalMixTableReader::Print()
+{
+  std::cout << "Print table..." << std::endl;
+  for(std::map<unsigned int,double>::iterator it = globalMap.begin(); it != globalMap.end(); ++it){
+    std::cout << " " << it->first << ", " << it->second << std::endl;
+  }
+
+  return;
 }
 
 #endif
