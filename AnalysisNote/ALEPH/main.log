@@ -1,16 +1,11 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2018.3.13)  4 MAY 2018 10:19
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  7 MAY 2018 18:22
 entering extended mode
+ restricted \write18 enabled.
  %&-line parsing enabled.
 **main.tex
 (./main.tex
-LaTeX2e <2005/12/01>
-Babel <v3.8h> and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, arabic, basque, bulgarian, coptic, welsh, czech, slovak, german, ng
-erman, danish, esperanto, spanish, catalan, galician, estonian, farsi, finnish,
- french, greek, monogreek, ancientgreek, croatian, hungarian, interlingua, ibyc
-us, indonesian, icelandic, italian, latin, mongolian, dutch, norsk, polish, por
-tuguese, pinyin, romanian, russian, slovenian, uppersorbian, serbian, swedish, 
-turkish, ukenglish, ukrainian, loaded.
+LaTeX2e <2017-04-15>
+Babel <3.10> and hyphenation patterns for 84 language(s) loaded.
 (./revtex4-1.cls
 Document Class: revtex4-1 2010/07/25/20:33:00 4.1r (http://publish.aps.org/revt
 ex4/ for documentation)
@@ -86,90 +81,84 @@ Class revtex4-1 Info: APS journal PRA selected on input line 7545.
 File: aps12pt4-1 2010/07/25/20:33:00 4.1r (http://publish.aps.org/revtex4/ for 
 documentation)
 Class revtex4-1 Info: RevTeX pointsize 12pt selected on input line 30.
-) (/usr/share/texmf/tex/latex/textcase/textcase.sty
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/textcase/textcase.sty
 Package: textcase 2004/10/07 v0.07 Text only upper/lower case changing (DPC)
 )
-(/usr/share/texmf/tex/latex/html/url.sty
-
-! LaTeX Error: Command \url already defined.
-               Or name \end... illegal, see p.192 of the manual.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.102 \newcommand\url{\begingroup \Url}
-                                       
-? 
-Package: url 1999/03/02  ver 1.4  Verb mode for urls, email addresses, and file
- names
-) (/usr/share/texmf/tex/latex/natbib/natbib.sty
-Package: natbib 2007/02/05 8.0 (PWD)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip10
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/natbib/natbib.sty
+Package: natbib 2010/09/13 8.31b (PWD, AO)
 \bibhang=\skip44
 \bibsep=\skip45
-LaTeX Info: Redefining \cite on input line 602.
+LaTeX Info: Redefining \cite on input line 694.
 \c@NAT@ctr=\count94
 )
-
-LaTeX Warning: You have requested, on input line 7549, version
-               `2009/11/07 8.31a (PWD, AO)' of package natbib,
-               but only version
-               `2007/02/05 8.0 (PWD)'
-               is available.
+Class revtex4-1 Info: Repairing natbib's \BibitemShut on input line 7549.
 
 (./revsymb4-1.sty
 Package: revsymb4-1 2010/07/25/20:33:00 4.1r (http://publish.aps.org/revtex4/ f
 or documentation)
 LaTeX Info: Redefining \REV@mathfrak on input line 119.
-)) (/usr/share/texmf/tex/latex/graphics/graphicx.sty
-Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+))
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2014/10/28 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)
 
-(/usr/share/texmf/tex/latex/graphics/keyval.sty
-Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
 \KV@toks@=\toks16
 )
-(/usr/share/texmf/tex/latex/graphics/graphics.sty
-Package: graphics 2006/02/20 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2017/04/14 v1.1b Standard LaTeX Graphics (DPC,SPQR)
 
-(/usr/share/texmf/tex/latex/graphics/trig.sty
-Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
 )
-(/usr/share/texmf/tex/latex/config/graphics.cfg
-File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
-Package graphics Info: Driver file: pdftex.def on input line 90.
+Package graphics Info: Driver file: pdftex.def on input line 99.
 
-(/usr/share/texmf/tex/latex/pdftex-def/pdftex.def
-File: pdftex.def 2007/01/08 v0.04d Graphics/color for pdfTeX
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2017/01/12 v0.06k Graphics/color for pdfTeX
+
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/infwarerr.sty
+Package: infwarerr 2016/05/16 v1.4 Providing info/warning/error messages (HO)
+)
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
+Package: ltxcmds 2016/05/16 v1.23 LaTeX kernel commands for general use (HO)
+)
 \Gread@gobject=\count95
 ))
 \Gin@req@height=\dimen102
 \Gin@req@width=\dimen103
 )
-(/usr/share/texmf/tex/latex/tools/dcolumn.sty
-Package: dcolumn 2001/05/28 v1.06 decimal alignment package (DPC)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/tools/dcolumn.sty
+Package: dcolumn 2014/10/28 v1.06 decimal alignment package (DPC)
 
-(/usr/share/texmf/tex/latex/tools/array.sty
-Package: array 2005/08/23 v2.4b Tabular extension package (FMi)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/tools/array.sty
+Package: array 2016/10/06 v2.4d Tabular extension package (FMi)
 \col@sep=\dimen104
 \extrarowheight=\dimen105
 \NC@list=\toks17
 \extratabsurround=\skip46
 \backup@length=\skip47
 ))
-(/usr/share/texmf/tex/latex/tools/bm.sty
-Package: bm 2004/02/26 v1.1c Bold Symbol Support (DPC/FMi)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/tools/bm.sty
+Package: bm 2017/01/16 v1.2c Bold Symbol Support (DPC/FMi)
 \symboldoperators=\mathgroup4
 \symboldletters=\mathgroup5
 \symboldsymbols=\mathgroup6
-LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 137.
-LaTeX Info: Redefining \bm on input line 203.
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 141.
+LaTeX Info: Redefining \bm on input line 207.
 )
-(/usr/share/texmf/tex/latex/placeins/placeins.sty
+(/usr/local/texlive/2017/texmf-dist/tex/latex/placeins/placeins.sty
 Package: placeins 2005/04/18  v 2.2
 )
-(/usr/share/texmf/tex/latex/booktabs/booktabs.sty
-Package: booktabs 2005/03/16 v1.6180 publication quality tables
+(/usr/local/texlive/2017/texmf-dist/tex/latex/booktabs/booktabs.sty
+Package: booktabs 2016/04/27 v1.618033 publication quality tables
 \heavyrulewidth=\dimen106
 \lightrulewidth=\dimen107
 \cmidrulewidth=\dimen108
@@ -188,79 +177,93 @@ Package: booktabs 2005/03/16 v1.6180 publication quality tables
 \@lastruleclass=\count99
 \@thisrulewidth=\dimen118
 )
-(/usr/share/texmf/tex/latex/colortbl/colortbl.sty
-Package: colortbl 2001/02/13 v0.1j Color table columns (DPC)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/colortbl/colortbl.sty
+Package: colortbl 2012/02/13 v1.0a Color table columns (DPC)
 
-(/usr/share/texmf/tex/latex/graphics/color.sty
-Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics/color.sty
+Package: color 2016/07/10 v1.1e Standard LaTeX Color (DPC)
 
-(/cvmfs/cms.cern.ch/slc6_amd64_gcc630/external/rivet/2.5.4/share/Rivet/texmf/te
-x/latex/config/color.cfg
-File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
-Package color Info: Driver file: pdftex.def on input line 130.
+Package color Info: Driver file: pdftex.def on input line 147.
 )
 \everycr=\toks18
 \minrowclearance=\skip48
 )
-(/cvmfs/cms.cern.ch/slc6_amd64_gcc630/external/rivet/2.5.4/share/Rivet/texmf/te
-x/latex/xcolor/xcolor.sty
-Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2016/05/11 v2.12 LaTeX color extensions (UK)
 
-(/cvmfs/cms.cern.ch/slc6_amd64_gcc630/external/rivet/2.5.4/share/Rivet/texmf/te
-x/latex/config/color.cfg
-File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
 Package xcolor Info: Driver file: pdftex.def on input line 225.
-LaTeX Info: Redefining \color on input line 702.
-Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1337.
-Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1341.
-Package xcolor Info: Model `RGB' extended on input line 1353.
-Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1355.
-Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1356.
-Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1357.
-Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1358.
-Package xcolor Info: Model `Gray' substituted by `gray' on input line 1359.
-Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
-) (/usr/share/texmf/tex/latex/subfig/subfig.sty
+LaTeX Info: Redefining \color on input line 709.
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1348.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1352.
+Package xcolor Info: Model `RGB' extended on input line 1364.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1366.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1367.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/subfig/subfig.sty
 Package: subfig 2005/06/28 ver: 1.3 subfig package
 
-(/usr/share/texmf/tex/latex/caption/caption.sty
-Package: caption 2007/01/07 v3.0k Customising captions (AR)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2016/02/21 v3.3-144 Customizing captions (AR)
 
-(/usr/share/texmf/tex/latex/caption/caption3.sty
-Package: caption3 2007/01/07 v3.0k caption3 kernel (AR)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2016/05/22 v1.7-166 caption3 kernel (AR)
+Package caption3 Info: TeX engine: e-TeX on input line 67.
 \captionmargin=\dimen119
-\captionmarginx=\dimen120
+\captionmargin@=\dimen120
 \captionwidth=\dimen121
-\captionindent=\dimen122
-\captionparindent=\dimen123
-\captionhangindent=\dimen124
-))
-\c@KVtest=\count100
+\caption@tempdima=\dimen122
+\caption@indent=\dimen123
+\caption@parindent=\dimen124
+\caption@hangindent=\dimen125
+Package caption Info: Unknown document class (or package),
+(caption)             standard defaults will be used.
+)
+
+Package caption Warning: Unsupported document class (or package) detected,
+(caption)                usage of the caption package is not recommended.
+See the caption package documentation for explanation.
+
+Package caption Info: \@makecaption = \long macro:#1#2->\par \vskip \abovecapti
+onskip \begingroup \small \rmfamily \sbox \@tempboxa {\let \\\heading@cr \@make
+@capt@title {#1}{#2}}\@ifdim {\wd \@tempboxa >\hsize }{\begingroup \samepage \f
+lushing \let \footnote \@footnotemark@gobble \@make@capt@title {#1}{#2}\par \en
+dgroup }{\global \@minipagefalse \hb@xt@ \hsize {\hfil \unhbox \@tempboxa \hfil
+ }}\endgroup \vskip \belowcaptionskip .
+\c@ContinuedFloat=\count100
+)
+\c@KVtest=\count101
 \sf@farskip=\skip49
-\sf@captopadj=\dimen125
+\sf@captopadj=\dimen126
 \sf@capskip=\skip50
 \sf@nearskip=\skip51
-\c@subfigure=\count101
-\c@subfigure@save=\count102
-\c@lofdepth=\count103
-\c@subtable=\count104
-\c@subtable@save=\count105
-\c@lotdepth=\count106
+\c@subfigure=\count102
+\c@subfigure@save=\count103
+\c@lofdepth=\count104
+\c@subtable=\count105
+\c@subtable@save=\count106
+\c@lotdepth=\count107
 \sf@top=\skip52
 \sf@bottom=\skip53
-)
-(/usr/share/texmf/tex/latex/float/float.sty
+) (/usr/local/texlive/2017/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count107
+\c@float@type=\count108
 \float@exts=\toks19
 \float@box=\box41
 \@float@everytoks=\toks20
 \@floatcapt=\box42
 )
-(/usr/share/texmf/tex/latex/tools/verbatim.sty
-Package: verbatim 2003/08/22 v1.5q LaTeX2e package for verbatim enhancements
+(/usr/local/texlive/2017/texmf-dist/tex/latex/tools/verbatim.sty
+Package: verbatim 2014/10/28 v1.5q LaTeX2e package for verbatim enhancements
 \every@verbatim=\toks21
 \verbatim@line=\toks22
 \verbatim@in@stream=\read1
@@ -276,44 +279,7 @@ Class revtex4-1 Info: Robustifying \LaTeX's \boldmath command on input line 67.
 Class revtex4-1 Info: cite was not loaded (OK!) on input line 67.
 Class revtex4-1 Info: mcite was not loaded (OK!) on input line 67.
 Class revtex4-1 Info: multicol was not loaded (OK!) on input line 67.
-(./main.aux
-
-LaTeX Warning: Label `sfig:a' multiply defined.
-
-
-LaTeX Warning: Label `sub@sfig:a' multiply defined.
-
-
-LaTeX Warning: Label `sfig:b' multiply defined.
-
-
-LaTeX Warning: Label `sub@sfig:b' multiply defined.
-
-
-LaTeX Warning: Label `sfig:c' multiply defined.
-
-
-LaTeX Warning: Label `sub@sfig:c' multiply defined.
-
-
-LaTeX Warning: Label `sfig:a' multiply defined.
-
-
-LaTeX Warning: Label `sub@sfig:a' multiply defined.
-
-
-LaTeX Warning: Label `sfig:b' multiply defined.
-
-
-LaTeX Warning: Label `sub@sfig:b' multiply defined.
-
-
-LaTeX Warning: Label `sfig:c' multiply defined.
-
-
-LaTeX Warning: Label `sub@sfig:c' multiply defined.
-
-)
+(./main.aux)
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 67.
@@ -328,39 +294,81 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 67.
 LaTeX Font Info:    ... okay on input line 67.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 67.
 LaTeX Font Info:    ... okay on input line 67.
- (/usr/share/texmf/tex/latex/ragged2e/ragged2e.sty
-Package: ragged2e 2003/03/25 v2.04 ragged2e Package (MS)
 
-(/usr/share/texmf/tex/latex/everysel/everysel.sty
-Package: everysel 1999/06/08 v1.03 EverySelectfont Package (MS)
-LaTeX Info: Redefining \selectfont on input line 125.
+(/usr/local/texlive/2017/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count109
+\scratchdimen=\dimen127
+\scratchbox=\box43
+\nofMPsegments=\count110
+\nofMParguments=\count111
+\everyMPshowfont=\toks23
+\MPscratchCnt=\count112
+\MPscratchDim=\dimen128
+\MPnumerator=\count113
+\makeMPintoPDFobject=\count114
+\everyMPtoPDFconversion=\toks24
+) (/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
+Package: pdftexcmds 2017/03/19 v0.25 Utility functions of pdfTeX for LuaTeX (HO
 )
-\CenteringLeftskip=\skip54
-\RaggedLeftLeftskip=\skip55
-\RaggedRightLeftskip=\skip56
-\CenteringRightskip=\skip57
-\RaggedLeftRightskip=\skip58
-\RaggedRightRightskip=\skip59
-\CenteringParfillskip=\skip60
-\RaggedLeftParfillskip=\skip61
-\RaggedRightParfillskip=\skip62
-\JustifyingParfillskip=\skip63
-\CenteringParindent=\skip64
-\RaggedLeftParindent=\skip65
-\RaggedRightParindent=\skip66
-\JustifyingParindent=\skip67
+
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/ifluatex.sty
+Package: ifluatex 2016/05/16 v1.4 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
 )
-Package caption Info: float package v1.3 (or newer) detected on input line 67.
-Package caption Info: longtable package v3.15 (or newer) detected on input line
- 67.
-Package caption Info: subref 1.2 or 1.3 detected on input line 67.
-LaTeX Info: Redefining \subref on input line 67.
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2017/03/15 v3.2 Provides the ifpdf switch
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
+Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/oberdiek/grfext.sty
+Package: grfext 2016/05/16 v1.2 Manage graphics extensions (HO)
+
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/kvdefinekeys.sty
+Package: kvdefinekeys 2016/05/16 v1.4 Define keys (HO)
+))
+(/usr/local/texlive/2017/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2016/05/16 v3.12 Key value format for package options (HO)
+
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
+Package: kvsetkeys 2016/05/16 v1.17 Key value parser (HO)
+
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/etexcmds.sty
+Package: etexcmds 2016/05/16 v1.6 Avoid name clashes with e-TeX commands (HO)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+)))
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+38.
+Package grfext Info: Graphics extension search list:
+(grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 456.
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: subfig package v1.3 is loaded.
+Package caption Info: float package is loaded.
+Package caption Info: End \AtBeginDocument code.
 \openout3 = `mainNotes.bib'.
 
 
 <aleph-logo.jpg, id=1, 241.90375pt x 100.375pt>
 File: aleph-logo.jpg Graphic file (type jpg)
  <use aleph-logo.jpg>
+Package pdftex.def Info: aleph-logo.jpg used on input line 71.
+(pdftex.def)             Requested size: 113.81102pt x 47.22525pt.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <10.95> on input line 106.
 LaTeX Font Info:    External font `cmex10' loaded for size
@@ -376,101 +384,231 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 Class revtex4-1 Warning: If you want your PACS to appear in your output, use do
 cument class option showpacs.
 
-[1{/usr/share/texmf/fonts/map/pdftex/updmap/pdftex.map} <./aleph-logo.jpg>]
-(./main.toc)
+[1{/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./ale
+ph-logo.jpg>] (./main.toc)
 \tf@toc=\write4
 \openout4 = `main.toc'.
 
  (./introduction.tex
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <12> on input line 3.
- [2]) [3] (./detector.tex
 
-LaTeX Warning: Reference `' on page 4 undefined on input line 3.
 
-) (./data.tex) (./dataQuality.tex
-<images/datamc/canvasPhiPreES.pdf, id=22, 569.12625pt x 542.025pt>
+Package natbib Warning: Citation `Khachatryan:2010gv' on page 2 undefined on in
+put line 3.
+
+
+Package natbib Warning: Citation `CMS:2012qk' on page 2 undefined on input line
+ 3.
+
+
+Package natbib Warning: Citation `Abelev:2012ola' on page 2 undefined on input 
+line 3.
+
+
+Package natbib Warning: Citation `Aad:2012gla' on page 2 undefined on input lin
+e 3.
+
+
+Package natbib Warning: Citation `Aamodt:2010pa' on page 2 undefined on input l
+ine 3.
+
+
+Package natbib Warning: Citation `Chatrchyan:2012wg' on page 2 undefined on inp
+ut line 3.
+
+
+Package natbib Warning: Citation `Back:2004je' on page 2 undefined on input lin
+e 7.
+
+
+Package natbib Warning: Citation `Arsene:2004fa' on page 2 undefined on input l
+ine 7.
+
+
+Package natbib Warning: Citation `Adcox:2004mh' on page 2 undefined on input li
+ne 7.
+
+
+Package natbib Warning: Citation `Adams:2005dq' on page 2 undefined on input li
+ne 7.
+
+
+Package natbib Warning: Citation `Ollitrault:1992bk' on page 2 undefined on inp
+ut line 7.
+
+
+Package natbib Warning: Citation `Alver:2010gr' on page 2 undefined on input li
+ne 7.
+
+
+Package natbib Warning: Citation `Khachatryan:2010gv' on page 2 undefined on in
+put line 9.
+
+
+Package natbib Warning: Citation `CMS:2012qk' on page 2 undefined on input line
+ 9.
+
+
+Package natbib Warning: Citation `Abelev:2012ola' on page 2 undefined on input 
+line 9.
+
+
+Package natbib Warning: Citation `Aad:2012gla' on page 2 undefined on input lin
+e 9.
+
+
+Package natbib Warning: Citation `Bzdak:2013zma' on page 2 undefined on input l
+ine 9.
+
+
+Package natbib Warning: Citation `Dusling:2015gta' on page 2 undefined on input
+ line 9.
+
+
+Package natbib Warning: Citation `Adamczyk:2012ku' on page 2 undefined on input
+ line 9.
+
+[2]
+
+Package natbib Warning: Citation `Gelis:2010nm' on page 3 undefined on input li
+ne 11.
+
+
+Package natbib Warning: Citation `Dusling:2013qoz' on page 3 undefined on input
+ line 11.
+
+) (./detector.tex
+
+LaTeX Warning: Reference `' on page 3 undefined on input line 3.
+
+) [3] (./data.tex) (./dataQuality.tex
+<images/datamc/canvasPhiPreES.pdf, id=23, 569.12625pt x 542.025pt>
 File: images/datamc/canvasPhiPreES.pdf Graphic file (type pdf)
 
 <use images/datamc/canvasPhiPreES.pdf>
-<images/datamc/canvasetaPreES.pdf, id=23, 569.12625pt x 542.025pt>
+Package pdftex.def Info: images/datamc/canvasPhiPreES.pdf used on input line 8.
+
+(pdftex.def)             Requested size: 140.40143pt x 133.71118pt.
+
+<images/datamc/canvasetaPreES.pdf, id=24, 569.12625pt x 542.025pt>
 File: images/datamc/canvasetaPreES.pdf Graphic file (type pdf)
 
 <use images/datamc/canvasetaPreES.pdf>
-<images/datamc/canvasptPreES.pdf, id=24, 569.12625pt x 542.025pt>
+Package pdftex.def Info: images/datamc/canvasetaPreES.pdf used on input line 9.
+
+(pdftex.def)             Requested size: 140.40143pt x 133.71118pt.
+
+<images/datamc/canvasptPreES.pdf, id=25, 569.12625pt x 542.025pt>
 File: images/datamc/canvasptPreES.pdf Graphic file (type pdf)
 
-<use images/datamc/canvasptPreES.pdf> [4]
-<images/trkefficiency/ptclean.pdf, id=28, 569.12625pt x 551.05875pt>
-File: images/trkefficiency/ptclean.pdf Graphic file (type pdf)
+<use images/datamc/canvasptPreES.pdf>
+Package pdftex.def Info: images/datamc/canvasptPreES.pdf used on input line 10.
 
-<use images/trkefficiency/ptclean.pdf>
-<images/trkefficiency/thetaclean.pdf, id=29, 569.12625pt x 551.05875pt>
-File: images/trkefficiency/thetaclean.pdf Graphic file (type pdf)
+(pdftex.def)             Requested size: 140.40143pt x 133.71118pt.
+) (./analysis.tex (./thrust.tex [4 <./images/datamc/canvasPhiPreES.pdf, page is
+ rotated 90 degrees> <./images/datamc/canvasetaPreES.pdf, page is rotated 90 de
+grees> <./images/datamc/canvasptPreES.pdf, page is rotated 90 degrees>]
+<../../Plotting/src/plots/multiPanel_thrust_nTrk.pdf, id=158, 569.12625pt x 369
+.38pt>
+File: ../../Plotting/src/plots/multiPanel_thrust_nTrk.pdf Graphic file (type pd
+f)
+ <use ../../Plotting/src/plots/multiPanel_thrust_nTrk.pdf>
+Package pdftex.def Info: ../../Plotting/src/plots/multiPanel_thrust_nTrk.pdf us
+ed on input line 40.
+(pdftex.def)             Requested size: 210.59857pt x 136.68536pt.
 
-<use images/trkefficiency/thetaclean.pdf>
-<images/trkefficiency/phiclean.pdf, id=30, 569.12625pt x 551.05875pt>
-File: images/trkefficiency/phiclean.pdf Graphic file (type pdf)
+<../../Plotting/src/plots/multiPanel_thrust_nTrk_MC.pdf, id=159, 569.12625pt x 
+369.38pt>
+File: ../../Plotting/src/plots/multiPanel_thrust_nTrk_MC.pdf Graphic file (type
+ pdf)
+ <use ../../Plotting/src/plots/multiPanel_thrust_nTrk_MC.pdf>
+Package pdftex.def Info: ../../Plotting/src/plots/multiPanel_thrust_nTrk_MC.pdf
+ used on input line 48.
+(pdftex.def)             Requested size: 210.59857pt x 136.68536pt.
+)
+(./EventSelection.tex) (./QCD.tex [5]
 
-<use images/trkefficiency/phiclean.pdf>
-<images/trkefficiency/ptratio.pdf, id=31, 569.12625pt x 551.05875pt>
-File: images/trkefficiency/ptratio.pdf Graphic file (type pdf)
+LaTeX Warning: Reference `fig:ThrustResults' on page 6 undefined on input line 
+16.
 
-<use images/trkefficiency/ptratio.pdf>
-<images/trkefficiency/thetaratio.pdf, id=32, 569.12625pt x 551.05875pt>
-File: images/trkefficiency/thetaratio.pdf Graphic file (type pdf)
 
-<use images/trkefficiency/thetaratio.pdf>
-<images/trkefficiency/phiratio.pdf, id=33, 569.12625pt x 551.05875pt>
-File: images/trkefficiency/phiratio.pdf Graphic file (type pdf)
+Package natbib Warning: Citation `Barate:1996fi' on page 6 undefined on input l
+ine 17.
 
-<use images/trkefficiency/phiratio.pdf>) [5 <./images/datamc/canvasPhiPreES.pdf
-, page is rotated 90 degrees> <./images/datamc/canvasetaPreES.pdf, page is rota
-ted 90 degrees> <./images/datamc/canvasptPreES.pdf, page is rotated 90 degrees>
- <./images/trkefficiency/ptclean.pdf, page is rotated 90 degrees> <./images/trk
-efficiency/thetaclean.pdf, page is rotated 90 degrees> <./images/trkefficiency/
-phiclean.pdf, page is rotated 90 degrees>] (./analysis.tex (./thrust.tex
-[6 <./images/trkefficiency/ptratio.pdf, page is rotated 90 degrees> <./images/t
-rkefficiency/thetaratio.pdf, page is rotated 90 degrees> <./images/trkefficienc
-y/phiratio.pdf, page is rotated 90 degrees>]) (./EventSelection.tex) (./QCD.tex
-<images/Thrust/ThrustResult.pdf, id=438, 569.12625pt x 546.04pt>
+
+Package natbib Warning: Citation `heister:2003aj' on page 6 undefined on input 
+line 17.
+
+
+Package natbib Warning: Citation `heister:2003aj' on page 6 undefined on input 
+line 19.
+
+[6 <../../Plotting/src/plots/multiPanel_thrust_nTrk.pdf> <../../Plotting/src/pl
+ots/multiPanel_thrust_nTrk_MC.pdf>]
+<images/Thrust/ThrustResult.pdf, id=186, 569.12625pt x 546.04pt>
 File: images/Thrust/ThrustResult.pdf Graphic file (type pdf)
 
 <use images/Thrust/ThrustResult.pdf>
-<images/Thrust/ThrustResultLogY.pdf, id=439, 569.12625pt x 546.04pt>
+Package pdftex.def Info: images/Thrust/ThrustResult.pdf used on input line 24.
+(pdftex.def)             Requested size: 229.32257pt x 220.02019pt.
+
+<images/Thrust/ThrustResultLogY.pdf, id=187, 569.12625pt x 546.04pt>
 File: images/Thrust/ThrustResultLogY.pdf Graphic file (type pdf)
 
-<use images/Thrust/ThrustResultLogY.pdf>) [7]) (./main.bbl [8 <./images/Thrust/
-ThrustResult.pdf> <./images/Thrust/ThrustResultLogY.pdf>] [9]) [10] (./main.aux
+<use images/Thrust/ThrustResultLogY.pdf>
+Package pdftex.def Info: images/Thrust/ThrustResultLogY.pdf used on input line 
+25.
+(pdftex.def)             Requested size: 229.32257pt x 220.02019pt.
+)) (./main.bbl
+
+LaTeX Warning: Reference `LastBibItem' on page 7 undefined on input line 2.
+
+[7 <./images/Thrust/ThrustResult.pdf> <./images/Thrust/ThrustResultLogY.pdf>]
+[8])
+
+Package natbib Warning: There were undefined citations.
+
+[9] (./main.aux
+
+Package natbib Warning: Citation(s) may have changed.
+(natbib)                Rerun to get citations correct.
+
 )
 
 LaTeX Warning: There were undefined references.
 
 
-LaTeX Warning: There were multiply-defined labels.
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right .
+
 
  ) 
 Here is how much of TeX's memory you used:
- 4073 strings out of 256214
- 55608 string characters out of 1917000
- 128901 words of memory out of 1500000
- 7276 multiletter control sequences out of 10000+200000
- 15517 words of font info for 53 fonts, out of 1200000 for 2000
- 645 hyphenation exceptions out of 8191
- 43i,7n,42p,1231b,312s stack positions out of 5000i,500n,6000p,200000b,15000s
-</usr/share/texmf/fonts/type1/bluesky/cm/cmbx10.pfb></usr/share/texmf/fonts/t
-ype1/bluesky/cm/cmbx12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmex10.pfb>
-</usr/share/texmf/fonts/type1/bluesky/cm/cmmi10.pfb></usr/share/texmf/fonts/typ
-e1/bluesky/cm/cmmi12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi8.pfb></u
-sr/share/texmf/fonts/type1/bluesky/cm/cmr10.pfb></usr/share/texmf/fonts/type1/b
-luesky/cm/cmr12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr8.pfb></usr/sha
-re/texmf/fonts/type1/bluesky/cm/cmsy10.pfb></usr/share/texmf/fonts/type1/bluesk
-y/cm/cmsy8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmti10.pfb></usr/share/
-texmf/fonts/type1/bluesky/cm/cmti12.pfb></usr/share/texmf/fonts/type1/bluesky/c
-m/cmtt10.pfb>
-Output written on main.pdf (10 pages, 457928 bytes).
+ 5656 strings out of 492995
+ 82546 string characters out of 6132704
+ 166053 words of memory out of 5000000
+ 9097 multiletter control sequences out of 15000+600000
+ 15517 words of font info for 53 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 44i,7n,42p,1231b,381s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
+></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
+</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
+/usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></
+usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></u
+sr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr
+/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/l
+ocal/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/loc
+al/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/
+texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/t
+exlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/tex
+live/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texl
+ive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texli
+ve/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on main.pdf (9 pages, 946556 bytes).
 PDF statistics:
- 519 PDF objects out of 1000 (max. 8388607)
- 0 named destinations out of 1000 (max. 131072)
- 61 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 264 PDF objects out of 1000 (max. 8388607)
+ 146 compressed objects within 2 object streams
+ 0 named destinations out of 1000 (max. 500000)
+ 41 words of extra memory for PDF output out of 10000 (max. 10000000)
 

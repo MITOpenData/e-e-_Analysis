@@ -412,7 +412,6 @@ void setTextAbovePad(TLatex* latex, TPad* pad, double offsetX, double offsetY)
     // assume the text objects is to be left aligned.
     float x = pad->GetLeftMargin()+ offsetX;
     float y = 1 - pad->GetTopMargin() + offsetY;
-    std::cout<<x<<" "<<y<<std::endl;
     if (latex->GetTextAlign() / 10 == 3) {  // text object is set to be right aligned.
         x = 1 - pad->GetRightMargin() - offsetX;
     }
@@ -426,7 +425,6 @@ void setTextBelowPad(TLatex* latex, TPad* pad, double offsetX, double offsetY)
     // assume the text objects is to be left aligned.
     float x = pad->GetLeftMargin()+ offsetX;
     float y = pad->GetBottomMargin() - offsetY;
-    std::cout<<x<<" "<<y<<std::endl;
     if (latex->GetTextAlign() / 10 == 3) {  // text object is set to be right aligned.
         x = 1 - pad->GetRightMargin() - offsetX;
     }
