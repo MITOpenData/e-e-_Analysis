@@ -19,11 +19,16 @@ class signalMixTableReader{
 
   bool isNum(const std::string inStr);
   bool Init(const std::string inFileName);
+  unsigned int getKey(int mult, double inAbsEta);
   double getSigOverMixFactor(int mult, double inAbsEta);
+  double getSigOverMixNum(int mult, double inAbsEta);
+  double getSigOverMixDenom(int mult, double inAbsEta);
 
   void Print();
 
   std::map<unsigned int, double> globalMap;
+  std::map<unsigned int, double> globalMapNum;
+  std::map<unsigned int, double> globalMapDenom;
   std::vector<int> multLowBounds;
   std::vector<int> multHiBounds;
   std::vector<double> absEtaLowBounds;
@@ -70,6 +75,8 @@ bool signalMixTableReader::Init(const std::string inFileName)
       std::string secondNumStr = tempStr.substr(0, tempStr.find(",")); 
       tempStr.replace(0, tempStr.find(",")+1, "");
       std::string thirdNumStr = tempStr.substr(0, tempStr.find(","));
+      tempStr.replace(0, tempStr.find(",")+1, "");
+      std::string fourthNumStr = tempStr.substr(0, tempStr.find(","));
 
       if(multLowBounds.size() == 1){
 	absEtaLowBounds.push_back(std::stod(firstNumStr));
@@ -78,7 +85,11 @@ bool signalMixTableReader::Init(const std::string inFileName)
 
       unsigned int key = (multHiBounds.size()-1) + 10*(pos);
       ++pos;
-      globalMap[key] = std::stod(thirdNumStr);
+
+      std::cout << " Setting " << thirdNumStr << "/" << fourthNumStr << std::endl;
+      globalMap[key] = std::stod(thirdNumStr)/std::stod(fourthNumStr);
+      globalMapNum[key] = std::stod(thirdNumStr);
+      globalMapDenom[key] = std::stod(fourthNumStr);
     }
   }
 
@@ -88,7 +99,8 @@ bool signalMixTableReader::Init(const std::string inFileName)
   return true;
 }
 
-double signalMixTableReader::getSigOverMixFactor(int mult, double absEta)
+
+unsigned int signalMixTableReader::getKey(int mult, double absEta)
 {
   if(!isInit){
     std::cout << "SIGNALMIXTABLEREADER: Error, not initialized properly, return 0" << std::endl;
@@ -114,7 +126,40 @@ double signalMixTableReader::getSigOverMixFactor(int mult, double absEta)
   }
 
   unsigned int key = mpos + 10*aepos;
+  return key;
+}
+
+double signalMixTableReader::getSigOverMixFactor(int mult, double absEta)
+{
+  if(!isInit){
+    std::cout << "SIGNALMIXTABLEREADER: Error, not initialized properly, return 0" << std::endl;
+    return 0;
+  }
+
+  unsigned int key = getKey(mult, absEta);
   return globalMap[key];
+}
+
+double signalMixTableReader::getSigOverMixNum(int mult, double absEta)
+{
+  if(!isInit){
+    std::cout << "SIGNALMIXTABLEREADER: Error, not initialized properly, return 0" << std::endl;
+    return 0;
+  }
+
+  unsigned int key = getKey(mult, absEta);
+  return globalMapNum[key];
+}
+
+double signalMixTableReader::getSigOverMixDenom(int mult, double absEta)
+{
+  if(!isInit){
+    std::cout << "SIGNALMIXTABLEREADER: Error, not initialized properly, return 0" << std::endl;
+    return 0;
+  }
+
+  unsigned int key = getKey(mult, absEta);
+  return globalMapDenom[key];
 }
 
 
