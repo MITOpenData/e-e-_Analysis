@@ -37,7 +37,7 @@ class Sphericity{
     float linl1, linl2, linl3;  //eigenvalues
     TVector3 linv1, linv2, linv3;//eigenvectors
 
-    void calculateSphericity(int n, float *px, float *py, float *pz, Short_t *pwflag, float r);
+    void calculateSphericity(int n, float *px, float *py, float *pz, Short_t *pwflag, int r);
     inline float p2(float px,float py,float pz);
 };
 
