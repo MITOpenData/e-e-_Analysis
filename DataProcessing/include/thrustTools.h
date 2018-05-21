@@ -1,9 +1,14 @@
 #ifndef THRUSTTOOLS
 #define THRUSTTOOLS
 
+//c++ dependencies
+#include <vector>
+
+//ROOT dependencies
 #include "TVector3.h"
 #include "TMath.h"
-#include <vector>
+
+//local DataProcessing dependencies
 #include "particleData.h"
 #include "eventData.h"
 
@@ -226,14 +231,12 @@ TVector3 getThrustHerwig(int n, float *px, float *py, float *pz){
   for(int t = 0; t<n; t++) pSum += TVector3(px[t],py[t],pz[t]).Mag();
  
   if(n<=0) return thrust;
-
-  if(n==1){//thrust is just the particle
+  else if(n==1){//thrust is just the particle
     thrust = TVector3(px[0],py[0],pz[0]);   
     thrust.SetMag(thrust.Mag()/pSum);
     return thrust;
   }
-
-  if(n==2){//special case for 2 particles
+  else if(n==2){//special case for 2 particles
     if(TMath::Power(px[0],2)+TMath::Power(py[0],2)+TMath::Power(pz[0],2) >= TMath::Power(px[1],2)+TMath::Power(py[1],2)+TMath::Power(pz[1],2)){
       thrust = TVector3(px[0],py[0],pz[0]);   
       thrust.SetMag(thrust.Mag()/pSum);
@@ -245,8 +248,7 @@ TVector3 getThrustHerwig(int n, float *px, float *py, float *pz){
       return thrust;
     }
   }
-
-  if(n==3){//combine lowest 2 magnitude momentum, then use same algo as n=2
+  else if(n==3){//combine lowest 2 magnitude momentum, then use same algo as n=2
     if(TMath::Power(px[0],2)+TMath::Power(py[0],2)+TMath::Power(pz[0],2) >= TMath::Power(px[1],2)+TMath::Power(py[1],2)+TMath::Power(pz[1],2)){
       if(TMath::Power(px[0],2)+TMath::Power(py[0],2)+TMath::Power(pz[0],2) >= TMath::Power(px[2],2)+TMath::Power(py[2],2)+TMath::Power(pz[2],2)){
         TVector3 thrust = TVector3(px[0],py[0],pz[0]);   
@@ -272,18 +274,13 @@ TVector3 getThrustHerwig(int n, float *px, float *py, float *pz){
       } 
     }
   }
-
-
-  if(n>3){
+  else if(n>3){
     //make vector of TVector3's of each particle
     std::vector< TVector3 > pVec;
-    for(int i = 0; i<n; i++){
-      TVector3 v = TVector3(px[i],py[i],pz[i]);
-      pVec.push_back(v); 
-    }
+    for(int i = 0; i<n; i++){pVec.push_back(TVector3(px[i],py[i],pz[i]));}
     //std::cout << pVecs.at(0).x();
   
-    TVector3 cross; 
+    TVector3 cross;
     float t = 0;
     for(int i = 1; i<n; i++){//loop through all possible cross products of 2 unique vectors
       for(int j = 0; j<i; j++){
@@ -314,8 +311,9 @@ TVector3 getThrustHerwig(int n, float *px, float *py, float *pz){
           }
         }
       }
-    } 
+    }
   }
+
   thrust.SetMag(thrust.Mag()/pSum);
   return thrust;
 }
@@ -491,6 +489,135 @@ TVector3 getChargedThrust(int n, float *px, float *py, float *pz, Short_t *pwfla
     break;
   }
   return thrustAxis;
+}
+
+//Thrust major as defined in http://cds.cern.ch/record/690637/files/ep-2003-084.pdf, p.14
+//Simple Algo: 
+// Take thrust and subtract off thrust component of all particles
+// Then just call standard getThrust to find maximum in plane
+// Note that this implementation will handle standard and charged thrust (add boolean, if charged not used set pwflag to null
+TVector3 getThrustMajor(TVector3 thrust, int n, float *px, float *py, float *pz, Short_t *pwflag, THRUST::algorithm algo=THRUST::HERWIG, bool doCharged=false)
+{
+  //check first that we are safely calling doCharged
+  if(doCharged && pwflag == NULL){
+    std::cout << "THRUSTTOOLS.H: GETTHRUSTMAJOR ERROR: Calling with \'doCharged\' option but with pwflag set to NULL. return 0 vector" << std::endl;
+    return TVector3(0,0,0);
+  }
+
+  //check that we have already calculated thrust, if not get thrust
+  if(thrust.Px() < 0.01 && thrust.Py() < 0.01 && thrust.Pz() < 0.01){
+    if(doCharged) thrust = getChargedThrust(n, px, py, pz, pwflag, algo);
+    else thrust = getThrust(n, px, py, pz, algo);
+  }
+
+  //renormalize thrust to unity for correct projections
+  thrust.SetMag(1.);
+  
+  const int nInternal = n;
+  float pxInternal[nInternal];
+  float pyInternal[nInternal];
+  float pzInternal[nInternal];
+  double pSum = 0.;
+
+  //Now set all particles to their corresponding thrust-perp projections
+  for(int i = 0; i < n; ++i){
+    TVector3 temp(px[i], py[i], pz[i]);
+    if(doCharged){
+      if(pwflag[i] == 0) pSum += temp.Mag();
+    }
+    else pSum += temp.Mag();
+
+    TVector3 thrustComponent = thrust;
+    thrustComponent.SetMag(thrustComponent.Dot(temp));
+
+    temp -= thrustComponent;
+    pxInternal[i] = temp.Px();
+    pyInternal[i] = temp.Py();
+    pzInternal[i] = temp.Pz();
+  }
+
+  TVector3 thrustMajorAxis(0, 0, 0);
+
+  if(!doCharged){
+    switch (algo) {
+    case THRUST::HERWIG: thrustMajorAxis = getThrustHerwig(n, pxInternal, pyInternal, pzInternal); break;
+    case THRUST::BELLE: thrustMajorAxis = getThrustBelle(n, pxInternal, pyInternal, pzInternal); break;
+    case THRUST::OPTIMAL: {
+      if(n < 4) thrustMajorAxis = getThrustBelle(n, pxInternal, pyInternal, pzInternal);
+      else thrustMajorAxis = getThrustHerwig(n, pxInternal, pyInternal, pzInternal);
+      break;
+    }
+    default:
+      break;
+    }
+  }
+  else{
+    switch (algo) {
+    case THRUST::HERWIG: thrustMajorAxis = getChargedThrustHerwig(n, pxInternal, pyInternal, pzInternal, pwflag); break;
+    case THRUST::BELLE: thrustMajorAxis = getChargedThrustBelle(n, pxInternal, pyInternal, pzInternal, pwflag); break;
+    case THRUST::OPTIMAL: {
+      if(n < 4) thrustMajorAxis = getChargedThrustBelle(n, pxInternal, pyInternal, pzInternal, pwflag);
+      else thrustMajorAxis = getChargedThrustHerwig(n, pxInternal, pyInternal, pzInternal, pwflag);
+      break;
+    }
+    default:
+      break;
+    }
+  }
+
+  //we have found the direction of the vector but the magnitude is wrong; reloop to fix the magnitude
+  thrustMajorAxis.SetMag(1.);
+  double thrustMajorProj = 0.;
+
+  for(int i = 0; i < n; ++i){
+    if(doCharged){
+      if(pwflag[i] != 0) continue;
+    }
+
+    TVector3 temp(px[i], py[i], pz[i]);
+    thrustMajorProj += temp.Dot(thrustMajorAxis);
+  }
+
+  thrustMajorAxis.SetMag(thrustMajorProj/pSum);
+  return thrustMajorAxis;
+}
+
+
+TVector3 getThrustMinor(TVector3 thrust, TVector3 thrustMajor, int n, float *px, float *py, float *pz, Short_t *pwflag, THRUST::algorithm algo=THRUST::HERWIG, bool doCharged=false)
+{
+  //check first that we are safely calling doCharged
+  if(doCharged && pwflag == NULL){
+    std::cout << "THRUSTTOOLS.H: GETTHRUSTMINOR ERROR: Calling with \'doCharged\' option but with pwflag set to NULL. return 0 vector" << std::endl;
+    return TVector3(0,0,0);
+  }
+
+  //check that we have already calculated thrust, if not get thrust
+  if(thrust.Px() < 0.01 && thrust.Py() < 0.01 && thrust.Pz() < 0.01){
+    if(doCharged) thrust = getChargedThrust(n, px, py, pz, pwflag, algo);
+    else thrust = getThrust(n, px, py, pz, algo);
+  }
+
+  //check that we have already calculated thrustMajor, if not get thrustMajor
+  if(thrustMajor.Px() < 0.01 && thrustMajor.Py() < 0.01 && thrustMajor.Pz() < 0.01) thrustMajor = getThrustMajor(thrust, n, px, py, pz, pwflag, algo, doCharged);
+
+  //Get thrustMinor and renormalize to 1 for correct projections, then calculate magnitude
+  TVector3 thrustMinorAxis = thrust.Cross(thrustMajor);
+  thrustMinorAxis.SetMag(1.);
+  double thrustMinorProj = 0.;
+  double pSum = 0.;
+
+  for(int i = 0; i < n; ++i){
+    if(doCharged){
+      if(pwflag[i] != 0) continue;
+    }
+
+    TVector3 temp(px[i], py[i], pz[i]);
+    thrustMinorProj += temp.Dot(thrustMinorAxis);
+    pSum += temp.Mag();
+  }
+
+  thrustMinorAxis.SetMag(thrustMinorProj/pSum);
+  return thrustMinorAxis;
 }
 
 #endif

@@ -1,3 +1,9 @@
+//A base for more generalized jet measurements (initial author Chris McGinn)
+//Borrows heavily from base code found in DataProcessing (Most implementations of thrust by Austin Baty or taken from ALEPH/BELLE experiment code)
+//Some general resources for what we measure:
+//  http://cds.cern.ch/record/690637/files/ep-2003-084.pdf (ALEPH QCD at Ecm 91 and 209 GeV)
+//  
+
 //standard dependencies
 #include <iostream>
 #include <string>
@@ -8,6 +14,8 @@
 #include "TFile.h"
 #include "TTree.h"
 #include "TDatime.h"
+#include "TVector3.h"
+#include "TLorentzVector.h"
 
 //fastjet dependencies
 #include "fastjet/JetDefinition.hh"
@@ -17,9 +25,18 @@
 //non-local project dependencies
 #include "DataProcessing/include/particleData.h"
 #include "DataProcessing/include/checkMakeDir.h"
+#include "DataProcessing/include/thrustTools.h"
 
 //local project dependencies
+#include "JetDistribution/include/globalJetVar.h"
 #include "JetDistribution/include/generalJetVar.h"
+
+void initTVector3(TVector3* in){(*in) = TVector3(0,0,0); return;}
+void initTVector3(std::vector<TVector3*> in)
+{
+  for(unsigned int i = 0; i < in.size(); ++i){initTVector3(in.at(i));}
+  return;
+}
 
 int makeGeneralJetTree(const std::string inName)
 {
@@ -55,36 +72,43 @@ int makeGeneralJetTree(const std::string inName)
   const std::string dateStr = std::to_string(date->GetDate());
   delete date;
 
-  const Int_t nJetAlgo = 2;
   //define jetMaker here so rParam can be used in jetTree name for clarity
 
   const double jtPtCut = .01;
-  const int nJtAlgo = 2;
-  const double rParam[nJtAlgo] = {0.4, 0.8};
+  const int nJtAlgo = 4;
+  const double rParam[nJtAlgo] = {0.4, 0.8, 0.4, 0.8};
+  const int ktParam[nJtAlgo] = {-1, -1, 1, 1};
   //  bool rParamIs8[nJtAlgo];
   //  for(int i = 0; i < nJtAlgo; ++i){rParamIs8[i] = rParam[i] > .799 && rParam[i] < .801;}
-  const double recombScheme[nJtAlgo] = {fastjet::E_scheme, fastjet::E_scheme};
+  const double recombScheme[nJtAlgo] = {fastjet::E_scheme, fastjet::E_scheme, fastjet::E_scheme, fastjet::E_scheme};
   fastjet::JetDefinition jDef[nJtAlgo];
   fastjet::JetDefinition jDefReclust[nJtAlgo];
-  const int nFinalClust[nJtAlgo] = {-1, -1};
+  const int nFinalClust[nJtAlgo] = {-1, -1, -1, -1};
 
   for(int i = 0; i < nJtAlgo; ++i){
-    jDef[i] = fastjet::JetDefinition(fastjet::ee_genkt_algorithm, rParam[i], -1, fastjet::RecombinationScheme(recombScheme[i]));
-    jDefReclust[i] = fastjet::JetDefinition(fastjet::ee_genkt_algorithm, 10, -1, fastjet::RecombinationScheme(recombScheme[i]));
+    jDef[i] = fastjet::JetDefinition(fastjet::ee_genkt_algorithm, rParam[i], ktParam[i], fastjet::RecombinationScheme(recombScheme[i]));
+    jDefReclust[i] = fastjet::JetDefinition(fastjet::ee_genkt_algorithm, 10, ktParam[i], fastjet::RecombinationScheme(recombScheme[i]));
   }
 
   checkMakeDir("output");
   const std::string outFileName = "output/" + reducedInName + "_GeneralJetTree_" + dateStr + ".root";
   TFile* outFile_p = new TFile(outFileName.c_str(), "RECREATE");
-  TTree* outTree_p[nJetAlgo];
-  generalJetVar jetVar[nJetAlgo];
+  TTree* globalOutTree_p = new TTree("generalJetTree_Global", "");
+  TTree* outTree_p[nJtAlgo];
+  globalJetVar gJetVar;
+  generalJetVar jetVar[nJtAlgo];
 
-  for(Int_t jI = 0; jI < nJetAlgo; ++jI){
+  gJetVar.SetBranchWrite(globalOutTree_p);
+
+  for(Int_t jI = 0; jI < nJtAlgo; ++jI){
     std::string recombSchemeStr = "EScheme";
     if(recombScheme[jI] == fastjet::WTA_modp_scheme) recombSchemeStr = "WTAmodpScheme";
 
-    std::string rOrJetStr = "akR" + std::to_string(int(rParam[jI]*10));
-    if(rParam[jI] < 0) rOrJetStr = "ktN" + std::to_string(nFinalClust[jI]);
+    std::string ktOrAntiKt = "ak";
+    if(ktParam[jI] == 1 || rParam[jI] < 0) ktOrAntiKt = "kt";
+
+    std::string rOrJetStr = ktOrAntiKt + "R" + std::to_string(int(rParam[jI]*10));
+    if(rParam[jI] < 0) rOrJetStr = ktOrAntiKt + "N" + std::to_string(nFinalClust[jI]);
 
     const std::string jetTreeName = "generalJetTree_" + rOrJetStr + recombSchemeStr; 
     outTree_p[jI] = new TTree(jetTreeName.c_str(), "");
@@ -108,6 +132,25 @@ int makeGeneralJetTree(const std::string inName)
 
       std::vector<fastjet::PseudoJet> particles;
 
+      TVector3 thrust, thrustMajor, thrustMinor;
+      initTVector3({&thrust, &thrustMajor, &thrustMinor});
+      thrust = getThrust(pData.nParticle, pData.px, pData.py, pData.pz, THRUST::OPTIMAL);      
+      thrustMajor = getThrustMajor(thrust, pData.nParticle, pData.px, pData.py, pData.pz, NULL, THRUST::OPTIMAL, false);
+      thrustMinor = getThrustMinor(thrust, thrustMajor, pData.nParticle, pData.px, pData.py, pData.pz, NULL, THRUST::OPTIMAL, false);
+
+      gJetVar.thrustMag = thrust.Mag();
+      gJetVar.thrustPx = thrust.Px();
+      gJetVar.thrustPy = thrust.Py();
+      gJetVar.thrustPz = thrust.Pz();
+      gJetVar.thrustMajorMag = thrustMajor.Mag();
+      gJetVar.thrustMajorPx = thrustMajor.Px();
+      gJetVar.thrustMajorPy = thrustMajor.Py();
+      gJetVar.thrustMajorPz = thrustMajor.Pz();
+      gJetVar.thrustMinorMag = thrustMinor.Mag();
+      gJetVar.thrustMinorPx = thrustMinor.Px();
+      gJetVar.thrustMinorPy = thrustMinor.Py();
+      gJetVar.thrustMinorPz = thrustMinor.Pz();
+      
       for(Int_t pI = 0; pI < pData.nParticle; ++pI){
 	TLorentzVector particle;
 	particle.SetXYZM(pData.px[pI], pData.py[pI], pData.pz[pI], pData.mass[pI]);
@@ -116,42 +159,28 @@ int makeGeneralJetTree(const std::string inName)
 
       if(particles.size() == 0) continue;
 
-      //std::cout << __LINE__ << std::endl;
-
       for(Int_t algoI = 0; algoI < nJtAlgo; ++algoI){
 	fastjet::ClusterSequence cs(particles, jDef[algoI]);
 	std::vector<fastjet::PseudoJet> jets;
 	jets = fastjet::sorted_by_pt(cs.inclusive_jets());
 
-	//std::cout << __LINE__ << std::endl;
-
 	jetVar[algoI].nref = 0;
 
 	for(unsigned int i = 0; i < jets.size(); ++i){
-	  //std::cout << __LINE__ << std::endl;
-
 	  if(jets.at(i).pt() < jtPtCut && rParam[algoI] > 0) break; //Arbitrarily low cut on jets, removes spike at phi zero when things become ill defined
 
-	  //std::cout << i << ", " << jets.size() << ", " << algoI <<  ", " << __LINE__ << std::endl;
-	  //std::cout << jetVar[algoI].nref << std::endl;
-
 	  jetVar[algoI].jtpt[jetVar[algoI].nref] = jets.at(i).pt();
-	  //std::cout << __LINE__ << std::endl;
 	  jetVar[algoI].jtphi[jetVar[algoI].nref] = jets.at(i).phi_std();
-	  //std::cout << __LINE__ << std::endl;
 	  jetVar[algoI].jtm[jetVar[algoI].nref] = jets.at(i).m();
-	  //std::cout << __LINE__ << std::endl;
 	  jetVar[algoI].jteta[jetVar[algoI].nref] = jets.at(i).eta();
-	  //std::cout << __LINE__ << std::endl;
 	  jetVar[algoI].fourJet[jetVar[algoI].nref] = TLorentzVector(jets.at(i).px(), jets.at(i).py(), jets.at(i).pz(), jets.at(i).E());
-
-	  //std::cout << __LINE__ << std::endl;
 	  
 	  ++(jetVar[algoI].nref);
 	}
       }
 
-      for(Int_t jI = 0; jI < nJetAlgo; ++jI){
+      globalOutTree_p->Fill();
+      for(Int_t jI = 0; jI < nJtAlgo; ++jI){
 	jetVar[jI].preFillClean();
 	outTree_p[jI]->Fill();
       }
@@ -163,7 +192,9 @@ int makeGeneralJetTree(const std::string inName)
 
   outFile_p->cd();
 
-  for(Int_t jI = 0; jI < nJetAlgo; ++jI){
+  globalOutTree_p->Write("", TObject::kOverwrite);
+  delete globalOutTree_p;
+  for(Int_t jI = 0; jI < nJtAlgo; ++jI){
     outTree_p[jI]->Write("", TObject::kOverwrite);
     delete outTree_p[jI];
   }
