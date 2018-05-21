@@ -49,7 +49,7 @@ int makeGeneralJetTree(const std::string inName)
     while(std::getline(file, tempStr)){
       if(tempStr.size() == 0) continue;
       
-      if(tempStr.find(".root") != std::string::npos) fileList.push_back(inName);
+      if(tempStr.find(".root") != std::string::npos) fileList.push_back(tempStr);
     }
 
     file.close();
@@ -66,7 +66,8 @@ int makeGeneralJetTree(const std::string inName)
 
   std::string reducedInName = inName;
   while(reducedInName.find("/") != std::string::npos){reducedInName.replace(0, reducedInName.find("/")+1, "");}
-  reducedInName.replace(reducedInName.find(".root"), 5, "");
+  if(inName.find(".root") != std::string::npos) reducedInName.replace(reducedInName.find(".root"), 5, "");
+  else if(inName.find(".txt") != std::string::npos) reducedInName.replace(reducedInName.find(".txt"), 4, "");
   
   TDatime* date = new TDatime();
   const std::string dateStr = std::to_string(date->GetDate());
@@ -122,7 +123,7 @@ int makeGeneralJetTree(const std::string inName)
 
     TFile* inFile_p = new TFile(fileList.at(fI).c_str(), "READ");
     TTree* inTree_p = (TTree*)inFile_p->Get("t");
-    pData.SetStatusAndAddressRead(inTree_p, {"nParticle", "px", "py", "pz", "mass"});
+    pData.SetStatusAndAddressRead(inTree_p, {"EventNo", "RunNo", "year", "subDir", "process", "isMC", "uniqueID", "nParticle", "px", "py", "pz", "mass"});
 
     const Int_t nEntries = inTree_p->GetEntries();
 
@@ -138,6 +139,14 @@ int makeGeneralJetTree(const std::string inName)
       thrustMajor = getThrustMajor(thrust, pData.nParticle, pData.px, pData.py, pData.pz, NULL, THRUST::OPTIMAL, false);
       thrustMinor = getThrustMinor(thrust, thrustMajor, pData.nParticle, pData.px, pData.py, pData.pz, NULL, THRUST::OPTIMAL, false);
 
+      gJetVar.EventNo = pData.EventNo;     
+      gJetVar.RunNo = pData.RunNo;     
+      gJetVar.year = pData.year;     
+      gJetVar.subDir = pData.subDir;     
+      gJetVar.process = pData.process;     
+      gJetVar.isMC = pData.isMC;     
+      gJetVar.uniqueID = pData.uniqueID;     
+      gJetVar.nParticle = pData.nParticle;     
       gJetVar.thrustMag = thrust.Mag();
       gJetVar.thrustPx = thrust.Px();
       gJetVar.thrustPy = thrust.Py();
