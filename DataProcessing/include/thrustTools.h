@@ -505,7 +505,7 @@ TVector3 getThrustMajor(TVector3 thrust, int n, float *px, float *py, float *pz,
   }
 
   //check that we have already calculated thrust, if not get thrust
-  if(thrust.Px() < 0.01 && thrust.Py() < 0.01 && thrust.Pz() < 0.01){
+  if(thrust.Px() < 0.001 && thrust.Py() < 0.001 && thrust.Pz() < 0.001){
     if(doCharged) thrust = getChargedThrust(n, px, py, pz, pwflag, algo);
     else thrust = getThrust(n, px, py, pz, algo);
   }
@@ -575,7 +575,7 @@ TVector3 getThrustMajor(TVector3 thrust, int n, float *px, float *py, float *pz,
     }
 
     TVector3 temp(px[i], py[i], pz[i]);
-    thrustMajorProj += temp.Dot(thrustMajorAxis);
+    thrustMajorProj += TMath::Abs(temp.Dot(thrustMajorAxis));
   }
 
   thrustMajorAxis.SetMag(thrustMajorProj/pSum);
@@ -592,13 +592,13 @@ TVector3 getThrustMinor(TVector3 thrust, TVector3 thrustMajor, int n, float *px,
   }
 
   //check that we have already calculated thrust, if not get thrust
-  if(thrust.Px() < 0.01 && thrust.Py() < 0.01 && thrust.Pz() < 0.01){
+  if(thrust.Px() < 0.001 && thrust.Py() < 0.001 && thrust.Pz() < 0.001){
     if(doCharged) thrust = getChargedThrust(n, px, py, pz, pwflag, algo);
     else thrust = getThrust(n, px, py, pz, algo);
   }
 
   //check that we have already calculated thrustMajor, if not get thrustMajor
-  if(thrustMajor.Px() < 0.01 && thrustMajor.Py() < 0.01 && thrustMajor.Pz() < 0.01) thrustMajor = getThrustMajor(thrust, n, px, py, pz, pwflag, algo, doCharged);
+  if(thrustMajor.Px() < 0.001 && thrustMajor.Py() < 0.001 && thrustMajor.Pz() < 0.001) thrustMajor = getThrustMajor(thrust, n, px, py, pz, pwflag, algo, doCharged);
 
   //Get thrustMinor and renormalize to 1 for correct projections, then calculate magnitude
   TVector3 thrustMinorAxis = thrust.Cross(thrustMajor);
@@ -612,7 +612,7 @@ TVector3 getThrustMinor(TVector3 thrust, TVector3 thrustMajor, int n, float *px,
     }
 
     TVector3 temp(px[i], py[i], pz[i]);
-    thrustMinorProj += temp.Dot(thrustMinorAxis);
+    thrustMinorProj += TMath::Abs(temp.Dot(thrustMinorAxis));
     pSum += temp.Mag();
   }
 
