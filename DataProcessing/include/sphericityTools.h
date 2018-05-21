@@ -93,21 +93,22 @@ inline float Sphericity::linD(){
 //where the magic happens
 //refer to http://home.fnal.gov/~mrenna/lutp0613man2/node234.html
 //generalized sphericity method, and sets important class member at the end for r==2 and r==1
-void Sphericity::calculateSphericity(int n, float *px, float *py, float *pz, Short_t *pwflag, float r){
+void Sphericity::calculateSphericity(int n, float *px, float *py, float *pz, Short_t *pwflag, int r){
   float norm = 0;
 
   TMatrixD m = TMatrixD(3,3);
  
+  float rF = r;
   //calculate matrix elements
   for(int i = 0; i<n; i++){
     if(chargedOnly && pwflag[i]!=0) continue;
-    m(0,0) += px[i]*px[i]*TMath::Power(p2(px[i],py[i],pz[i]),(r-2)/2.0);   
-    m(1,1) += py[i]*py[i]*TMath::Power(p2(px[i],py[i],pz[i]),(r-2)/2.0);   
-    m(2,2) += pz[i]*pz[i]*TMath::Power(p2(px[i],py[i],pz[i]),(r-2)/2.0);   
-    m(1,0) += px[i]*py[i]*TMath::Power(p2(px[i],py[i],pz[i]),(r-2)/2.0);   
-    m(2,0) += px[i]*pz[i]*TMath::Power(p2(px[i],py[i],pz[i]),(r-2)/2.0);   
-    m(1,2) += py[i]*pz[i]*TMath::Power(p2(px[i],py[i],pz[i]),(r-2)/2.0);
-    norm += TMath::Power(p2(px[i],py[i],pz[i]),r/2.0);   
+    m(0,0) += px[i]*px[i]*TMath::Power(p2(px[i],py[i],pz[i]),(rF-2)/2.0);   
+    m(1,1) += py[i]*py[i]*TMath::Power(p2(px[i],py[i],pz[i]),(rF-2)/2.0);   
+    m(2,2) += pz[i]*pz[i]*TMath::Power(p2(px[i],py[i],pz[i]),(rF-2)/2.0);   
+    m(1,0) += px[i]*py[i]*TMath::Power(p2(px[i],py[i],pz[i]),(rF-2)/2.0);   
+    m(2,0) += px[i]*pz[i]*TMath::Power(p2(px[i],py[i],pz[i]),(rF-2)/2.0);   
+    m(1,2) += py[i]*pz[i]*TMath::Power(p2(px[i],py[i],pz[i]),(rF-2)/2.0);
+    norm += TMath::Power(p2(px[i],py[i],pz[i]),rF/2.0);   
   } 
 
   //normalize
