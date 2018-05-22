@@ -1,0 +1,20 @@
+To build area:
+
+Make sure you have source'd top level file 'setStudyMultEnv.sh'. If you have not, some of the pathing will not work.
+ *Note that the default setStudyMultEnv.sh is set for lxplus paths. If you are working on another system you will have to modify it for your own builds of FastJet, ROOT, etc.
+
+Once paths are set, to build:
+ * Run 'make'
+To cleanup:
+ * Run 'make clean'
+
+To run code, highly recommended run with a compiler. Here are some examples:
+ * ./bin/makeGeneralJetTree.exe /data/cmcginn/StudyMultSamples/ALEPH/LEP1/20180506/LEP1Data1994P1_recons_aftercut-MERGED.root
+ * ./bin/checkThrustMajorMinor.exe LEP1Data1994P1_recons_aftercut-MERGED_GeneralJetTree_*.root
+  * Replace the wildcard in above with the date of the production from command one (output files get appended date to ease versioning)
+
+This will create the general jet tree in the first command, in a file to the output dir, then process that file to create some histograms testing thrust variables (perpindicular axes, ordered magnitudes going from thrust -> thrust major -> thrust minor)
+
+If you would like to run with ROOT interpreter, the rootlogon.C in JetDistribution and in JetDistribution/src should handle pathing correctly. Calling fileName as a function with arguments as in the compiled case should match results of above workflow.
+
+Please report bugs to github user cfmcginn.
