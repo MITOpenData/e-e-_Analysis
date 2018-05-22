@@ -23,8 +23,10 @@ class Sphericity{
     inline TVector3 linSphericityAxis();
     inline float sphericity(); 
     inline float aplanarity(); 
+    inline float planarity(); 
     inline float linSphericity(); 
     inline float linAplanarity(); 
+    inline float linPlanarity(); 
     inline float linC(); 
     inline float linD(); 
 
@@ -78,8 +80,17 @@ inline float Sphericity::aplanarity(){
   return 1.5*l3;
 }
 
+//Added planarity as defined here: http://cds.cern.ch/record/690637/files/ep-2003-084.pdf, p.15
+inline float Sphericity::planarity(){
+  return l2 - l3;
+}
+
 inline float Sphericity::linAplanarity(){
   return 1.5*linl3;
+}
+
+inline float Sphericity::linPlanarity(){
+  return linl2 - linl3;
 }
 
 inline float Sphericity::linC(){

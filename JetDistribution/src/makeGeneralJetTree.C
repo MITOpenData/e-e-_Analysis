@@ -16,6 +16,8 @@
 #include "TDatime.h"
 #include "TVector3.h"
 #include "TLorentzVector.h"
+#include "TMatrixD.h"
+#include "TMath.h"
 
 //fastjet dependencies
 #include "fastjet/JetDefinition.hh"
@@ -26,6 +28,7 @@
 #include "DataProcessing/include/particleData.h"
 #include "DataProcessing/include/checkMakeDir.h"
 #include "DataProcessing/include/thrustTools.h"
+#include "DataProcessing/include/sphericityTools.h"
 
 //local project dependencies
 #include "JetDistribution/include/globalJetVar.h"
@@ -76,19 +79,25 @@ int makeGeneralJetTree(const std::string inName)
   //define jetMaker here so rParam can be used in jetTree name for clarity
 
   const double jtPtCut = .01;
-  const int nJtAlgo = 4;
-  const double rParam[nJtAlgo] = {0.4, 0.8, 0.4, 0.8};
-  const int ktParam[nJtAlgo] = {-1, -1, 1, 1};
+  const int nJtAlgo = 6;
+  const double rParam[nJtAlgo] = {0.4, 0.8, 0.4, 0.8, -1, -1};
+  const int ktParam[nJtAlgo] = {-1, -1, 1, 1, 100, 100};
   //  bool rParamIs8[nJtAlgo];
   //  for(int i = 0; i < nJtAlgo; ++i){rParamIs8[i] = rParam[i] > .799 && rParam[i] < .801;}
-  const double recombScheme[nJtAlgo] = {fastjet::E_scheme, fastjet::E_scheme, fastjet::E_scheme, fastjet::E_scheme};
+  const double recombScheme[nJtAlgo] = {fastjet::E_scheme, fastjet::E_scheme, fastjet::E_scheme, fastjet::E_scheme, fastjet::E_scheme, fastjet::E_scheme};
   fastjet::JetDefinition jDef[nJtAlgo];
   fastjet::JetDefinition jDefReclust[nJtAlgo];
-  const int nFinalClust[nJtAlgo] = {-1, -1, -1, -1};
+  const int nFinalClust[nJtAlgo] = {-1, -1, -1, -1, 3, 4};
 
   for(int i = 0; i < nJtAlgo; ++i){
-    jDef[i] = fastjet::JetDefinition(fastjet::ee_genkt_algorithm, rParam[i], ktParam[i], fastjet::RecombinationScheme(recombScheme[i]));
-    jDefReclust[i] = fastjet::JetDefinition(fastjet::ee_genkt_algorithm, 10, ktParam[i], fastjet::RecombinationScheme(recombScheme[i]));
+    if(rParam[i] > 0){
+      jDef[i] = fastjet::JetDefinition(fastjet::ee_genkt_algorithm, rParam[i], ktParam[i], fastjet::RecombinationScheme(recombScheme[i]));
+      jDefReclust[i] = fastjet::JetDefinition(fastjet::ee_genkt_algorithm, 10, ktParam[i], fastjet::RecombinationScheme(recombScheme[i]));
+    }
+    else{
+      jDef[i] = fastjet::JetDefinition(fastjet::ee_kt_algorithm, fastjet::RecombinationScheme(recombScheme[i]));
+      jDefReclust[i] = fastjet::JetDefinition(fastjet::ee_kt_algorithm, fastjet::RecombinationScheme(recombScheme[i]));
+    }
   }
 
   checkMakeDir("output");
@@ -159,19 +168,99 @@ int makeGeneralJetTree(const std::string inName)
       gJetVar.thrustMinorPx = thrustMinor.Px();
       gJetVar.thrustMinorPy = thrustMinor.Py();
       gJetVar.thrustMinorPz = thrustMinor.Pz();
+      gJetVar.oblateness = gJetVar.thrustMajorMag - gJetVar.thrustMinorMag;
+
+      Sphericity spher(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag, false);
       
+      gJetVar.aplanarity = spher.aplanarity();
+      gJetVar.planarity = spher.planarity();
+      
+      TLorentzVector hemiPos(0,0,0,0);
+      TLorentzVector hemiNeg(0,0,0,0);
+      double broadening1 = 0.;
+      double broadening2 = 0.;
+      double eVis = 0.;
+      double pSum = 0.;
+      double momTensor[3][3];
+
+      for(Int_t i = 0; i < 3; ++i){
+	for(Int_t j = 0; j < 3; ++j){
+	  momTensor[i][j] = 0.;
+	}
+      }
+
+      thrust.SetMag(1.);
+
       for(Int_t pI = 0; pI < pData.nParticle; ++pI){
 	TLorentzVector particle;
 	particle.SetXYZM(pData.px[pI], pData.py[pI], pData.pz[pI], pData.mass[pI]);
 	particles.push_back(fastjet::PseudoJet(pData.px[pI], pData.py[pI], pData.pz[pI], particle.E()));
+	TVector3 temp(pData.px[pI], pData.py[pI], pData.pz[pI]);     
+	double tempArr[3] = {pData.px[pI], pData.py[pI], pData.pz[pI]};
+
+	for(Int_t i = 0; i < 3; ++i){
+	  for(Int_t j = 0; j < 3; ++j){
+	    momTensor[i][j] = tempArr[i]*tempArr[j]/temp.Mag();
+	  }
+	}
+
+	eVis += particle.E();
+	if(temp.Dot(thrustMajor) > 0){
+	  hemiPos += particle;
+	  broadening1 += TMath::Abs(temp.Cross(thrust).Mag());
+	}
+	else{
+	  hemiNeg += particle;
+	  broadening2 += TMath::Abs(temp.Cross(thrust).Mag());
+	}
+
+	pSum += temp.Mag();
       }
+
+      TMatrixD matrix(3,3);
+      TVectorD eigenValues;
+      for(Int_t i = 0; i < 3; ++i){
+        for(Int_t j = 0; j < 3; ++j){
+          matrix(i,j) = momTensor[i][j]/pSum;
+        }
+      }
+
+      matrix = matrix.EigenVectors(eigenValues);
+
+
+      gJetVar.eVis = eVis;
+      gJetVar.heavyJetMass = hemiPos.E()*hemiPos.E() - (hemiPos.Px()*hemiPos.Px() + hemiPos.Py()*hemiPos.Py() + hemiPos.Pz()*hemiPos.Pz());
+      gJetVar.heavyJetMass /= eVis*eVis;
+
+      gJetVar.lightJetMass = hemiNeg.E()*hemiNeg.E() - (hemiNeg.Px()*hemiNeg.Px() + hemiNeg.Py()*hemiNeg.Py() + hemiNeg.Pz()*hemiNeg.Pz());
+      gJetVar.lightJetMass /= eVis*eVis;
+
+      if(gJetVar.heavyJetMass < gJetVar.lightJetMass){
+	float tempVal = gJetVar.heavyJetMass;
+	gJetVar.heavyJetMass = gJetVar.lightJetMass;
+	gJetVar.lightJetMass = tempVal;
+      }
+      
+      gJetVar.jetMassDifference = gJetVar.heavyJetMass - gJetVar.lightJetMass;
+
+      broadening1 /= 2.*pSum;
+      broadening2 /= 2.*pSum;
+
+      gJetVar.wideJetBroadening = TMath::Max(broadening1, broadening2);
+      gJetVar.narrowJetBroadening = TMath::Min(broadening1, broadening2);
+      gJetVar.totalJetBroadening = gJetVar.wideJetBroadening + gJetVar.narrowJetBroadening;
+      gJetVar.cParam = eigenValues(0)*eigenValues(1) + eigenValues(1)*eigenValues(2) + eigenValues(2)*eigenValues(0);
+      gJetVar.jetResParam4 = -999;
+
 
       if(particles.size() == 0) continue;
 
       for(Int_t algoI = 0; algoI < nJtAlgo; ++algoI){
 	fastjet::ClusterSequence cs(particles, jDef[algoI]);
 	std::vector<fastjet::PseudoJet> jets;
-	jets = fastjet::sorted_by_pt(cs.inclusive_jets());
+
+	if(rParam[algoI] > 0) jets = fastjet::sorted_by_pt(cs.inclusive_jets());
+	else jets = fastjet::sorted_by_pt(cs.exclusive_jets(nFinalClust[algoI]));
 
 	jetVar[algoI].nref = 0;
 

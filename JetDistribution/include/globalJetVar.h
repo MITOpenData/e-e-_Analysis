@@ -17,20 +17,33 @@ class globalJetVar{
   unsigned long long uniqueID;
   float energy;
   int nParticle;
-  float thrustMag;
+  float thrustMag; // see definition from http://cds.cern.ch/record/690637/files/ep-2003-084.pdf, p.14
   float thrustPx;
   float thrustPy;
   float thrustPz;
-  float thrustMajorMag;
+  float thrustMajorMag; // see definition from http://cds.cern.ch/record/690637/files/ep-2003-084.pdf, p.14
   float thrustMajorPx;
   float thrustMajorPy;
   float thrustMajorPz;
-  float thrustMinorMag;
+  float thrustMinorMag; // see definition from http://cds.cern.ch/record/690637/files/ep-2003-084.pdf, p.15
   float thrustMinorPx;
   float thrustMinorPy;
   float thrustMinorPz;
+  float oblateness; // see definition from http://cds.cern.ch/record/690637/files/ep-2003-084.pdf, p.15
+  float sphericity; // see definition from http://cds.cern.ch/record/690637/files/ep-2003-084.pdf, p.15
+  float aplanarity; // see definition from http://cds.cern.ch/record/690637/files/ep-2003-084.pdf, p.15
+  float planarity; // see definition from http://cds.cern.ch/record/690637/files/ep-2003-084.pdf, p.15
+  float eVis;
+  float heavyJetMass; // see definition from http://cds.cern.ch/record/690637/files/ep-2003-084.pdf, p.15
+  float lightJetMass; // see definition from http://cds.cern.ch/record/690637/files/ep-2003-084.pdf, p.15
+  float jetMassDifference; // see definition from http://cds.cern.ch/record/690637/files/ep-2003-084.pdf, p.16
+  float wideJetBroadening; // see definition from http://cds.cern.ch/record/690637/files/ep-2003-084.pdf, p.16
+  float narrowJetBroadening; // see definition from http://cds.cern.ch/record/690637/files/ep-2003-084.pdf, p.16
+  float totalJetBroadening; // see definition from http://cds.cern.ch/record/690637/files/ep-2003-084.pdf, p.16
+  float cParam; // see definition from http://cds.cern.ch/record/690637/files/ep-2003-084.pdf, p.16
+  float jetResParam4; // see definition from http://cds.cern.ch/record/690637/files/ep-2003-084.pdf, p.16
 
-  static const int nVar = 21;
+  static const int nVar = 34;
   std::string varStr[nVar] = {"EventNo",
 			      "RunNo",
 			      "year",
@@ -51,7 +64,20 @@ class globalJetVar{
 			      "thrustMinorMag",
 			      "thrustMinorPx",
 			      "thrustMinorPy",
-			      "thrustMinorPz"};
+			      "thrustMinorPz",
+			      "oblateness",
+			      "sphericity",
+			      "aplanarity",
+			      "planarity",
+			      "eVis",
+			      "heavyJetMass",
+			      "lightJetMass",
+			      "jetMassDifference",
+			      "wideJetBroadening",
+			      "narrowJetBroadening",
+			      "totalJetBroadening",
+			      "cParam",
+			      "jetResParam4"};
 
   bool varIsGood[nVar];
 
@@ -84,6 +110,19 @@ globalJetVar::globalJetVar()
   thrustMinorPx = -999;
   thrustMinorPy = -999;
   thrustMinorPz = -999;
+  oblateness = -999;
+  sphericity = -999;
+  aplanarity = -999;
+  planarity = -999;
+  eVis = -999;
+  heavyJetMass = -999;
+  lightJetMass = -999;
+  jetMassDifference = -999;
+  wideJetBroadening = -999;
+  narrowJetBroadening = -999;
+  totalJetBroadening = -999;
+  cParam = -999;
+  jetResParam4 = -999;
 
   for(int i = 0; i < nVar; ++i){varIsGood[i] = true;}
   return;
@@ -131,6 +170,19 @@ void globalJetVar::SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::str
   if(varIsGood[18]) inTree_p->SetBranchAddress("thrustMinorPx", &thrustMinorPx);
   if(varIsGood[19]) inTree_p->SetBranchAddress("thrustMinorPy", &thrustMinorPy);
   if(varIsGood[20]) inTree_p->SetBranchAddress("thrustMinorPz", &thrustMinorPz);
+  if(varIsGood[21]) inTree_p->SetBranchAddress("oblateness", &oblateness);
+  if(varIsGood[22]) inTree_p->SetBranchAddress("sphericity", &sphericity);
+  if(varIsGood[23]) inTree_p->SetBranchAddress("aplanarity", &aplanarity);
+  if(varIsGood[24]) inTree_p->SetBranchAddress("planarity", &planarity);
+  if(varIsGood[25]) inTree_p->SetBranchAddress("eVis", &eVis);  
+  if(varIsGood[26]) inTree_p->SetBranchAddress("heavyJetMass", &heavyJetMass);
+  if(varIsGood[27]) inTree_p->SetBranchAddress("lightJetMass", &lightJetMass);
+  if(varIsGood[28]) inTree_p->SetBranchAddress("jetMassDifference", &jetMassDifference);
+  if(varIsGood[29]) inTree_p->SetBranchAddress("wideJetBroadening", &wideJetBroadening);
+  if(varIsGood[30]) inTree_p->SetBranchAddress("narrowJetBroadening", &narrowJetBroadening);
+  if(varIsGood[31]) inTree_p->SetBranchAddress("totalJetBroadening", &totalJetBroadening);
+  if(varIsGood[32]) inTree_p->SetBranchAddress("cParam", &cParam);
+  if(varIsGood[33]) inTree_p->SetBranchAddress("jetResParam4", &jetResParam4);
 
   return;
 }
@@ -158,6 +210,19 @@ void globalJetVar::SetBranchWrite(TTree* inTree_p)
   inTree_p->Branch("thrustMinorPx", &thrustMinorPx, "thrustMinorPx/F");
   inTree_p->Branch("thrustMinorPy", &thrustMinorPy, "thrustMinorPy/F");
   inTree_p->Branch("thrustMinorPz", &thrustMinorPz, "thrustMinorPz/F");
+  inTree_p->Branch("oblateness", &oblateness, "oblateness/F");
+  inTree_p->Branch("sphericity", &sphericity, "sphericity/F");
+  inTree_p->Branch("aplanarity", &aplanarity, "aplanarity/F");
+  inTree_p->Branch("planarity", &planarity, "planarity/F");
+  inTree_p->Branch("eVis", &eVis, "eVis/F");
+  inTree_p->Branch("heavyJetMass", &heavyJetMass, "heavyJetMass/F");
+  inTree_p->Branch("lightJetMass", &lightJetMass, "lightJetMass/F");
+  inTree_p->Branch("jetMassDifference", &jetMassDifference, "jetMassDifference/F");
+  inTree_p->Branch("wideJetBroadening", &wideJetBroadening, "wideJetBroadening/F");
+  inTree_p->Branch("narrowJetBroadening", &narrowJetBroadening, "narrowJetBroadening/F");
+  inTree_p->Branch("totalJetBroadening", &totalJetBroadening, "totalJetBroadening/F");
+  inTree_p->Branch("cParam", &cParam, "cParam/F");
+  inTree_p->Branch("jetResParam4", &jetResParam4, "jetResParam4/F");
 
   return;
 }
