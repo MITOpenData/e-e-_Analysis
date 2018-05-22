@@ -42,8 +42,9 @@ class globalJetVar{
   float totalJetBroadening; // see definition from http://cds.cern.ch/record/690637/files/ep-2003-084.pdf, p.16
   float cParam; // see definition from http://cds.cern.ch/record/690637/files/ep-2003-084.pdf, p.16
   float jetResParam4; // see definition from http://cds.cern.ch/record/690637/files/ep-2003-084.pdf, p.16
+  float jetResParam4NegLog; // see definition from http://cds.cern.ch/record/690637/files/ep-2003-084.pdf, p.16
 
-  static const int nVar = 34;
+  static const int nVar = 35;
   std::string varStr[nVar] = {"EventNo",
 			      "RunNo",
 			      "year",
@@ -77,7 +78,8 @@ class globalJetVar{
 			      "narrowJetBroadening",
 			      "totalJetBroadening",
 			      "cParam",
-			      "jetResParam4"};
+			      "jetResParam4",
+			      "jetResParam4NegLog"};
 
   bool varIsGood[nVar];
 
@@ -123,6 +125,7 @@ globalJetVar::globalJetVar()
   totalJetBroadening = -999;
   cParam = -999;
   jetResParam4 = -999;
+  jetResParam4NegLog = -999;
 
   for(int i = 0; i < nVar; ++i){varIsGood[i] = true;}
   return;
@@ -183,6 +186,7 @@ void globalJetVar::SetStatusAndAddressRead(TTree* inTree_p, std::vector<std::str
   if(varIsGood[31]) inTree_p->SetBranchAddress("totalJetBroadening", &totalJetBroadening);
   if(varIsGood[32]) inTree_p->SetBranchAddress("cParam", &cParam);
   if(varIsGood[33]) inTree_p->SetBranchAddress("jetResParam4", &jetResParam4);
+  if(varIsGood[34]) inTree_p->SetBranchAddress("jetResParam4NegLog", &jetResParam4NegLog);
 
   return;
 }
@@ -223,6 +227,7 @@ void globalJetVar::SetBranchWrite(TTree* inTree_p)
   inTree_p->Branch("totalJetBroadening", &totalJetBroadening, "totalJetBroadening/F");
   inTree_p->Branch("cParam", &cParam, "cParam/F");
   inTree_p->Branch("jetResParam4", &jetResParam4, "jetResParam4/F");
+  inTree_p->Branch("jetResParam4NegLog", &jetResParam4NegLog, "jetResParam4NegLog/F");
 
   return;
 }

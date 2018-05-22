@@ -200,7 +200,7 @@ int makeGeneralJetTree(const std::string inName)
 
 	for(Int_t i = 0; i < 3; ++i){
 	  for(Int_t j = 0; j < 3; ++j){
-	    momTensor[i][j] = tempArr[i]*tempArr[j]/temp.Mag();
+	    momTensor[i][j] += tempArr[i]*tempArr[j]/temp.Mag();
 	  }
 	}
 
@@ -249,9 +249,7 @@ int makeGeneralJetTree(const std::string inName)
       gJetVar.wideJetBroadening = TMath::Max(broadening1, broadening2);
       gJetVar.narrowJetBroadening = TMath::Min(broadening1, broadening2);
       gJetVar.totalJetBroadening = gJetVar.wideJetBroadening + gJetVar.narrowJetBroadening;
-      gJetVar.cParam = eigenValues(0)*eigenValues(1) + eigenValues(1)*eigenValues(2) + eigenValues(2)*eigenValues(0);
-      gJetVar.jetResParam4 = -999;
-
+      gJetVar.cParam = 3.*(eigenValues(0)*eigenValues(1) + eigenValues(1)*eigenValues(2) + eigenValues(2)*eigenValues(0));
 
       if(particles.size() == 0) continue;
 
@@ -275,7 +273,29 @@ int makeGeneralJetTree(const std::string inName)
 	  
 	  ++(jetVar[algoI].nref);
 	}
+
+	//take exclusive clustering to four jets, and find the minimum distance parameters for jetResParam4
+	//no procedure is listed in paper for this, but this seems correct - to be checked
+	if(nFinalClust[algoI] == 4){
+	  double minRes = 9999;
+	  for(unsigned int i = 0; i < jets.size(); ++i){
+	    double e1 = jets.at(i).E();
+	    TVector3 v1(jets.at(i).px(), jets.at(i).py(), jets.at(i).pz());
+
+	    for(unsigned int j = i+1; j < jets.size(); ++j){
+	      double e2 = jets.at(j).E();
+	      TVector3 v2(jets.at(j).px(), jets.at(j).py(), jets.at(j).pz());
+	      double tempRes = 2.*TMath::Min(e1*e1,e2*e2)*(1. - v1.Dot(v2)/(v1.Mag()*v2.Mag()))/(eVis*eVis); //substituting dot product for cosine
+
+	      if(tempRes < minRes) minRes = tempRes;
+	    }
+	  }
+      
+	  gJetVar.jetResParam4 = minRes;
+	}     
       }
+
+      gJetVar.jetResParam4NegLog = -TMath::Log(gJetVar.jetResParam4);
 
       globalOutTree_p->Fill();
       for(Int_t jI = 0; jI < nJtAlgo; ++jI){
