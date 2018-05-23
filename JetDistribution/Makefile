@@ -17,7 +17,7 @@ CHECK_FASTJETDIR=printf "\nFASTJETDIR is set to: \'$(FASTJETDIR)\'\n   !!!IF FAS
 
 #programs to make
 
-all: mkdirBin mkdirPdf mkdirOutput checkStudyMultDir checkFastJetDir bin/makeGeneralJetTree.exe bin/checkThrustMajorMinor.exe
+all: mkdirBin mkdirPdf mkdirOutput checkStudyMultDir checkFastJetDir bin/makeGeneralJetTree.exe bin/checkThrustMajorMinor.exe bin/testHepPlainTxtReader.exe bin/makeAlephQcdHepComp.exe
 
 mkdirBin:
 	$(MKDIR_BIN)
@@ -35,6 +35,12 @@ bin/makeGeneralJetTree.exe: src/makeGeneralJetTree.C
 
 bin/checkThrustMajorMinor.exe: src/checkThrustMajorMinor.C
 	$(CXX) $(CXXFLAGS) $(ROOT) -I $(STUDYMULTDIR) -o bin/checkThrustMajorMinor.exe src/checkThrustMajorMinor.C
+
+bin/testHepPlainTxtReader.exe: src/testHepPlainTxtReader.C
+	$(CXX) $(CXXFLAGS) $(ROOT) -I $(STUDYMULTDIR) -o bin/testHepPlainTxtReader.exe src/testHepPlainTxtReader.C
+
+bin/makeAlephQcdHepComp.exe: src/makeAlephQcdHepComp.C
+	$(CXX) $(CXXFLAGS) $(ROOT) -I $(STUDYMULTDIR) -o bin/makeAlephQcdHepComp.exe src/makeAlephQcdHepComp.C
 
 clean:
 	rm -f *~

@@ -1,3 +1,4 @@
+
 //A base for more generalized jet measurements (initial author Chris McGinn)
 //Borrows heavily from base code found in DataProcessing (Most implementations of thrust by Austin Baty or taken from ALEPH/BELLE experiment code)
 //Some general resources for what we measure:
@@ -132,7 +133,7 @@ int makeGeneralJetTree(const std::string inName)
 
     TFile* inFile_p = new TFile(fileList.at(fI).c_str(), "READ");
     TTree* inTree_p = (TTree*)inFile_p->Get("t");
-    pData.SetStatusAndAddressRead(inTree_p, {"EventNo", "RunNo", "year", "subDir", "process", "isMC", "uniqueID", "nParticle", "px", "py", "pz", "mass"});
+    pData.SetStatusAndAddressRead(inTree_p, {"EventNo", "RunNo", "year", "subDir", "process", "isMC", "uniqueID", "Energy", "nParticle", "px", "py", "pz", "mass"});
 
     const Int_t nEntries = inTree_p->GetEntries();
 
@@ -155,6 +156,7 @@ int makeGeneralJetTree(const std::string inName)
       gJetVar.process = pData.process;     
       gJetVar.isMC = pData.isMC;     
       gJetVar.uniqueID = pData.uniqueID;     
+      gJetVar.energy = pData.Energy;     
       gJetVar.nParticle = pData.nParticle;     
       gJetVar.thrustMag = thrust.Mag();
       gJetVar.thrustPx = thrust.Px();
@@ -171,7 +173,8 @@ int makeGeneralJetTree(const std::string inName)
       gJetVar.oblateness = gJetVar.thrustMajorMag - gJetVar.thrustMinorMag;
 
       Sphericity spher(pData.nParticle, pData.px, pData.py, pData.pz, pData.pwflag, false);
-      
+
+      gJetVar.sphericity = spher.sphericity();
       gJetVar.aplanarity = spher.aplanarity();
       gJetVar.planarity = spher.planarity();
       
@@ -226,7 +229,6 @@ int makeGeneralJetTree(const std::string inName)
       }
 
       matrix = matrix.EigenVectors(eigenValues);
-
 
       gJetVar.eVis = eVis;
       gJetVar.heavyJetMass = hemiPos.E()*hemiPos.E() - (hemiPos.Px()*hemiPos.Px() + hemiPos.Py()*hemiPos.Py() + hemiPos.Pz()*hemiPos.Pz());

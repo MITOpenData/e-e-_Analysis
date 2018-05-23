@@ -19,6 +19,7 @@ class hepPlainTxtReader{
   std::vector<double> xValLow;
   std::vector<double> xValHi;
   std::vector<double> yVal;
+  std::vector<double> yErrStat;
 
   hepPlainTxtReader();
   hepPlainTxtReader(const std::string inFileName, const std::string histName);
@@ -65,12 +66,14 @@ void hepPlainTxtReader::Reset()
   xValLow.clear();
   xValHi.clear();
   yVal.clear();
+  yErrStat.clear();
 
   return;
 }
 
 void hepPlainTxtReader::Init(const std::string inFileName, const std::string histName)
 {
+  Reset();
   isInit = false;
 
   std::ifstream file(inFileName.c_str());
@@ -120,6 +123,7 @@ void hepPlainTxtReader::Init(const std::string inFileName, const std::string his
 	  xValLow.push_back(std::stod(stringBreakDown.at(1)));
 	  xValHi.push_back(std::stod(stringBreakDown.at(2)));
 	  yVal.push_back(std::stod(stringBreakDown.at(3)));
+	  yErrStat.push_back(std::stod(stringBreakDown.at(4)));
 	}
 
 	if(tempStr.find("xdesc") != std::string::npos) startX = true;
@@ -183,7 +187,7 @@ void hepPlainTxtReader::GetHistogram(TH1D** inHist_p, const std::string histName
   (*inHist_p) = new TH1D(histName.c_str(), "", nBins, bins);
   for(unsigned int i = 0; i < yVal.size(); ++i){
     (*inHist_p)->SetBinContent(i+1, yVal.at(i));
-    (*inHist_p)->SetBinError(i+1, 0.);
+    (*inHist_p)->SetBinError(i+1, yErrStat.at(i));
   }
 
   return;

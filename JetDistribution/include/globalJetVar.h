@@ -201,7 +201,7 @@ void globalJetVar::SetBranchWrite(TTree* inTree_p)
   inTree_p->Branch("isMC", &isMC, "isMC/O");
   inTree_p->Branch("uniqueID", &uniqueID, "uniqueID/l");
   inTree_p->Branch("energy", &energy, "energy/F");
-  inTree_p->Branch("nParticle", &nParticle, "nParticle/F");
+  inTree_p->Branch("nParticle", &nParticle, "nParticle/I");
   inTree_p->Branch("thrustMag", &thrustMag, "thrustMag/F");
   inTree_p->Branch("thrustPx", &thrustPx, "thrustPx/F");
   inTree_p->Branch("thrustPy", &thrustPy, "thrustPy/F");
