@@ -1,4 +1,4 @@
-Build w/ 'make'
+Build w/ 'make' 
 
 Upon successful build, to process a Aleph file do
 ./bin/scan.exe <inFileName>
