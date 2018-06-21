@@ -22,6 +22,7 @@
 #include "DataProcessing/include/checkMakeDir.h"
 #include "DataProcessing/include/particleData.h"
 #include "DataProcessing/include/trackSelection.h"
+#include "DataProcessing/include/neutralHadronSelection.h"
 #include "DataProcessing/include/eventSelection.h"
 #include "DataProcessing/include/eventData.h"
 #include "DataProcessing/include/jetData.h"
@@ -398,6 +399,7 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
 
   eventSelection eSelection;
   TrackSelection trkSelection = TrackSelection();
+  NeutralHadronSelection neuSelection = NeutralHadronSelection();
   alephTrkEfficiency trkEff = alephTrkEfficiency();
 
   particleData pData;
@@ -692,6 +694,8 @@ int scan(const std::string inFileName, const bool isNewInfo, const bool isNewInf
       pData.highPurity[counterParticles] = trkSelection.highPurity(&pData, counterParticles);
       if(pData.highPurity[counterParticles]) nTrk_HP++;
       if(pData.highPurity[counterParticles]) nTrk_HP_Corr += 1.0/trkEff.efficiency(v.Theta(),v.Phi(),v.Pt());
+      
+      if(pData.pwflag[counterParticles]==4 || pData.pwflag[counterParticles]==5) pData.highPurity[counterParticles] = neuSelection.highPurity(&pData, counterParticles);
 
       ++counterParticles;	
     }

@@ -9,9 +9,9 @@ IF YOUR MAKE FAILS:
 Most likely you have not source'd setStudyMultEnv.sh in the top level of studymult, setting a global variable used for compilation and clarity. Please cd to top level, source, and repeat
 
 For a simple test on svm (as long as the path is maintained) do
-cp /data/flowex/MCsamples/1999/192/GGBB/DIR001/LEP2MCGGBBY1999E192_recons_aftercut-001.aleph .
-./bin/scan.exe LEP2MCGGBBY1999E192_recons_aftercut-001.aleph 
-root -l LEP2MCGGBBY1999E192_recons_aftercut-001.root
+cp /data/flowex/Datasamples/LEP1_REPROCESS_20180216/1992/LEP1Data1992_recons_aftercut-001.aleph .
+./bin/scan.exe LEP1Data1992_recons_aftercut-001.aleph 1 1 
+root -l LEP1Data1992_recons_aftercut-001.root
 
 And check to see that the contents of trees are sensible
 
