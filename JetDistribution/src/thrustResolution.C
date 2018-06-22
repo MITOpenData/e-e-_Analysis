@@ -44,12 +44,41 @@ int thrustResolution(const std::string inFileName)
   delete date;
 
   TFile* outFile_p = new TFile(outFileName.c_str(), "RECREATE");
+  
+  std::cout<<"Initializing histograms and loading data..."<<std::endl;
+  /************************************************/
+  // Initialize Histograms                         /
+  /************************************************/
+  
+  // Subranges of NtrkOffline
+  static const int numRanges = 5;
+  int nTrkMin[numRanges] = {4,10,20,30,35};
+  int nTrkMax[numRanges] = {10,20,30,999,999};
+  int colors[numRanges] = {0,1,2,3,4}; // gold,blue,red,orange,green,peach
+    
   TH1F* dTTheta_h = new TH1F("dTTheta_h",";#Delta TTheta;Counts",600,-TMath::Pi(),TMath::Pi());
   TH1F* dTEta_h = new TH1F("dTEta_h",";#Delta TEta;Counts",1200,-10,10);
   TH1F* dTPhi_h = new TH1F("dTPhi_h",";#Delta TPhi;Counts",360,-TMath::Pi()/2.0,TMath::Pi()/2.0);
-
   centerTitles({dTTheta_h, dTEta_h,dTPhi_h});
+    
+  // nTrk cuts //
+  TH1F * dTTheta_Cut[numRanges];
+  TH1F * dTEta_Cut[numRanges];
+  TH1F * dTPhi_Cut[numRanges];
+    
+  for(unsigned int i = 0; i < numRanges; ++i)
+  {
+      dTTheta_Cut[i] = new TH1D(Form("dTTheta%d",nTrkMin[i]), Form("nTrkOffline_%d;N_{Trk}^{Offline};Entries",nTrkMin[i]), 600,-TMath::Pi(),TMath::Pi());
+      dTEta_Cut[i] = new TH1F(Form("dTEta_%d",nTrkMin[i]), Form("Thrust_%d;Thrust;Entries",1200,-10,10);
+      dTPhi_Cut[i] = new TH1F(Form("dTPhi_%d",nTrkMin[i]), Form("nJets_%d;N_{Jets}^{Offline};Entries",nTrkMin[i]),360,-TMath::Pi()/2.0,TMath::Pi()/2.0);
+                              
+      centerTitles({dTTheta_Cut[i], dTEta_Cut[i],dTPhi_Cut[i]});
+  }
 
+  /************************************************/
+  // Initialize Tree and Variables                 /
+  /************************************************/
+                              
   TFile* inFile_p = new TFile(inFileName.c_str(),"READ");
   TTree* genTree_p = (TTree*)inFile_p->Get("tgen");
   TTree* recoTree_p = (TTree*)inFile_p->Get("t");
@@ -57,7 +86,7 @@ int thrustResolution(const std::string inFileName)
   std::vector<std::string> particleList;
   std::vector<std::string> eventList;
 
-  particleList.push_back("nParticle");
+  particleList.push_back("nChargedHadronsHP");
   eventList.push_back("TTheta");
   eventList.push_back("TPhi");
 
@@ -71,6 +100,8 @@ int thrustResolution(const std::string inFileName)
 
   std::cout << "Processing " << nEntries << " events..." << std::endl;
 
+  Float nChargedHadronsHP; // use gen particles to do this
+                              
   Float_t TTheta_diff;
   Float_t TEta_diff;
   Float_t TPhi_diff;
@@ -82,14 +113,11 @@ int thrustResolution(const std::string inFileName)
 
   for(Int_t entry = 0; entry < nEntries; ++entry)
   {
-    if(entry%10000 == 0) std::cout << " Entry " << entry << "/" << nEntries << \
-			   std::endl;
+    if(entry%10000 == 0) std::cout << " Entry " << entry << "/" << nEntries << std::endl;
     genTree_p->GetEntry(entry);
     recoTree_p->GetEntry(entry);
-    
-    // std::cout<<gen_event.TTheta << " "<<reco_event.TTheta<<std::endl;
-    //  std::cout<<gen_event.TPhi<< " "<<reco_event.TPhi<<std::endl;
-
+    nChargedHadronsHP = gen_particle.nChargedHadronsHP;
+      
     TTheta_diff = gen_event.TTheta - reco_event.TTheta;
     TEta_diff = -1*std::log(TMath::Tan(gen_event.TTheta/2.0)) - -1*std::log(TMath::Tan(reco_event.TTheta/2.0));
     
@@ -97,20 +125,57 @@ int thrustResolution(const std::string inFileName)
     vec_recoPhi_rotatePi.SetMagPhi(1.0,reco_event.TPhi+TMath::Pi());
     vec_genPhi.SetMagPhi(1.0,gen_event.TPhi);
     vec_genPhi_rotatePi.SetMagPhi(1.0,gen_event.TPhi+TMath::Pi());
-    //    Float_t tempDTPhi = vec_recoPhi.DeltaPhi(vec_genPhi);
+
     float ang1 = vec_recoPhi.DeltaPhi(vec_genPhi);
     float ang2 = vec_recoPhi.DeltaPhi(vec_genPhi_rotatePi);
     float ang3 = vec_recoPhi_rotatePi.DeltaPhi(vec_genPhi);
     float ang4 = vec_recoPhi_rotatePi.DeltaPhi(vec_genPhi_rotatePi);
-    //std::cout<<ang1<<" "<<ang2<<" "<<ang3<<" "<<ang4<<std::endl;
+
     TPhi_diff = ang1;
     if(fabs(ang2)<fabs(TPhi_diff)) TPhi_diff = ang2;
     if(fabs(ang3)<fabs(TPhi_diff)) TPhi_diff = ang3;
     if(fabs(ang4)<fabs(TPhi_diff)) TPhi_diff = ang4;
     
+    // no cut
     dTTheta_h->Fill(TTheta_diff);
     dTEta_h->Fill(TEta_diff);
     dTPhi_h->Fill(TPhi_diff);
+      
+    // 4-10
+    if(nChargedHadronsHP >= nTrkMin[0] && nChargedHadronsHP < nTrkMax[0])
+    {
+        dTTheta_Cut[0]->Fill(TTheta_diff);
+        dTEta_Cut[0]->Fill(TEta_diff);
+        dTPhi_Cut[0]->Fill(TPhi_diff);
+    }
+    // 10-20
+    else if(nChargedHadronsHP >= nTrkMin[1] && nChargedHadronsHP < nTrkMax[1])
+    {
+        dTTheta_Cut[1]->Fill(TTheta_diff);
+        dTEta_Cut[1]->Fill(TEta_diff);
+        dTPhi_Cut[1]->Fill(TPhi_diff);
+    }
+    // 20-30
+    else if(nChargedHadronsHP >= nTrkMin[2] && nChargedHadronsHP < nTrkMax[2])
+    {
+        dTTheta_Cut[2]->Fill(TTheta_diff);
+        dTEta_Cut[2]->Fill(TEta_diff);
+        dTPhi_Cut[2]->Fill(TPhi_diff);
+    }
+    // 30-999
+    else if(nChargedHadronsHP >= nTrkMin[3] && nChargedHadronsHP < nTrkMax[3])
+    {
+        dTTheta_Cut[3]->Fill(TTheta_diff);
+        dTEta_Cut[3]->Fill(TEta_diff);
+        dTPhi_Cut[3]->Fill(TPhi_diff);
+        // 35-999
+        if (nChargedHadronsHP >= nTrkMin[4] && nChargedHadronsHP < nTrkMax[4])
+        {
+            dTTheta_Cut[4]->Fill(TTheta_diff);
+            dTEta_Cut[4]->Fill(TEta_diff);
+            dTPhi_Cut[4]->Fill(TPhi_diff);
+        }
+    }
   }
   
   inFile_p->Close();
@@ -120,7 +185,18 @@ int thrustResolution(const std::string inFileName)
   dTTheta_h->Write("",TObject::kOverwrite);
   dTEta_h->Write("",TObject::kOverwrite);
   dTPhi_h->Write("",TObject::kOverwrite);
-
+                              
+  for(unsigned int i = 0; i < numRanges; ++i)
+  {
+      dTTheta_Cut[i]->Write("",TObject::kOverwrite);
+      dTEta_Cut[i]->Write("",TObject::kOverwrite);
+      dTPhi_Cut[i]->Write("",TObject::kOverwrite);
+      
+      delete dTTheta_Cut[i];
+      delete dTPhi_Cut[i];
+      delete dTEta_Cut[i];
+  }
+                                                          
   delete dTTheta_h;
   delete dTPhi_h;
   delete dTEta_h;
