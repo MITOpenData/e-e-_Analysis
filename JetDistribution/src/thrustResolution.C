@@ -12,6 +12,7 @@
 #include "TDatime.h"
 #include "TMath.h"
 #include "TVector2.h"
+#include "TLatex.h"
 
 // Non-Local StudyMult dependencies
 #include "DataProcessing/include/checkMakeDir.h"
@@ -54,8 +55,13 @@ int thrustResolution(const std::string inFileName)
   static const int numRanges = 5;
   int nTrkMin[numRanges] = {4,10,20,30,35};
   int nTrkMax[numRanges] = {10,20,30,999,999};
-  int colors[numRanges] = {0,1,2,3,4}; // gold,blue,red,orange,green,peach
-    
+  //int colors[numRanges] = {0,1,2,3,4}; // gold,blue,red,orange,green,peach
+
+  // TLatex latex;
+  //latex.SetTextSize(33);
+  //latex.setTextAlign(13);
+  //latex.SetTextFont(43);
+
   TH1F* dTTheta_h = new TH1F("dTTheta_h",";#Delta TTheta;Counts",600,-TMath::Pi(),TMath::Pi());
   TH1F* dTEta_h = new TH1F("dTEta_h",";#Delta TEta;Counts",1200,-10,10);
   TH1F* dTPhi_h = new TH1F("dTPhi_h",";#Delta TPhi;Counts",360,-TMath::Pi()/2.0,TMath::Pi()/2.0);
@@ -68,9 +74,9 @@ int thrustResolution(const std::string inFileName)
     
   for(unsigned int i = 0; i < numRanges; ++i)
   {
-      dTTheta_Cut[i] = new TH1D(Form("dTTheta%d",nTrkMin[i]), Form("nTrkOffline_%d;N_{Trk}^{Offline};Entries",nTrkMin[i]), 600,-TMath::Pi(),TMath::Pi());
-      dTEta_Cut[i] = new TH1F(Form("dTEta_%d",nTrkMin[i]), Form("Thrust_%d;Thrust;Entries",1200,-10,10);
-      dTPhi_Cut[i] = new TH1F(Form("dTPhi_%d",nTrkMin[i]), Form("nJets_%d;N_{Jets}^{Offline};Entries",nTrkMin[i]),360,-TMath::Pi()/2.0,TMath::Pi()/2.0);
+      dTTheta_Cut[i] = new TH1F(Form("dTTheta_%d",nTrkMin[i]), Form("dTTheta_%d;dTTheta;Entries",nTrkMin[i]), 600,-TMath::Pi(),TMath::Pi());
+      dTEta_Cut[i] = new TH1F(Form("dTEta_%d",nTrkMin[i]), Form("dTEta_%d;dTEta;Entries",nTrkMin[i]),1200,-10,10);
+      dTPhi_Cut[i] = new TH1F(Form("dTPhi_%d",nTrkMin[i]), Form("dTPhi_%d;dTPhi;Entries",nTrkMin[i]),360,-TMath::Pi()/2.0,TMath::Pi()/2.0);
                               
       centerTitles({dTTheta_Cut[i], dTEta_Cut[i],dTPhi_Cut[i]});
   }
@@ -86,10 +92,10 @@ int thrustResolution(const std::string inFileName)
   std::vector<std::string> particleList;
   std::vector<std::string> eventList;
 
-  particleList.push_back("nChargedHadronsHP");
+  eventList.push_back("nChargedHadronsHP");
   eventList.push_back("TTheta");
   eventList.push_back("TPhi");
-
+  
   particleData gen_particle; eventData gen_event; 
   particleData reco_particle; eventData reco_event;
 
@@ -100,7 +106,7 @@ int thrustResolution(const std::string inFileName)
 
   std::cout << "Processing " << nEntries << " events..." << std::endl;
 
-  Float nChargedHadronsHP; // use gen particles to do this
+  Float_t nChargedHadronsHP; // use gen particles to do this
                               
   Float_t TTheta_diff;
   Float_t TEta_diff;
@@ -116,7 +122,7 @@ int thrustResolution(const std::string inFileName)
     if(entry%10000 == 0) std::cout << " Entry " << entry << "/" << nEntries << std::endl;
     genTree_p->GetEntry(entry);
     recoTree_p->GetEntry(entry);
-    nChargedHadronsHP = gen_particle.nChargedHadronsHP;
+    nChargedHadronsHP = gen_event.nChargedHadronsHP;
       
     TTheta_diff = gen_event.TTheta - reco_event.TTheta;
     TEta_diff = -1*std::log(TMath::Tan(gen_event.TTheta/2.0)) - -1*std::log(TMath::Tan(reco_event.TTheta/2.0));
