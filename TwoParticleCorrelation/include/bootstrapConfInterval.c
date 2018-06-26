@@ -68,7 +68,7 @@ float ** bootstrapConfInterval(TH1F *h, TF1 *f, int nHists)
     for (int nH = 0; nH<numHists; nH++)
     {
         // initialize sample histograms and fits
-        sampleHists[nH] = new TH1F(Form("clone_%d",nH), "", numBins, histMin, histMax);
+        sampleHists[nH] = new TH1F(Form("clone_%d",nH), "", numBins, 0,1); // histMin, histMax);
         sampleFits[nH] = (TF1*) f->Clone(Form("fit_%d",nH));
         sampleFits[nH]->SetParameter(0,100);
         
@@ -77,15 +77,16 @@ float ** bootstrapConfInterval(TH1F *h, TF1 *f, int nHists)
         for (int M = 0; M<numEntries; M++)
         {
             if(M%1000 == 0) std::cout<<Form("%d / %d",M,numEntries)<<std::endl;
+            // generate random number between histMin and histMax following distribution given by input function
             float rand = f->GetRandom(histMin,histMax);
-            std::cout<<rand<<std::endl;
+            //std::cout<<rand<<std::endl;
             //sampleHists[nH]->Fill(f->GetRandom(histMin,histMax));
             sampleHists[nH]->Fill(rand);
         }
         
         // perform fit
         //sampleHists[nH]->Scale(1./sampleHists[nH]->GetEntries());
-        sampleHists[nH]->Fit(Form("fit_%d",nH));
+        sampleHists[nH]->Fit(Form("fit_%d",nH),"Q N 0");
         //sampleHists[nH]->Fit(Form("fit_%d",nH),"LL");
         //sampleHists[nH]->Fit(Form("fit_%d",nH));
         //sampleHists[nH]->Fit(Form("fit_%d",nH));
@@ -115,13 +116,6 @@ float ** bootstrapConfInterval(TH1F *h, TF1 *f, int nHists)
     
     TFile *fout = new TFile("testBOOTSTRAPCONF.root","recreate");
     for (int nH = 0; nH < numHists; nH++){ sampleHists[nH]->Write("",TObject::kOverwrite);}
-    fout->Close();
-    
-    TCanvas * c = new TCanvas("c","c",1000,1000);
-    c->cd();
-    cout<<sampleHists[0]->GetEntries()<<endl;
-    sampleHists[0]->Print("all");
-    sampleHists[0]->Draw();
     
     // Clean up
     for (int nP = 0; nP<numParams; nP++){ delete paramDists[nP]; }
@@ -152,7 +146,7 @@ int test()
     
     string functionalForm = "gaus(0)"; // [0]*exp(-0.5*((x-[1])/[2])**2)
     TF1 *f1 = new TF1("gaus",functionalForm.c_str(),-10,10);
-    gausHist->Fit("gaus");
+    gausHist->Fit("gaus","Q N 0");
     f1->GetRandom(-10,10);
     float** confidenceIntervals = bootstrapConfInterval(gausHist,f1,10);
     

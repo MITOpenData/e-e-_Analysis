@@ -16,6 +16,7 @@
 //local headers
 #include "include/Selection.h"
 #include "include/utilities.h"
+#include "include/bootstrapConfInterval.c"
 #include "../include/xjjrootuti.h"
 #include "../../Utilities/include/plotLogo.h"
 
@@ -138,6 +139,7 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
   double etaranges[8]={1.5,2.5,2.5,5,1.5,5,2.6,10};
   Int_t minbin,maxbin;
   Int_t nCanvas=0;
+    bool once = true;
   for(int e = 0; e<nEnergyBins; e++)
   {
     if (doOneBin&&e!=0) continue;
@@ -279,6 +281,7 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
           
           // Fourier decomposition
           TF1 *f1 = new TF1("f1","[0]*(1+2*([1]*cos(1*x)+[2]*cos(2*x)+[3]*cos(3*x)+[4]*cos(4*x)+[5]*cos(5*x)+[6]*cos(6*x)))");
+          
           for (Int_t j=0;j<4;j++) {
             //c2->cd(j+1);
             //if (i ==2) for(Int_t k = 0; k<h_deltaphi[j*2]->GetNbinsX();k++)std::cout<<h_deltaphi[j*2]->GetBinContent(k)<<std::endl;
@@ -309,6 +312,23 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
           h_deltaphi[0]->Fit("f1");
           h_deltaphi[0]->Fit("f1","LL");
           h_deltaphi[0]->Fit("f1");
+        
+        if (once)
+        {
+            TF1 *fTest = new TF1("fTest","[0] * (1.0 + 2*[1]*cos(2*x)) + [2] + gaus(0)");
+            // TEST BOOTSTRAPCONFINTERVAL //
+            float** confidenceIntervals = bootstrapConfInterval(h_deltaphi[0],f1,10);
+            for (int nP = 0; nP < f1->GetNpar(); nP++)
+            {
+                float lowConf = f1->GetParameter(nP) + confidenceIntervals[nP][0]; // plus is correct here because if the delta is negative then the number will be shifted down
+                float highConf = f1->GetParameter(nP) + confidenceIntervals[nP][1]; // plus is also correct here because if the delta is positive then the number will be shifted up
+                cout<<Form("v_%d: [%f,%f]",nP,f1->GetParameter(nP) + confidenceIntervals[nP][0],f1->GetParameter(nP)+ confidenceIntervals[nP][1])<<endl;
+                // important: clean up memory
+                delete [] confidenceIntervals[nP];
+            }
+            delete [] confidenceIntervals;
+            once = false;
+        }
           h_deltaphi[0]->Draw();
           TLatex*texv1_0 = new TLatex(-1, 0.95*(h_deltaphi[0]->GetMaximum()-h_deltaphi[0]->GetMinimum())+h_deltaphi[0]->GetMinimum(), Form("v_{1}=%.3f #pm %.3f",f1->GetParameter(1),f1->GetParError(1)));
           TLatex*texv2_0 = new TLatex(-1, 0.85*(h_deltaphi[0]->GetMaximum()-h_deltaphi[0]->GetMinimum())+h_deltaphi[0]->GetMinimum(), Form("v_{2}=%.3f #pm %.3f",f1->GetParameter(2),f1->GetParError(2)));
@@ -349,15 +369,8 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
           texv2_2->Draw();
           texv3_2->Draw();
 
-//	  h_deltaphi[0]->Write();
 	  delete c1;
-          /*
-	  delete l;
-          delete signal2PC[e][m][p][et];
-          delete bkgrnd2PC[e][m][p][et];
-          delete ratio2PC[e][m][p][et];
-          for (Int_t i=0;i<4;i++)  delete h_deltaphi[i*2];
-	  */
+            
 	      cAll->SaveAs(Form("%s_ASummary_%d_%d_%d_%d_%d.png",plotsname.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
 	      cAll->SaveAs(Form("%s_ASummary_%d_%d_%d_%d_%d.eps",plotsname.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
             
@@ -366,6 +379,8 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
     }
   }
 
+    
+    
   hMetaData->Write();
   
   if (doOneBin) return 0;
