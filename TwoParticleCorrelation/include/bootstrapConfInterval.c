@@ -18,6 +18,10 @@
 #include "TCanvas.h"
 #include "TFile.h"
 
+// Local Dependencies
+#include "RNGFromDist.C"
+
+
 // Create nHists histograms with identical binning and boundaries as h
 // Sample N points = same number of entries in h (numEntries)
 // Perform fit on each histogram using functionalForm
@@ -27,6 +31,8 @@ float ** bootstrapConfInterval(TH1F *h, TF1 *f, int nHists)
 {
     using namespace std;
     TH1::SetDefaultSumw2();
+    // return between -pi/2 and 3pi/2
+    RNGFromDist r = RNGFromDist(f);
     
     // Initialize Variables
     static const int numHists = nHists;
@@ -68,7 +74,7 @@ float ** bootstrapConfInterval(TH1F *h, TF1 *f, int nHists)
     for (int nH = 0; nH<numHists; nH++)
     {
         // initialize sample histograms and fits
-        sampleHists[nH] = new TH1F(Form("clone_%d",nH), "", numBins, 0,1); // histMin, histMax);
+        sampleHists[nH] = new TH1F(Form("clone_%d",nH), "", numBins, histMin,histMax); // histMin, histMax);
         sampleFits[nH] = (TF1*) f->Clone(Form("fit_%d",nH));
         sampleFits[nH]->SetParameter(0,100);
         
@@ -78,10 +84,8 @@ float ** bootstrapConfInterval(TH1F *h, TF1 *f, int nHists)
         {
             if(M%1000 == 0) std::cout<<Form("%d / %d",M,numEntries)<<std::endl;
             // generate random number between histMin and histMax following distribution given by input function
-            float rand = f->GetRandom(histMin,histMax);
-            //std::cout<<rand<<std::endl;
             //sampleHists[nH]->Fill(f->GetRandom(histMin,histMax));
-            sampleHists[nH]->Fill(rand);
+            sampleHists[nH]->Fill(r.getRand());
         }
         
         // perform fit
