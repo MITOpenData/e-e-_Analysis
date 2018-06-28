@@ -315,14 +315,16 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
         
         if (once)
         {
-            TF1 *fTest = new TF1("fTest","[0] * (1.0 + 2*[1]*cos(2*x)) + [2] + gaus(0)");
+            //TF1 *fTest = new TF1("fTest","[0] * (1.0 + 2*[1]*cos(2*x)) + [2] + gaus(0)");
             // TEST BOOTSTRAPCONFINTERVAL //
-            float** confidenceIntervals = bootstrapConfInterval(h_deltaphi[0],f1,10);
+            float** confidenceIntervals = bootstrapConfInterval(h_deltaphi[0],f1,50);
+            float centralValue = 0; // f->GetParameter(nP); // Using 0 so that we find 95% confidence interval above 0 to determine if any flow exists
             for (int nP = 0; nP < f1->GetNpar(); nP++)
             {
-                float lowConf = f1->GetParameter(nP) + confidenceIntervals[nP][0]; // plus is correct here because if the delta is negative then the number will be shifted down
-                float highConf = f1->GetParameter(nP) + confidenceIntervals[nP][1]; // plus is also correct here because if the delta is positive then the number will be shifted up
-                cout<<Form("v_%d: [%f,%f]",nP,f1->GetParameter(nP) + confidenceIntervals[nP][0],f1->GetParameter(nP)+ confidenceIntervals[nP][1])<<endl;
+                float upperBound = confidenceIntervals[nP][0];
+                float lowConf = f1->GetParameter(nP) + confidenceIntervals[nP][1]; // plus is correct here because if the delta is negative then the number will be shifted down
+                float highConf = f1->GetParameter(nP) + confidenceIntervals[nP][2]; // plus is also correct here because if the delta is positive then the number will be shifted up
+                cout<<Form("v_%d  |  Max: %f  |  Confidence Interval about fit parameter: [%f,%f]",nP,upperBound,lowConf,highConf)<<endl;  // highConf and upperBound should be equal because we subtract off f1->GetParameter(nP) to make the confindence interval distribution and then add it back for highConf 
                 // important: clean up memory
                 delete [] confidenceIntervals[nP];
             }
@@ -444,3 +446,10 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
   return 0;
 
 }
+
+
+
+
+
+
+

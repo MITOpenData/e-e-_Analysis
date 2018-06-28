@@ -2,22 +2,24 @@
 #include "TF1.h"
 #include "TMath.h"
 
-class RNGFromDist{
+class RNGFromDist
+{
   public:
     RNGFromDist(TF1* f);
     ~RNGFromDist();
     float getRand();
 
   private:
-    TRandom3 rng3;
+    TRandom3 * rng3;
     TF1 * f;
     float normalization;
+
 };
 
 float RNGFromDist::getRand(){
   while(true){
-    float a = rng3.Rndm()*2*TMath::Pi()-TMath::Pi()/2;
-    float b = rng3.Rndm()*normalization;
+    float a = rng3->Rndm()*2*TMath::Pi()-TMath::Pi()/2;
+    float b = rng3->Rndm()*normalization;
   
     if(b<f->Eval(a)) return a;
   }

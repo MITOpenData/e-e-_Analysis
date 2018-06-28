@@ -26,7 +26,7 @@
 // Sample N points = same number of entries in h (numEntries)
 // Perform fit on each histogram using functionalForm
 // Create distribution of each parameter
-
+// returns [95% above zero, Low,High] where Low,High are the lower and upper values of the 95% confidence interval about the fit parameter
 float ** bootstrapConfInterval(TH1F *h, TF1 *f, int nHists)
 {
     using namespace std;
@@ -57,17 +57,23 @@ float ** bootstrapConfInterval(TH1F *h, TF1 *f, int nHists)
     static const int deltaHigh = xq[1]*nHists;
     // will store the intervals and be returned
     float** intervals = new float*[numParams];
-    vector<float> bootstrapDiffs[numParams];
+    vector<float> bootstrapDiffsAboutZero[numParams];
+    vector<float> bootstrapDiffsAboutFitParam[numParams];
     
     // Initialize Histograms
     TH1F *sampleHists[numHists];
     TF1 *sampleFits[numHists];
     TH1F *paramDists[numParams];
+    TH1F *bootstrapDiffsAboutZero_h[numParams];
+    TH1F *bootstrapDiffsAboutFitParam_h[numParams];
     
     // initialize parameter distributions +- 10 from parameter of original fit
     for (int nP = 0; nP<numParams; nP++)
     {
         paramDists[nP] = new TH1F(Form("par_%d",nP),Form("par_%d",nP), paramBins, f->GetParameter(nP)-10, f->GetParameter(nP)+10);
+        bootstrapDiffsAboutZero_h[nP] = new TH1F(Form("bootstrapDiffsAboutZero_h_%d",nP),Form("bootstrapDiffsAboutZero_h_%d",nP), 1000,-0.5,0.5);
+        bootstrapDiffsAboutFitParam_h[nP] = new TH1F(Form("bootstrapDiffsAboutParam_h_%d",nP),Form("bootstrapDiffsAboutParam_h_%d",nP), 1000,-0.5,0.5);
+        
     }
     
     
@@ -82,47 +88,58 @@ float ** bootstrapConfInterval(TH1F *h, TF1 *f, int nHists)
         // fill same histograms
         for (int M = 0; M<numEntries; M++)
         {
-            if(M%1000 == 0) std::cout<<Form("%d / %d",M,numEntries)<<std::endl;
+            if(M%5000 == 0) std::cout<<Form("%d / %d",M,numEntries)<<std::endl;
             // generate random number between histMin and histMax following distribution given by input function
-            //sampleHists[nH]->Fill(f->GetRandom(histMin,histMax));
             sampleHists[nH]->Fill(r.getRand());
         }
         
         // perform fit
-        //sampleHists[nH]->Scale(1./sampleHists[nH]->GetEntries());
         sampleHists[nH]->Fit(Form("fit_%d",nH),"Q N 0");
-        //sampleHists[nH]->Fit(Form("fit_%d",nH),"LL");
-        //sampleHists[nH]->Fit(Form("fit_%d",nH));
-        //sampleHists[nH]->Fit(Form("fit_%d",nH));
         sampleHists[nH]->SetStats(0);
         
         std::cout<<"filling param hists"<<std::endl;
         // fill parameter distributions
+        
         for (int nP = 0; nP<numParams; nP++)
         {
             paramDists[nP]->Fill(sampleFits[nH]->GetParameter(nP));
-            bootstrapDiffs[nP].push_back(sampleFits[nH]->GetParameter(nP) - f->GetParameter(nP));
+            bootstrapDiffsAboutZero_h[nP]->Fill(sampleFits[nH]->GetParameter(nP) - 0.0);
+            bootstrapDiffsAboutZero[nP].push_back(sampleFits[nH]->GetParameter(nP) - 0.0);
+            bootstrapDiffsAboutFitParam_h[nP]->Fill(sampleFits[nH]->GetParameter(nP) - f->GetParameter(nP));
+            bootstrapDiffsAboutFitParam[nP].push_back(sampleFits[nH]->GetParameter(nP) - f->GetParameter(nP));
         }
     }
     
-    // Find 95% confidence interval of each of the paramDists
-    cout<<"Confidence intervals before passing to test()"<<endl;
+    // Find 95% confidence interval of each of the paramDists about above fit parameter. Find 95% upper bound above zero.
+    //cout<<"Confidence intervals before passing to test()"<<endl;
     for (int nP = 0; nP<numParams; nP++)
     {
-        sort(bootstrapDiffs[nP].begin(),bootstrapDiffs[nP].end());
-        cout<<Form("v_%d: [%f,%f]",nP,bootstrapDiffs[nP][deltaLow],bootstrapDiffs[nP][deltaHigh])<<endl;
-        intervals[nP] = new float[2];
-        intervals[nP][0] = bootstrapDiffs[nP][deltaLow];
-        intervals[nP][1] = bootstrapDiffs[nP][deltaHigh];
+        sort(bootstrapDiffsAboutZero[nP].begin(),bootstrapDiffsAboutZero[nP].end());
+        sort(bootstrapDiffsAboutFitParam[nP].begin(),bootstrapDiffsAboutFitParam[nP].end());
+        //cout<<Form("v_%d: [%f,%f]",nP,bootstrapDiffsAboutFitParam[nP][deltaLow],bootstrapDiffsAboutFitParam[nP][deltaHigh])<<endl;
+        intervals[nP] = new float[3];
+        intervals[nP][0] = bootstrapDiffsAboutZero[nP][deltaHigh];
+        intervals[nP][1] = bootstrapDiffsAboutFitParam[nP][deltaLow];
+        intervals[nP][2] = bootstrapDiffsAboutFitParam[nP][deltaHigh];
     }
-    cout<<"testBOOTSTRAPCONF"<<endl;
-    
     
     TFile *fout = new TFile("testBOOTSTRAPCONF.root","recreate");
-    for (int nH = 0; nH < numHists; nH++){ sampleHists[nH]->Write("",TObject::kOverwrite);}
+    for (int nH = 0; nH < numHists; nH++){
+        sampleHists[nH]->Write("",TObject::kOverwrite);
+        sampleFits[nH]->Write("",TObject::kOverwrite);
+    }
+    for (int nP = 0; nP<numParams; nP++){
+        paramDists[nP]->Write("",TObject::kOverwrite);
+        bootstrapDiffsAboutZero_h[nP]->Write("",TObject::kOverwrite);
+        bootstrapDiffsAboutFitParam_h[nP]->Write("",TObject::kOverwrite);
+    }
     
     // Clean up
-    for (int nP = 0; nP<numParams; nP++){ delete paramDists[nP]; }
+    for (int nP = 0; nP<numParams; nP++){
+        delete bootstrapDiffsAboutFitParam_h[nP];
+        delete bootstrapDiffsAboutZero_h[nP];
+        delete paramDists[nP];
+    }
     for (int nH = 0; nH < numHists; nH++){ delete sampleHists[nH]; delete sampleFits[nH];}
     
     
