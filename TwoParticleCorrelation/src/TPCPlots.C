@@ -134,7 +134,8 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
   TH2F * ratio2PC[nEnergyBins][nMultBins][nptBins][netaBins];
   TH1F * nEvtSigHist1 = (TH1F*)f1->Get("nEvtSigHisto");
   TH1F * nEvtBkgHist1 = (TH1F*)f1->Get("nEvtSigHisto"); 
-
+  TH1F*h_deltaphi[7];
+    
   Float_t etaPlotRange = s.getEtaPlotRange();
   double etaranges[8]={1.5,2.5,2.5,5,1.5,5,2.6,10};
   Int_t minbin,maxbin;
@@ -201,8 +202,8 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
           if (signal2PC[e][m][p][et]->GetEntries()==0) continue;
 	  
           // For performing 1D projection
-          TH1F*h_deltaphi[7];
-        
+          
+          fout->cd();
           for (Int_t j=0;j<7;j =j+2)
           {
               // if (i==0) h_deltaphi[m]->SetFillColor(kRed);
@@ -215,6 +216,7 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
               else            h_deltaphi[j]->SetTitle(Form("#Delta#phi, #Delta#eta (%1.1f, %1.1f), Multipliplicity (%d, %d)",etaranges[j],etaranges[j+1], s.multBinsLow[m],s.multBinsHigh[m]));
               h_deltaphi[j]->GetYaxis()->SetTitle("Y(#Delta#phi)");
               h_deltaphi[j]->Scale((ratio2PC[e][m][p][et]->GetYaxis()->GetBinWidth(1))/(maxbin-minbin+1));
+              h_deltaphi[j]->Write(Form("h_deltaphi%d_%d_%d_%d_%d_%d",j,e,s.multBinsLow[m],s.multBinsHigh[m],p,et),TObject::kOverwrite);
           }
 
           // drawing plots
@@ -347,8 +349,8 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
           h_deltaphi[2]->Fit("f1","LL");
           h_deltaphi[2]->Fit("f1");
           h_deltaphi[2]->Draw();
-	  h_deltaphi[0]->Write();
-	  h_deltaphi[2]->Write();
+	  //h_deltaphi[0]->Write();
+	  //h_deltaphi[2]->Write();
           TLatex*texv1_1 = new TLatex(-1, 0.95*(h_deltaphi[2]->GetMaximum()-h_deltaphi[2]->GetMinimum())+h_deltaphi[2]->GetMinimum(), Form("v_{1}=%.3f #pm %.3f",f1->GetParameter(1),f1->GetParError(1)));
           TLatex*texv2_1 = new TLatex(-1, 0.85*(h_deltaphi[2]->GetMaximum()-h_deltaphi[2]->GetMinimum())+h_deltaphi[2]->GetMinimum(), Form("v_{2}=%.3f #pm %.3f",f1->GetParameter(2),f1->GetParError(2)));
           TLatex*texv3_1 = new TLatex(-1, 0.75*(h_deltaphi[2]->GetMaximum()-h_deltaphi[2]->GetMinimum())+h_deltaphi[2]->GetMinimum(), Form("v_{3}=%.3f #pm %.3f",f1->GetParameter(3),f1->GetParError(3)));
@@ -376,6 +378,8 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
 	      cAll->SaveAs(Form("%s_ASummary_%d_%d_%d_%d_%d.png",plotsname.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
 	      cAll->SaveAs(Form("%s_ASummary_%d_%d_%d_%d_%d.eps",plotsname.c_str(),e,s.multBinsLow[m],s.multBinsHigh[m],p,et));
             
+            
+            
         }
       }
     }
@@ -383,7 +387,7 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
 
     
     
-  hMetaData->Write();
+  //hMetaData->Write();
   
   if (doOneBin) return 0;
 
@@ -441,7 +445,8 @@ int TPCPlots(const std::string inFileName1, const std::string outfilename, const
   //c2->SaveAs(Form("../pdfDir/%s_pt1.C",plotsname.c_str()));
   c2->SetLogy();
     
-  fout->Write();
+  fout->Close();
+    delete fout;
   delete c2;
   return 0;
 
